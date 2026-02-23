@@ -1,11 +1,11 @@
 ---
 import {
+  documentSources,
   deploymentOptions,
   problemFlowSteps,
   screenshotPlaceholders,
   themes,
   trustItems,
-  useCases,
   valuePillars,
   workflowSteps
 } from "../data/landingContent";
@@ -44,9 +44,9 @@ const withBase = (path: string) => `${baseUrl}${path.replace(/^\/+/, "")}`;
       <div class="hero-actions">
         <a href="#cta" class="btn btn-primary">Request Early Pilot</a>
         <a href="#product-previews" class="btn btn-ghost">View Product Flow</a>
-        <a href={withBase("/themes/review")} class="btn btn-ghost">
+        <!-- <a href={withBase("/themes/review")} class="btn btn-ghost">
           Side-by-Side Review
-        </a>
+        </a> -->
       </div>
     </div>
 
@@ -133,12 +133,19 @@ const withBase = (path: string) => `${baseUrl}${path.replace(/^\/+/, "")}`;
 
   <section class="grid-two" data-reveal>
     <article class="panel">
-      <h2>Where Teams Use It</h2>
-      <ul>
-        {useCases.map((item) => (
-          <li>{item}</li>
+      <h2>Supported Document Sources</h2>
+      <p class="section-intro">
+        Connect the repositories teams already use for controlled document workflows.
+      </p>
+      <div class="source-grid">
+        {documentSources.map((source) => (
+          <article class={`source-tile source-${source.id}`}>
+            <div class="source-badge">{source.badge}</div>
+            <h3>{source.name}</h3>
+            <p>{source.detail}</p>
+          </article>
         ))}
-      </ul>
+      </div>
     </article>
     <article class="panel">
       <h2>How Teams Work In LACE</h2>

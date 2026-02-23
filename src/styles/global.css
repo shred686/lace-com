@@ -519,6 +519,93 @@ li {
   gap: 0.9rem;
 }
 
+.source-grid {
+  margin-top: 0.65rem;
+  display: grid;
+  gap: 0.85rem;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+}
+
+.source-tile {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--line) 76%, var(--accent));
+  border-radius: 0.9rem;
+  padding: 0.95rem;
+  min-height: 142px;
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  gap: 0.55rem;
+  background:
+    linear-gradient(
+      155deg,
+      color-mix(in srgb, var(--source-color, var(--primary)) 16%, var(--bg-alt)),
+      color-mix(in srgb, var(--panel-strong) 90%, transparent)
+    );
+  transition: transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
+}
+
+.source-tile::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at 88% 14%,
+    color-mix(in srgb, var(--source-color, var(--accent)) 28%, transparent),
+    transparent 34%
+  );
+  pointer-events: none;
+}
+
+.source-tile:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--source-color, var(--primary)) 58%, var(--line));
+  box-shadow: 0 16px 28px color-mix(in srgb, var(--source-color, var(--primary)) 14%, transparent);
+}
+
+.source-badge {
+  width: fit-content;
+  padding: 0.24rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--source-color, var(--accent)) 55%, var(--line));
+  background: color-mix(in srgb, var(--source-color, var(--accent)) 16%, transparent);
+  color: color-mix(in srgb, var(--source-color, var(--accent)) 45%, var(--text));
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.source-tile h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.source-tile p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.source-sharepoint {
+  --source-color: #2b7cd3;
+}
+
+.source-google-drive {
+  --source-color: #1a9b52;
+}
+
+.source-onedrive {
+  --source-color: #178ad5;
+}
+
+.source-box {
+  --source-color: #0d67c2;
+}
+
+.source-dropbox {
+  --source-color: #2f73f6;
+}
+
 .step-card {
   transition: transform 180ms ease, border-color 180ms ease;
 }

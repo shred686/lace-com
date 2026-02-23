@@ -92,12 +92,37 @@ export const workflowSteps = [
   }
 ];
 
-export const useCases = [
-  "RFP and government proposal responses",
-  "Technical modernization and architecture plans",
-  "Compliance and policy documentation",
-  "Program-level operating playbooks",
-  "Knowledge engineering and ontology-backed artifacts"
+export const documentSources = [
+  {
+    id: "sharepoint",
+    name: "SharePoint",
+    badge: "SP",
+    detail: "Microsoft 365 sites and document libraries"
+  },
+  {
+    id: "google-drive",
+    name: "Google Drive",
+    badge: "GD",
+    detail: "Shared drives, folders, and workspace docs"
+  },
+  {
+    id: "onedrive",
+    name: "OneDrive",
+    badge: "OD",
+    detail: "Personal and team files in Microsoft 365"
+  },
+  {
+    id: "box",
+    name: "Box",
+    badge: "BX",
+    detail: "Enterprise content and governance workspaces"
+  },
+  {
+    id: "dropbox",
+    name: "Dropbox",
+    badge: "DB",
+    detail: "Team repositories and synced project folders"
+  }
 ];
 
 export const screenshotPlaceholders = [

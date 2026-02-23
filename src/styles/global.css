@@ -1072,17 +1072,18 @@ li {
   }
 
   .use-case-tabs {
-    display: flex;
+    display: grid;
     gap: 0.5rem;
-    overflow-x: auto;
-    padding-bottom: 0.2rem;
-    scrollbar-width: thin;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .use-case-tab {
-    width: auto;
-    min-width: 170px;
-    white-space: nowrap;
+    width: 100%;
+    min-width: 0;
+    white-space: normal;
+    line-height: 1.25;
+    text-wrap: balance;
+    overflow-wrap: anywhere;
   }
 
   .use-case-columns {
@@ -1096,12 +1097,20 @@ li {
   .preview-grid {
     grid-template-columns: 1fr;
   }
+
+  .upload-list {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 700px) {
   .landing-shell {
     width: calc(100% - 1rem);
     padding: 1.4rem 0 3.4rem;
+  }
+
+  .use-case-tabs {
+    grid-template-columns: 1fr;
   }
 
   .theme-switch {

@@ -1,7 +1,7 @@
 🏗 LACE
 Long-Form Artifact Construction Engine
 
-Structured AI for serious documents.
+Make AI work for your company.
 
 Proposals. Technical reports. Compliance documents. Policies. Ontologies.
 If it’s long, structured, and high-stakes — LACE builds it right.

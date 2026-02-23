@@ -1,0 +1,1157 @@
+openapi: 3.1.0
+info:
+  title: LACE Backend API
+  version: "1.0.0-draft"
+  summary: Control-plane, streaming, and pipeline-authoring API for LACE
+  description: |
+    Draft API contract for backend execution and user-authored pipeline definitions.
+
+    Notes:
+    - Mutation endpoints should require `Idempotency-Key`.
+    - `run_events` are append-only and cursored by `seq`.
+    - WebSocket path is documented for contract completeness even though OpenAPI has limited WS semantics.
+servers:
+  - url: https://api.lace.local
+    description: Production
+  - url: http://localhost:8000
+    description: Local development
+
+tags:
+  - name: Artifacts
+  - name: Sources
+  - name: Runs
+  - name: Streaming
+  - name: Compilations
+  - name: Pipeline Authoring
+  - name: Health
+
+paths:
+  /health/live:
+    get:
+      tags: [Health]
+      operationId: getLiveHealth
+      responses:
+        "200":
+          description: Liveness probe status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+
+  /health/ready:
+    get:
+      tags: [Health]
+      operationId: getReadyHealth
+      responses:
+        "200":
+          description: Readiness probe status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+
+  /v1/artifacts:
+    get:
+      tags: [Artifacts]
+      operationId: listArtifacts
+      parameters:
+        - $ref: "#/components/parameters/Limit"
+        - $ref: "#/components/parameters/Cursor"
+      responses:
+        "200":
+          description: Artifact page
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ArtifactListResponse"
+    post:
+      tags: [Artifacts]
+      operationId: createArtifact
+      parameters:
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateArtifactRequest"
+      responses:
+        "201":
+          description: Artifact created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ArtifactResponse"
+
+  /v1/artifacts/{artifact_id}:
+    get:
+      tags: [Artifacts]
+      operationId: getArtifact
+      parameters:
+        - $ref: "#/components/parameters/ArtifactId"
+      responses:
+        "200":
+          description: Full artifact
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ArtifactResponse"
+
+  /v1/artifacts/{artifact_id}/nodes/{node_id}:
+    get:
+      tags: [Artifacts]
+      operationId: getArtifactNode
+      parameters:
+        - $ref: "#/components/parameters/ArtifactId"
+        - $ref: "#/components/parameters/NodeId"
+      responses:
+        "200":
+          description: Node details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NodeResponse"
+    patch:
+      tags: [Artifacts]
+      operationId: patchArtifactNode
+      parameters:
+        - $ref: "#/components/parameters/ArtifactId"
+        - $ref: "#/components/parameters/NodeId"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatchNodeRequest"
+      responses:
+        "200":
+          description: Node updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NodeResponse"
+
+  /v1/uploads/presign:
+    post:
+      tags: [Sources]
+      operationId: createUploadPresign
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PresignUploadRequest"
+      responses:
+        "200":
+          description: Presigned upload details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PresignUploadResponse"
+
+  /v1/artifacts/{artifact_id}/sources:
+    get:
+      tags: [Sources]
+      operationId: listArtifactSources
+      parameters:
+        - $ref: "#/components/parameters/ArtifactId"
+      responses:
+        "200":
+          description: Sources linked to artifact
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SourceListResponse"
+    post:
+      tags: [Sources]
+      operationId: registerArtifactSource
+      parameters:
+        - $ref: "#/components/parameters/ArtifactId"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterSourceRequest"
+      responses:
+        "201":
+          description: Source registered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SourceResponse"
+
+  /v1/runs:
+    post:
+      tags: [Runs]
+      operationId: createRun
+      parameters:
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateRunRequest"
+      responses:
+        "202":
+          description: Run accepted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RunResponse"
+
+  /v1/runs/{run_id}:
+    get:
+      tags: [Runs]
+      operationId: getRun
+      parameters:
+        - $ref: "#/components/parameters/RunId"
+      responses:
+        "200":
+          description: Run status and progress
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RunResponse"
+
+  /v1/runs/{run_id}/cancel:
+    post:
+      tags: [Runs]
+      operationId: cancelRun
+      parameters:
+        - $ref: "#/components/parameters/RunId"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      responses:
+        "202":
+          description: Cancel requested
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RunCommandResponse"
+
+  /v1/runs/{run_id}/retry:
+    post:
+      tags: [Runs]
+      operationId: retryRun
+      parameters:
+        - $ref: "#/components/parameters/RunId"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RetryRunRequest"
+      responses:
+        "202":
+          description: Retry accepted as new run
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RunResponse"
+
+  /v1/runs/{run_id}/events:
+    get:
+      tags: [Runs]
+      operationId: listRunEvents
+      parameters:
+        - $ref: "#/components/parameters/RunId"
+        - $ref: "#/components/parameters/AfterSeq"
+        - $ref: "#/components/parameters/Limit"
+      responses:
+        "200":
+          description: Cursor-based event replay
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RunEventListResponse"
+
+  /v1/runs/{run_id}/events/stream:
+    get:
+      tags: [Streaming]
+      operationId: streamRunEventsSse
+      parameters:
+        - $ref: "#/components/parameters/RunId"
+        - $ref: "#/components/parameters/AfterSeq"
+      responses:
+        "200":
+          description: SSE stream of run events
+          content:
+            text/event-stream:
+              schema:
+                type: string
+
+  /v1/runs/{run_id}/stream:
+    get:
+      tags: [Streaming]
+      operationId: streamRunEventsWebSocket
+      parameters:
+        - $ref: "#/components/parameters/RunId"
+      responses:
+        "101":
+          description: WebSocket protocol upgrade for bidirectional run stream
+
+  /v1/artifacts/{artifact_id}/compilations:
+    post:
+      tags: [Compilations]
+      operationId: createCompilation
+      parameters:
+        - $ref: "#/components/parameters/ArtifactId"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCompilationRequest"
+      responses:
+        "202":
+          description: Compilation requested
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompilationResponse"
+
+  /v1/artifacts/{artifact_id}/compilations/{compilation_id}:
+    get:
+      tags: [Compilations]
+      operationId: getCompilation
+      parameters:
+        - $ref: "#/components/parameters/ArtifactId"
+        - $ref: "#/components/parameters/CompilationId"
+      responses:
+        "200":
+          description: Compilation status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompilationResponse"
+
+  /v1/artifacts/{artifact_id}/compilations/{compilation_id}/download:
+    get:
+      tags: [Compilations]
+      operationId: downloadCompilation
+      parameters:
+        - $ref: "#/components/parameters/ArtifactId"
+        - $ref: "#/components/parameters/CompilationId"
+      responses:
+        "302":
+          description: Redirect to signed MinIO URL
+
+  /v1/step-types:
+    get:
+      tags: [Pipeline Authoring]
+      operationId: listStepTypes
+      responses:
+        "200":
+          description: Registered step types available in builder UI
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StepTypeListResponse"
+
+  /v1/pipelines:
+    get:
+      tags: [Pipeline Authoring]
+      operationId: listPipelines
+      parameters:
+        - $ref: "#/components/parameters/Limit"
+        - $ref: "#/components/parameters/Cursor"
+      responses:
+        "200":
+          description: Pipeline definitions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PipelineListResponse"
+    post:
+      tags: [Pipeline Authoring]
+      operationId: createPipeline
+      parameters:
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePipelineRequest"
+      responses:
+        "201":
+          description: Pipeline created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PipelineResponse"
+
+  /v1/pipelines/{pipeline_id}:
+    get:
+      tags: [Pipeline Authoring]
+      operationId: getPipeline
+      parameters:
+        - $ref: "#/components/parameters/PipelineId"
+      responses:
+        "200":
+          description: Pipeline details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PipelineResponse"
+
+  /v1/pipelines/{pipeline_id}/drafts:
+    get:
+      tags: [Pipeline Authoring]
+      operationId: listPipelineDrafts
+      parameters:
+        - $ref: "#/components/parameters/PipelineId"
+      responses:
+        "200":
+          description: Pipeline drafts
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PipelineDraftListResponse"
+    post:
+      tags: [Pipeline Authoring]
+      operationId: createPipelineDraft
+      parameters:
+        - $ref: "#/components/parameters/PipelineId"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePipelineDraftRequest"
+      responses:
+        "201":
+          description: Pipeline draft created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PipelineDraftResponse"
+
+  /v1/pipeline-drafts/{draft_id}:
+    get:
+      tags: [Pipeline Authoring]
+      operationId: getPipelineDraft
+      parameters:
+        - $ref: "#/components/parameters/DraftId"
+      responses:
+        "200":
+          description: Pipeline draft details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PipelineDraftResponse"
+    patch:
+      tags: [Pipeline Authoring]
+      operationId: patchPipelineDraft
+      parameters:
+        - $ref: "#/components/parameters/DraftId"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatchPipelineDraftRequest"
+      responses:
+        "200":
+          description: Pipeline draft updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PipelineDraftResponse"
+
+  /v1/pipeline-drafts/{draft_id}/validate:
+    post:
+      tags: [Pipeline Authoring]
+      operationId: validatePipelineDraft
+      parameters:
+        - $ref: "#/components/parameters/DraftId"
+      responses:
+        "200":
+          description: Validation report
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PipelineValidationReport"
+
+  /v1/pipeline-drafts/{draft_id}/dry-run:
+    post:
+      tags: [Pipeline Authoring]
+      operationId: dryRunPipelineDraft
+      parameters:
+        - $ref: "#/components/parameters/DraftId"
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                request:
+                  $ref: "#/components/schemas/CreateRunRequest"
+      responses:
+        "200":
+          description: Dry-run report
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PipelineDryRunResponse"
+
+  /v1/pipeline-drafts/{draft_id}/publish:
+    post:
+      tags: [Pipeline Authoring]
+      operationId: publishPipelineDraft
+      parameters:
+        - $ref: "#/components/parameters/DraftId"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PublishPipelineDraftRequest"
+      responses:
+        "201":
+          description: Immutable pipeline version published
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PipelineVersionResponse"
+
+  /v1/pipelines/{pipeline_id}/versions:
+    get:
+      tags: [Pipeline Authoring]
+      operationId: listPipelineVersions
+      parameters:
+        - $ref: "#/components/parameters/PipelineId"
+      responses:
+        "200":
+          description: Published versions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PipelineVersionListResponse"
+
+  /v1/pipelines/{pipeline_id}/aliases/{alias}:
+    put:
+      tags: [Pipeline Authoring]
+      operationId: upsertPipelineAlias
+      parameters:
+        - $ref: "#/components/parameters/PipelineId"
+        - $ref: "#/components/parameters/Alias"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpsertPipelineAliasRequest"
+      responses:
+        "200":
+          description: Alias updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PipelineAliasResponse"
+
+components:
+  parameters:
+    ArtifactId:
+      name: artifact_id
+      in: path
+      required: true
+      schema: { type: string, minLength: 1 }
+    NodeId:
+      name: node_id
+      in: path
+      required: true
+      schema: { type: string, minLength: 1 }
+    RunId:
+      name: run_id
+      in: path
+      required: true
+      schema: { type: string, minLength: 1 }
+    CompilationId:
+      name: compilation_id
+      in: path
+      required: true
+      schema: { type: string, minLength: 1 }
+    PipelineId:
+      name: pipeline_id
+      in: path
+      required: true
+      schema: { type: string, minLength: 1 }
+    DraftId:
+      name: draft_id
+      in: path
+      required: true
+      schema: { type: string, minLength: 1 }
+    Alias:
+      name: alias
+      in: path
+      required: true
+      schema: { type: string, minLength: 1 }
+    Limit:
+      name: limit
+      in: query
+      required: false
+      schema: { type: integer, minimum: 1, maximum: 500, default: 100 }
+    Cursor:
+      name: cursor
+      in: query
+      required: false
+      schema: { type: string }
+    AfterSeq:
+      name: after_seq
+      in: query
+      required: false
+      schema: { type: integer, minimum: 0 }
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: false
+      schema: { type: string, minLength: 1, maxLength: 255 }
+
+  schemas:
+    CursorPage:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items: {}
+        next_cursor:
+          type: string
+
+    HealthResponse:
+      type: object
+      required: [ok, service, timestamp]
+      properties:
+        ok: { type: boolean }
+        service: { type: string }
+        timestamp: { type: string, format: date-time }
+
+    ArtifactSummary:
+      type: object
+      required: [artifact_id, version, artifact_revision, root_node_id, updated_at]
+      properties:
+        artifact_id: { type: string }
+        version: { type: string }
+        artifact_revision: { type: integer, minimum: 1 }
+        root_node_id: { type: string }
+        title: { type: string }
+        updated_at: { type: string, format: date-time }
+
+    ArtifactResponse:
+      type: object
+      required: [artifact]
+      properties:
+        artifact:
+          type: object
+          required: [artifact_id, ir]
+          properties:
+            artifact_id: { type: string }
+            ir:
+              type: object
+              description: Canonical ArtifactIR payload
+            latest_change_event_id: { type: string }
+
+    ArtifactListResponse:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ArtifactSummary"
+        next_cursor: { type: string }
+
+    CreateArtifactRequest:
+      type: object
+      required: [artifact_id]
+      properties:
+        artifact_id: { type: string, minLength: 1 }
+        root_node_id: { type: string, default: root }
+        root_title: { type: string, default: Root }
+        metadata:
+          type: object
+
+    NodeResponse:
+      type: object
+      required: [artifact_id, node]
+      properties:
+        artifact_id: { type: string }
+        node:
+          type: object
+          description: NodeIR payload
+
+    PatchNodeRequest:
+      type: object
+      description: Deterministic UI-side patching for manual edits
+      properties:
+        set_title: { type: string }
+        set_status: { type: string }
+        replace_content_blocks:
+          type: array
+          items:
+            $ref: "#/components/schemas/Block"
+        merge_constraints:
+          type: object
+
+    Block:
+      type: object
+      properties:
+        block_id: { type: string }
+        block_type: { type: string }
+        markdown: { type: string }
+        body: { type: string }
+        meta: { type: object }
+
+    PresignUploadRequest:
+      type: object
+      required: [filename, media_type]
+      properties:
+        artifact_id: { type: string }
+        filename: { type: string }
+        media_type: { type: string }
+        expected_bytes: { type: integer, minimum: 1 }
+
+    PresignUploadResponse:
+      type: object
+      required: [upload_url, object_key, expires_at]
+      properties:
+        upload_url: { type: string, format: uri }
+        object_key: { type: string }
+        required_headers:
+          type: object
+          additionalProperties:
+            type: string
+        expires_at: { type: string, format: date-time }
+
+    RegisterSourceRequest:
+      type: object
+      required: [source_id, object_key, media_type]
+      properties:
+        source_id: { type: string }
+        object_key: { type: string }
+        media_type: { type: string }
+        sha256: { type: string }
+        bytes: { type: integer, minimum: 1 }
+        metadata: { type: object }
+
+    SourceDocument:
+      type: object
+      required: [source_id, artifact_id, object_key, media_type, created_at]
+      properties:
+        source_id: { type: string }
+        artifact_id: { type: string }
+        object_key: { type: string }
+        media_type: { type: string }
+        sha256: { type: string }
+        bytes: { type: integer }
+        metadata: { type: object }
+        created_at: { type: string, format: date-time }
+
+    SourceResponse:
+      type: object
+      required: [source]
+      properties:
+        source:
+          $ref: "#/components/schemas/SourceDocument"
+
+    SourceListResponse:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/SourceDocument"
+
+    PipelineRef:
+      type: object
+      required: [pipeline_id]
+      properties:
+        pipeline_id: { type: string }
+        version: { type: string }
+        alias: { type: string }
+
+    CreateRunRequest:
+      type: object
+      required: [artifact_id, operation, mode, pipeline_ref]
+      properties:
+        artifact_id: { type: string }
+        target_node_id: { type: string }
+        mode:
+          type: string
+          enum: [node, outline_recursive, auto_recursive]
+        operation:
+          type: string
+          enum: [generate, regenerate, expand, enrich, patch, outline_only]
+        pipeline_ref:
+          $ref: "#/components/schemas/PipelineRef"
+        constraints:
+          type: object
+        compiler_targets:
+          type: array
+          items: { type: string }
+        user_prompt:
+          type: string
+        source_inputs:
+          type: array
+          items:
+            anyOf:
+              - type: string
+              - type: object
+        intent_overrides:
+          type: object
+
+    RetryRunRequest:
+      type: object
+      properties:
+        constraints_override: { type: object }
+        operation_override:
+          type: string
+          enum: [generate, regenerate, expand, enrich, patch, outline_only]
+
+    Run:
+      type: object
+      required:
+        [run_id, artifact_id, pipeline_id, status, mode, operation, created_at]
+      properties:
+        run_id: { type: string }
+        artifact_id: { type: string }
+        target_node_id: { type: string }
+        pipeline_id: { type: string }
+        pipeline_version: { type: string }
+        pipeline_alias: { type: string }
+        mode:
+          type: string
+          enum: [node, outline_recursive, auto_recursive]
+        operation:
+          type: string
+          enum: [generate, regenerate, expand, enrich, patch, outline_only]
+        status:
+          type: string
+          enum: [queued, running, succeeded, failed, cancel_requested, cancelled]
+        created_at: { type: string, format: date-time }
+        started_at: { type: string, format: date-time }
+        finished_at: { type: string, format: date-time }
+        progress:
+          type: object
+        metrics:
+          type: object
+        error:
+          type: object
+
+    RunStep:
+      type: object
+      required: [step_id, attempt, status]
+      properties:
+        step_id: { type: string }
+        attempt: { type: integer, minimum: 1 }
+        status:
+          type: string
+          enum: [queued, running, succeeded, failed, skipped]
+        started_at: { type: string, format: date-time }
+        finished_at: { type: string, format: date-time }
+        metrics: { type: object }
+        error: { type: object }
+
+    RunResponse:
+      type: object
+      required: [run]
+      properties:
+        run:
+          $ref: "#/components/schemas/Run"
+        steps:
+          type: array
+          items:
+            $ref: "#/components/schemas/RunStep"
+
+    RunCommandResponse:
+      type: object
+      required: [run_id, command, accepted, requested_at]
+      properties:
+        run_id: { type: string }
+        command:
+          type: string
+          enum: [cancel, retry, pause, resume]
+        accepted: { type: boolean }
+        requested_at: { type: string, format: date-time }
+
+    RunEvent:
+      type: object
+      required: [event_id, run_id, seq, ts, type, payload]
+      properties:
+        event_id: { type: string }
+        run_id: { type: string }
+        artifact_id: { type: string }
+        node_id: { type: string }
+        seq: { type: integer, minimum: 1 }
+        ts: { type: string, format: date-time }
+        type:
+          type: string
+          enum:
+            - run_started
+            - run_completed
+            - run_failed
+            - step_started
+            - step_completed
+            - step_failed
+            - node_start
+            - node_completed
+            - node_failed
+            - node_blocked
+            - node_skip
+            - change_event_applied
+            - metrics_update
+        payload:
+          type: object
+        provenance_refs:
+          type: object
+
+    RunEventListResponse:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/RunEvent"
+        next_after_seq:
+          type: integer
+
+    CreateCompilationRequest:
+      type: object
+      required: [target]
+      properties:
+        target:
+          type: string
+          enum: [md, docx, pdf, owl]
+        revision_no: { type: integer, minimum: 1 }
+
+    Compilation:
+      type: object
+      required: [compilation_id, artifact_id, target, status, created_at]
+      properties:
+        compilation_id: { type: string }
+        artifact_id: { type: string }
+        revision_no: { type: integer }
+        target: { type: string }
+        status:
+          type: string
+          enum: [queued, running, succeeded, failed]
+        media_type: { type: string }
+        bytes: { type: integer }
+        object_key: { type: string }
+        created_at: { type: string, format: date-time }
+        error: { type: object }
+
+    CompilationResponse:
+      type: object
+      required: [compilation]
+      properties:
+        compilation:
+          $ref: "#/components/schemas/Compilation"
+
+    StepType:
+      type: object
+      required: [type_id]
+      properties:
+        type_id: { type: string }
+        version: { type: string }
+        description: { type: string }
+        input_schema: { type: object }
+        output_schema: { type: object }
+        param_schema: { type: object }
+
+    StepTypeListResponse:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/StepType"
+
+    CreatePipelineRequest:
+      type: object
+      required: [pipeline_id]
+      properties:
+        pipeline_id: { type: string }
+        name: { type: string }
+        description: { type: string }
+
+    Pipeline:
+      type: object
+      required: [pipeline_id, created_at, updated_at]
+      properties:
+        pipeline_id: { type: string }
+        name: { type: string }
+        description: { type: string }
+        created_at: { type: string, format: date-time }
+        updated_at: { type: string, format: date-time }
+
+    PipelineResponse:
+      type: object
+      required: [pipeline]
+      properties:
+        pipeline:
+          $ref: "#/components/schemas/Pipeline"
+
+    PipelineListResponse:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Pipeline"
+        next_cursor: { type: string }
+
+    CreatePipelineDraftRequest:
+      type: object
+      properties:
+        base_version: { type: string }
+        draft_document:
+          type: object
+
+    PatchPipelineDraftRequest:
+      type: object
+      properties:
+        draft_document:
+          type: object
+        note:
+          type: string
+
+    PipelineDraft:
+      type: object
+      required: [draft_id, pipeline_id, status, created_at, updated_at]
+      properties:
+        draft_id: { type: string }
+        pipeline_id: { type: string }
+        status:
+          type: string
+          enum: [draft, validated, invalid, published, archived]
+        base_version: { type: string }
+        draft_document:
+          type: object
+        last_validation_report:
+          type: object
+        created_at: { type: string, format: date-time }
+        updated_at: { type: string, format: date-time }
+
+    PipelineDraftResponse:
+      type: object
+      required: [draft]
+      properties:
+        draft:
+          $ref: "#/components/schemas/PipelineDraft"
+
+    PipelineDraftListResponse:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/PipelineDraft"
+
+    PipelineValidationReport:
+      type: object
+      required: [draft_id, ok, errors, warnings]
+      properties:
+        draft_id: { type: string }
+        ok: { type: boolean }
+        errors:
+          type: array
+          items:
+            type: object
+            required: [code, message]
+            properties:
+              code: { type: string }
+              message: { type: string }
+              location: { type: string }
+        warnings:
+          type: array
+          items:
+            type: object
+            required: [code, message]
+            properties:
+              code: { type: string }
+              message: { type: string }
+              location: { type: string }
+
+    PipelineDryRunResponse:
+      type: object
+      required: [draft_id, ok]
+      properties:
+        draft_id: { type: string }
+        ok: { type: boolean }
+        simulated_steps:
+          type: array
+          items:
+            type: object
+        diagnostics:
+          type: array
+          items:
+            type: object
+
+    PublishPipelineDraftRequest:
+      type: object
+      required: [version]
+      properties:
+        version: { type: string, minLength: 1 }
+        alias_updates:
+          type: array
+          items:
+            type: string
+
+    PipelineVersion:
+      type: object
+      required: [pipeline_id, version, published_at]
+      properties:
+        pipeline_id: { type: string }
+        version: { type: string }
+        source_draft_id: { type: string }
+        definition_hash: { type: string }
+        published_at: { type: string, format: date-time }
+        published_by: { type: string }
+
+    PipelineVersionResponse:
+      type: object
+      required: [version]
+      properties:
+        version:
+          $ref: "#/components/schemas/PipelineVersion"
+
+    PipelineVersionListResponse:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/PipelineVersion"
+
+    UpsertPipelineAliasRequest:
+      type: object
+      required: [version]
+      properties:
+        version: { type: string }
+
+    PipelineAliasResponse:
+      type: object
+      required: [pipeline_id, alias, version, updated_at]
+      properties:
+        pipeline_id: { type: string }
+        alias: { type: string }
+        version: { type: string }
+        updated_at: { type: string, format: date-time }

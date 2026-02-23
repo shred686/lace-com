@@ -1,0 +1,156 @@
+schema_version: pipeline.definition.v1
+pipeline_id: lace.GenerateNodeContentPipeline
+version: "1.0.0"
+description: >
+  Generate or regenerate content for a target node using LACE IR, returning a
+  deterministic IR update + compiled outputs.
+
+defaults:
+  retry:
+    max_attempts: 3
+    backoff_ms: 1500
+    retry_on: ["TRANSIENT", "LLM_TIMEOUT", "RATE_LIMIT"]
+  timeouts_ms: 60000
+
+inputs:
+  request: { type: lace.GenerationRequest.v1, ref: pipeline.inputs.request }
+
+outputs:
+  change_event: { type: lace.ChangeEvent.v1, ref: steps.apply.outputs.change_event }
+  updated_ir:    { type: lace.ArtifactIR.v1, ref: steps.apply.outputs.updated_ir }
+  compiled:      { type: lace.CompiledBundle.v1, ref: steps.compile.outputs.bundle }
+  validation:    { type: lace.ValidationReport.v1, ref: steps.validate.outputs.report }
+
+steps:
+  - id: load
+    type: lace.LoadArtifact.v1
+    inputs:
+      request: { type: lace.GenerationRequest.v1, ref: pipeline.inputs.request }
+    outputs:
+      ir: lace.ArtifactIR.v1
+      target_node: lace.ArtifactNodeRef.v1
+    params:
+      lock_scope: node
+      lock_ttl_ms: 300000
+
+  - id: resolve_constraints
+    type: lace.ResolveConstraints.v1
+    inputs:
+      ir: { type: lace.ArtifactIR.v1, ref: steps.load.outputs.ir }
+      request: { type: lace.GenerationRequest.v1, ref: pipeline.inputs.request }
+    outputs:
+      resolved: lace.ResolvedConstraints.v1
+
+  - id: parse_intent
+    type: lace.IntentParser.v1
+    inputs:
+      request: { type: lace.GenerationRequest.v1, ref: pipeline.inputs.request }
+      resolved: { type: lace.ResolvedConstraints.v1, ref: steps.resolve_constraints.outputs.resolved }
+    outputs:
+      intent: lace.IntentParseResponse.v1
+
+  - id: ingest_sources
+    type: lace.SourceIngest.v1
+    inputs:
+      ir: { type: lace.ArtifactIR.v1, ref: steps.load.outputs.ir }
+      request: { type: lace.GenerationRequest.v1, ref: pipeline.inputs.request }
+      intent: { type: lace.IntentParseResponse.v1, ref: steps.parse_intent.outputs.intent }
+    outputs:
+      ingest_report: lace.SourceIngestReport.v1
+
+  - id: select_sources
+    type: lace.SourceSelector.v1
+    inputs:
+      ir: { type: lace.ArtifactIR.v1, ref: steps.load.outputs.ir }
+      request: { type: lace.GenerationRequest.v1, ref: pipeline.inputs.request }
+      intent: { type: lace.IntentParseResponse.v1, ref: steps.parse_intent.outputs.intent }
+      ingest_report: { type: lace.SourceIngestReport.v1, ref: steps.ingest_sources.outputs.ingest_report }
+    outputs:
+      selection: lace.SourceSelectionResponse.v1
+
+  - id: build_context
+    type: lace.ContextBuilder.v1
+    inputs:
+      ir:       { type: lace.ArtifactIR.v1, ref: steps.load.outputs.ir }
+      node:     { type: lace.ArtifactNodeRef.v1, ref: steps.load.outputs.target_node }
+      resolved: { type: lace.ResolvedConstraints.v1, ref: steps.resolve_constraints.outputs.resolved }
+      intent: { type: lace.IntentParseResponse.v1, ref: steps.parse_intent.outputs.intent }
+      source_selection: { type: lace.SourceSelectionResponse.v1, ref: steps.select_sources.outputs.selection }
+      request:  { type: lace.GenerationRequest.v1, ref: pipeline.inputs.request }
+    outputs:
+      strategy_input: lace.StrategyInput.v1
+    params:
+      token_budget: 120000
+
+  - id: select_strategy
+    type: lace.StrategySelector.v1
+    inputs:
+      strategy_input: { type: lace.StrategyInput.v1, ref: steps.build_context.outputs.strategy_input }
+    outputs:
+      plan: lace.StrategyPlan.v1
+
+  - id: llm_call
+    type: lace.LLMCall.v1
+    inputs:
+      strategy_input: { type: lace.StrategyInput.v1, ref: steps.build_context.outputs.strategy_input }
+      plan:           { type: lace.StrategyPlan.v1, ref: steps.select_strategy.outputs.plan }
+    outputs:
+      llm_response: lace.LLMResponse.v1
+    params:
+      provider: openai
+      model: gpt-5
+      response_schema: lace.llm_response.v1
+
+  - id: validate_llm
+    type: lace.ValidateLLMResponse.v1
+    inputs:
+      llm_response: { type: lace.LLMResponse.v1, ref: steps.llm_call.outputs.llm_response }
+      plan: { type: lace.StrategyPlan.v1, ref: steps.select_strategy.outputs.plan }
+    outputs:
+      validated: lace.ValidatedLLMResponse.v1
+    gates:
+      - type: required_keys.v1
+        params:
+          keys: ["validated"]
+
+  - id: apply
+    type: lace.DeterministicApply.v1
+    inputs:
+      ir:         { type: lace.ArtifactIR.v1, ref: steps.load.outputs.ir }
+      node:       { type: lace.ArtifactNodeRef.v1, ref: steps.load.outputs.target_node }
+      validated:  { type: lace.ValidatedLLMResponse.v1, ref: steps.validate_llm.outputs.validated }
+      request:    { type: lace.GenerationRequest.v1, ref: pipeline.inputs.request }
+    outputs:
+      updated_ir: lace.ArtifactIR.v1
+      change_event: lace.ChangeEvent.v1
+    gates:
+      - type: required_keys.v1
+        params:
+          keys: ["updated_ir", "change_event"]
+
+  - id: validate
+    type: lace.ValidationLayer.v1
+    inputs:
+      updated_ir: { type: lace.ArtifactIR.v1, ref: steps.apply.outputs.updated_ir }
+      request:    { type: lace.GenerationRequest.v1, ref: pipeline.inputs.request }
+    outputs:
+      report: lace.ValidationReport.v1
+    gates:
+      - type: required_keys.v1
+        params:
+          keys: ["report"]
+
+  - id: compile
+    type: lace.Compiler.v1
+    inputs:
+      updated_ir: { type: lace.ArtifactIR.v1, ref: steps.apply.outputs.updated_ir }
+      report:     { type: lace.ValidationReport.v1, ref: steps.validate.outputs.report }
+      request:    { type: lace.GenerationRequest.v1, ref: pipeline.inputs.request }
+    outputs:
+      bundle: lace.CompiledBundle.v1
+    params:
+      targets: ["md"]
+    gates:
+      - type: required_keys.v1
+        params:
+          keys: ["bundle"]

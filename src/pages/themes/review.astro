@@ -1,0 +1,67 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const previews = [
+  {
+    id: "midnight",
+    label: "Midnight",
+    note: "Dark, subtle glow, product-first presentation",
+    href: "/themes/midnight"
+  },
+  {
+    id: "blueprint",
+    label: "Blueprint",
+    note: "Crisp systems aesthetic",
+    href: "/themes/blueprint"
+  },
+  {
+    id: "circuit",
+    label: "Circuit",
+    note: "Sharp neon flow-map energy",
+    href: "/themes/circuit"
+  },
+  {
+    id: "forge",
+    label: "Forge",
+    note: "Warm industrial architecture tone",
+    href: "/themes/forge"
+  }
+];
+---
+
+<BaseLayout title="LACE Theme Review" theme="midnight">
+  <main class="review-page">
+    <header class="review-header" data-reveal>
+      <p class="eyebrow">LACE Theme Review</p>
+      <h1>Side-by-Side Variant Comparison</h1>
+      <p>
+        Each panel below is a dedicated route rendering the same landing
+        content with a different visual system.
+      </p>
+      <div class="hero-actions">
+        <a href="/themes/midnight" class="btn btn-primary">Open Midnight</a>
+        <a href="/themes/blueprint" class="btn btn-ghost">Open Blueprint</a>
+        <a href="/themes/circuit" class="btn btn-ghost">Open Circuit</a>
+        <a href="/themes/forge" class="btn btn-ghost">Open Forge</a>
+      </div>
+    </header>
+
+    <section class="preview-grid" data-reveal>
+      {previews.map((preview) => (
+        <article class="preview-card">
+          <div class="preview-head">
+            <h2>{preview.label}</h2>
+            <p>{preview.note}</p>
+            <a href={preview.href} class="btn btn-ghost">Open Full Route</a>
+          </div>
+          <iframe
+            title={`${preview.label} theme preview`}
+            src={preview.href}
+            loading="lazy"
+          >
+          </iframe>
+        </article>
+      ))}
+    </section>
+  </main>
+</BaseLayout>

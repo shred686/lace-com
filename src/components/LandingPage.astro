@@ -1,0 +1,205 @@
+---
+import {
+  deploymentOptions,
+  problemFlowSteps,
+  screenshotPlaceholders,
+  themes,
+  trustItems,
+  useCases,
+  valuePillars,
+  workflowSteps
+} from "../data/landingContent";
+
+interface Props {
+  activeTheme?: string;
+}
+
+const { activeTheme = "midnight" } = Astro.props;
+---
+
+<main class="landing-shell">
+  <div class="ambient-layer" aria-hidden="true"></div>
+
+  <header class="hero panel" data-reveal>
+    <div class="hero-copy-block">
+      <p class="eyebrow">LACE · Long-Form Artifact Construction Engine</p>
+      <h1>Structured AI for serious documents.</h1>
+      <p class="lead">
+        LACE gives AI the context of your company, project, and requirements so
+        it can produce long, high-value documents that actually hold up in real
+        review.
+      </p>
+      <p class="hero-support">
+        Proposals, technical plans, compliance artifacts, and policy documents.
+        If it is high-stakes, LACE builds it right.
+      </p>
+      <div class="hero-actions">
+        <a href="#cta" class="btn btn-primary">Request Early Pilot</a>
+        <a href="#product-previews" class="btn btn-ghost">View Product Flow</a>
+        <a href="/themes/review" class="btn btn-ghost">Side-by-Side Review</a>
+      </div>
+    </div>
+
+    <div class="hero-visual-wrap">
+      <div class="hero-shot">
+        <p class="shot-label">Product Preview Placeholder</p>
+        <h3>LACE Workspace Overview</h3>
+        <p>Drop your first dashboard screenshot or short product animation.</p>
+        <div class="shot-grid">
+          <span>Context Loaded</span>
+          <span>Section Build Active</span>
+          <span>Review Queue</span>
+          <span>Export Ready</span>
+        </div>
+      </div>
+      <div class="float-chip chip-one">Context linked</div>
+      <div class="float-chip chip-two">Output aligned</div>
+    </div>
+  </header>
+
+  <section class="theme-panel panel" data-reveal>
+    <p>Theme routes for direct comparison:</p>
+    <div class="theme-switch">
+      {themes.map((theme) => (
+        <a
+          class="theme-option theme-link"
+          href={`/themes/${theme.id}`}
+          data-active={theme.id === activeTheme ? "true" : "false"}
+        >
+          <span>{theme.label}</span>
+          <small>{theme.note}</small>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="panel problem-journey">
+    <h2>The Problem</h2>
+    <p class="section-intro">
+      Most AI tools are built for chat. Your work is not chat.
+    </p>
+    <p class="section-intro">
+      What teams do today in ChatGPT, Gemini, and commercial chat apps when
+      trying to produce high-stakes deliverables:
+    </p>
+    <div class="problem-flow">
+      {problemFlowSteps.map((item) => (
+        <article class="flow-step" data-reveal>
+          <div class="flow-marker">
+            <span class="flow-index">{item.step}</span>
+          </div>
+          <div class="flow-card">
+            <h3>{item.title}</h3>
+            <p>
+              <strong>You do:</strong> {item.userAction}
+            </p>
+            <p>
+              <strong>What happens:</strong> {item.struggle}
+            </p>
+          </div>
+        </article>
+      ))}
+    </div>
+    <p class="problem-close">
+      This is the core gap: teams need AI to operate inside their real business
+      context and output constraints, not just answer prompts.
+    </p>
+  </section>
+
+  <section class="panel" data-reveal>
+    <h2>What Changes With LACE</h2>
+    <p class="section-intro">
+      Instead of one-off prompts, teams get a document workflow tuned to their
+      real context.
+    </p>
+    <div class="pillars-grid">
+      {valuePillars.map((pillar) => (
+        <article class="pillar-card">
+          <h3>{pillar.title}</h3>
+          <p>{pillar.copy}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="grid-two" data-reveal>
+    <article class="panel">
+      <h2>Where Teams Use It</h2>
+      <ul>
+        {useCases.map((item) => (
+          <li>{item}</li>
+        ))}
+      </ul>
+    </article>
+    <article class="panel">
+      <h2>How Teams Work In LACE</h2>
+      <div class="workflow-grid">
+        {workflowSteps.map((step) => (
+          <article class="step-card">
+            <p class="step-number">{step.step}</p>
+            <h3>{step.title}</h3>
+            <p>{step.description}</p>
+          </article>
+        ))}
+      </div>
+    </article>
+  </section>
+
+  <section id="product-previews" class="panel" data-reveal>
+    <h2>System Screens And Graphics</h2>
+    <p class="section-intro">
+      Placeholders below are ready to swap with actual screenshots and product
+      visuals.
+    </p>
+    <div class="shots-grid">
+      {screenshotPlaceholders.map((shot) => (
+        <article class="shot-card">
+          <div class="shot-placeholder">
+            <span>Screenshot Placeholder</span>
+          </div>
+          <h3>{shot.title}</h3>
+          <p>{shot.caption}</p>
+        </article>
+      ))}
+    </div>
+    <div class="diagram-placeholder">
+      <div>
+        <p class="eyebrow">Graphic Placeholder</p>
+        <h3>Pipeline / Architecture Visual</h3>
+        <p>Space reserved for your flow diagram or motion graphic.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="grid-two" data-reveal>
+    <article class="panel">
+      <h2>Trust And Deployment</h2>
+      <ul>
+        {trustItems.map((item) => (
+          <li>{item}</li>
+        ))}
+      </ul>
+    </article>
+    <article class="panel">
+      <h2>Deployment Options</h2>
+      <ul>
+        {deploymentOptions.map((item) => (
+          <li>{item}</li>
+        ))}
+      </ul>
+    </article>
+  </section>
+
+  <section id="cta" class="cta panel" data-reveal>
+    <h2>Ready To Build Serious Documents With AI?</h2>
+    <p class="section-intro">
+      Bring your context. Keep your standards. Ship high-stakes documents
+      faster.
+    </p>
+    <div class="cta-actions">
+      <a href="#" class="btn btn-primary">Request an Early Pilot</a>
+      <a href="#" class="btn btn-ghost">Schedule a Demo</a>
+      <a href="#" class="btn btn-ghost">Join the Alpha Program</a>
+    </div>
+  </section>
+</main>

@@ -11,6 +11,8 @@ import {
   workflowSteps
 } from "../data/landingContent";
 import heroProductPreview from "../assets/images/lace-screen1.png";
+import whitepaperEnglish from "../assets/docs/lace_enterprise_overview_v2_ENGLISH.pdf";
+import whitepaperSpanish from "../assets/docs/lace_enterprise_overview_v2_SPANISH.pdf";
 
 const baseUrl = import.meta.env.BASE_URL;
 const withBase = (path: string) => `${baseUrl}${path.replace(/^\/+/, "")}`;
@@ -95,7 +97,17 @@ const useCaseIntros: Record<string, string> = {
     </div>
 
     <div class="hero-actions">
-      <a href="#cta" class="btn btn-primary">Request Early Pilot</a>
+      <a href={whitepaperEnglish} class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+        Read the whitepaper
+      </a>
+      <a
+        href={whitepaperSpanish}
+        class="btn btn-primary btn-sm hero-subaction"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Download in Spanish
+      </a>
       <!-- <a href={withBase("/themes/review")} class="btn btn-ghost">
         Side-by-Side Review
       </a> -->

@@ -232,6 +232,8 @@ li {
 }
 
 .hero > .hero-actions {
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
   width: 100%;
   margin-top: 0;
@@ -244,6 +246,13 @@ li {
   font-weight: 700;
   text-decoration: none;
   transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.btn-sm {
+  font-size: 0.86rem;
+  font-weight: 600;
+  padding: 0.42rem 0.72rem;
+  border-radius: 0.62rem;
 }
 
 .btn:hover {
@@ -260,6 +269,10 @@ li {
   border-color: var(--line);
   color: var(--text);
   background: color-mix(in srgb, var(--bg-alt) 62%, transparent);
+}
+
+.hero-actions .hero-subaction {
+  width: max-content;
 }
 
 .hero-visual-wrap {
@@ -1137,5 +1150,9 @@ li {
   .btn {
     width: 100%;
     text-align: center;
+  }
+
+  .hero-actions .hero-subaction {
+    width: auto;
   }
 }

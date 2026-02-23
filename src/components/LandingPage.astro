@@ -86,6 +86,29 @@ const useCaseIntros: Record<string, string> = {
       <h1>Make AI work for your company.</h1>
     </div>
 
+    <div class="hero-visual-wrap">
+      <div class="hero-shot" data-lightbox-trigger style="cursor:pointer">
+        <Image
+          src={heroProductPreview}
+          alt="LACE product preview"
+          class="hero-shot-image"
+          widths={[480, 720, 960]}
+          sizes="(max-width: 700px) 92vw, (max-width: 1180px) 460px, 460px"
+        />
+      </div>
+    </div>
+
+    <dialog class="lightbox" data-lightbox>
+      <button class="lightbox-close" aria-label="Close">&times;</button>
+      <Image
+        src={heroProductPreview}
+        alt="LACE product preview"
+        class="lightbox-image"
+        widths={[960, 1440, 1920]}
+        sizes="94vw"
+      />
+    </dialog>
+
     <div class="hero-copy-block">
       <p class="lead">
         Give AI the full context of your company, project, and requirements.
@@ -108,21 +131,6 @@ const useCaseIntros: Record<string, string> = {
       >
         Download in Spanish
       </a>
-      <!-- <a href={withBase("/themes/review")} class="btn btn-ghost">
-        Side-by-Side Review
-      </a> -->
-    </div>
-
-    <div class="hero-visual-wrap">
-      <div class="hero-shot">
-        <Image
-          src={heroProductPreview}
-          alt="LACE product preview"
-          class="hero-shot-image"
-          widths={[480, 720, 960]}
-          sizes="(max-width: 700px) 92vw, (max-width: 1180px) 460px, 460px"
-        />
-      </div>
     </div>
   </header>
 
@@ -468,6 +476,17 @@ const useCaseIntros: Record<string, string> = {
 
         activateUseCase(useCaseTabs[nextIndex].dataset.caseId!, true);
       });
+    });
+  }
+
+  // Lightbox
+  const lightboxTrigger = document.querySelector('[data-lightbox-trigger]');
+  const lightbox = document.querySelector<HTMLDialogElement>('[data-lightbox]');
+  if (lightboxTrigger && lightbox) {
+    lightboxTrigger.addEventListener('click', () => lightbox.showModal());
+    lightbox.querySelector('.lightbox-close')?.addEventListener('click', () => lightbox.close());
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) lightbox.close();
     });
   }
 </script>

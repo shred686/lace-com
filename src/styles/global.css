@@ -131,7 +131,7 @@ li {
 .landing-shell {
   width: min(1180px, calc(100% - 2rem));
   margin: 0 auto;
-  padding: 2.25rem 0 6rem;
+  padding: 0 0 6rem;
   position: relative;
 }
 
@@ -160,11 +160,14 @@ li {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: clamp(1.5rem, 3vw, 2.5rem);
-  min-height: 100svh;
-  padding: clamp(2.4rem, 5vw, 3.8rem) clamp(1.2rem, 3vw, 2.2rem);
+  gap: clamp(1rem, 2vw, 1.5rem);
+  height: 100svh;
+  max-height: 100svh;
+  margin-top: 0;
+  padding: clamp(0.8rem, 1.5vw, 1.2rem) clamp(1.2rem, 3vw, 2.2rem);
   position: relative;
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 .hero::before {
@@ -276,9 +279,11 @@ li {
 }
 
 .hero-visual-wrap {
-  min-height: 260px;
   display: grid;
   place-items: center;
+  min-height: 0;
+  flex-shrink: 1;
+  overflow: hidden;
 }
 
 .hero-shot {
@@ -294,6 +299,45 @@ li {
   width: 100%;
   height: auto;
   border-radius: 0.72rem;
+}
+
+.lightbox {
+  border: none;
+  background: transparent;
+  padding: 0;
+  max-width: 94vw;
+  max-height: 94vh;
+  width: auto;
+  height: auto;
+  position: fixed;
+  inset: 0;
+  margin: auto;
+}
+
+.lightbox::backdrop {
+  background: rgba(0, 0, 0, 0.85);
+}
+
+.lightbox-image {
+  display: block;
+  max-width: 94vw;
+  max-height: 90vh;
+  width: auto;
+  height: auto;
+  border-radius: 0.5rem;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: -2rem;
+  right: -0.5rem;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 2rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0.25rem;
 }
 
 .shot-label {

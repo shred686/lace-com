@@ -1,4 +1,5 @@
 ---
+import { Image } from "astro:assets";
 import {
   documentSources,
   deploymentOptions,
@@ -9,6 +10,7 @@ import {
   valuePillars,
   workflowSteps
 } from "../data/landingContent";
+import heroProductPreview from "../assets/images/lace-screen1.png";
 
 const baseUrl = import.meta.env.BASE_URL;
 const withBase = (path: string) => `${baseUrl}${path.replace(/^\/+/, "")}`;
@@ -29,40 +31,38 @@ const withBase = (path: string) => `${baseUrl}${path.replace(/^\/+/, "")}`;
   <div class="ambient-layer" aria-hidden="true"></div>
 
   <header class="hero panel" data-reveal>
-    <div class="hero-copy-block">
+    <div class="hero-head">
       <p class="eyebrow">LACE · Long-Form Artifact Construction Engine</p>
       <h1>Make AI work for your company.</h1>
+    </div>
+
+    <div class="hero-copy-block">
       <p class="lead">
-        Give AI the context of your company, project, and requirements so
-        it can produce high-value documents that actually hold up in real
-        review.
+        Give AI the full context of your company, project, and requirements.
       </p>
       <p class="hero-support">
-        Proposals, technical plans, compliance artifacts, and policy documents.
-        If it is high-stakes, LACE builds it right.
+        Effectively generate valuable documents that hold up to real review.<br />
+        Policy, reports, proposals - LACE builds it right.
       </p>
-      <div class="hero-actions">
-        <a href="#cta" class="btn btn-primary">Request Early Pilot</a>
-        <a href="#product-previews" class="btn btn-ghost">View Product Flow</a>
-        <!-- <a href={withBase("/themes/review")} class="btn btn-ghost">
-          Side-by-Side Review
-        </a> -->
-      </div>
+    </div>
+
+    <div class="hero-actions">
+      <a href="#cta" class="btn btn-primary">Request Early Pilot</a>
+      <!-- <a href={withBase("/themes/review")} class="btn btn-ghost">
+        Side-by-Side Review
+      </a> -->
     </div>
 
     <div class="hero-visual-wrap">
       <div class="hero-shot">
-        <p class="shot-label">Product Preview Placeholder</p>
-        <h3>LACE Workspace Overview</h3>
-        <p>Drop your first dashboard screenshot or short product animation.</p>
-        <div class="shot-grid">
-          <span>Context Loaded</span>
-          <span>Section Build Active</span>
-          <span>Review Queue</span>
-          <span>Export Ready</span>
-        </div>
+        <Image
+          src={heroProductPreview}
+          alt="LACE product preview"
+          class="hero-shot-image"
+          widths={[480, 720, 960]}
+          sizes="(max-width: 700px) 92vw, (max-width: 1180px) 460px, 460px"
+        />
       </div>
-      <div class="float-chip chip-two">Output aligned</div>
     </div>
   </header>
 

@@ -22,7 +22,7 @@ This repository includes a workflow at `.github/workflows/deploy.yml` that build
 
 ### URL behavior
 
-- During GitHub Actions deploy builds, the Astro `base` path is set to `/l/ace-com/`.
+- During GitHub Actions deploy builds, the Astro `base` path is set to `/lace-com/`.
 - During local development (`npm run dev`), the `base` path remains `/`.
 - Override defaults with environment variables:
   - `SITE_URL` (example: `https://example.com`)

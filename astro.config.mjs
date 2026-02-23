@@ -5,7 +5,7 @@ const [owner, repo] = repository ? repository.split("/") : [];
 
 const base =
   process.env.BASE_PATH ||
-  (process.env.GITHUB_ACTIONS === "true" ? "/l/ace-com/" : "/");
+  (process.env.GITHUB_ACTIONS === "true" ? "/lace-com/" : "/");
 
 const site =
   process.env.SITE_URL ||

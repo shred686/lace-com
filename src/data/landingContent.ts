@@ -66,8 +66,8 @@ export const valuePillars = [
     copy: "Keep style, terminology, and section quality aligned across the entire document, not just one page."
   },
   {
-    title: "Review-Ready Output",
-    copy: "Regenerate targeted sections, compare changes, and move faster through stakeholder and compliance review."
+    title: "Grounded, Verifiable Output",
+    copy: "LACE is designed to reduce hallucinations by grounding writing in your real source documents, checking claims against available evidence, and producing citation-ready sections for review."
   }
 ];
 

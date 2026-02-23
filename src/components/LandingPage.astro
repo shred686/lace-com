@@ -10,14 +10,20 @@ import {
   workflowSteps
 } from "../data/landingContent";
 
-interface Props {
-  activeTheme?: string;
-}
-
-const { activeTheme = "midnight" } = Astro.props;
 const baseUrl = import.meta.env.BASE_URL;
 const withBase = (path: string) => `${baseUrl}${path.replace(/^\/+/, "")}`;
 ---
+
+<div class="theme-switcher">
+  <button class="theme-dropdown-toggle" aria-haspopup="listbox" aria-expanded="false">
+    Switch theme ▾
+  </button>
+  <ul class="theme-dropdown" role="listbox">
+    {themes.map((theme) => (
+      <li role="option" data-theme-id={theme.id}>{theme.label}</li>
+    ))}
+  </ul>
+</div>
 
 <main class="landing-shell">
   <div class="ambient-layer" aria-hidden="true"></div>
@@ -56,12 +62,11 @@ const withBase = (path: string) => `${baseUrl}${path.replace(/^\/+/, "")}`;
           <span>Export Ready</span>
         </div>
       </div>
-      <div class="float-chip chip-one">Context linked</div>
       <div class="float-chip chip-two">Output aligned</div>
     </div>
   </header>
 
-  <section class="theme-panel panel" data-reveal>
+  <!-- <section class="theme-panel panel" data-reveal>
     <p>Theme routes for direct comparison:</p>
     <div class="theme-switch">
       {themes.map((theme) => (
@@ -75,7 +80,7 @@ const withBase = (path: string) => `${baseUrl}${path.replace(/^\/+/, "")}`;
         </a>
       ))}
     </div>
-  </section>
+  </section> -->
 
   <section class="panel problem-journey">
     <h2>The Problem</h2>
@@ -207,3 +212,39 @@ const withBase = (path: string) => `${baseUrl}${path.replace(/^\/+/, "")}`;
     </div>
   </section>
 </main>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('.theme-dropdown-toggle');
+  const menu = document.querySelector<HTMLUListElement>('.theme-dropdown');
+  if (toggle && menu) {
+    const currentTheme = () => document.documentElement.getAttribute('data-theme') || 'circuit';
+
+    function markActive() {
+      menu!.querySelectorAll('li').forEach((li) => {
+        li.setAttribute('aria-selected', li.dataset.themeId === currentTheme() ? 'true' : 'false');
+      });
+    }
+    markActive();
+
+    toggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const open = menu!.getAttribute('data-open') === 'true';
+      menu!.setAttribute('data-open', open ? 'false' : 'true');
+      toggle.setAttribute('aria-expanded', open ? 'false' : 'true');
+    });
+
+    menu.addEventListener('click', (e) => {
+      const li = (e.target as HTMLElement).closest<HTMLLIElement>('li[data-theme-id]');
+      if (!li) return;
+      document.documentElement.setAttribute('data-theme', li.dataset.themeId!);
+      markActive();
+      menu!.setAttribute('data-open', 'false');
+      toggle.setAttribute('aria-expanded', 'false');
+    });
+
+    document.addEventListener('click', () => {
+      menu!.setAttribute('data-open', 'false');
+      toggle.setAttribute('aria-expanded', 'false');
+    });
+  }
+</script>

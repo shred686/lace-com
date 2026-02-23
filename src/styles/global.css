@@ -287,6 +287,65 @@ li {
   right: 2%;
 }
 
+/* Fixed theme switcher – top right of viewport */
+.theme-switcher {
+  position: fixed;
+  top: 1rem;
+  right: 1.5rem;
+  z-index: 900;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+.theme-dropdown-toggle {
+  all: unset;
+  font-size: 0.76rem;
+  padding: 0.34rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--panel-strong) 92%, transparent);
+  color: var(--accent);
+  cursor: pointer;
+  white-space: nowrap;
+  backdrop-filter: blur(8px);
+}
+
+.theme-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 0.4rem);
+  right: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0.3rem 0;
+  min-width: 10rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--line);
+  background: var(--panel-strong);
+  backdrop-filter: blur(8px);
+}
+
+.theme-dropdown[data-open="true"] {
+  display: block;
+}
+
+.theme-dropdown li {
+  padding: 0.45rem 0.75rem;
+  font-size: 0.78rem;
+  cursor: pointer;
+  color: var(--text);
+  transition: background 0.15s;
+}
+
+.theme-dropdown li:hover {
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+  color: var(--accent);
+}
+
+.theme-dropdown li[aria-selected="true"] {
+  color: var(--accent);
+  font-weight: 600;
+}
+
 .chip-two {
   bottom: 8%;
   left: 5%;

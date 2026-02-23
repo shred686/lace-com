@@ -4,9 +4,9 @@ import {
   documentSources,
   deploymentOptions,
   problemFlowSteps,
-  screenshotPlaceholders,
   themes,
   trustItems,
+  useCases,
   valuePillars,
   workflowSteps
 } from "../data/landingContent";
@@ -14,6 +14,54 @@ import heroProductPreview from "../assets/images/lace-screen1.png";
 
 const baseUrl = import.meta.env.BASE_URL;
 const withBase = (path: string) => `${baseUrl}${path.replace(/^\/+/, "")}`;
+const useCaseIntros: Record<string, string> = {
+  "financial-filings":
+    "Financial filings demand precise language, strict consistency, and fast updates when numbers move. LACE keeps long reports coherent while making controlled AI-assisted revisions safer and easier to review.",
+  "enterprise-policy":
+    "Enterprise policy sets grow fast and become hard to keep aligned across teams and departments. LACE helps maintain one stable language system and updates policies without breaking related sections.",
+  "systems-engineering":
+    "Systems engineering documents are deeply interconnected and sensitive to requirement changes. LACE supports deterministic updates with traceability so AI can assist without destabilizing core specs.",
+  "government-proposals":
+    "Government proposals require strict compliance and synchronized messaging across many volumes. LACE brings structured retrieval, controlled generation, and repeatable updates to make AI usable in proposal operations.",
+  "legal-contracts":
+    "Contract drafting and redlining often involves repetitive edits across versions and clause sets. LACE applies AI in a controlled way so legal teams can revise faster while preserving consistency and reasoning.",
+  "legal-compliance":
+    "Compliance documentation must stay uniform across audits, controls, and policy narratives. LACE stabilizes AI-generated updates so teams can respond to regulatory change without rewriting everything manually.",
+  "legal-governance":
+    "Governance documents need precise language and dependable formatting for executive and board use. LACE keeps updates structured and consistent while reducing manual reconciliation across related files.",
+  "legal-risk":
+    "Legal risk memos require fast synthesis of incident details into clear decision-ready assessments. LACE turns scattered inputs into structured outputs and applies AI with repeatable, reviewable controls.",
+  "hr-policy":
+    "HR policy libraries evolve constantly with legal, cultural, and operational updates. LACE helps teams roll out consistent policy revisions while keeping tone and compliance aligned across documents.",
+  "hr-job-architecture":
+    "Job architecture content must be standardized to reduce confusion and legal exposure. LACE enables scalable, consistent role documentation with controlled AI support across levels and functions.",
+  "hr-performance":
+    "Performance and promotion documents need consistency while still reflecting department context. LACE provides structured templates and stable regeneration so AI improves speed without lowering review quality.",
+  "hr-reporting":
+    "HR reporting depends on turning raw workforce data into clear executive narrative. LACE helps produce repeatable, coherent reporting artifacts with AI grounded in structured source context.",
+  "finance-reports":
+    "Finance narratives change as numbers shift, but quality and consistency cannot slip. LACE keeps quarterly and annual documents synchronized and makes AI-assisted updates controlled and auditable.",
+  "finance-budget-justification":
+    "Budget justification requires defensible narrative tied directly to changing assumptions and figures. LACE helps finance teams regenerate only what changed while preserving document integrity and rationale.",
+  "finance-audit-packages":
+    "Audit preparation demands consistent control language and precise supporting explanations. LACE reduces manual consolidation and keeps AI-generated updates stable through review cycles.",
+  "finance-vendor-analysis":
+    "Vendor analysis often spans fragmented inputs and inconsistent business-case framing. LACE standardizes comparison narratives and applies AI in a way that is easier to trust and approve.",
+  "ops-sop":
+    "Operations teams need SOPs that are standardized, current, and audit-ready. LACE turns process inputs into consistent procedures and supports reliable updates as workflows evolve.",
+  "ops-incident-reports":
+    "Incident reporting requires clear structure, traceability, and fast turnaround under pressure. LACE helps operations teams produce consistent post-incident documentation with controlled AI assistance.",
+  "ops-knowledge-base":
+    "Critical operational knowledge is often trapped in meetings, chats, and email threads. LACE converts that sprawl into durable documentation with stable AI-assisted organization and upkeep.",
+  "sales-rfp":
+    "Proposal and RFP workflows require speed, compliance, and consistent messaging across sections. LACE enables reusable response patterns and controlled AI generation for higher-quality submissions.",
+  "sales-case-studies":
+    "Case studies and white papers require long-form narrative polish from mixed project inputs. LACE helps teams produce coherent market-ready content while keeping voice and evidence aligned.",
+  "sales-enablement":
+    "Sales enablement assets need frequent updates across industries, competitors, and audiences. LACE keeps core messaging consistent while generating targeted variants with stable AI workflows.",
+  "training-certification":
+    "Training and certification programs rely on consistent terminology across many learning artifacts. LACE supports repeatable AI-assisted updates so materials stay aligned as standards and curricula evolve."
+};
 ---
 
 <div class="theme-switcher">
@@ -65,6 +113,112 @@ const withBase = (path: string) => `${baseUrl}${path.replace(/^\/+/, "")}`;
       </div>
     </div>
   </header>
+
+  <section class="panel lace-intro" data-reveal>
+    <h2>What is LACE?</h2>
+    <p class="section-intro">
+      LACE helps teams create and maintain long, important documents -
+      intelligently.
+    </p>
+    <p class="section-intro">
+      Most AI tools can write a page. But real work lives in 50-200 page
+      documents - proposals, technical plans, compliance reports, policy
+      manuals - where sections depend on each other and small changes ripple
+      everywhere.
+    </p>
+    <p class="section-intro">
+      LACE connects to your corporate knowledge base - policies, prior reports,
+      standards, internal language - so documents are not just written. They
+      are informed.
+    </p>
+    <p class="section-intro upload-label">Upload:</p>
+    <ul class="upload-list">
+      <li>SharePoint drives</li>
+      <li>Department folders</li>
+      <li>Prior PDFs</li>
+      <li>Policy archives</li>
+      <li>Email archives</li>
+      <li>Meeting minutes</li>
+    </ul>
+    <p class="upload-cta">
+      Generate consistent, organization-wide documents.
+    </p>
+    <p class="intro-emphasis">
+      LACE lets you generate long, coherent documents that go beyond the limits
+      of commercial AI tools like ChatGPT, Gemini, Grok, Claude, and more.
+    </p>
+  </section>
+
+  <section id="use-cases" class="panel use-cases" data-reveal>
+    <p class="eyebrow">Use Cases</p>
+    <h2>Who LACE Works For</h2>
+    <p class="section-intro">
+      Pick a domain to see where LACE is strongest for long, high-stakes
+      document workflows.
+    </p>
+    <div class="use-case-layout">
+      <div class="use-case-tabs" role="tablist" aria-orientation="vertical" data-use-case-tabs>
+        {useCases.map((useCase, index) => (
+          <button
+            type="button"
+            class="use-case-tab"
+            role="tab"
+            id={`tab-${useCase.id}`}
+            aria-controls={`panel-${useCase.id}`}
+            aria-selected={index === 0 ? "true" : "false"}
+            tabindex={index === 0 ? "0" : "-1"}
+            data-case-id={useCase.id}
+          >
+            {useCase.tabTitle}
+          </button>
+        ))}
+      </div>
+      <div class="use-case-panels">
+        {useCases.map((useCase, index) => (
+          <article
+            class="use-case-panel"
+            role="tabpanel"
+            id={`panel-${useCase.id}`}
+            aria-labelledby={`tab-${useCase.id}`}
+            data-case-panel={useCase.id}
+            hidden={index !== 0}
+          >
+            <h3>{useCase.heading}</h3>
+            <p class="use-case-intro">
+              {useCaseIntros[useCase.id] ??
+                "This workflow involves long, interdependent documentation with frequent updates and strict quality constraints. LACE applies controlled AI generation to reduce manual effort while keeping structure, tone, and traceability stable."}
+            </p>
+            <div class="use-case-columns">
+              <section class="use-case-column">
+                <p class="use-case-label">Documents</p>
+                <ul>
+                  {useCase.documents.map((item) => (
+                    <li>{item}</li>
+                  ))}
+                </ul>
+              </section>
+              <section class="use-case-column">
+                <p class="use-case-label">Common Challenges</p>
+                <ul>
+                  {useCase.problems.map((item) => (
+                    <li>{item}</li>
+                  ))}
+                </ul>
+              </section>
+              <section class="use-case-column">
+                <p class="use-case-label">How LACE Fits</p>
+                <ul>
+                  {useCase.laceFit.map((item) => (
+                    <li>{item}</li>
+                  ))}
+                </ul>
+              </section>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
 
   <!-- <section class="theme-panel panel" data-reveal>
     <p>Theme routes for direct comparison:</p>
@@ -131,6 +285,40 @@ const withBase = (path: string) => `${baseUrl}${path.replace(/^\/+/, "")}`;
     </div>
   </section>
 
+  <section class="panel retrieval-section" data-reveal>
+    <p class="eyebrow">Retrieval &amp; Search</p>
+    <h2>Smarter Retrieval. Real Search.</h2>
+    <p class="section-intro">
+      Legacy systems rely on keyword matching. If the exact word is not there,
+      you get nothing.
+    </p>
+    <p class="search-query">
+      Search term: <span class="search-term">cat</span>
+    </p>
+    <div class="search-compare">
+      <article class="search-card search-card-legacy">
+        <h3>Legacy System</h3>
+        <p class="search-label">Corpus entry</p>
+        <p class="search-snippet">"A furry feline creature..."</p>
+        <p class="search-result search-result-miss">No match</p>
+      </article>
+      <article class="search-card search-card-lace">
+        <h3>LACE</h3>
+        <p class="search-label">Corpus entry</p>
+        <p class="search-snippet">"A furry feline creature..."</p>
+        <p class="search-result search-result-hit">Match found</p>
+      </article>
+    </div>
+    <p class="section-intro retrieval-close">
+      Because LACE does not just match words. It understands meaning.
+    </p>
+    <ul class="retrieval-benefits">
+      <li>Fewer missed connections</li>
+      <li>Better reuse of institutional knowledge</li>
+      <li>Smarter documents built on real context</li>
+    </ul>
+  </section>
+
   <section class="grid-two" data-reveal>
     <article class="panel">
       <h2>Supported Document Sources</h2>
@@ -159,32 +347,6 @@ const withBase = (path: string) => `${baseUrl}${path.replace(/^\/+/, "")}`;
         ))}
       </div>
     </article>
-  </section>
-
-  <section id="product-previews" class="panel" data-reveal>
-    <h2>System Screens And Graphics</h2>
-    <p class="section-intro">
-      Placeholders below are ready to swap with actual screenshots and product
-      visuals.
-    </p>
-    <div class="shots-grid">
-      {screenshotPlaceholders.map((shot) => (
-        <article class="shot-card">
-          <div class="shot-placeholder">
-            <span>Screenshot Placeholder</span>
-          </div>
-          <h3>{shot.title}</h3>
-          <p>{shot.caption}</p>
-        </article>
-      ))}
-    </div>
-    <div class="diagram-placeholder">
-      <div>
-        <p class="eyebrow">Graphic Placeholder</p>
-        <h3>Pipeline / Architecture Visual</h3>
-        <p>Space reserved for your flow diagram or motion graphic.</p>
-      </div>
-    </div>
   </section>
 
   <section class="grid-two" data-reveal>
@@ -252,6 +414,48 @@ const withBase = (path: string) => `${baseUrl}${path.replace(/^\/+/, "")}`;
     document.addEventListener('click', () => {
       menu!.setAttribute('data-open', 'false');
       toggle.setAttribute('aria-expanded', 'false');
+    });
+  }
+
+  const useCaseTabs = Array.from(
+    document.querySelectorAll<HTMLButtonElement>('.use-case-tab')
+  );
+  const useCasePanels = Array.from(
+    document.querySelectorAll<HTMLElement>('.use-case-panel')
+  );
+
+  if (useCaseTabs.length && useCasePanels.length) {
+    const activateUseCase = (caseId: string, moveFocus = false) => {
+      useCaseTabs.forEach((tab) => {
+        const isActive = tab.dataset.caseId === caseId;
+        tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        tab.setAttribute('tabindex', isActive ? '0' : '-1');
+        if (moveFocus && isActive) tab.focus();
+      });
+
+      useCasePanels.forEach((panel) => {
+        panel.hidden = panel.dataset.casePanel !== caseId;
+      });
+    };
+
+    useCaseTabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => {
+        activateUseCase(tab.dataset.caseId!);
+      });
+
+      tab.addEventListener('keydown', (event) => {
+        const key = event.key;
+        if (!['ArrowUp', 'ArrowDown', 'Home', 'End'].includes(key)) return;
+        event.preventDefault();
+
+        let nextIndex = index;
+        if (key === 'ArrowDown') nextIndex = (index + 1) % useCaseTabs.length;
+        if (key === 'ArrowUp') nextIndex = (index - 1 + useCaseTabs.length) % useCaseTabs.length;
+        if (key === 'Home') nextIndex = 0;
+        if (key === 'End') nextIndex = useCaseTabs.length - 1;
+
+        activateUseCase(useCaseTabs[nextIndex].dataset.caseId!, true);
+      });
     });
   }
 </script>

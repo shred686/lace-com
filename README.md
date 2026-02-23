@@ -22,8 +22,8 @@ This repository includes a workflow at `.github/workflows/deploy.yml` that build
 
 ### URL behavior
 
-- For project pages (`owner/repo`), the Astro `base` path is auto-set to `/<repo>` during GitHub Actions builds.
-- For user/org pages (`owner/owner.github.io`), the `base` path resolves to `/`.
+- During GitHub Actions deploy builds, the Astro `base` path is set to `/l/ace-com/`.
+- During local development (`npm run dev`), the `base` path remains `/`.
 - Override defaults with environment variables:
   - `SITE_URL` (example: `https://example.com`)
   - `BASE_PATH` (example: `/lace-com`)

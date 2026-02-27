@@ -10,7 +10,9 @@ import {
   valuePillars,
   workflowSteps
 } from "../data/landingContent";
-import heroProductPreview from "../assets/images/lace-screen1.png";
+import heroScreen1 from "../assets/images/lace-screen1.png";
+import heroScreen2 from "../assets/images/lace-screen2.png";
+import heroScreen3 from "../assets/images/lace-screen3.png";
 import whitepaperEnglish from "../assets/docs/lace_enterprise_overview_v2_ENGLISH.pdf";
 import whitepaperSpanish from "../assets/docs/lace_enterprise_overview_v2_SPANISH.pdf";
 
@@ -87,21 +89,43 @@ const useCaseIntros: Record<string, string> = {
     </div>
 
     <div class="hero-visual-wrap">
-      <div class="hero-shot" data-lightbox-trigger style="cursor:pointer">
-        <Image
-          src={heroProductPreview}
-          alt="LACE product preview"
-          class="hero-shot-image"
-          widths={[480, 720, 960]}
-          sizes="(max-width: 700px) 92vw, (max-width: 1180px) 460px, 460px"
-        />
+      <div class="hero-shot-stack" aria-label="LACE product screenshots">
+        <div class="hero-shot hero-shot-back hero-shot-left" aria-hidden="true">
+          <Image
+            src={heroScreen1}
+            alt=""
+            class="hero-shot-image"
+            widths={[420, 620, 860]}
+            sizes="(max-width: 700px) 72vw, (max-width: 1180px) 360px, 360px"
+          />
+        </div>
+
+        <div class="hero-shot hero-shot-main" data-lightbox-trigger>
+          <Image
+            src={heroScreen2}
+            alt="LACE product preview"
+            class="hero-shot-image"
+            widths={[560, 840, 1120]}
+            sizes="(max-width: 700px) 84vw, (max-width: 1180px) 500px, 500px"
+          />
+        </div>
+
+        <div class="hero-shot hero-shot-back hero-shot-right" aria-hidden="true">
+          <Image
+            src={heroScreen3}
+            alt=""
+            class="hero-shot-image"
+            widths={[420, 620, 860]}
+            sizes="(max-width: 700px) 72vw, (max-width: 1180px) 360px, 360px"
+          />
+        </div>
       </div>
     </div>
 
     <dialog class="lightbox" data-lightbox>
       <button class="lightbox-close" aria-label="Close">&times;</button>
       <Image
-        src={heroProductPreview}
+        src={heroScreen2}
         alt="LACE product preview"
         class="lightbox-image"
         widths={[960, 1440, 1920]}

@@ -279,19 +279,31 @@ li {
 }
 
 .hero-visual-wrap {
-  display: grid;
-  place-items: center;
-  min-height: 0;
+  width: min(100%, 960px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: clamp(280px, 34vw, 420px);
   flex-shrink: 1;
-  overflow: hidden;
+  overflow: visible;
+}
+
+.hero-shot-stack {
+  position: relative;
+  width: min(100%, 860px);
+  min-height: clamp(260px, 30vw, 390px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .hero-shot {
-  width: min(460px, 100%);
+  width: min(520px, 88vw);
   border: 1px solid color-mix(in srgb, var(--line) 88%, var(--accent));
   border-radius: 1rem;
-  padding: 1rem;
+  padding: 0.9rem;
   background: linear-gradient(160deg, color-mix(in srgb, var(--bg-alt) 80%, transparent), color-mix(in srgb, var(--panel) 80%, transparent));
+  box-shadow: 0 18px 46px color-mix(in srgb, #000 18%, transparent);
 }
 
 .hero-shot-image {
@@ -299,6 +311,35 @@ li {
   width: 100%;
   height: auto;
   border-radius: 0.72rem;
+}
+
+.hero-shot-main {
+  position: relative;
+  z-index: 3;
+  cursor: pointer;
+  box-shadow: 0 28px 56px color-mix(in srgb, #000 26%, transparent);
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+
+.hero-shot-main:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 34px 64px color-mix(in srgb, #000 32%, transparent);
+}
+
+.hero-shot-back {
+  position: absolute;
+  width: min(380px, 68vw);
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.95;
+}
+
+.hero-shot-left {
+  transform: translateX(-42%) translateY(3%) rotate(-9deg) scale(0.9);
+}
+
+.hero-shot-right {
+  transform: translateX(42%) translateY(-3%) rotate(9deg) scale(0.9);
 }
 
 .lightbox {
@@ -1170,6 +1211,41 @@ li {
   .landing-shell {
     width: calc(100% - 1rem);
     padding: 1.4rem 0 3.4rem;
+  }
+
+  .hero {
+    min-height: 100svh;
+    max-height: none;
+    height: auto;
+    padding: 1.4rem 1rem;
+  }
+
+  .hero-visual-wrap {
+    width: 100%;
+    min-height: clamp(360px, 90vw, 520px);
+    margin-top: 0.3rem;
+  }
+
+  .hero-shot-stack {
+    width: 100%;
+    min-height: clamp(340px, 82vw, 500px);
+  }
+
+  .hero-shot {
+    width: min(84vw, 420px);
+    padding: 0.7rem;
+  }
+
+  .hero-shot-back {
+    width: min(72vw, 340px);
+  }
+
+  .hero-shot-left {
+    transform: translateY(-34%) rotate(-6deg) scale(0.9);
+  }
+
+  .hero-shot-right {
+    transform: translateY(34%) rotate(6deg) scale(0.9);
   }
 
   .use-case-tab {

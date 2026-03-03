@@ -8,8 +8,8 @@ interface Props {
 }
 
 const {
-  title = "LACE | Long-Form Artifact Construction Engine",
-  description = "Structured AI for serious documents.",
+  title = "Determinant Systems | Deterministic Infrastructure for Enterprise AI",
+  description = "Determinant Systems builds LACE, structured and auditable AI systems for mission-critical enterprise documentation.",
   theme = "midnight"
 } = Astro.props;
 ---
@@ -25,8 +25,42 @@ const {
   <body>
     <slot />
     <script is:inline>
-      const revealTargets = document.querySelectorAll("[data-reveal]");
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const nav = document.querySelector(".top-nav");
+
+      if (nav) {
+        let navRaf = 0;
+
+        const updateNavChrome = () => {
+          const scrollTop = window.scrollY || window.pageYOffset || 0;
+          const start = 20;
+          const range = 100;
+          const progress = Math.max(0, Math.min(1, (scrollTop - start) / range));
+          nav.style.setProperty("--nav-solid", progress.toFixed(3));
+        };
+
+        const requestNavFrame = () => {
+          if (navRaf) return;
+          navRaf = window.requestAnimationFrame(() => {
+            navRaf = 0;
+            updateNavChrome();
+          });
+        };
+
+        updateNavChrome();
+        window.addEventListener("scroll", requestNavFrame, { passive: true });
+        window.addEventListener("resize", requestNavFrame);
+      }
+
+      const revealTargets = Array.from(document.querySelectorAll("[data-reveal]"));
       if (revealTargets.length > 0) {
+        revealTargets.forEach((target, index) => {
+          const explicitDelay = Number(target.getAttribute("data-reveal-delay"));
+          const autoDelay = Math.min(index * 35, 320);
+          const delay = Number.isFinite(explicitDelay) ? explicitDelay : autoDelay;
+          target.style.setProperty("--reveal-delay", `${delay}ms`);
+        });
+
         const revealObserver = new IntersectionObserver(
           (entries) => {
             entries.forEach((entry) => {
@@ -39,6 +73,64 @@ const {
           { threshold: 0.14, rootMargin: "0px 0px -8% 0px" }
         );
         revealTargets.forEach((target) => revealObserver.observe(target));
+      }
+
+      if (!reduceMotion) {
+        const parallaxTargets = Array.from(document.querySelectorAll("[data-parallax]"));
+
+        if (parallaxTargets.length > 0) {
+          let parallaxRaf = 0;
+
+          const updateParallax = () => {
+            parallaxRaf = 0;
+            const viewportHeight = window.innerHeight || 1;
+            const viewportWidth = window.innerWidth || 1;
+            const viewportCenterY = viewportHeight / 2;
+            const viewportCenterX = viewportWidth / 2;
+
+            parallaxTargets.forEach((target) => {
+              const rect = target.getBoundingClientRect();
+              if (rect.bottom < -160 || rect.top > viewportHeight + 160) {
+                target.style.setProperty("--parallax-x", "0px");
+                target.style.setProperty("--parallax-y", "0px");
+                target.style.setProperty("--parallax-rot", "0deg");
+                return;
+              }
+
+              const axis = target.getAttribute("data-parallax-axis") || "y";
+              const speedValue = Number(target.getAttribute("data-parallax-speed"));
+              const rotateValue = Number(target.getAttribute("data-parallax-rotate"));
+              const speed = Number.isFinite(speedValue) ? speedValue : 10;
+              const rotate = Number.isFinite(rotateValue) ? rotateValue : 0;
+
+              const elementCenterY = rect.top + rect.height / 2;
+              const elementCenterX = rect.left + rect.width / 2;
+              const distanceY = (viewportCenterY - elementCenterY) / viewportHeight;
+              const distanceX = (viewportCenterX - elementCenterX) / viewportWidth;
+              const clampedY = Math.max(-1, Math.min(1, distanceY));
+              const clampedX = Math.max(-1, Math.min(1, distanceX));
+
+              const useX = axis.includes("x");
+              const useY = axis.includes("y");
+              const shiftX = useX ? clampedX * speed : 0;
+              const shiftY = useY ? clampedY * speed : 0;
+              const rotation = rotate ? clampedY * rotate : 0;
+
+              target.style.setProperty("--parallax-x", `${shiftX.toFixed(2)}px`);
+              target.style.setProperty("--parallax-y", `${shiftY.toFixed(2)}px`);
+              target.style.setProperty("--parallax-rot", `${rotation.toFixed(2)}deg`);
+            });
+          };
+
+          const requestParallaxFrame = () => {
+            if (parallaxRaf) return;
+            parallaxRaf = window.requestAnimationFrame(updateParallax);
+          };
+
+          requestParallaxFrame();
+          window.addEventListener("scroll", requestParallaxFrame, { passive: true });
+          window.addEventListener("resize", requestParallaxFrame);
+        }
       }
     </script>
   </body>

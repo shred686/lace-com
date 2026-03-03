@@ -1,10 +1,8 @@
 ---
 import { Image } from "astro:assets";
 import {
-  documentSources,
   deploymentOptions,
-  problemFlowSteps,
-  themes,
+  documentSources,
   trustItems,
   useCases,
   valuePillars,
@@ -16,109 +14,129 @@ import heroScreen3 from "../assets/images/lace-screen3.png";
 import whitepaperEnglish from "../assets/docs/lace_enterprise_overview_v2_ENGLISH.pdf";
 import whitepaperSpanish from "../assets/docs/lace_enterprise_overview_v2_SPANISH.pdf";
 
-const baseUrl = import.meta.env.BASE_URL;
-const withBase = (path: string) => `${baseUrl}${path.replace(/^\/+/, "")}`;
-const useCaseIntros: Record<string, string> = {
-  "financial-filings":
-    "Financial filings demand precise language, strict consistency, and fast updates when numbers move. LACE keeps long reports coherent while making controlled AI-assisted revisions safer and easier to review.",
-  "enterprise-policy":
-    "Enterprise policy sets grow fast and become hard to keep aligned across teams and departments. LACE helps maintain one stable language system and updates policies without breaking related sections.",
-  "systems-engineering":
-    "Systems engineering documents are deeply interconnected and sensitive to requirement changes. LACE supports deterministic updates with traceability so AI can assist without destabilizing core specs.",
-  "government-proposals":
-    "Government proposals require strict compliance and synchronized messaging across many volumes. LACE brings structured retrieval, controlled generation, and repeatable updates to make AI usable in proposal operations.",
-  "legal-contracts":
-    "Contract drafting and redlining often involves repetitive edits across versions and clause sets. LACE applies AI in a controlled way so legal teams can revise faster while preserving consistency and reasoning.",
-  "legal-compliance":
-    "Compliance documentation must stay uniform across audits, controls, and policy narratives. LACE stabilizes AI-generated updates so teams can respond to regulatory change without rewriting everything manually.",
-  "legal-governance":
-    "Governance documents need precise language and dependable formatting for executive and board use. LACE keeps updates structured and consistent while reducing manual reconciliation across related files.",
-  "legal-risk":
-    "Legal risk memos require fast synthesis of incident details into clear decision-ready assessments. LACE turns scattered inputs into structured outputs and applies AI with repeatable, reviewable controls.",
-  "hr-policy":
-    "HR policy libraries evolve constantly with legal, cultural, and operational updates. LACE helps teams roll out consistent policy revisions while keeping tone and compliance aligned across documents.",
-  "hr-job-architecture":
-    "Job architecture content must be standardized to reduce confusion and legal exposure. LACE enables scalable, consistent role documentation with controlled AI support across levels and functions.",
-  "hr-performance":
-    "Performance and promotion documents need consistency while still reflecting department context. LACE provides structured templates and stable regeneration so AI improves speed without lowering review quality.",
-  "hr-reporting":
-    "HR reporting depends on turning raw workforce data into clear executive narrative. LACE helps produce repeatable, coherent reporting artifacts with AI grounded in structured source context.",
-  "finance-reports":
-    "Finance narratives change as numbers shift, but quality and consistency cannot slip. LACE keeps quarterly and annual documents synchronized and makes AI-assisted updates controlled and auditable.",
-  "finance-budget-justification":
-    "Budget justification requires defensible narrative tied directly to changing assumptions and figures. LACE helps finance teams regenerate only what changed while preserving document integrity and rationale.",
-  "finance-audit-packages":
-    "Audit preparation demands consistent control language and precise supporting explanations. LACE reduces manual consolidation and keeps AI-generated updates stable through review cycles.",
-  "finance-vendor-analysis":
-    "Vendor analysis often spans fragmented inputs and inconsistent business-case framing. LACE standardizes comparison narratives and applies AI in a way that is easier to trust and approve.",
-  "ops-sop":
-    "Operations teams need SOPs that are standardized, current, and audit-ready. LACE turns process inputs into consistent procedures and supports reliable updates as workflows evolve.",
-  "ops-incident-reports":
-    "Incident reporting requires clear structure, traceability, and fast turnaround under pressure. LACE helps operations teams produce consistent post-incident documentation with controlled AI assistance.",
-  "ops-knowledge-base":
-    "Critical operational knowledge is often trapped in meetings, chats, and email threads. LACE converts that sprawl into durable documentation with stable AI-assisted organization and upkeep.",
-  "sales-rfp":
-    "Proposal and RFP workflows require speed, compliance, and consistent messaging across sections. LACE enables reusable response patterns and controlled AI generation for higher-quality submissions.",
-  "sales-case-studies":
-    "Case studies and white papers require long-form narrative polish from mixed project inputs. LACE helps teams produce coherent market-ready content while keeping voice and evidence aligned.",
-  "sales-enablement":
-    "Sales enablement assets need frequent updates across industries, competitors, and audiences. LACE keeps core messaging consistent while generating targeted variants with stable AI workflows.",
-  "training-certification":
-    "Training and certification programs rely on consistent terminology across many learning artifacts. LACE supports repeatable AI-assisted updates so materials stay aligned as standards and curricula evolve."
-};
+interface Props {
+  activeTheme?: string;
+}
+
+
+const spotlightUseCase =
+  useCases.find((useCase) => useCase.id === "government-proposals") ?? useCases[0];
+const featuredUseCases = useCases
+  .filter((useCase) => useCase.id !== spotlightUseCase.id)
+  .slice(0, 6);
+const connectedSources = documentSources.slice(0, 4);
+const capabilityTags = [
+  "Deterministic Generation",
+  "Audit Trails",
+  "Source Grounding",
+  "Section-Level Regeneration",
+  "Policy-Aware Outputs",
+  "Enterprise Deployment"
+];
+const assuranceTags = [
+  "On-Prem + Cloud",
+  "Model Provider Flexibility",
+  "Regulated Workflow Support",
+  "Reviewable Change History",
+  "Enterprise Controls"
+];
 ---
 
-<!-- <div class="theme-switcher">
-  <button class="theme-dropdown-toggle" aria-haspopup="listbox" aria-expanded="false">
-    Switch theme ▾
-  </button>
-  <ul class="theme-dropdown" role="listbox">
-    {themes.map((theme) => (
-      <li role="option" data-theme-id={theme.id}>{theme.label}</li>
-    ))}
-  </ul>
-</div> -->
+<main class="ds-site">
+  <div class="noise-layer" aria-hidden="true"></div>
 
-<main class="landing-shell">
-  <div class="ambient-layer" aria-hidden="true"></div>
+  <header class="top-nav" data-reveal data-reveal-delay="40">
+    <a href="/" class="brand-wordmark">
+      <span class="brand-dot" aria-hidden="true"></span>
+      Determinant Systems
+    </a>
 
-  <header class="hero panel" data-reveal>
-    <div class="hero-head">
-      <p class="eyebrow">LACE · Long-Form Artifact Construction Engine</p>
+    <button
+      type="button"
+      class="top-nav-toggle"
+      aria-expanded="false"
+      aria-controls="topNavPanel"
+      aria-label="Toggle navigation"
+    >
+      <span class="top-nav-toggle-line"></span>
+      <span class="top-nav-toggle-line"></span>
+    </button>
+
+    <div class="top-nav-panel" id="topNavPanel">
+      <nav class="top-links" aria-label="Primary">
+        <a href="#lace">LACE</a>
+        <a href="#platform">Platform</a>
+        <a href="#use-cases">Use Cases</a>
+        <a href="#trust">Trust</a>
+      </nav>
+
+      <a href={whitepaperEnglish} class="nav-cta" target="_blank" rel="noopener noreferrer">
+        Read whitepaper
+      </a>
+    </div>
+  </header>
+
+  <section class="hero" data-reveal data-reveal-delay="90">
+    <div class="hero-copy">
+      <p class="kicker">Determinant Systems</p>
       <h1>Make AI work for your company.</h1>
+      <p class="hero-intro">Deterministic Infrastructure for Enterprise AI.</p>
+      <p class="hero-detail">
+        We build structured, auditable AI systems designed for high-trust,
+        mission-critical environments.
+      </p>
+
+      <div class="hero-actions">
+        <a href="#lace" class="btn btn-primary">Explore LACE</a>
+        <a href={whitepaperSpanish} class="btn btn-ghost" target="_blank" rel="noopener noreferrer">
+          Whitepaper (Spanish)
+        </a>
+      </div>
+
+      <div class="hero-meta">
+        <span>determinantsystems.com</span>
+        <span>LACE is our flagship product platform</span>
+      </div>
     </div>
 
-    <div class="hero-visual-wrap">
-      <div class="hero-shot-stack" aria-label="LACE product screenshots">
-        <div class="hero-shot hero-shot-back hero-shot-left" aria-hidden="true">
-          <Image
-            src={heroScreen1}
-            alt=""
-            class="hero-shot-image"
-            widths={[420, 620, 860]}
-            sizes="(max-width: 700px) 72vw, (max-width: 1180px) 360px, 360px"
-          />
-        </div>
+    <div
+      class="hero-visual"
+      aria-label="LACE platform previews"
+      data-parallax
+      data-parallax-axis="y"
+      data-parallax-speed="14"
+    >
+      <div class="hero-ambient hero-ambient-blue" aria-hidden="true"></div>
+      <div class="hero-ambient hero-ambient-teal" aria-hidden="true"></div>
 
-        <div class="hero-shot hero-shot-main" data-lightbox-trigger>
-          <Image
-            src={heroScreen2}
-            alt="LACE product preview"
-            class="hero-shot-image"
-            widths={[560, 840, 1120]}
-            sizes="(max-width: 700px) 84vw, (max-width: 1180px) 500px, 500px"
-          />
-        </div>
+      <div class="shot shot-back shot-left" aria-hidden="true">
+        <Image
+          src={heroScreen1}
+          alt=""
+          class="shot-image"
+          widths={[380, 560, 760]}
+          sizes="(max-width: 1020px) 72vw, 320px"
+        />
+      </div>
 
-        <div class="hero-shot hero-shot-back hero-shot-right" aria-hidden="true">
-          <Image
-            src={heroScreen3}
-            alt=""
-            class="hero-shot-image"
-            widths={[420, 620, 860]}
-            sizes="(max-width: 700px) 72vw, (max-width: 1180px) 360px, 360px"
-          />
-        </div>
+      <button type="button" class="shot shot-main" data-lightbox-trigger>
+        <Image
+          src={heroScreen2}
+          alt="LACE platform workflow and orchestration view"
+          class="shot-image"
+          widths={[560, 900, 1280]}
+          sizes="(max-width: 1020px) 88vw, 560px"
+        />
+      </button>
+
+      <div class="shot shot-back shot-right" aria-hidden="true">
+        <Image
+          src={heroScreen3}
+          alt=""
+          class="shot-image"
+          widths={[380, 560, 760]}
+          sizes="(max-width: 1020px) 72vw, 320px"
+        />
       </div>
     </div>
 
@@ -126,202 +144,77 @@ const useCaseIntros: Record<string, string> = {
       <button class="lightbox-close" aria-label="Close">&times;</button>
       <Image
         src={heroScreen2}
-        alt="LACE product preview"
+        alt="LACE platform workflow and orchestration view"
         class="lightbox-image"
-        widths={[960, 1440, 1920]}
-        sizes="94vw"
+        widths={[1024, 1440, 1920]}
+        sizes="95vw"
       />
     </dialog>
-
-    <div class="hero-copy-block">
-      <p class="lead">
-        Give AI the full context of your company, project, and requirements.
-      </p>
-      <p class="hero-support">
-        Effectively generate valuable documents that hold up to real review.<br />
-        Policy, reports, proposals - LACE builds it right.
-      </p>
-    </div>
-
-    <div class="hero-actions">
-      <a href={whitepaperEnglish} class="btn btn-primary" target="_blank" rel="noopener noreferrer">
-        Read the whitepaper
-      </a>
-      <a
-        href={whitepaperSpanish}
-        class="btn btn-primary btn-sm hero-subaction"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Download in Spanish
-      </a>
-    </div>
-  </header>
-
-  <section class="panel lace-intro" data-reveal>
-    <h2>What is LACE?</h2>
-    <p class="section-intro">
-      LACE helps teams create and maintain long, important documents -
-      intelligently.
-    </p>
-    <p class="section-intro">
-      Most AI tools can write a page. But real work lives in 50-200 page
-      documents - proposals, technical plans, compliance reports, policy
-      manuals - where sections depend on each other and small changes ripple
-      everywhere.
-    </p>
-    <p class="section-intro">
-      LACE connects to your corporate knowledge base - policies, prior reports,
-      standards, internal language - so documents are not just written. They
-      are informed.
-    </p>
-    <p class="section-intro upload-label">Upload:</p>
-    <ul class="upload-list">
-      <li>SharePoint drives</li>
-      <li>Department folders</li>
-      <li>Prior PDFs</li>
-      <li>Policy archives</li>
-      <li>Email archives</li>
-      <li>Meeting minutes</li>
-    </ul>
-    <p class="upload-cta">
-      Generate consistent, organization-wide documents.
-    </p>
-    <p class="intro-emphasis">
-      LACE lets you generate long, coherent documents that go beyond the limits
-      of commercial AI tools like ChatGPT, Gemini, Grok, Claude, and more.
-    </p>
   </section>
 
-  <section id="use-cases" class="panel use-cases" data-reveal>
-    <p class="eyebrow">Use Cases</p>
-    <h2>Who LACE Works For</h2>
-    <p class="section-intro">
-      Pick a domain to see where LACE is strongest for long, high-stakes
-      document workflows.
-    </p>
-    <div class="use-case-layout">
-      <div class="use-case-tabs" role="tablist" aria-orientation="vertical" data-use-case-tabs>
-        {useCases.map((useCase, index) => (
-          <button
-            type="button"
-            class="use-case-tab"
-            role="tab"
-            id={`tab-${useCase.id}`}
-            aria-controls={`panel-${useCase.id}`}
-            aria-selected={index === 0 ? "true" : "false"}
-            tabindex={index === 0 ? "0" : "-1"}
-            data-case-id={useCase.id}
-          >
-            {useCase.tabTitle}
-          </button>
-        ))}
-      </div>
-      <div class="use-case-panels">
-        {useCases.map((useCase, index) => (
-          <article
-            class="use-case-panel"
-            role="tabpanel"
-            id={`panel-${useCase.id}`}
-            aria-labelledby={`tab-${useCase.id}`}
-            data-case-panel={useCase.id}
-            hidden={index !== 0}
-          >
-            <h3>{useCase.heading}</h3>
-            <p class="use-case-intro">
-              {useCaseIntros[useCase.id] ??
-                "This workflow involves long, interdependent documentation with frequent updates and strict quality constraints. LACE applies controlled AI generation to reduce manual effort while keeping structure, tone, and traceability stable."}
-            </p>
-            <div class="use-case-columns">
-              <section class="use-case-column">
-                <p class="use-case-label">Documents</p>
-                <ul>
-                  {useCase.documents.map((item) => (
-                    <li>{item}</li>
-                  ))}
-                </ul>
-              </section>
-              <section class="use-case-column">
-                <p class="use-case-label">Common Challenges</p>
-                <ul>
-                  {useCase.problems.map((item) => (
-                    <li>{item}</li>
-                  ))}
-                </ul>
-              </section>
-              <section class="use-case-column">
-                <p class="use-case-label">How LACE Fits</p>
-                <ul>
-                  {useCase.laceFit.map((item) => (
-                    <li>{item}</li>
-                  ))}
-                </ul>
-              </section>
-            </div>
-          </article>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- <section class="theme-panel panel" data-reveal>
-    <p>Theme routes for direct comparison:</p>
-    <div class="theme-switch">
-      {themes.map((theme) => (
-        <a
-          class="theme-option theme-link"
-          href={withBase(`/themes/${theme.id}`)}
-          data-active={theme.id === activeTheme ? "true" : "false"}
-        >
-          <span>{theme.label}</span>
-          <small>{theme.note}</small>
-        </a>
+  <div class="capability-marquee" aria-hidden="true" data-parallax data-parallax-axis="y" data-parallax-speed="6">
+    <div class="capability-track">
+      {[...capabilityTags, ...capabilityTags].map((tag) => (
+        <span>{tag}</span>
       ))}
     </div>
-  </section> -->
+  </div>
 
-  <section class="panel problem-journey">
-    <h2>The Problem</h2>
-    <p class="section-intro">
-      Most AI tools are built for chat. Your work is not chat.
-    </p>
-    <p class="section-intro">
-      What teams do today in ChatGPT, Gemini, and commercial chat apps when
-      trying to produce high-stakes deliverables:
-    </p>
-    <div class="problem-flow">
-      {problemFlowSteps.map((item) => (
-        <article class="flow-step" data-reveal>
-          <div class="flow-marker">
-            <span class="flow-index">{item.step}</span>
-          </div>
-          <div class="flow-card">
-            <h3>{item.title}</h3>
-            <p>
-              <strong>You do:</strong> {item.userAction}
-            </p>
-            <p>
-              <strong>What happens:</strong> {item.struggle}
-            </p>
-          </div>
-        </article>
-      ))}
+  <section id="intro" class="section intro" data-reveal>
+    <div class="section-head">
+      <p class="section-label">Company</p>
+      <h2>Built for organizations that need deterministic outcomes, not prompt luck.</h2>
     </div>
-    <p class="problem-close">
-      This is the core gap: teams need AI to operate inside their real business
-      context and output constraints, not just answer prompts.
-    </p>
+
+    <div class="intro-grid">
+      <p>
+        Determinant Systems develops infrastructure for teams where compliance,
+        reliability, and reviewability are mandatory. Our systems keep generation
+        controlled and measurable from first draft to final deliverable.
+      </p>
+      <ul class="intro-list">
+        <li>Deterministic generation pipelines</li>
+        <li>Traceable outputs and source mapping</li>
+        <li>Audit-friendly workflow orchestration</li>
+        <li>Deployable in regulated enterprise environments</li>
+      </ul>
+    </div>
+
+    <div
+      class="intro-graphics"
+      aria-hidden="true"
+      data-parallax
+      data-parallax-axis="y"
+      data-parallax-speed="10"
+      data-parallax-rotate="0.9"
+    >
+      <div class="intro-ring intro-ring-one"></div>
+      <div class="intro-ring intro-ring-two"></div>
+      <div class="intro-node intro-node-a"></div>
+      <div class="intro-node intro-node-b"></div>
+      <div class="intro-node intro-node-c"></div>
+      <div class="intro-beam"></div>
+    </div>
   </section>
 
-  <section class="panel" data-reveal>
-    <h2>What Changes With LACE</h2>
-    <p class="section-intro">
-      Instead of one-off prompts, teams get a document workflow tuned to their
-      real context.
-    </p>
+  <section id="lace" class="section lace-overview" data-reveal>
+    <div class="section-head">
+      <p class="section-label">Product</p>
+      <h2>LACE powers long-form, high-stakes document systems.</h2>
+      <p>
+        LACE (Long-Form Artifact Construction Engine) helps teams generate and
+        maintain complex documentation that must stay consistent across sections,
+        reviews, and updates.
+      </p>
+    </div>
+
     <div class="pillars-grid">
-      {valuePillars.map((pillar) => (
-        <article class="pillar-card">
+      {valuePillars.map((pillar, index) => (
+        <article
+          class={`surface-card pillar-card ${index === 0 ? "pillar-feature" : ""}`}
+          data-reveal
+          data-reveal-delay={120 + index * 80}
+        >
           <h3>{pillar.title}</h3>
           <p>{pillar.copy}</p>
         </article>
@@ -329,61 +222,12 @@ const useCaseIntros: Record<string, string> = {
     </div>
   </section>
 
-  <section class="panel retrieval-section" data-reveal>
-    <p class="eyebrow">Retrieval &amp; Search</p>
-    <h2>Smarter Retrieval. Real Search.</h2>
-    <p class="section-intro">
-      Legacy systems rely on keyword matching. If the exact word is not there,
-      you get nothing.
-    </p>
-    <p class="search-query">
-      Search term: <span class="search-term">cat</span>
-    </p>
-    <div class="search-compare">
-      <article class="search-card search-card-legacy">
-        <h3>Legacy System</h3>
-        <p class="search-label">Corpus entry</p>
-        <p class="search-snippet">"A furry feline creature..."</p>
-        <p class="search-result search-result-miss">No match</p>
-      </article>
-      <article class="search-card search-card-lace">
-        <h3>LACE</h3>
-        <p class="search-label">Corpus entry</p>
-        <p class="search-snippet">"A furry feline creature..."</p>
-        <p class="search-result search-result-hit">Match found</p>
-      </article>
-    </div>
-    <p class="section-intro retrieval-close">
-      Because LACE does not just match words. It understands meaning.
-    </p>
-    <ul class="retrieval-benefits">
-      <li>Fewer missed connections</li>
-      <li>Better reuse of institutional knowledge</li>
-      <li>Smarter documents built on real context</li>
-    </ul>
-  </section>
-
-  <section class="grid-two" data-reveal>
-    <article class="panel">
-      <h2>Supported Document Sources</h2>
-      <p class="section-intro">
-        Connect the repositories teams already use for controlled document workflows.
-      </p>
-      <div class="source-grid">
-        {documentSources.map((source) => (
-          <article class={`source-tile source-${source.id}`}>
-            <div class="source-badge">{source.badge}</div>
-            <h3>{source.name}</h3>
-            <p>{source.detail}</p>
-          </article>
-        ))}
-      </div>
-    </article>
-    <article class="panel">
-      <h2>How Teams Work In LACE</h2>
+  <section id="platform" class="section split platform-section" data-reveal>
+    <article class="surface-card block workflow-panel" data-reveal data-reveal-delay="70">
+      <h2>How teams run LACE</h2>
       <div class="workflow-grid">
-        {workflowSteps.map((step) => (
-          <article class="step-card">
+        {workflowSteps.map((step, index) => (
+          <article class="workflow-step" data-reveal data-reveal-delay={140 + index * 80}>
             <p class="step-number">{step.step}</p>
             <h3>{step.title}</h3>
             <p>{step.description}</p>
@@ -391,126 +235,231 @@ const useCaseIntros: Record<string, string> = {
         ))}
       </div>
     </article>
+
+    <article class="surface-card block platform-panel" data-reveal data-reveal-delay="140">
+      <h2>Context-rich platform workspace</h2>
+      <p>
+        Structured retrieval, deterministic regeneration, and review-state visibility
+        in one operator surface.
+      </p>
+
+      <div
+        class="platform-scene"
+        aria-hidden="true"
+        data-parallax
+        data-parallax-axis="y"
+        data-parallax-speed="11"
+      >
+        <div class="platform-glow platform-glow-a"></div>
+        <div class="platform-glow platform-glow-b"></div>
+        <Image
+          src={heroScreen1}
+          alt=""
+          class="platform-image platform-image-main"
+          widths={[500, 760, 980]}
+          sizes="(max-width: 1120px) 86vw, 420px"
+        />
+        <Image
+          src={heroScreen3}
+          alt=""
+          class="platform-image platform-image-back"
+          widths={[340, 520, 700]}
+          sizes="(max-width: 1120px) 68vw, 280px"
+        />
+        <span class="platform-tag platform-tag-one">Traceable updates</span>
+        <span class="platform-tag platform-tag-two">Source-grounded outputs</span>
+      </div>
+
+      <div class="source-grid">
+        {connectedSources.map((source, index) => (
+          <article class="source-item" data-reveal data-reveal-delay={220 + index * 70}>
+            <div class="source-badge">{source.badge}</div>
+            <h3>{source.name}</h3>
+            <p>{source.detail}</p>
+          </article>
+        ))}
+      </div>
+    </article>
   </section>
 
-  <section class="grid-two" data-reveal>
-    <article class="panel">
-      <h2>Trust And Deployment</h2>
-      <ul>
-        {trustItems.map((item) => (
-          <li>{item}</li>
+  <section id="use-cases" class="section use-cases-section" data-reveal>
+    <div class="section-head">
+      <p class="section-label">Use Cases</p>
+      <h2>Where LACE creates immediate leverage</h2>
+      <p>
+        Teams with long, interdependent documentation and strict review standards
+        see the fastest payoff.
+      </p>
+    </div>
+
+    <div class="use-case-stage">
+      <article
+        class="surface-card use-case-spotlight"
+        data-reveal
+        data-reveal-delay="80"
+        data-parallax
+        data-parallax-axis="y"
+        data-parallax-speed="9"
+      >
+        <p class="section-label">Spotlight</p>
+        <h3>{spotlightUseCase.heading}</h3>
+        <p>{spotlightUseCase.problems[0]}</p>
+        <div class="spotlight-columns">
+          <div>
+            <p class="case-label">Typical documents</p>
+            <ul>
+              {spotlightUseCase.documents.slice(0, 4).map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <p class="case-label">How LACE fits</p>
+            <ul>
+              {spotlightUseCase.laceFit.slice(0, 4).map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <div class="use-case-list">
+        {featuredUseCases.map((useCase, index) => (
+          <article class="surface-card use-case-row" data-reveal data-reveal-delay={140 + index * 70}>
+            <h3>{useCase.tabTitle}</h3>
+            <p>{useCase.problems[0]}</p>
+          </article>
         ))}
-      </ul>
-    </article>
-    <article class="panel">
-      <h2>Deployment Options</h2>
-      <ul>
-        {deploymentOptions.map((item) => (
-          <li>{item}</li>
-        ))}
-      </ul>
-    </article>
+      </div>
+    </div>
   </section>
 
-  <section id="cta" class="cta panel" data-reveal>
-    <h2>Ready To Build Serious Documents With AI?</h2>
-    <p class="section-intro">
-      Bring your context. Keep your standards. Ship high-stakes documents
-      faster.
+  <section id="trust" class="section trust-section" data-reveal>
+    <div
+      class="assurance-ticker"
+      aria-hidden="true"
+      data-parallax
+      data-parallax-axis="y"
+      data-parallax-speed="7"
+    >
+      <div class="assurance-track">
+        {[...assuranceTags, ...assuranceTags].map((tag) => (
+          <span>{tag}</span>
+        ))}
+      </div>
+    </div>
+
+    <div class="trust-grid">
+      <article class="surface-card block" data-reveal data-reveal-delay="70">
+        <h2>Trust controls</h2>
+        <ul>
+          {trustItems.map((item) => (
+            <li>{item}</li>
+          ))}
+        </ul>
+      </article>
+
+      <article class="surface-card block" data-reveal data-reveal-delay="150">
+        <h2>Deployment options</h2>
+        <ul>
+          {deploymentOptions.map((item) => (
+            <li>{item}</li>
+          ))}
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <section class="section cta" data-reveal>
+    <p class="section-label">Get Started</p>
+    <h2>Deploy LACE with Determinant Systems.</h2>
+    <p>
+      Build reliable AI workflows for the documents your company is judged on.
     </p>
-    <div class="cta-actions">
-      <a href="#" class="btn btn-primary">Request an Early Pilot</a>
-      <a href="#" class="btn btn-ghost">Schedule a Demo</a>
-      <a href="#" class="btn btn-ghost">Join the Alpha Program</a>
+    <div class="hero-actions">
+      <a href={whitepaperEnglish} class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+        Read the Enterprise Overview
+      </a>
+      <a href="#platform" class="btn btn-ghost">View Platform Flow</a>
     </div>
   </section>
 </main>
 
 <script>
-  const toggle = document.querySelector<HTMLButtonElement>('.theme-dropdown-toggle');
-  const menu = document.querySelector<HTMLUListElement>('.theme-dropdown');
-  if (toggle && menu) {
-    const currentTheme = () => document.documentElement.getAttribute('data-theme') || 'circuit';
+  const lightboxTrigger = document.querySelector<HTMLButtonElement>("[data-lightbox-trigger]");
+  const lightbox = document.querySelector<HTMLDialogElement>("[data-lightbox]");
 
-    function markActive() {
-      menu!.querySelectorAll('li').forEach((li) => {
-        li.setAttribute('aria-selected', li.dataset.themeId === currentTheme() ? 'true' : 'false');
-      });
-    }
-    markActive();
-
-    toggle.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const open = menu!.getAttribute('data-open') === 'true';
-      menu!.setAttribute('data-open', open ? 'false' : 'true');
-      toggle.setAttribute('aria-expanded', open ? 'false' : 'true');
-    });
-
-    menu.addEventListener('click', (e) => {
-      const li = (e.target as HTMLElement).closest<HTMLLIElement>('li[data-theme-id]');
-      if (!li) return;
-      document.documentElement.setAttribute('data-theme', li.dataset.themeId!);
-      markActive();
-      menu!.setAttribute('data-open', 'false');
-      toggle.setAttribute('aria-expanded', 'false');
-    });
-
-    document.addEventListener('click', () => {
-      menu!.setAttribute('data-open', 'false');
-      toggle.setAttribute('aria-expanded', 'false');
-    });
-  }
-
-  const useCaseTabs = Array.from(
-    document.querySelectorAll<HTMLButtonElement>('.use-case-tab')
-  );
-  const useCasePanels = Array.from(
-    document.querySelectorAll<HTMLElement>('.use-case-panel')
-  );
-
-  if (useCaseTabs.length && useCasePanels.length) {
-    const activateUseCase = (caseId: string, moveFocus = false) => {
-      useCaseTabs.forEach((tab) => {
-        const isActive = tab.dataset.caseId === caseId;
-        tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
-        tab.setAttribute('tabindex', isActive ? '0' : '-1');
-        if (moveFocus && isActive) tab.focus();
-      });
-
-      useCasePanels.forEach((panel) => {
-        panel.hidden = panel.dataset.casePanel !== caseId;
-      });
-    };
-
-    useCaseTabs.forEach((tab, index) => {
-      tab.addEventListener('click', () => {
-        activateUseCase(tab.dataset.caseId!);
-      });
-
-      tab.addEventListener('keydown', (event) => {
-        const key = event.key;
-        if (!['ArrowUp', 'ArrowDown', 'Home', 'End'].includes(key)) return;
-        event.preventDefault();
-
-        let nextIndex = index;
-        if (key === 'ArrowDown') nextIndex = (index + 1) % useCaseTabs.length;
-        if (key === 'ArrowUp') nextIndex = (index - 1 + useCaseTabs.length) % useCaseTabs.length;
-        if (key === 'Home') nextIndex = 0;
-        if (key === 'End') nextIndex = useCaseTabs.length - 1;
-
-        activateUseCase(useCaseTabs[nextIndex].dataset.caseId!, true);
-      });
-    });
-  }
-
-  // Lightbox
-  const lightboxTrigger = document.querySelector('[data-lightbox-trigger]');
-  const lightbox = document.querySelector<HTMLDialogElement>('[data-lightbox]');
   if (lightboxTrigger && lightbox) {
-    lightboxTrigger.addEventListener('click', () => lightbox.showModal());
-    lightbox.querySelector('.lightbox-close')?.addEventListener('click', () => lightbox.close());
-    lightbox.addEventListener('click', (e) => {
-      if (e.target === lightbox) lightbox.close();
+    lightboxTrigger.addEventListener("click", () => lightbox.showModal());
+
+    lightbox.querySelector(".lightbox-close")?.addEventListener("click", () => {
+      lightbox.close();
+    });
+
+    lightbox.addEventListener("click", (event) => {
+      if (event.target === lightbox) {
+        lightbox.close();
+      }
     });
   }
+
+
+  // Mobile nav
+  const topNav = document.querySelector<HTMLElement>(".top-nav");
+  const navToggle = document.querySelector<HTMLButtonElement>(".top-nav-toggle");
+  const navPanel = document.getElementById("topNavPanel");
+  const navTargets = document.querySelectorAll<HTMLAnchorElement>(".top-links a, .nav-cta");
+  const navMedia = window.matchMedia("(max-width: 900px)");
+
+  const setNavOpen = (open: boolean) => {
+    if (!topNav || !navToggle) return;
+    topNav.classList.toggle("is-open", open);
+    navToggle.setAttribute("aria-expanded", open ? "true" : "false");
+
+    if (navPanel && navMedia.matches) {
+      navPanel.toggleAttribute("hidden", !open);
+    } else if (navPanel) {
+      navPanel.removeAttribute("hidden");
+    }
+  };
+
+  const closeNav = () => {
+    setNavOpen(false);
+  };
+
+  const toggleNav = () => {
+    if (!topNav) return;
+    const nextOpen = !topNav.classList.contains("is-open");
+    setNavOpen(nextOpen);
+  };
+
+  navToggle?.addEventListener("click", toggleNav);
+
+  navTargets.forEach((target) => {
+    target.addEventListener("click", () => {
+      if (navMedia.matches) closeNav();
+    });
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!topNav || !navMedia.matches) return;
+    if (!topNav.contains(event.target as Node)) closeNav();
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") closeNav();
+  });
+
+  const syncNavForViewport = () => {
+    if (navMedia.matches) {
+      setNavOpen(false);
+      return;
+    }
+    setNavOpen(false);
+    navPanel?.removeAttribute("hidden");
+  };
+
+  syncNavForViewport();
+  navMedia.addEventListener("change", syncNavForViewport);
 </script>

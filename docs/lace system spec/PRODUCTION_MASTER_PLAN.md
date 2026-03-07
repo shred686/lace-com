@@ -3,6 +3,13 @@
 Status date: 2026-02-12  
 Scope: Move from MVP CLI runtime to production-grade Python backend services.
 
+Canonical backlog source: `docs/spec/PRODUCTION_READINESS_MASTER_BACKLOG.md`
+
+Active companion plans (current):
+- `docs/spec/LARGE_FILE_REFACTOR_PHASED_PLAN_2026-03-06.md` (2026-03-06)
+  - Incremental large-file decomposition program (Tier 1-3) with commit/test gates.
+  - Use this as the execution plan for maintainability + coding-agent reliability refactors.
+
 Primary principle:
 - LLM = stateless generator.
 - Engine = stateful artifact manager.
@@ -95,6 +102,25 @@ Engineering cannot violate these without explicit design review:
   - explicit commit semantics,
   - schema/version migration policy,
   - supply-chain governance.
+
+## 1.A) Production Readiness Alignment Delta (2026-03-04)
+
+The following canonical backlog IDs were added and should be treated as required plan inputs:
+
+- `V1-P0-053`: Sync Postgres I/O in async request path (event-loop blocking risk).
+- `V1-P0-054`: No shared DB connection pool (connect-per-operation).
+- `V1-P0-055`: Query-parameter API key acceptance (`?api_key=`) leaks credentials.
+- `V1-P0-056`: NATS stream retention/size policy not explicitly configured.
+- `V1-P0-057`: File backend unsafe in multi-worker deployments (process-local lock only).
+- `V1-P1-058`: OWL export contract fidelity mismatch vs implementation semantics.
+- `V1-P1-059`: Shutdown/drain semantics for in-flight runs and final events are incomplete.
+- `V1-P1-060`: Platform-governed LLM timeout/budget enforcement is missing.
+- `V1-P0-061`: SaaS vs on-prem distribution mode contract/profile enforcement is missing.
+- `V1-P1-062`: Entitlement/licensing enforcement plane is missing.
+- `V1-P1-063`: On-prem packaging/operations profile is not productionized.
+
+Execution rule:
+- Do not duplicate acceptance criteria in this plan; execute against canonical definitions in `docs/spec/PRODUCTION_READINESS_MASTER_BACKLOG.md`.
 
 ## 2) Target V1 Architecture
 
@@ -191,6 +217,14 @@ These decisions are fixed for V1 to remove implementation ambiguity:
 - Locking decision:
   - canonical mutation paths use DB-backed artifact lease rows (`artifact_locks`) with heartbeat/expiry,
   - no filesystem-only lock authority in production mode.
+- Distribution mode decision:
+  - one codebase, two runtime profiles: `saas` and `onprem`,
+  - `saas` profile requires request-scoped tenant identity and forbids process-global tenant fallback,
+  - `onprem` defaults single-tenant; customer-operated multi-tenant is allowed only with the same auth/tenant controls as SaaS.
+- Entitlement/licensing decision:
+  - entitlements are capability-based (apps/features/limits), not deployment-type-based,
+  - SaaS reads entitlements from platform-managed data,
+  - on-prem validates signed license claims locally (offline-capable), with explicit grace/expiry behavior.
 
 ## 3) Production Gap Matrix
 
@@ -231,6 +265,15 @@ These decisions are fixed for V1 to remove implementation ambiguity:
 | P2-4 | Test-driven document quality API (`lace test`) | Missing | P2 | Medium |
 | P2-5 | Provenance graph exporter (Neo4j/graph sinks) | Missing | P2 | Medium |
 | P2-6 | Air-gapped/on-prem packaging profile | Missing | P2 | Medium |
+
+### 3.A) Distribution Mode and Entitlement Backlog Linkage
+
+Execute these canonical backlog IDs as part of the production plan:
+- `V1-P0-061` (distribution mode contract),
+- `V1-P1-062` (entitlement/licensing enforcement),
+- `V1-P1-063` (on-prem packaging and ops profile),
+- plus existing tenancy/auth controls: `V1-P0-001`, `V1-P0-002`, `V1-P0-003`, `V1-P1-035`.
+- `V1-P2-064` (workspace-agent runtime task reference pack).
 
 ## 4) Workstream Specifications
 
@@ -1071,3 +1114,6 @@ These are intentionally tracked as non-blocking differentiators to avoid deraili
   - optional exporter from transformation/provenance logs to graph stores.
 - `P2-6` Air-gapped/on-prem packaging:
   - self-host profile with reduced external dependencies for disconnected deployments.
+- `P2-7` Workspace-agent runtime track (reference-only):
+  - implementation prompt: `docs/spec/workspace-agent/CODING AGENT PROMPT-workspace-agents.md`
+  - research conversation: `docs/spec/workspace-agent/chatgpt-conversation.md`

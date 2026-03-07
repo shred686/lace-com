@@ -1,0 +1,454 @@
+---
+import { Image } from "astro:assets";
+import {
+  assuranceTags,
+  capabilityTags,
+  companyBullets,
+  deploymentOptions,
+  heroProofs,
+  operatingModes,
+  trustItems,
+  useCases,
+  valuePillars,
+  workflowSteps
+} from "../data/homeNewContent";
+import heroScreen1 from "../assets/images/lace-screen1.png";
+import heroScreen2 from "../assets/images/lace-screen2.png";
+import heroScreen3 from "../assets/images/lace-screen3.png";
+import whitepaperEnglish from "../assets/docs/lace_enterprise_overview_v2_ENGLISH.pdf";
+
+const spotlightUseCase = useCases.find((useCase) => useCase.id === "permit-research") ?? useCases[0];
+const featuredUseCases = useCases.filter((useCase) => useCase.id !== spotlightUseCase.id).slice(0, 4);
+---
+
+<main class="ds-site">
+  <div class="noise-layer" aria-hidden="true"></div>
+
+  <header class="top-nav" data-reveal data-reveal-delay="40">
+    <a href="/" class="brand-wordmark">
+      <span class="brand-dot" aria-hidden="true"></span>
+      Determinant Systems
+    </a>
+
+    <button
+      type="button"
+      class="top-nav-toggle"
+      aria-expanded="false"
+      aria-controls="topNavPanel"
+      aria-label="Toggle navigation"
+    >
+      <span class="top-nav-toggle-line"></span>
+      <span class="top-nav-toggle-line"></span>
+    </button>
+
+    <div class="top-nav-panel" id="topNavPanel">
+      <nav class="top-links" aria-label="Primary">
+        <a href="#lace">LACE</a>
+        <a href="#platform">Platform</a>
+        <a href="#use-cases">Use Cases</a>
+        <a href="#trust">Trust</a>
+      </nav>
+
+      <a href={whitepaperEnglish} class="nav-cta" target="_blank" rel="noopener noreferrer">
+        Enterprise overview
+      </a>
+    </div>
+  </header>
+
+  <section class="hero" data-reveal data-reveal-delay="90">
+    <div class="hero-copy">
+      <p class="kicker">Determinant Systems</p>
+      <h1>Make AI work for your company.</h1>
+      <p class="hero-intro">Infrastructure for enterprise AI.</p>
+      <p class="hero-detail">
+        LACE lets you model a business use case, run AI inside defined rules and policy, 
+        and deploy a full-fledged application.
+      </p>
+
+      <div class="hero-actions">
+        <a
+          href={whitepaperEnglish}
+          class="btn btn-primary"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Explore LACE
+        </a>
+        <a href="#platform" class="btn btn-ghost">See platform flow</a>
+      </div>
+
+      <div class="hero-meta">
+        {heroProofs.map((item) => (
+          <span>{item}</span>
+        ))}
+      </div>
+    </div>
+
+    <div
+      class="hero-visual"
+      aria-label="LACE platform previews"
+      data-parallax
+      data-parallax-axis="y"
+      data-parallax-speed="14"
+    >
+      <div class="hero-ambient hero-ambient-blue" aria-hidden="true"></div>
+      <div class="hero-ambient hero-ambient-teal" aria-hidden="true"></div>
+
+      <div class="shot shot-back shot-left" aria-hidden="true">
+        <Image
+          src={heroScreen1}
+          alt=""
+          class="shot-image"
+          widths={[380, 560, 760]}
+          sizes="(max-width: 1020px) 72vw, 320px"
+        />
+      </div>
+
+      <button type="button" class="shot shot-main" data-lightbox-trigger>
+        <Image
+          src={heroScreen2}
+          alt="LACE workflow view showing structured generation and review states"
+          class="shot-image"
+          widths={[560, 900, 1280]}
+          sizes="(max-width: 1020px) 88vw, 560px"
+        />
+      </button>
+
+      <div class="shot shot-back shot-right" aria-hidden="true">
+        <Image
+          src={heroScreen3}
+          alt=""
+          class="shot-image"
+          widths={[380, 560, 760]}
+          sizes="(max-width: 1020px) 72vw, 320px"
+        />
+      </div>
+    </div>
+
+    <dialog class="lightbox" data-lightbox>
+      <button class="lightbox-close" aria-label="Close">&times;</button>
+      <Image
+        src={heroScreen2}
+        alt="LACE workflow view showing structured generation and review states"
+        class="lightbox-image"
+        widths={[1024, 1440, 1920]}
+        sizes="95vw"
+      />
+    </dialog>
+  </section>
+
+  <div class="capability-marquee" aria-hidden="true" data-parallax data-parallax-axis="y" data-parallax-speed="6">
+    <div class="capability-track">
+      {[...capabilityTags, ...capabilityTags].map((tag) => (
+        <span>{tag}</span>
+      ))}
+    </div>
+  </div>
+
+  <section id="intro" class="section intro" data-reveal>
+    <div class="section-head">
+      <p class="section-label">Company</p>
+      <h2>Built for organizations that need deterministic outcomes, not prompt luck.</h2>
+    </div>
+
+    <div class="intro-grid">
+      <p>
+        Most teams are forced to choose between generic chatbots with no control and
+        custom AI builds that take months. Determinant Systems builds the layer in
+        between: infrastructure for turning business use cases into governed AI systems
+        that can be trusted in production.
+      </p>
+      <ul class="intro-list">
+        {companyBullets.map((item) => (
+          <li>{item}</li>
+        ))}
+      </ul>
+    </div>
+
+    <div
+      class="intro-graphics"
+      aria-hidden="true"
+      data-parallax
+      data-parallax-axis="y"
+      data-parallax-speed="10"
+      data-parallax-rotate="0.9"
+    >
+      <div class="intro-ring intro-ring-one"></div>
+      <div class="intro-ring intro-ring-two"></div>
+      <div class="intro-node intro-node-a"></div>
+      <div class="intro-node intro-node-b"></div>
+      <div class="intro-node intro-node-c"></div>
+      <div class="intro-beam"></div>
+    </div>
+  </section>
+
+  <section id="lace" class="section lace-overview" data-reveal>
+    <div class="section-head">
+      <p class="section-label">Product</p>
+      <h2>LACE turns a business use case into a controlled AI workflow.</h2>
+      <p>
+        A user defines inputs, reasoning steps, constraints, and outputs. LACE compiles
+        that into a deterministic pipeline, supervises execution, and can publish it as
+        a web application behind a URL.
+      </p>
+    </div>
+
+    <div class="pillars-grid">
+      {valuePillars.map((pillar, index) => (
+        <article
+          class={`surface-card pillar-card ${index === 0 ? "pillar-feature" : ""}`}
+          data-reveal
+          data-reveal-delay={120 + index * 80}
+        >
+          <h3>{pillar.title}</h3>
+          <p>{pillar.copy}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section id="platform" class="section split platform-section" data-reveal>
+    <article class="surface-card block workflow-panel" data-reveal data-reveal-delay="70">
+      <h2>How a use case becomes a working system</h2>
+      <p>
+        Instead of asking AI for one-off answers, teams define the workflow once and let
+        LACE run it as a governed process they can reuse, inspect, and improve.
+      </p>
+      <div class="workflow-grid">
+        {workflowSteps.map((step, index) => (
+          <article class="workflow-step" data-reveal data-reveal-delay={140 + index * 80}>
+            <p class="step-number">{step.step}</p>
+            <h3>{step.title}</h3>
+            <p>{step.description}</p>
+          </article>
+        ))}
+      </div>
+    </article>
+
+    <article class="surface-card block platform-panel" data-reveal data-reveal-delay="140">
+      <h2>The model is the intelligence. The platform is the governance.</h2>
+      <p>
+        LACE wraps every run in a control layer. It can govern models, budgets, data
+        policies, allowed pipelines, and human approvals, then publish the workflow as
+        software once it proves itself.
+      </p>
+
+      <div
+        class="platform-scene"
+        aria-hidden="true"
+        data-parallax
+        data-parallax-axis="y"
+        data-parallax-speed="11"
+      >
+        <div class="platform-glow platform-glow-a"></div>
+        <div class="platform-glow platform-glow-b"></div>
+        <Image
+          src={heroScreen1}
+          alt=""
+          class="platform-image platform-image-main"
+          widths={[500, 760, 980]}
+          sizes="(max-width: 1120px) 86vw, 420px"
+        />
+        <Image
+          src={heroScreen3}
+          alt=""
+          class="platform-image platform-image-back"
+          widths={[340, 520, 700]}
+          sizes="(max-width: 1120px) 68vw, 280px"
+        />
+        <span class="platform-tag platform-tag-one">control plane</span>
+        <span class="platform-tag platform-tag-two">publishable apps</span>
+      </div>
+
+      <div class="source-grid">
+        {operatingModes.map((mode, index) => (
+          <article class="source-item" data-reveal data-reveal-delay={220 + index * 70}>
+            <div class="source-badge">{mode.badge}</div>
+            <h3>{mode.name}</h3>
+            <p>{mode.detail}</p>
+          </article>
+        ))}
+      </div>
+    </article>
+  </section>
+
+  <section id="use-cases" class="section use-cases-section" data-reveal>
+    <div class="section-head">
+      <p class="section-label">Use Cases</p>
+      <h2>Model the use case. Then deploy it.</h2>
+      <p>
+        LACE is not one app. It is a system for turning narrow, high-value workflows into
+        governed AI products.
+      </p>
+    </div>
+
+    <div class="use-case-stage">
+      <article
+        class="surface-card use-case-spotlight"
+        data-reveal
+        data-reveal-delay="80"
+        data-parallax
+        data-parallax-axis="y"
+        data-parallax-speed="9"
+      >
+        <p class="section-label">Spotlight</p>
+        <h3>{spotlightUseCase.heading}</h3>
+        <p>{spotlightUseCase.summary}</p>
+        <div class="spotlight-columns">
+          <div>
+            <p class="case-label">Typical inputs</p>
+            <ul>
+              {spotlightUseCase.documents.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <p class="case-label">How LACE fits</p>
+            <ul>
+              {spotlightUseCase.laceFit.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <div class="use-case-list">
+        {featuredUseCases.map((useCase, index) => (
+          <article class="surface-card use-case-row" data-reveal data-reveal-delay={140 + index * 70}>
+            <h3>{useCase.tabTitle}</h3>
+            <p>{useCase.summary}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section id="trust" class="section trust-section" data-reveal>
+    <div
+      class="assurance-ticker"
+      aria-hidden="true"
+      data-parallax
+      data-parallax-axis="y"
+      data-parallax-speed="7"
+    >
+      <div class="assurance-track">
+        {[...assuranceTags, ...assuranceTags].map((tag) => (
+          <span>{tag}</span>
+        ))}
+      </div>
+    </div>
+
+    <div class="trust-grid">
+      <article class="surface-card block" data-reveal data-reveal-delay="70">
+        <h2>Trust controls</h2>
+        <ul>
+          {trustItems.map((item) => (
+            <li>{item}</li>
+          ))}
+        </ul>
+      </article>
+
+      <article class="surface-card block" data-reveal data-reveal-delay="150">
+        <h2>Deployment options</h2>
+        <ul>
+          {deploymentOptions.map((item) => (
+            <li>{item}</li>
+          ))}
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <section class="section cta" data-reveal>
+    <p class="section-label">Get Started</p>
+    <h2>Model the workflow. Enforce the rules. Publish the product.</h2>
+    <p>
+      LACE helps teams move from prompt experiments to governed AI systems they can run
+      internally or sell to a market.
+    </p>
+    <div class="hero-actions">
+      <a href={whitepaperEnglish} class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+        Read the Enterprise Overview
+      </a>
+      <a href="#use-cases" class="btn btn-ghost">View use cases</a>
+    </div>
+  </section>
+</main>
+
+<script>
+  const lightboxTrigger = document.querySelector<HTMLButtonElement>("[data-lightbox-trigger]");
+  const lightbox = document.querySelector<HTMLDialogElement>("[data-lightbox]");
+
+  if (lightboxTrigger && lightbox) {
+    lightboxTrigger.addEventListener("click", () => lightbox.showModal());
+
+    lightbox.querySelector(".lightbox-close")?.addEventListener("click", () => {
+      lightbox.close();
+    });
+
+    lightbox.addEventListener("click", (event) => {
+      if (event.target === lightbox) {
+        lightbox.close();
+      }
+    });
+  }
+
+  const topNav = document.querySelector<HTMLElement>(".top-nav");
+  const navToggle = document.querySelector<HTMLButtonElement>(".top-nav-toggle");
+  const navPanel = document.getElementById("topNavPanel");
+  const navTargets = document.querySelectorAll<HTMLAnchorElement>(".top-links a, .nav-cta");
+  const navMedia = window.matchMedia("(max-width: 900px)");
+
+  const setNavOpen = (open: boolean) => {
+    if (!topNav || !navToggle) return;
+    topNav.classList.toggle("is-open", open);
+    navToggle.setAttribute("aria-expanded", open ? "true" : "false");
+
+    if (navPanel && navMedia.matches) {
+      navPanel.toggleAttribute("hidden", !open);
+    } else if (navPanel) {
+      navPanel.removeAttribute("hidden");
+    }
+  };
+
+  const closeNav = () => {
+    setNavOpen(false);
+  };
+
+  const toggleNav = () => {
+    if (!topNav) return;
+    const nextOpen = !topNav.classList.contains("is-open");
+    setNavOpen(nextOpen);
+  };
+
+  navToggle?.addEventListener("click", toggleNav);
+
+  navTargets.forEach((target) => {
+    target.addEventListener("click", () => {
+      if (navMedia.matches) closeNav();
+    });
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!topNav || !navMedia.matches) return;
+    if (!topNav.contains(event.target as Node)) closeNav();
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") closeNav();
+  });
+
+  const syncNavForViewport = () => {
+    if (navMedia.matches) {
+      setNavOpen(false);
+      return;
+    }
+    setNavOpen(false);
+    navPanel?.removeAttribute("hidden");
+  };
+
+  syncNavForViewport();
+  navMedia.addEventListener("change", syncNavForViewport);
+</script>

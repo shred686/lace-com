@@ -5,17 +5,19 @@ interface Props {
   title?: string;
   description?: string;
   theme?: string;
+  lang?: string;
 }
 
 const {
   title = "Determinant Systems | Deterministic Infrastructure for Enterprise AI",
   description = "Determinant Systems builds LACE, structured and auditable AI systems for mission-critical enterprise documentation.",
-  theme = "midnight"
+  theme = "midnight",
+  lang = "en"
 } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en" data-theme={theme}>
+<html lang={lang} data-theme={theme}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />

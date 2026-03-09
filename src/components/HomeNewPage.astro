@@ -1,6 +1,22 @@
 ---
 import { Image } from "astro:assets";
 import {
+  getHomeNewContent,
+  type HomeLocale
+} from "../data/homeNewContent";
+import heroScreen1 from "../assets/images/lace-screen1.png";
+import heroScreen2 from "../assets/images/lace-screen2.png";
+import heroScreen3 from "../assets/images/lace-screen3.png";
+import whitepaperEnglish from "../assets/docs/lace_enterprise_overview_v2_ENGLISH.pdf";
+import whitepaperSpanish from "../assets/docs/lace_enterprise_overview_v2_SPANISH.pdf";
+
+interface Props {
+  locale?: HomeLocale;
+}
+
+const { locale = "en" } = Astro.props;
+
+const {
   assuranceTags,
   capabilityTags,
   companyBullets,
@@ -11,11 +27,114 @@ import {
   useCases,
   valuePillars,
   workflowSteps
-} from "../data/homeNewContent";
-import heroScreen1 from "../assets/images/lace-screen1.png";
-import heroScreen2 from "../assets/images/lace-screen2.png";
-import heroScreen3 from "../assets/images/lace-screen3.png";
-import whitepaperEnglish from "../assets/docs/lace_enterprise_overview_v2_ENGLISH.pdf";
+} = getHomeNewContent(locale);
+
+const isSpanish = locale === "es";
+const currentPath = Astro.url.pathname;
+const spanishPath = currentPath === "/" ? "/es/" : `/es${currentPath}`;
+const englishPath = isSpanish ? currentPath.replace(/^\/es(?=\/|$)/, "") || "/" : currentPath;
+const languageToggleHref = isSpanish ? englishPath : spanishPath;
+const languageToggleLabel = isSpanish ? "English" : "Español";
+const brandHref = isSpanish ? "/es/" : "/";
+const whitepaperUrl = isSpanish ? whitepaperSpanish : whitepaperEnglish;
+
+const copy = isSpanish
+  ? {
+      navLabel: "Principal",
+      toggleNav: "Alternar navegacion",
+      navPlatform: "Plataforma",
+      navUseCases: "Casos de uso",
+      navTrust: "Confianza",
+      navOverview: "Resumen empresarial",
+      heroTitle: "Haz que la IA funcione para tu empresa.",
+      heroIntro: "Infraestructura para IA empresarial.",
+      heroDetail:
+        "LACE te permite modelar un caso de uso de negocio, ejecutar IA con reglas y politicas definidas, y desplegar una aplicacion completa.",
+      heroCtaPrimary: "Explorar LACE",
+      heroCtaSecondary: "Ver flujo de plataforma",
+      heroAlt: "Vista del flujo de LACE con generacion estructurada y estados de revision",
+      heroVisualLabel: "Vistas previas de la plataforma LACE",
+      closeLabel: "Cerrar",
+      introLabel: "Empresa",
+      introTitle: "Construido para organizaciones que necesitan resultados deterministas, no suerte con prompts.",
+      introBody:
+        "Muchos equipos deben elegir entre chatbots genericos sin control y desarrollos de IA a medida que toman meses. Determinant Systems construye la capa intermedia: infraestructura para convertir casos de uso en sistemas de IA gobernados y confiables en produccion.",
+      productLabel: "Producto",
+      productTitle: "LACE convierte un caso de uso de negocio en un flujo de IA controlado.",
+      productBody:
+        "Un usuario define entradas, pasos de razonamiento, restricciones y salidas. LACE lo compila como un pipeline determinista, supervisa su ejecucion y puede publicarlo como aplicacion web bajo una URL.",
+      workflowTitle: "Como un caso de uso se convierte en un sistema funcional",
+      workflowBody:
+        "En lugar de pedir respuestas aisladas, los equipos definen el flujo una vez y LACE lo ejecuta como un proceso gobernado, reutilizable e inspeccionable.",
+      governanceTitle: "El modelo es la inteligencia. La plataforma es la gobernanza.",
+      governanceBody:
+        "LACE envuelve cada ejecucion en una capa de control. Puede gobernar modelos, presupuestos, politicas de datos, pipelines permitidos y aprobaciones humanas, y publicar el flujo como software cuando demuestra valor.",
+      controlPlane: "plano de control",
+      publishableApps: "apps publicables",
+      useCasesLabel: "Casos de uso",
+      useCasesTitle: "Modela el caso de uso. Luego despliegalo.",
+      useCasesBody:
+        "LACE no es una sola app. Es un sistema para convertir flujos estrechos de alto valor en productos de IA gobernados.",
+      spotlight: "Destacado",
+      typicalInputs: "Entradas tipicas",
+      laceFit: "Como encaja LACE",
+      trustTitle: "Controles de confianza",
+      deploymentTitle: "Opciones de despliegue",
+      ctaLabel: "Comienza",
+      ctaTitle: "Modela el flujo. Aplica las reglas. Publica el producto.",
+      ctaBody:
+        "LACE ayuda a los equipos a pasar de experimentos con prompts a sistemas de IA gobernados que pueden operar internamente o vender al mercado.",
+      ctaPrimary: "Leer resumen empresarial",
+      ctaSecondary: "Ver casos de uso"
+    }
+  : {
+      navLabel: "Primary",
+      toggleNav: "Toggle navigation",
+      navPlatform: "Platform",
+      navUseCases: "Use Cases",
+      navTrust: "Trust",
+      navOverview: "Enterprise overview",
+      heroTitle: "Make AI work for your company.",
+      heroIntro: "Infrastructure for enterprise AI.",
+      heroDetail:
+        "LACE lets you model a business use case, run AI inside defined rules and policy, and deploy a full-fledged application.",
+      heroCtaPrimary: "Explore LACE",
+      heroCtaSecondary: "See platform flow",
+      heroAlt: "LACE workflow view showing structured generation and review states",
+      heroVisualLabel: "LACE platform previews",
+      closeLabel: "Close",
+      introLabel: "Company",
+      introTitle: "Built for organizations that need deterministic outcomes, not prompt luck.",
+      introBody:
+        "Most teams are forced to choose between generic chatbots with no control and custom AI builds that take months. Determinant Systems builds the layer in between: infrastructure for turning business use cases into governed AI systems that can be trusted in production.",
+      productLabel: "Product",
+      productTitle: "LACE turns a business use case into a controlled AI workflow.",
+      productBody:
+        "A user defines inputs, reasoning steps, constraints, and outputs. LACE compiles that into a deterministic pipeline, supervises execution, and can publish it as a web application behind a URL.",
+      workflowTitle: "How a use case becomes a working system",
+      workflowBody:
+        "Instead of asking AI for one-off answers, teams define the workflow once and let LACE run it as a governed process they can reuse, inspect, and improve.",
+      governanceTitle: "The model is the intelligence. The platform is the governance.",
+      governanceBody:
+        "LACE wraps every run in a control layer. It can govern models, budgets, data policies, allowed pipelines, and human approvals, then publish the workflow as software once it proves itself.",
+      controlPlane: "control plane",
+      publishableApps: "publishable apps",
+      useCasesLabel: "Use Cases",
+      useCasesTitle: "Model the use case. Then deploy it.",
+      useCasesBody:
+        "LACE is not one app. It is a system for turning narrow, high-value workflows into governed AI products.",
+      spotlight: "Spotlight",
+      typicalInputs: "Typical inputs",
+      laceFit: "How LACE fits",
+      trustTitle: "Trust controls",
+      deploymentTitle: "Deployment options",
+      ctaLabel: "Get Started",
+      ctaTitle: "Model the workflow. Enforce the rules. Publish the product.",
+      ctaBody:
+        "LACE helps teams move from prompt experiments to governed AI systems they can run internally or sell to a market.",
+      ctaPrimary: "Read the Enterprise Overview",
+      ctaSecondary: "View use cases"
+    };
 
 const spotlightUseCase = useCases.find((useCase) => useCase.id === "permit-research") ?? useCases[0];
 const featuredUseCases = useCases.filter((useCase) => useCase.id !== spotlightUseCase.id).slice(0, 4);
@@ -25,7 +144,7 @@ const featuredUseCases = useCases.filter((useCase) => useCase.id !== spotlightUs
   <div class="noise-layer" aria-hidden="true"></div>
 
   <header class="top-nav" data-reveal data-reveal-delay="40">
-    <a href="/" class="brand-wordmark">
+    <a href={brandHref} class="brand-wordmark">
       <span class="brand-dot" aria-hidden="true"></span>
       Determinant Systems
     </a>
@@ -35,22 +154,24 @@ const featuredUseCases = useCases.filter((useCase) => useCase.id !== spotlightUs
       class="top-nav-toggle"
       aria-expanded="false"
       aria-controls="topNavPanel"
-      aria-label="Toggle navigation"
+      aria-label={copy.toggleNav}
     >
       <span class="top-nav-toggle-line"></span>
       <span class="top-nav-toggle-line"></span>
     </button>
 
     <div class="top-nav-panel" id="topNavPanel">
-      <nav class="top-links" aria-label="Primary">
+      <nav class="top-links" aria-label={copy.navLabel}>
         <a href="#lace">LACE</a>
-        <a href="#platform">Platform</a>
-        <a href="#use-cases">Use Cases</a>
-        <a href="#trust">Trust</a>
+        <a href="#platform">{copy.navPlatform}</a>
+        <a href="#use-cases">{copy.navUseCases}</a>
+        <a href="#trust">{copy.navTrust}</a>
       </nav>
 
-      <a href={whitepaperEnglish} class="nav-cta" target="_blank" rel="noopener noreferrer">
-        Enterprise overview
+      <a href={languageToggleHref} class="nav-language-toggle">{languageToggleLabel}</a>
+
+      <a href={whitepaperUrl} class="nav-cta" target="_blank" rel="noopener noreferrer">
+        {copy.navOverview}
       </a>
     </div>
   </header>
@@ -58,23 +179,20 @@ const featuredUseCases = useCases.filter((useCase) => useCase.id !== spotlightUs
   <section class="hero" data-reveal data-reveal-delay="90">
     <div class="hero-copy">
       <p class="kicker">Determinant Systems</p>
-      <h1>Make AI work for your company.</h1>
-      <p class="hero-intro">Infrastructure for enterprise AI.</p>
-      <p class="hero-detail">
-        LACE lets you model a business use case, run AI inside defined rules and policy, 
-        and deploy a full-fledged application.
-      </p>
+      <h1>{copy.heroTitle}</h1>
+      <p class="hero-intro">{copy.heroIntro}</p>
+      <p class="hero-detail">{copy.heroDetail}</p>
 
       <div class="hero-actions">
         <a
-          href={whitepaperEnglish}
+          href={whitepaperUrl}
           class="btn btn-primary"
           target="_blank"
           rel="noopener noreferrer"
         >
-          Explore LACE
+          {copy.heroCtaPrimary}
         </a>
-        <a href="#platform" class="btn btn-ghost">See platform flow</a>
+        <a href="#platform" class="btn btn-ghost">{copy.heroCtaSecondary}</a>
       </div>
 
       <div class="hero-meta">
@@ -86,7 +204,7 @@ const featuredUseCases = useCases.filter((useCase) => useCase.id !== spotlightUs
 
     <div
       class="hero-visual"
-      aria-label="LACE platform previews"
+      aria-label={copy.heroVisualLabel}
       data-parallax
       data-parallax-axis="y"
       data-parallax-speed="14"
@@ -107,7 +225,7 @@ const featuredUseCases = useCases.filter((useCase) => useCase.id !== spotlightUs
       <button type="button" class="shot shot-main" data-lightbox-trigger>
         <Image
           src={heroScreen2}
-          alt="LACE workflow view showing structured generation and review states"
+          alt={copy.heroAlt}
           class="shot-image"
           widths={[560, 900, 1280]}
           sizes="(max-width: 1020px) 88vw, 560px"
@@ -126,10 +244,10 @@ const featuredUseCases = useCases.filter((useCase) => useCase.id !== spotlightUs
     </div>
 
     <dialog class="lightbox" data-lightbox>
-      <button class="lightbox-close" aria-label="Close">&times;</button>
+      <button class="lightbox-close" aria-label={copy.closeLabel}>&times;</button>
       <Image
         src={heroScreen2}
-        alt="LACE workflow view showing structured generation and review states"
+        alt={copy.heroAlt}
         class="lightbox-image"
         widths={[1024, 1440, 1920]}
         sizes="95vw"
@@ -147,17 +265,12 @@ const featuredUseCases = useCases.filter((useCase) => useCase.id !== spotlightUs
 
   <section id="intro" class="section intro" data-reveal>
     <div class="section-head">
-      <p class="section-label">Company</p>
-      <h2>Built for organizations that need deterministic outcomes, not prompt luck.</h2>
+      <p class="section-label">{copy.introLabel}</p>
+      <h2>{copy.introTitle}</h2>
     </div>
 
     <div class="intro-grid">
-      <p>
-        Most teams are forced to choose between generic chatbots with no control and
-        custom AI builds that take months. Determinant Systems builds the layer in
-        between: infrastructure for turning business use cases into governed AI systems
-        that can be trusted in production.
-      </p>
+      <p>{copy.introBody}</p>
       <ul class="intro-list">
         {companyBullets.map((item) => (
           <li>{item}</li>
@@ -184,13 +297,9 @@ const featuredUseCases = useCases.filter((useCase) => useCase.id !== spotlightUs
 
   <section id="lace" class="section lace-overview" data-reveal>
     <div class="section-head">
-      <p class="section-label">Product</p>
-      <h2>LACE turns a business use case into a controlled AI workflow.</h2>
-      <p>
-        A user defines inputs, reasoning steps, constraints, and outputs. LACE compiles
-        that into a deterministic pipeline, supervises execution, and can publish it as
-        a web application behind a URL.
-      </p>
+      <p class="section-label">{copy.productLabel}</p>
+      <h2>{copy.productTitle}</h2>
+      <p>{copy.productBody}</p>
     </div>
 
     <div class="pillars-grid">
@@ -209,11 +318,8 @@ const featuredUseCases = useCases.filter((useCase) => useCase.id !== spotlightUs
 
   <section id="platform" class="section split platform-section" data-reveal>
     <article class="surface-card block workflow-panel" data-reveal data-reveal-delay="70">
-      <h2>How a use case becomes a working system</h2>
-      <p>
-        Instead of asking AI for one-off answers, teams define the workflow once and let
-        LACE run it as a governed process they can reuse, inspect, and improve.
-      </p>
+      <h2>{copy.workflowTitle}</h2>
+      <p>{copy.workflowBody}</p>
       <div class="workflow-grid">
         {workflowSteps.map((step, index) => (
           <article class="workflow-step" data-reveal data-reveal-delay={140 + index * 80}>
@@ -226,12 +332,8 @@ const featuredUseCases = useCases.filter((useCase) => useCase.id !== spotlightUs
     </article>
 
     <article class="surface-card block platform-panel" data-reveal data-reveal-delay="140">
-      <h2>The model is the intelligence. The platform is the governance.</h2>
-      <p>
-        LACE wraps every run in a control layer. It can govern models, budgets, data
-        policies, allowed pipelines, and human approvals, then publish the workflow as
-        software once it proves itself.
-      </p>
+      <h2>{copy.governanceTitle}</h2>
+      <p>{copy.governanceBody}</p>
 
       <div
         class="platform-scene"
@@ -256,8 +358,8 @@ const featuredUseCases = useCases.filter((useCase) => useCase.id !== spotlightUs
           widths={[340, 520, 700]}
           sizes="(max-width: 1120px) 68vw, 280px"
         />
-        <span class="platform-tag platform-tag-one">control plane</span>
-        <span class="platform-tag platform-tag-two">publishable apps</span>
+        <span class="platform-tag platform-tag-one">{copy.controlPlane}</span>
+        <span class="platform-tag platform-tag-two">{copy.publishableApps}</span>
       </div>
 
       <div class="source-grid">
@@ -274,12 +376,9 @@ const featuredUseCases = useCases.filter((useCase) => useCase.id !== spotlightUs
 
   <section id="use-cases" class="section use-cases-section" data-reveal>
     <div class="section-head">
-      <p class="section-label">Use Cases</p>
-      <h2>Model the use case. Then deploy it.</h2>
-      <p>
-        LACE is not one app. It is a system for turning narrow, high-value workflows into
-        governed AI products.
-      </p>
+      <p class="section-label">{copy.useCasesLabel}</p>
+      <h2>{copy.useCasesTitle}</h2>
+      <p>{copy.useCasesBody}</p>
     </div>
 
     <div class="use-case-stage">
@@ -291,12 +390,12 @@ const featuredUseCases = useCases.filter((useCase) => useCase.id !== spotlightUs
         data-parallax-axis="y"
         data-parallax-speed="9"
       >
-        <p class="section-label">Spotlight</p>
+        <p class="section-label">{copy.spotlight}</p>
         <h3>{spotlightUseCase.heading}</h3>
         <p>{spotlightUseCase.summary}</p>
         <div class="spotlight-columns">
           <div>
-            <p class="case-label">Typical inputs</p>
+            <p class="case-label">{copy.typicalInputs}</p>
             <ul>
               {spotlightUseCase.documents.map((item) => (
                 <li>{item}</li>
@@ -304,7 +403,7 @@ const featuredUseCases = useCases.filter((useCase) => useCase.id !== spotlightUs
             </ul>
           </div>
           <div>
-            <p class="case-label">How LACE fits</p>
+            <p class="case-label">{copy.laceFit}</p>
             <ul>
               {spotlightUseCase.laceFit.map((item) => (
                 <li>{item}</li>
@@ -342,7 +441,7 @@ const featuredUseCases = useCases.filter((useCase) => useCase.id !== spotlightUs
 
     <div class="trust-grid">
       <article class="surface-card block" data-reveal data-reveal-delay="70">
-        <h2>Trust controls</h2>
+        <h2>{copy.trustTitle}</h2>
         <ul>
           {trustItems.map((item) => (
             <li>{item}</li>
@@ -351,7 +450,7 @@ const featuredUseCases = useCases.filter((useCase) => useCase.id !== spotlightUs
       </article>
 
       <article class="surface-card block" data-reveal data-reveal-delay="150">
-        <h2>Deployment options</h2>
+        <h2>{copy.deploymentTitle}</h2>
         <ul>
           {deploymentOptions.map((item) => (
             <li>{item}</li>
@@ -362,17 +461,14 @@ const featuredUseCases = useCases.filter((useCase) => useCase.id !== spotlightUs
   </section>
 
   <section class="section cta" data-reveal>
-    <p class="section-label">Get Started</p>
-    <h2>Model the workflow. Enforce the rules. Publish the product.</h2>
-    <p>
-      LACE helps teams move from prompt experiments to governed AI systems they can run
-      internally or sell to a market.
-    </p>
+    <p class="section-label">{copy.ctaLabel}</p>
+    <h2>{copy.ctaTitle}</h2>
+    <p>{copy.ctaBody}</p>
     <div class="hero-actions">
-      <a href={whitepaperEnglish} class="btn btn-primary" target="_blank" rel="noopener noreferrer">
-        Read the Enterprise Overview
+      <a href={whitepaperUrl} class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+        {copy.ctaPrimary}
       </a>
-      <a href="#use-cases" class="btn btn-ghost">View use cases</a>
+      <a href="#use-cases" class="btn btn-ghost">{copy.ctaSecondary}</a>
     </div>
   </section>
 </main>
@@ -398,7 +494,9 @@ const featuredUseCases = useCases.filter((useCase) => useCase.id !== spotlightUs
   const topNav = document.querySelector<HTMLElement>(".top-nav");
   const navToggle = document.querySelector<HTMLButtonElement>(".top-nav-toggle");
   const navPanel = document.getElementById("topNavPanel");
-  const navTargets = document.querySelectorAll<HTMLAnchorElement>(".top-links a, .nav-cta");
+  const navTargets = document.querySelectorAll<HTMLAnchorElement>(
+    ".top-links a, .nav-cta, .nav-language-toggle"
+  );
   const navMedia = window.matchMedia("(max-width: 900px)");
 
   const setNavOpen = (open: boolean) => {

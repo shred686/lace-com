@@ -1,0 +1,95 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Message Sent | Determinant Systems"
+  description="Your message has been sent to Determinant Systems."
+  theme="midnight"
+  lang="en"
+>
+  <main class="contact-success-page">
+    <div class="noise-layer"></div>
+
+    <section class="contact-success-shell ds-site">
+      <div class="success-card" data-reveal>
+        <p class="success-eyebrow">Contact</p>
+        <h1>Message sent.</h1>
+        <p class="success-copy">
+          Thanks for reaching out. We&apos;ll review your note and follow up by email.
+        </p>
+        <div class="success-actions">
+          <a href="/" class="success-link">Back home</a>
+          <a href="/contact" class="success-link success-link-secondary">Send another message</a>
+        </div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .contact-success-page {
+    min-height: 100vh;
+    position: relative;
+  }
+
+  .contact-success-shell {
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+  }
+
+  .success-card {
+    width: min(42rem, 100%);
+    padding: clamp(1.8rem, 5vw, 3rem);
+    border: 1px solid var(--line);
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.015)),
+      rgba(6, 8, 11, 0.78);
+    box-shadow: var(--shadow-lg);
+    backdrop-filter: blur(16px);
+  }
+
+  .success-eyebrow {
+    margin-bottom: 0.9rem;
+    color: #d9dee7;
+    font-size: 0.82rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .success-copy {
+    margin-top: 1rem;
+    max-width: 34rem;
+    font-size: 1.02rem;
+  }
+
+  .success-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.9rem;
+    margin-top: 1.8rem;
+  }
+
+  .success-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.9rem;
+    padding: 0.8rem 1.2rem;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    color: var(--text);
+    text-decoration: none;
+    background: linear-gradient(135deg, rgba(94, 143, 255, 0.25), rgba(77, 220, 190, 0.15));
+  }
+
+  .success-link-secondary {
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  @media (max-width: 640px) {
+    .success-card {
+      border-radius: 0.35rem;
+    }
+  }
+</style>

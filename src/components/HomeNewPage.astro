@@ -1,14 +1,10 @@
 ---
-import { Image } from "astro:assets";
 import {
   getHomeNewContent,
   type HomeLocale
 } from "../data/homeNewContent";
-import heroScreen1 from "../assets/images/lace-screen1.png";
-import heroScreen2 from "../assets/images/lace-screen2.png";
-import heroScreen3 from "../assets/images/lace-screen3.png";
 import whitepaperEnglish from "../assets/docs/lace_enterprise_overview_v2_ENGLISH.pdf";
-import whitepaperSpanish from "../assets/docs/lace_enterprise_overview_v2_SPANISH.pdf";
+import whitepaperSpanish from "../assets/docs/LACE_Enterprise_Overview_v2_SPANISH.pdf";
 
 interface Props {
   locale?: HomeLocale;
@@ -18,14 +14,12 @@ const { locale = "en" } = Astro.props;
 
 const {
   assuranceTags,
+  capabilities,
   capabilityTags,
-  companyBullets,
   deploymentOptions,
   heroProofs,
-  operatingModes,
   trustItems,
   useCases,
-  valuePillars,
   workflowSteps
 } = getHomeNewContent(locale);
 
@@ -40,408 +34,690 @@ const whitepaperUrl = isSpanish ? whitepaperSpanish : whitepaperEnglish;
 
 const copy = isSpanish
   ? {
-      navLabel: "Principal",
       toggleNav: "Alternar navegacion",
       navPlatform: "Plataforma",
       navUseCases: "Casos de uso",
       navTrust: "Confianza",
-      navOverview: "Resumen empresarial",
+      navContact: "Contáctanos",
       heroTitle: "Haz que la IA funcione para tu empresa.",
       heroIntro: "Infraestructura para IA empresarial.",
       heroDetail:
         "LACE te permite modelar un caso de uso de negocio, ejecutar IA con reglas y politicas definidas, y desplegar una aplicacion completa.",
-      heroCtaPrimary: "Explorar LACE",
-      heroCtaSecondary: "Ver flujo de plataforma",
-      heroAlt: "Vista del flujo de LACE con generacion estructurada y estados de revision",
-      heroVisualLabel: "Vistas previas de la plataforma LACE",
-      closeLabel: "Cerrar",
-      introLabel: "Empresa",
-      introTitle: "Construido para organizaciones que necesitan resultados deterministas, no suerte con prompts.",
-      introBody:
-        "Muchos equipos deben elegir entre chatbots genericos sin control y desarrollos de IA a medida que toman meses. Determinant Systems construye la capa intermedia: infraestructura para convertir casos de uso en sistemas de IA gobernados y confiables en produccion.",
-      productLabel: "Producto",
-      productTitle: "LACE convierte un caso de uso de negocio en un flujo de IA controlado.",
-      productBody:
-        "Un usuario define entradas, pasos de razonamiento, restricciones y salidas. LACE lo compila como un pipeline determinista, supervisa su ejecucion y puede publicarlo como aplicacion web bajo una URL.",
-      workflowTitle: "Como un caso de uso se convierte en un sistema funcional",
+      heroCtaPrimary: "DOWNLOAD WHITEPAPER",
+      systemStatus: "Sistema activo // protocolo en linea",
+      whoLabel: "Quienes somos",
+      whoIndex: "01 // Identidad",
+      whoTitleLead: "Una consultoria de IA construida",
+      whoTitleAccent: "para la era agentica.",
+      whoTitle: "Una consultoria de IA con infraestructura propia.",
+      whoBody:
+        "Determinant Systems ayuda a organizaciones a pasar de experimentos de IA a sistemas de IA que pueden operar en produccion. Implementamos flujos de trabajo de IA empresariales, construimos sistemas agenticos para procesos complejos de negocio, y desplegamos nuestra propia plataforma - LACE - para organizaciones que necesitan control total de como opera la IA dentro de su entorno.",
+      whoBody2:
+        "Trabajamos con empresas que no pueden permitir resultados impredecibles: industrias reguladas, programas gubernamentales, servicios profesionales y cualquier equipo donde una respuesta incorrecta no es solo molesta - es una responsabilidad.",
+      whoCta: "Arquitectura del protocolo",
+      whoDiagramTop: "Ingestion",
+      whoDiagramCore: "LACE ORCHESTRATION",
+      whoDiagramCoreSub: "observe // route // verify",
+      whoDiagramBottom: "Synthesis",
+      whoDiagramLeft: "Deterministic",
+      whoDiagramRight: "Adaptive",
+      whoDiagramRail: "WORKFLOW-COMPILED // POLICY-BOUND",
+      whoDiagramVersion: "LACE CORE // v4.2",
+      introLabel: "El problema",
+      introTitle: "La mayoria de las herramientas de IA son rapidas.",
+      introBody: "Muy pocas son confiables.",
+      problemCards: [
+        {
+          title: "Chatbots genericos",
+          body:
+            "Rapidos y capaces, pero imposibles de gobernar. Sin politicas, sin rastro de auditoria y sin forma de imponer consistencia. Haz la misma pregunta dos veces y obtendras respuestas distintas. Inaceptable en cualquier entorno regulado o de alto riesgo."
+        },
+        {
+          title: "Desarrollos de IA a medida",
+          body:
+            "Precisos y controlables, pero caros, lentos y fragiles. Cada uno se construye desde cero, tarda meses en entregarse y resuelve exactamente un caso de uso. Cuando cambian los requisitos, hay que empezar de nuevo."
+        },
+        {
+          title: "Lo que realmente se necesita",
+          body:
+            "IA que opere dentro de reglas reales de negocio. Salidas auditables. Resultados consistentes. La capacidad de revisar, aprobar y rastrear cada decision sin un ciclo de desarrollo de seis meses para cada nuevo flujo."
+        }
+      ],
+      workflowLabel: "Plataforma // Flujo",
+      workflowTitle: "Como un caso de uso se convierte en un sistema funcional.",
       workflowBody:
         "En lugar de pedir respuestas aisladas, los equipos definen el flujo una vez y LACE lo ejecuta como un proceso gobernado, reutilizable e inspeccionable.",
-      governanceTitle: "El modelo es la inteligencia. La plataforma es la gobernanza.",
-      governanceBody:
-        "LACE envuelve cada ejecucion en una capa de control. Puede gobernar modelos, presupuestos, politicas de datos, pipelines permitidos y aprobaciones humanas, y publicar el flujo como software cuando demuestra valor.",
-      controlPlane: "plano de control",
-      publishableApps: "apps publicables",
+      ourPlatformLabel: "Nuestra plataforma",
+      ourPlatformTitle: "Presentamos LACE.",
+      ourPlatformBody:
+        "LACE es una plataforma de IA empresarial que convierte flujos de trabajo en sistemas gobernados y repetibles. Tu defines lo que debe hacer el proceso — las entradas, las reglas, las salidas — y LACE lo compila en un pipeline que ejecuta IA dentro de pasos controlados, valida cada resultado antes de que cuente y mantiene un registro completo de todo lo que ocurrio.",
+      ourPlatformSub:
+        "Piensa en ello como la capa operacional que se sienta entre un modelo de IA poderoso y tu negocio real — asegurando que la IA haga lo que necesitas, de la manera que lo necesitas, cada vez.",
+      howItWorksLabel: "Como funciona",
+      howItWorksTitle: "De proceso de negocio a sistema de IA gobernado en cuatro pasos.",
+      capabilitiesLabel: "Capacidades de la plataforma",
+      capabilitiesTitle: "Lo que hace a LACE diferente de un wrapper de IA.",
+      capabilitiesBody:
+        "LACE no es una capa delgada sobre una API de IA. Es un entorno de ejecucion completo — con pipelines verificados por tipo, una capa de cumplimiento de politicas, proveniencia completa en cada salida y un sistema de publicacion que convierte flujos probados en software desplegable.",
       useCasesLabel: "Casos de uso",
-      useCasesTitle: "Modela el caso de uso. Luego despliegalo.",
+      useCasesTitle: "Todo negocio tiene un proceso que la IA podria manejar — pero no puede confiar en que lo haga.",
       useCasesBody:
-        "LACE no es una sola app. Es un sistema para convertir flujos estrechos de alto valor en productos de IA gobernados.",
+        "LACE no reemplaza esos instintos. Le da a la IA la estructura, las reglas y la supervision que la hace utilizable en entornos reales de negocio.",
       spotlight: "Destacado",
       typicalInputs: "Entradas tipicas",
       laceFit: "Como encaja LACE",
+      whatYouGet: "Lo que obtienes",
       trustTitle: "Controles de confianza",
+      trustHeading: "IA que puedes auditar, no IA que suele acertar.",
       deploymentTitle: "Opciones de despliegue",
+      deploymentHeading: "Despliega en cualquier lugar. Tu entorno, tus reglas.",
       ctaLabel: "Comienza",
-      ctaTitle: "Modela el flujo. Aplica las reglas. Publica el producto.",
+      ctaTitle: "Ready to run AI the right way?",
       ctaBody:
-        "LACE ayuda a los equipos a pasar de experimentos con prompts a sistemas de IA gobernados que pueden operar internamente o vender al mercado.",
-      ctaPrimary: "Leer resumen empresarial",
-      ctaSecondary: "Ver casos de uso"
+        "Tell us what process you're trying to govern. We'll show you how LACE handles it - or build it for you.",
+      ctaPrimary: "Talk to us",
+      ctaSecondary: "Download the enterprise overview →",
+      runtime: "PROTOCOLO_RUNTIME_LACE_V3",
+      sourceGrounded: "Basado en fuentes",
+      footerTagline: "Infraestructura de IA empresarial",
+      security: "Seguridad",
+      privacy: "Privacidad",
+      workflows: "Flujos",
+      traceable: "Trazable",
+      deployModes: "Modos de despliegue",
+      readyForExecution: "LISTO_PARA_EJECUTAR"
     }
   : {
-      navLabel: "Primary",
       toggleNav: "Toggle navigation",
       navPlatform: "Platform",
       navUseCases: "Use Cases",
       navTrust: "Trust",
-      navOverview: "Enterprise overview",
+      navContact: "Contact us",
       heroTitle: "Make AI work for your company.",
       heroIntro: "Infrastructure for enterprise AI.",
       heroDetail:
-        "LACE lets you model a business use case, run AI inside defined rules and policy, and deploy a full-fledged application.",
-      heroCtaPrimary: "Explore LACE",
-      heroCtaSecondary: "See platform flow",
-      heroAlt: "LACE workflow view showing structured generation and review states",
-      heroVisualLabel: "LACE platform previews",
-      closeLabel: "Close",
-      introLabel: "Company",
-      introTitle: "Built for organizations that need deterministic outcomes, not prompt luck.",
-      introBody:
-        "Most teams are forced to choose between generic chatbots with no control and custom AI builds that take months. Determinant Systems builds the layer in between: infrastructure for turning business use cases into governed AI systems that can be trusted in production.",
-      productLabel: "Product",
-      productTitle: "LACE turns a business use case into a controlled AI workflow.",
-      productBody:
-        "A user defines inputs, reasoning steps, constraints, and outputs. LACE compiles that into a deterministic pipeline, supervises execution, and can publish it as a web application behind a URL.",
-      workflowTitle: "How a use case becomes a working system",
+        "Determinant Systems helps companies design, build, and deploy AI workflows that are controlled, reliable, and useful in production.",
+      heroCtaPrimary: "DOWNLOAD WHITEPAPER",
+      systemStatus: "System active // protocol online",
+      whoLabel: "Who We Are",
+      whoIndex: "01 // Identity",
+      whoTitleLead: "An AI Consultancy",
+      whoTitleAccent: " Built for the Agentic Era.",
+      whoTitle: "An AI consultancy with its own infrastructure.",
+      whoBody:
+        "Determinant Systems helps organizations move from AI experiments to AI systems they can run in production. We implement enterprise AI workflows, build agentic systems for complex business processes, and deploy our own platform - LACE - for organizations that need full control over how AI operates inside their environment.",
+      whoBody2:
+        "We work with businesses that can't afford unpredictable outputs: regulated industries, government programs, professional services, and any team where a wrong answer isn't just annoying - it's a liability.",
+      whoCta: "Protocol Architecture",
+      whoDiagramTop: "Ingestion",
+      whoDiagramCore: "LACE ORCHESTRATION",
+      whoDiagramCoreSub: "observe // route // verify",
+      whoDiagramBottom: "Synthesis",
+      whoDiagramLeft: "Deterministic",
+      whoDiagramRight: "Adaptive",
+      whoDiagramRail: "WORKFLOW-COMPILED // POLICY-BOUND",
+      whoDiagramVersion: "LACE CORE // v4.2",
+      introLabel: "The Problem",
+      introTitle: "Most AI tools are fast.",
+      introBody: "Very few are trustworthy.",
+      problemCards: [
+        {
+          title: "Generic chatbots",
+          body:
+            "Fast and capable, but impossible to govern. No policies, no audit trail, no way to enforce consistency. Ask the same question twice and get two different answers. Unacceptable in any regulated or high-stakes environment."
+        },
+        {
+          title: "Custom AI builds",
+          body:
+            "Precise and controllable, but expensive, slow, and brittle. Each one is built from scratch, takes months to deliver, and serves exactly one use case. When requirements change, you start over."
+        },
+        {
+          title: "What's actually needed",
+          body:
+            "AI that operates inside real business rules. Auditable outputs. Consistent results. The ability to review, approve, and trace every decision without a six-month build cycle for every new workflow."
+        }
+      ],
+      workflowLabel: "Platform // Workflow",
+      workflowTitle: "How a use case becomes a working system.",
       workflowBody:
         "Instead of asking AI for one-off answers, teams define the workflow once and let LACE run it as a governed process they can reuse, inspect, and improve.",
-      governanceTitle: "The model is the intelligence. The platform is the governance.",
-      governanceBody:
-        "LACE wraps every run in a control layer. It can govern models, budgets, data policies, allowed pipelines, and human approvals, then publish the workflow as software once it proves itself.",
-      controlPlane: "control plane",
-      publishableApps: "publishable apps",
+      ourPlatformLabel: "Our Platform",
+      ourPlatformTitle: "Introducing LACE.",
+      ourPlatformBody:
+        "LACE is an enterprise AI platform that turns business workflows into governed, repeatable systems. You define what the process should do — the inputs, the rules, the outputs — and LACE compiles it into a pipeline that runs AI inside controlled steps, validates every result before it counts, and keeps a complete record of everything that happened.",
+      ourPlatformSub:
+        "Think of it as the operational layer that sits between a powerful AI model and your actual business — making sure the AI does what you need, the way you need it, every time.",
+      howItWorksLabel: "How It Works",
+      howItWorksTitle: "From business process to governed AI system in four steps.",
+      capabilitiesLabel: "Platform Capabilities",
+      capabilitiesTitle: "What makes LACE different from an AI wrapper.",
+      capabilitiesBody:
+        "LACE isn't a thin layer on top of an AI API. It's a full execution environment — with type-checked pipelines, a policy enforcement layer, full provenance on every output, and a publishing system that turns proven workflows into deployable software.",
       useCasesLabel: "Use Cases",
-      useCasesTitle: "Model the use case. Then deploy it.",
+      useCasesTitle: "Every business has a process that AI could handle — but can't trust it to.",
       useCasesBody:
-        "LACE is not one app. It is a system for turning narrow, high-value workflows into governed AI products.",
+        "LACE doesn't replace those instincts. It gives AI the structure, the rules, and the oversight that makes it usable in real business environments.",
       spotlight: "Spotlight",
       typicalInputs: "Typical inputs",
       laceFit: "How LACE fits",
+      whatYouGet: "What you get",
       trustTitle: "Trust controls",
+      trustHeading: "AI you can audit, not AI that is usually right.",
       deploymentTitle: "Deployment options",
-      ctaLabel: "Get Started",
-      ctaTitle: "Model the workflow. Enforce the rules. Publish the product.",
+      deploymentHeading: "Deploy anywhere. Your environment, your rules.",
+      ctaLabel: "Get started",
+      ctaTitle: "Ready to run AI the right way?",
       ctaBody:
-        "LACE helps teams move from prompt experiments to governed AI systems they can run internally or sell to a market.",
-      ctaPrimary: "Read the Enterprise Overview",
-      ctaSecondary: "View use cases"
+        "Tell us what process you're trying to govern. We'll show you how LACE handles it - or build it for you.",
+      ctaPrimary: "Talk to us",
+      ctaSecondary: "Download the enterprise overview →",
+      runtime: "LACE_RUNTIME_PROTOCOL_V3",
+      sourceGrounded: "Source-grounded",
+      footerTagline: "Enterprise AI infrastructure",
+      security: "Security",
+      privacy: "Privacy",
+      workflows: "Workflows",
+      traceable: "Traceable",
+      blackBoxes: "Black Boxes",
+      readyForExecution: "READY_FOR_EXECUTION"
     };
 
-const spotlightUseCase = useCases.find((useCase) => useCase.id === "permit-research") ?? useCases[0];
-const featuredUseCases = useCases.filter((useCase) => useCase.id !== spotlightUseCase.id).slice(0, 4);
+const identityWorkflowMeta = isSpanish
+  ? {
+      hudLabel: "LACE // EJECUCION DE FLUJO",
+      title: "Pipeline de propuesta de modernizacion hospitalaria",
+      badge: "Proposal",
+      runId: "run eb96afbe...",
+      statusQueued: "en cola",
+      statusRunning: "ejecutando",
+      statusSucceeded: "completado",
+      progressIdle: "00/07"
+    }
+  : {
+      hudLabel: "LACE // WORKFLOW RUNTIME",
+      title: "Regional health modernization proposal pipeline",
+      badge: "Proposal",
+      runId: "run eb96afbe...",
+      statusQueued: "queued",
+      statusRunning: "running",
+      statusSucceeded: "succeeded",
+      progressIdle: "00/07"
+    };
+
+const identityWorkflowNodes = [
+  {
+    id: "load_brief",
+    order: 1,
+    badge: "Load",
+    title: "load_brief",
+    detail: "proposal brief and mission constraints mounted",
+    footer: "1 artifact",
+    runtime: "184ms",
+    x: 48,
+    y: 224,
+    width: 184,
+    height: 160,
+    enterX: -18,
+    enterY: 14,
+    ports: [
+      { kind: "out", style: "left:100%;top:62px;" },
+      { kind: "out", style: "left:100%;top:118px;" }
+    ]
+  },
+  {
+    id: "query_public_web",
+    order: 2,
+    badge: "Search",
+    title: "query_public_web",
+    detail: "federal programs, grants, and modernization guidance",
+    footer: "6 web sources",
+    runtime: "612ms",
+    x: 312,
+    y: 176,
+    width: 192,
+    height: 160,
+    enterX: -8,
+    enterY: 18,
+    ports: [
+      { kind: "in", style: "left:0;top:82px;" },
+      { kind: "out", style: "left:100px;top:100%;" }
+    ]
+  },
+  {
+    id: "retrieve_corpus",
+    order: 3,
+    badge: "Retrieve",
+    title: "retrieve_private_corpus",
+    detail: "prior bids, policy packs, and internal capability notes",
+    footer: "12 retrieved docs",
+    runtime: "428ms",
+    x: 532,
+    y: 224,
+    width: 184,
+    height: 160,
+    enterX: 18,
+    enterY: 14,
+    ports: [
+      { kind: "in", style: "left:0;top:76px;" },
+      { kind: "out", style: "left:80px;top:100%;" }
+    ]
+  },
+  {
+    id: "build_context_pack",
+    order: 4,
+    badge: "Context",
+    title: "build_context_pack",
+    detail: "evidence map, source weights, and policy rails composed",
+    footer: "ranked context",
+    runtime: "311ms",
+    x: 288,
+    y: 416,
+    width: 216,
+    height: 164,
+    enterX: 0,
+    enterY: 20,
+    ports: [
+      { kind: "in", style: "left:124px;top:0;" },
+      { kind: "in", style: "left:100%;top:76px;" },
+      { kind: "out", style: "left:100%;top:124px;" },
+      { kind: "out", style: "left:72px;top:100%;" }
+    ]
+  },
+  {
+    id: "route_decision_gate",
+    order: 5,
+    badge: "Decide",
+    title: "route_decision_gate",
+    detail: "strategy branch selected from fit, risk, and scope",
+    footer: "decision matrix",
+    runtime: "96ms",
+    x: 544,
+    y: 496,
+    width: 168,
+    height: 152,
+    enterX: 18,
+    enterY: 14,
+    ports: [
+      { kind: "in", style: "left:0;top:74px;" },
+      { kind: "out", style: "left:84px;top:100%;" }
+    ]
+  },
+  {
+    id: "draft_response",
+    order: 6,
+    badge: "Synthesize",
+    title: "draft_response",
+    detail: "executive summary, workplan, and differentiators generated",
+    footer: "governed synthesis",
+    runtime: "544ms",
+    x: 96,
+    y: 624,
+    width: 208,
+    height: 160,
+    enterX: -4,
+    enterY: 18,
+    ports: [
+      { kind: "in", style: "left:72px;top:0;" },
+      { kind: "out", style: "left:100%;top:104px;" }
+    ]
+  },
+  {
+    id: "review_export",
+    order: 7,
+    badge: "Deliver",
+    title: "review_export",
+    detail: "approval route + packet export",
+    footer: "packet ready",
+    runtime: "196ms",
+    x: 424,
+    y: 672,
+    width: 176,
+    height: 128,
+    enterX: 14,
+    enterY: 16,
+    ports: [
+      { kind: "in", style: "left:128px;top:0;" },
+      { kind: "in", style: "left:0;top:88px;" }
+    ]
+  }
+];
+
+const identityWorkflowEdges = [
+  { order: 2, path: "M232 286 H264 V258 H312" },
+  { order: 3, path: "M232 342 H264 V396 H500 V300 H532" },
+  { order: 4, path: "M412 336 V416" },
+  { order: 4, path: "M612 384 V396 H536 V492 H512" },
+  { order: 5, path: "M512 540 H528 V570 H544" },
+  { order: 6, path: "M360 580 V600 H168 V624" },
+  { order: 7, path: "M628 648 V660 H552 V672" },
+  { order: 7, path: "M304 728 H376 V760 H424" }
+];
+
+const useCaseIcons = ["→", "◻", "⊕", "◈", "⋯", "⬡"];
+
+const year = new Date().getFullYear();
 ---
 
-<main class="ds-site">
-  <div class="noise-layer" aria-hidden="true"></div>
+<main class="official-home">
+  <canvas id="neural-canvas" class="neural-canvas" aria-hidden="true"></canvas>
+  <div class="scan-line" aria-hidden="true"></div>
 
-  <header class="top-nav" data-reveal data-reveal-delay="40">
-    <a href={brandHref} class="brand-wordmark">
-      <span class="brand-dot" aria-hidden="true"></span>
-      Determinant Systems
-    </a>
-
-    <button
-      type="button"
-      class="top-nav-toggle"
-      aria-expanded="false"
-      aria-controls="topNavPanel"
-      aria-label={copy.toggleNav}
-    >
-      <span class="top-nav-toggle-line"></span>
-      <span class="top-nav-toggle-line"></span>
-    </button>
-
-    <div class="top-nav-panel" id="topNavPanel">
-      <nav class="top-links" aria-label={copy.navLabel}>
-        <a href="#lace">LACE</a>
-        <a href="#platform">{copy.navPlatform}</a>
-        <a href="#use-cases">{copy.navUseCases}</a>
-        <a href="#trust">{copy.navTrust}</a>
-      </nav>
-
-      <a href={languageToggleHref} class="nav-language-toggle">{languageToggleLabel}</a>
-
-      <a href={whitepaperUrl} class="nav-cta" target="_blank" rel="noopener noreferrer">
-        {copy.navOverview}
+  <header id="topnav" class="official-topnav" data-r>
+    <div class="official-topnav-inner">
+      <a href={brandHref} class="brand-mark">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+          <circle cx="9" cy="9" r="3" fill="#00FFC2"></circle>
+          <circle cx="9" cy="9" r="6.5" stroke="#00FFC2" stroke-width="0.5" opacity="0.4"></circle>
+          <circle cx="9" cy="9" r="9" stroke="#00FFC2" stroke-width="0.3" opacity="0.15"></circle>
+        </svg>
+        <span>DETERMINANT SYSTEMS</span>
       </a>
+
+      <button class="official-topnav-toggle" type="button" aria-expanded="false" aria-label={copy.toggleNav}>
+        <span></span>
+        <span></span>
+      </button>
+
+      <div class="official-topnav-panel" id="topNavPanel">
+        <nav class="official-topnav-links" aria-label="Primary">
+          <a href="#lace">Company</a>
+          <a href="#platform">{copy.navPlatform}</a>
+          <a href="#use-cases">{copy.navUseCases}</a>
+          <!-- <a href="#trust">{copy.navTrust}</a> -->
+        </nav>
+
+        <div class="official-topnav-actions">
+          <a href={languageToggleHref} class="nav-language-toggle">{languageToggleLabel}</a>
+          <a href="/contact" class="nav-deploy-link">{copy.navContact}</a>
+        </div>
+      </div>
     </div>
   </header>
 
-  <section class="hero" data-reveal data-reveal-delay="90">
-    <div class="hero-copy">
-      <p class="kicker">Determinant Systems</p>
-      <h1>{copy.heroTitle}</h1>
+  <section class="official-hero section-shell">
+    <div class="hero-vertical-lines" aria-hidden="true">
+      <div class="hero-line hero-line-a">
+        <div class="pulse-dot dot-a"></div>
+        <div class="small-dot dot-b"></div>
+      </div>
+      <div class="hero-line hero-line-b">
+        <div class="small-dot dot-c"></div>
+      </div>
+      <div class="hero-line hero-line-c"></div>
+      <div class="hero-line hero-line-d"></div>
+      <div class="hero-line hero-line-e">
+        <div class="pulse-dot dot-d"></div>
+        <div class="small-dot dot-e"></div>
+      </div>
+    </div>
+
+    <div class="hero-radial-glow" aria-hidden="true"></div>
+
+    <div class="official-hero-content" data-r>
+      <!-- <div class="hero-status-pill">
+        <div class="pulse-dot tiny"></div>
+        <span>{copy.systemStatus}</span>
+      </div> -->
+
+      <h1>
+        {copy.heroTitle.split(" ").slice(0, 4).join(" ")}<br />
+        <span class="accent-glow">{copy.heroTitle.split(" ").slice(4).join(" ")}</span>
+      </h1>
+
       <p class="hero-intro">{copy.heroIntro}</p>
       <p class="hero-detail">{copy.heroDetail}</p>
 
       <div class="hero-actions">
-        <a
-          href={whitepaperUrl}
-          class="btn btn-primary"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <a href={whitepaperUrl} target="_blank" rel="noopener noreferrer" class="hero-btn hero-btn-primary">
           {copy.heroCtaPrimary}
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5"></path>
+          </svg>
         </a>
-        <a href="#platform" class="btn btn-ghost">{copy.heroCtaSecondary}</a>
       </div>
 
-      <div class="hero-meta">
-        {heroProofs.map((item) => (
-          <span>{item}</span>
+      <div class="hero-proof-list">
+        {heroProofs.map((proof) => (
+          <span>{proof}</span>
         ))}
       </div>
     </div>
 
-    <div
-      class="hero-visual"
-      aria-label={copy.heroVisualLabel}
-      data-parallax
-      data-parallax-axis="y"
-      data-parallax-speed="14"
-    >
-      <div class="hero-ambient hero-ambient-blue" aria-hidden="true"></div>
-      <div class="hero-ambient hero-ambient-teal" aria-hidden="true"></div>
-
-      <div class="shot shot-back shot-left" aria-hidden="true">
-        <Image
-          src={heroScreen1}
-          alt=""
-          class="shot-image"
-          widths={[380, 560, 760]}
-          sizes="(max-width: 1020px) 72vw, 320px"
-        />
-      </div>
-
-      <button type="button" class="shot shot-main" data-lightbox-trigger>
-        <Image
-          src={heroScreen2}
-          alt={copy.heroAlt}
-          class="shot-image"
-          widths={[560, 900, 1280]}
-          sizes="(max-width: 1020px) 88vw, 560px"
-        />
-      </button>
-
-      <div class="shot shot-back shot-right" aria-hidden="true">
-        <Image
-          src={heroScreen3}
-          alt=""
-          class="shot-image"
-          widths={[380, 560, 760]}
-          sizes="(max-width: 1020px) 72vw, 320px"
-        />
-      </div>
+    <div class="hero-bottom-glow" aria-hidden="true"></div>
+    <div class="hero-scroll-cue" aria-hidden="true">
+      <span>Scroll</span>
+      <div></div>
     </div>
-
-    <dialog class="lightbox" data-lightbox>
-      <button class="lightbox-close" aria-label={copy.closeLabel}>&times;</button>
-      <Image
-        src={heroScreen2}
-        alt={copy.heroAlt}
-        class="lightbox-image"
-        widths={[1024, 1440, 1920]}
-        sizes="95vw"
-      />
-    </dialog>
   </section>
 
-  <div class="capability-marquee" aria-hidden="true" data-parallax data-parallax-axis="y" data-parallax-speed="6">
-    <div class="capability-track">
+  <div class="official-marquee section-shell" aria-hidden="true">
+    <div class="marquee-fade-left"></div>
+    <div class="marquee-fade-right"></div>
+    <div class="mq-track">
       {[...capabilityTags, ...capabilityTags].map((tag) => (
-        <span>{tag}</span>
+        <>
+          <span>{tag}</span>
+          <strong>-</strong>
+        </>
       ))}
     </div>
   </div>
 
-  <section id="intro" class="section intro" data-reveal>
-    <div class="section-head">
-      <p class="section-label">{copy.introLabel}</p>
-      <h2>{copy.introTitle}</h2>
-    </div>
+  <section id="lace" class="who-identity">
+    <div class="who-identity-shell section-shell">
+      <div class="who-identity-layout">
+        <div class="who-identity-copy" data-r>
+          <!-- <p class="who-identity-kicker">{copy.whoIndex}</p> -->
+          <h2 class="who-identity-title">
+            {copy.whoTitleLead}
+            <br />
+            <span>{copy.whoTitleAccent}</span>
+          </h2>
 
-    <div class="intro-grid">
-      <p>{copy.introBody}</p>
-      <ul class="intro-list">
-        {companyBullets.map((item) => (
-          <li>{item}</li>
-        ))}
-      </ul>
-    </div>
+          <div class="who-identity-body who-identity-body-main">
+            <p>{copy.whoBody}</p>
+          </div>
 
-    <div
-      class="intro-graphics"
-      aria-hidden="true"
-      data-parallax
-      data-parallax-axis="y"
-      data-parallax-speed="10"
-      data-parallax-rotate="0.9"
-    >
-      <div class="intro-ring intro-ring-one"></div>
-      <div class="intro-ring intro-ring-two"></div>
-      <div class="intro-node intro-node-a"></div>
-      <div class="intro-node intro-node-b"></div>
-      <div class="intro-node intro-node-c"></div>
-      <div class="intro-beam"></div>
+          <div class="who-identity-body who-identity-body-secondary">
+            <p>{copy.whoBody2}</p>
+          </div>
+
+          <a href="#platform" class="who-identity-link">
+            <span>{copy.whoCta}</span>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M2.5 8h10M9 4.5 12.5 8 9 11.5" stroke="currentColor" stroke-width="1.4"></path>
+            </svg>
+          </a>
+        </div>
+
+        <div class="who-identity-stage" data-r data-reveal-delay="120">
+          <div class="who-identity-stage-scale">
+            <div
+              class="who-identity-diagram"
+              id="identity-diagram"
+              data-flow-phase="idle"
+              data-status-queued={identityWorkflowMeta.statusQueued}
+              data-status-running={identityWorkflowMeta.statusRunning}
+              data-status-succeeded={identityWorkflowMeta.statusSucceeded}
+            >
+              <div class="who-grid-fade who-grid-fade-left" aria-hidden="true"></div>
+              <div class="who-grid-fade who-grid-fade-right" aria-hidden="true"></div>
+              <div class="who-grid-glow" aria-hidden="true"></div>
+
+              <div class="who-flow-hud">
+                <div>
+                  <p class="who-flow-hud-kicker">{identityWorkflowMeta.hudLabel}</p>
+                  <h3>{identityWorkflowMeta.title}</h3>
+                </div>
+                <div class="who-flow-hud-meta">
+                  <span class="who-flow-hud-badge">{identityWorkflowMeta.badge}</span>
+                  <span class="who-flow-hud-run">{identityWorkflowMeta.runId}</span>
+                  <span class="who-flow-hud-progress" data-flow-progress>{identityWorkflowMeta.progressIdle}</span>
+                  <span class="who-flow-hud-status" data-flow-status>{identityWorkflowMeta.statusQueued}</span>
+                </div>
+              </div>
+
+              <div class="who-flow-canvas">
+                <svg class="who-flow-edges" viewBox="0 0 786 812" fill="none" aria-hidden="true">
+                  {identityWorkflowEdges.map((edge) => (
+                    <>
+                      <path class="who-flow-edge-base" d={edge.path}></path>
+                      <path
+                        class="who-flow-edge"
+                        data-flow-edge
+                        data-order={edge.order}
+                        d={edge.path}
+                        pathLength="1"
+                      ></path>
+                    </>
+                  ))}
+                </svg>
+
+                {identityWorkflowNodes.map((node) => (
+                  <article
+                    class="who-flow-node"
+                    data-flow-node
+                    data-order={node.order}
+                    data-node-id={node.id}
+                    style={`left:${node.x}px;top:${node.y}px;width:${node.width}px;height:${node.height}px;--entry-x:${node.enterX}px;--entry-y:${node.enterY}px;`}
+                  >
+                    {node.ports?.map((port) => (
+                      <span class={`who-flow-port who-flow-port-${port.kind}`} style={port.style} aria-hidden="true"></span>
+                    ))}
+                    <div class="who-flow-node-top">
+                      <span>{String(node.order).padStart(2, "0")} // {node.badge}</span>
+                      <strong data-flow-node-status>{identityWorkflowMeta.statusQueued}</strong>
+                    </div>
+                    <h4>{node.title}</h4>
+                    <p>{node.detail}</p>
+                    <div class="who-flow-node-footer">
+                      <span>{node.footer}</span>
+                      <span>{node.runtime}</span>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <section id="lace" class="section lace-overview" data-reveal>
-    <div class="section-head">
-      <p class="section-label">{copy.productLabel}</p>
-      <h2>{copy.productTitle}</h2>
-      <p>{copy.productBody}</p>
+  <div class="neural-separator section-shell" aria-hidden="true"></div>
+
+  <section class="company-intro section-shell">
+    <div class="section-head" data-r>
+      <p class="section-kicker">{copy.introLabel}</p>
+      <h2>{copy.introTitle}<br/><span class="lace-accent-word">{copy.introBody}</span></h2>
     </div>
 
-    <div class="pillars-grid">
-      {valuePillars.map((pillar, index) => (
-        <article
-          class={`surface-card pillar-card ${index === 0 ? "pillar-feature" : ""}`}
-          data-reveal
-          data-reveal-delay={120 + index * 80}
-        >
-          <h3>{pillar.title}</h3>
-          <p>{pillar.copy}</p>
+    <div class="problem-grid">
+      {copy.problemCards.map((item, index) => (
+        <article class="glass-card problem-card" data-r data-reveal-delay={120 + index * 80}>
+          <h3>{item.title}</h3>
+          <p>{item.body}</p>
         </article>
       ))}
     </div>
   </section>
 
-  <section id="platform" class="section split platform-section" data-reveal>
-    <article class="surface-card block workflow-panel" data-reveal data-reveal-delay="70">
-      <h2>{copy.workflowTitle}</h2>
-      <p>{copy.workflowBody}</p>
-      <div class="workflow-grid">
-        {workflowSteps.map((step, index) => (
-          <article class="workflow-step" data-reveal data-reveal-delay={140 + index * 80}>
-            <p class="step-number">{step.step}</p>
-            <h3>{step.title}</h3>
-            <p>{step.description}</p>
-          </article>
-        ))}
-      </div>
-    </article>
+  <div class="neural-separator section-shell" aria-hidden="true"></div>
 
-    <article class="surface-card block platform-panel" data-reveal data-reveal-delay="140">
-      <h2>{copy.governanceTitle}</h2>
-      <p>{copy.governanceBody}</p>
+  <div id="light-zone" class="lace-light-zone">
 
-      <div
-        class="platform-scene"
-        aria-hidden="true"
-        data-parallax
-        data-parallax-axis="y"
-        data-parallax-speed="11"
-      >
-        <div class="platform-glow platform-glow-a"></div>
-        <div class="platform-glow platform-glow-b"></div>
-        <Image
-          src={heroScreen1}
-          alt=""
-          class="platform-image platform-image-main"
-          widths={[500, 760, 980]}
-          sizes="(max-width: 1120px) 86vw, 420px"
-        />
-        <Image
-          src={heroScreen3}
-          alt=""
-          class="platform-image platform-image-back"
-          widths={[340, 520, 700]}
-          sizes="(max-width: 1120px) 68vw, 280px"
-        />
-        <span class="platform-tag platform-tag-one">{copy.controlPlane}</span>
-        <span class="platform-tag platform-tag-two">{copy.publishableApps}</span>
-      </div>
-
-      <div class="source-grid">
-        {operatingModes.map((mode, index) => (
-          <article class="source-item" data-reveal data-reveal-delay={220 + index * 70}>
-            <div class="source-badge">{mode.badge}</div>
-            <h3>{mode.name}</h3>
-            <p>{mode.detail}</p>
-          </article>
-        ))}
-      </div>
-    </article>
+  <section id="platform" class="platform-intro section-shell">
+    <div class="platform-intro-head" data-r>
+      <p class="section-kicker">{copy.ourPlatformLabel}</p>
+      <h2 set:html={copy.ourPlatformTitle.replace("LACE", '<span class="lace-accent-word">LACE</span>')}></h2>
+      <p class="platform-intro-body">{copy.ourPlatformBody}</p>
+      <p class="platform-intro-sub">{copy.ourPlatformSub}</p>
+    </div>
   </section>
 
-  <section id="use-cases" class="section use-cases-section" data-reveal>
-    <div class="section-head">
-      <p class="section-label">{copy.useCasesLabel}</p>
+  <div class="neural-separator section-shell" aria-hidden="true"></div>
+
+  <section class="how-it-works section-shell">
+    <div class="section-head" data-r>
+      <p class="section-kicker">{copy.howItWorksLabel}</p>
+      <h2>{copy.howItWorksTitle}</h2>
+    </div>
+
+    <div class="pipeline-cards hiw-cards">
+      {workflowSteps.map((step, index) => (
+        <article class="glass-card pipeline-step-card" data-r data-reveal-delay={80 + index * 80} data-step={index + 1}>
+          <div class="step-number-box">{step.step}</div>
+          <div>
+            <h3>{step.title}</h3>
+            <p>{step.description}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <div class="neural-separator section-shell" aria-hidden="true"></div>
+
+  <section class="platform-capabilities section-shell">
+    <div class="section-head" data-r>
+      <p class="section-kicker">{copy.capabilitiesLabel}</p>
+      <h2>{copy.capabilitiesTitle}</h2>
+      <p>{copy.capabilitiesBody}</p>
+    </div>
+
+    <div class="capabilities-grid">
+      {capabilities.map((cap, index) => (
+        <article class="glass-card capability-card" data-r data-reveal-delay={80 + index * 60}>
+          <span class="capability-icon">{cap.icon}</span>
+          <h4>{cap.title}</h4>
+          <p>{cap.body}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <div class="neural-separator section-shell" aria-hidden="true"></div>
+
+  <section id="use-cases" class="use-cases section-shell">
+    <div class="section-head use-cases-head-new" data-r>
+      <p class="section-kicker">{copy.useCasesLabel}</p>
       <h2>{copy.useCasesTitle}</h2>
       <p>{copy.useCasesBody}</p>
     </div>
 
-    <div class="use-case-stage">
-      <article
-        class="surface-card use-case-spotlight"
-        data-reveal
-        data-reveal-delay="80"
-        data-parallax
-        data-parallax-axis="y"
-        data-parallax-speed="9"
-      >
-        <p class="section-label">{copy.spotlight}</p>
-        <h3>{spotlightUseCase.heading}</h3>
-        <p>{spotlightUseCase.summary}</p>
-        <div class="spotlight-columns">
-          <div>
-            <p class="case-label">{copy.typicalInputs}</p>
-            <ul>
-              {spotlightUseCase.documents.map((item) => (
-                <li>{item}</li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <p class="case-label">{copy.laceFit}</p>
-            <ul>
-              {spotlightUseCase.laceFit.map((item) => (
-                <li>{item}</li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </article>
-
-      <div class="use-case-list">
-        {featuredUseCases.map((useCase, index) => (
-          <article class="surface-card use-case-row" data-reveal data-reveal-delay={140 + index * 70}>
+    <div class="use-case-card-grid" data-r>
+      {useCases.map((useCase, index) => (
+        <article class="use-case-hover-card glass-card" data-r data-reveal-delay={80 + index * 45}>
+          <span class="use-case-hover-icon">{useCaseIcons[index % useCaseIcons.length]}</span>
+          <div class="use-case-hover-content">
             <h3>{useCase.tabTitle}</h3>
             <p>{useCase.summary}</p>
-          </article>
-        ))}
-      </div>
+          </div>
+        </article>
+      ))}
     </div>
   </section>
 
-  <section id="trust" class="section trust-section" data-reveal>
-    <div
-      class="assurance-ticker"
-      aria-hidden="true"
-      data-parallax
-      data-parallax-axis="y"
-      data-parallax-speed="7"
-    >
-      <div class="assurance-track">
+  <div class="neural-separator section-shell" aria-hidden="true"></div>
+
+  <section id="trust" class="trust-and-deploy section-shell">
+    <div class="official-marquee reverse" aria-hidden="true">
+      <div class="marquee-fade-left"></div>
+      <div class="marquee-fade-right"></div>
+      <div class="mq-track mq-track-r">
         {[...assuranceTags, ...assuranceTags].map((tag) => (
-          <span>{tag}</span>
+          <>
+            <span>{tag}</span>
+            <strong>-</strong>
+          </>
         ))}
       </div>
     </div>
 
     <div class="trust-grid">
-      <article class="surface-card block" data-reveal data-reveal-delay="70">
-        <h2>{copy.trustTitle}</h2>
+      <article class="glass-card trust-panel" data-r data-reveal-delay="80">
+        <p class="section-kicker">{copy.trustTitle}</p>
+        <h3>{copy.trustHeading}</h3>
         <ul>
           {trustItems.map((item) => (
             <li>{item}</li>
@@ -449,104 +725,611 @@ const featuredUseCases = useCases.filter((useCase) => useCase.id !== spotlightUs
         </ul>
       </article>
 
-      <article class="surface-card block" data-reveal data-reveal-delay="150">
-        <h2>{copy.deploymentTitle}</h2>
+      <article class="glass-card trust-panel" data-r data-reveal-delay="180">
+        <p class="section-kicker">{copy.deploymentTitle}</p>
+        <h3>{copy.deploymentHeading}</h3>
         <ul>
           {deploymentOptions.map((item) => (
             <li>{item}</li>
           ))}
         </ul>
+        <div class="deploy-tags">
+          <span>SaaS</span>
+          <span>On-Prem</span>
+          <span>Air-Gapped</span>
+          <span>Private Cloud</span>
+        </div>
       </article>
     </div>
   </section>
 
-  <section class="section cta" data-reveal>
-    <p class="section-label">{copy.ctaLabel}</p>
-    <h2>{copy.ctaTitle}</h2>
-    <p>{copy.ctaBody}</p>
-    <div class="hero-actions">
-      <a href={whitepaperUrl} class="btn btn-primary" target="_blank" rel="noopener noreferrer">
-        {copy.ctaPrimary}
-      </a>
-      <a href="#use-cases" class="btn btn-ghost">{copy.ctaSecondary}</a>
+  </div><!-- /.lace-light-zone -->
+
+  <div id="lace-flash-veil" aria-hidden="true"></div>
+
+  <section id="cta-section" class="final-cta">
+    <canvas id="cta-canvas" class="cta-canvas" aria-hidden="true"></canvas>
+    <div class="cta-vignette" aria-hidden="true"></div>
+
+    <div class="final-cta-content section-shell">
+      <div class="cta-pill" data-r>
+        <div class="pulse-dot tiny"></div>
+        <span>{copy.ctaLabel}</span>
+      </div>
+
+      <h2 data-r data-reveal-delay="60" set:html={copy.ctaTitle.replace("the right way?", '<span class="lace-accent-word">the right way?</span>')}></h2>
+
+      <p data-r data-reveal-delay="140">{copy.ctaBody}</p>
+
+      <div class="hero-actions cta-actions" data-r data-reveal-delay="220">
+        <a href="/contact" class="hero-btn hero-btn-primary">
+          {copy.ctaPrimary}
+        </a>
+        <a href={whitepaperUrl} target="_blank" rel="noopener noreferrer" class="hero-btn hero-btn-ghost">{copy.ctaSecondary}</a>
+      </div>
+
+      <div class="cta-stats" data-r data-reveal-delay="300">
+        <div><strong>∞</strong><span>{copy.workflows}</span></div>
+        <div><strong>100%</strong><span>{copy.traceable}</span></div>
+        <div><strong>0</strong><span>{copy.blackBoxes}</span></div>
+      </div>
     </div>
   </section>
+
+  <footer class="official-footer">
+    <div class="section-shell footer-inner">
+      <div>
+        <div class="footer-brand">
+          <svg width="14" height="14" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+            <circle cx="9" cy="9" r="3" fill="#00FFC2"></circle>
+            <circle cx="9" cy="9" r="6.5" stroke="#00FFC2" stroke-width="0.5" opacity="0.4"></circle>
+          </svg>
+          <span>Determinant Systems</span>
+        </div>
+        <p>© {year} Determinant Systems // {copy.footerTagline}</p>
+      </div>
+      <div class="footer-links">
+        <a href="#">{copy.security}</a>
+        <a href="#">{copy.privacy}</a>
+        <a href={languageToggleHref}>{languageToggleLabel}</a>
+      </div>
+    </div>
+  </footer>
 </main>
 
 <script>
-  const lightboxTrigger = document.querySelector<HTMLButtonElement>("[data-lightbox-trigger]");
-  const lightbox = document.querySelector<HTMLDialogElement>("[data-lightbox]");
+  (() => {
+    const topnav = document.getElementById("topnav");
+    const toggle = document.querySelector(".official-topnav-toggle");
+    const panel = document.getElementById("topNavPanel");
 
-  if (lightboxTrigger && lightbox) {
-    lightboxTrigger.addEventListener("click", () => lightbox.showModal());
+    if (topnav && toggle && panel) {
+      const setOpen = (open) => {
+        topnav.classList.toggle("is-open", open);
+        toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      };
 
-    lightbox.querySelector(".lightbox-close")?.addEventListener("click", () => {
-      lightbox.close();
+      toggle.addEventListener("click", () => {
+        const open = !topnav.classList.contains("is-open");
+        setOpen(open);
+      });
+
+      panel.querySelectorAll("a").forEach((link) => {
+        link.addEventListener("click", () => setOpen(false));
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") setOpen(false);
+      });
+
+      document.addEventListener("click", (event) => {
+        if (!topnav.contains(event.target)) setOpen(false);
+      });
+
+      let navRaf = 0;
+      const updateNav = () => {
+        navRaf = 0;
+        const progress = Math.min(1, Math.max(0, (window.scrollY - 20) / 100));
+        topnav.style.setProperty("--nav-progress", String(progress));
+      };
+      const requestNav = () => {
+        if (navRaf) return;
+        navRaf = requestAnimationFrame(updateNav);
+      };
+      updateNav();
+      window.addEventListener("scroll", requestNav, { passive: true });
+      window.addEventListener("resize", requestNav);
+    }
+  })();
+
+  (() => {
+    const els = Array.from(document.querySelectorAll("[data-r]"));
+    els.forEach((el, i) => {
+      const explicit = Number(el.getAttribute("data-reveal-delay"));
+      const delay = Number.isFinite(explicit) ? explicit : i * 25;
+      el.style.setProperty("--rd", `${delay}ms`);
     });
 
-    lightbox.addEventListener("click", (event) => {
-      if (event.target === lightbox) {
-        lightbox.close();
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("vis");
+            obs.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: "0px 0px -4% 0px" }
+    );
+
+    els.forEach((el) => obs.observe(el));
+  })();
+
+  (() => {
+    const diagram = document.getElementById("identity-diagram");
+    if (!diagram) return;
+
+    const statusQueued = diagram.getAttribute("data-status-queued") || "queued";
+    const statusRunning = diagram.getAttribute("data-status-running") || "running";
+    const statusSucceeded = diagram.getAttribute("data-status-succeeded") || "succeeded";
+
+    const nodes = Array.from(diagram.querySelectorAll("[data-flow-node]")).sort(
+      (a, b) => Number(a.getAttribute("data-order")) - Number(b.getAttribute("data-order"))
+    );
+    const edges = Array.from(diagram.querySelectorAll("[data-flow-edge]")).sort(
+      (a, b) => Number(a.getAttribute("data-order")) - Number(b.getAttribute("data-order"))
+    );
+
+    const progressEl = diagram.querySelector("[data-flow-progress]");
+    const statusEl = diagram.querySelector("[data-flow-status]");
+
+    const formatProgress = (value) => `${String(value).padStart(2, "0")}/${String(nodes.length).padStart(2, "0")}`;
+
+    const setNodeStatus = (node, value) => {
+      const chip = node.querySelector("[data-flow-node-status]");
+      if (chip) chip.textContent = value;
+    };
+
+    const reset = () => {
+      diagram.setAttribute("data-flow-phase", "idle");
+      nodes.forEach((node) => {
+        node.classList.remove("is-visible", "is-running", "is-done");
+        setNodeStatus(node, statusQueued);
+      });
+      edges.forEach((edge) => edge.classList.remove("is-visible"));
+      if (progressEl) progressEl.textContent = formatProgress(0);
+      if (statusEl) statusEl.textContent = statusQueued;
+    };
+
+    const start = () => {
+      reset();
+      diagram.setAttribute("data-flow-phase", "running");
+      if (statusEl) statusEl.textContent = statusRunning;
+
+      let previousNode = null;
+      nodes.forEach((node, index) => {
+        const stepNumber = index + 1;
+        const stepStart = index * 700;
+
+        window.setTimeout(() => {
+          edges
+            .filter((edge) => Number(edge.getAttribute("data-order")) === stepNumber)
+            .forEach((edge) => edge.classList.add("is-visible"));
+        }, stepStart);
+
+        window.setTimeout(() => {
+          if (previousNode) {
+            previousNode.classList.remove("is-running");
+            previousNode.classList.add("is-done");
+            setNodeStatus(previousNode, statusSucceeded);
+          }
+
+          node.classList.add("is-visible", "is-running");
+          setNodeStatus(node, statusRunning);
+
+          if (progressEl) progressEl.textContent = formatProgress(stepNumber);
+
+          previousNode = node;
+
+          if (stepNumber === nodes.length) {
+            window.setTimeout(() => {
+              node.classList.remove("is-running");
+              node.classList.add("is-done");
+              setNodeStatus(node, statusSucceeded);
+              diagram.setAttribute("data-flow-phase", "complete");
+              if (statusEl) statusEl.textContent = statusSucceeded;
+            }, 620);
+          }
+        }, stepStart + (stepNumber === 1 ? 0 : 240));
+      });
+
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && entry.intersectionRatio > 0.2) {
+            start();
+            observer.disconnect();
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    observer.observe(diagram);
+  })();
+
+  (() => {
+    const section = document.getElementById("pipeline-section");
+    if (!section) return;
+
+    let fired = false;
+    const activate = () => {
+      if (fired) return;
+      fired = true;
+
+      const diagram = document.getElementById("pipe-diagram");
+      if (diagram) diagram.classList.add("pipe-active");
+
+      const nodeEls = document.querySelectorAll(".pipe-node-el");
+      const rings = document.querySelectorAll(".pn-ring");
+      nodeEls.forEach((el, i) => {
+        setTimeout(() => {
+          el.classList.add("is-lit");
+          if (rings[i]) rings[i].classList.add("is-lit");
+        }, i * 780 + 200);
+      });
+
+      const cards = document.querySelectorAll(".pipeline-step-card");
+      cards.forEach((card, i) => {
+        setTimeout(() => {
+          card.classList.add("is-flash");
+          setTimeout(() => card.classList.remove("is-flash"), 700);
+        }, i * 780 + 350);
+      });
+
+      const signals = document.querySelectorAll(".pipe-signal");
+      signals.forEach((sig, i) => {
+        const delay = i * 780 + 300;
+        setTimeout(() => {
+          const to = Number(sig.getAttribute("data-to") || "72");
+          sig.setAttribute("opacity", "0.9");
+
+          let start = 0;
+          const duration = 600;
+          const step = (ts) => {
+            if (!start) start = ts;
+            const p = Math.min(1, (ts - start) / duration);
+            const ease = p < 0.5 ? 2 * p * p : -1 + (4 - 2 * p) * p;
+            sig.setAttribute("cy", String(ease * to));
+            if (p < 1) requestAnimationFrame(step);
+            else sig.setAttribute("opacity", "0");
+          };
+
+          requestAnimationFrame(step);
+        }, delay);
+      });
+    };
+
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && entry.intersectionRatio > 0.15) {
+            activate();
+            obs.disconnect();
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+
+    obs.observe(section);
+  })();
+
+  (() => {
+    const canvas = document.getElementById("cta-canvas");
+    if (!(canvas instanceof HTMLCanvasElement)) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const C = "0,255,194";
+    let W = 0;
+    let H = 0;
+    let offset = 0;
+    let glints = [];
+    let raf = 0;
+
+    const resize = () => {
+      const host = canvas.parentElement;
+      if (!host) return;
+      W = canvas.width = host.offsetWidth;
+      H = canvas.height = host.offsetHeight;
+    };
+
+    const drawLines = () => {
+      const numLines = 90;
+      for (let i = 0; i < numLines; i += 1) {
+        const t = i / numLines;
+        const y = t * H;
+        const curl = (t - 0.5) * H * 0.55;
+        const cp1x = W * 0.25;
+        const cp1y = y - curl * 0.6;
+        const cp2x = W * 0.75;
+        const cp2y = y + curl * 0.4;
+        const dy = (offset * 0.4) % (H / numLines);
+        const fy = y + dy;
+        const dist = Math.abs(t - 0.5);
+        const baseOp = Math.max(0.02, 0.22 - dist * 0.35);
+
+        ctx.beginPath();
+        ctx.moveTo(0, fy);
+        ctx.bezierCurveTo(cp1x, cp1y + dy, cp2x, cp2y + dy, W, fy - curl * 0.08);
+        ctx.strokeStyle = `rgba(${C},${baseOp})`;
+        ctx.lineWidth = 0.55;
+        ctx.stroke();
       }
-    });
-  }
+    };
 
-  const topNav = document.querySelector<HTMLElement>(".top-nav");
-  const navToggle = document.querySelector<HTMLButtonElement>(".top-nav-toggle");
-  const navPanel = document.getElementById("topNavPanel");
-  const navTargets = document.querySelectorAll<HTMLAnchorElement>(
-    ".top-links a, .nav-cta, .nav-language-toggle"
-  );
-  const navMedia = window.matchMedia("(max-width: 900px)");
+    const spawnGlint = () => {
+      glints.push({
+        x: Math.random() * W * 0.8 + W * 0.1,
+        y: Math.random() * H,
+        life: 1,
+        size: Math.random() * 3 + 2
+      });
+    };
 
-  const setNavOpen = (open: boolean) => {
-    if (!topNav || !navToggle) return;
-    topNav.classList.toggle("is-open", open);
-    navToggle.setAttribute("aria-expanded", open ? "true" : "false");
+    const drawGlints = () => {
+      glints = glints.filter((g) => g.life > 0);
+      glints.forEach((g) => {
+        const op = g.life * 0.85;
+        const gr = ctx.createRadialGradient(g.x, g.y, 0, g.x, g.y, g.size * 5);
+        gr.addColorStop(0, `rgba(${C},${op})`);
+        gr.addColorStop(0.3, `rgba(${C},${op * 0.4})`);
+        gr.addColorStop(1, `rgba(${C},0)`);
 
-    if (navPanel && navMedia.matches) {
-      navPanel.toggleAttribute("hidden", !open);
-    } else if (navPanel) {
-      navPanel.removeAttribute("hidden");
+        ctx.beginPath();
+        ctx.arc(g.x, g.y, g.size * 5, 0, Math.PI * 2);
+        ctx.fillStyle = gr;
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(g.x, g.y, g.size * 0.6, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${op})`;
+        ctx.fill();
+
+        g.life -= 0.025;
+      });
+    };
+
+    const draw = () => {
+      ctx.clearRect(0, 0, W, H);
+      drawLines();
+      drawGlints();
+      offset += 1;
+      if (Math.random() < 0.04) spawnGlint();
+      raf = requestAnimationFrame(draw);
+    };
+
+    resize();
+    draw();
+
+    if (window.ResizeObserver) {
+      const ro = new ResizeObserver(() => {
+        cancelAnimationFrame(raf);
+        resize();
+        draw();
+      });
+      if (canvas.parentElement) ro.observe(canvas.parentElement);
+    } else {
+      window.addEventListener("resize", () => {
+        cancelAnimationFrame(raf);
+        resize();
+        draw();
+      });
     }
-  };
+  })();
 
-  const closeNav = () => {
-    setNavOpen(false);
-  };
+  (() => {
+    const canvas = document.getElementById("neural-canvas");
+    if (!(canvas instanceof HTMLCanvasElement)) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
 
-  const toggleNav = () => {
-    if (!topNav) return;
-    const nextOpen = !topNav.classList.contains("is-open");
-    setNavOpen(nextOpen);
-  };
+    const home = document.querySelector(".official-home");
+    const isLight = () => !!(home && home.classList.contains("canvas-dim"));
+    // Dark: bright teal. Light: vivid medium green — clearly colored on white.
+    const C = () => isLight() ? "0,168,128" : "0,255,194";
+    // Opacity scale: base values were tuned for dark bg; boost them for white.
+    const os = () => isLight() ? 2.6 : 1;
+    let nodes = [];
+    let W = 0;
+    let H = 0;
+    let raf = 0;
+    let sweepAngle = 0;
 
-  navToggle?.addEventListener("click", toggleNav);
+    const resize = () => {
+      W = canvas.width = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+      nodes = [];
+      const count = Math.max(10, Math.floor((W * H) / 18000));
+      for (let i = 0; i < count; i += 1) {
+        nodes.push({
+          x: Math.random() * W,
+          y: Math.random() * H,
+          vx: (Math.random() - 0.5) * 0.22,
+          vy: (Math.random() - 0.5) * 0.22,
+          r: Math.random() * 1.4 + 0.4,
+          g: Math.random() * 0.2
+        });
+      }
+    };
 
-  navTargets.forEach((target) => {
-    target.addEventListener("click", () => {
-      if (navMedia.matches) closeNav();
+    const fire = () => {
+      const s = nodes[Math.floor(Math.random() * nodes.length)];
+      const near = nodes.filter((n) => n !== s && Math.hypot(n.x - s.x, n.y - s.y) < 220);
+      if (!near.length) return;
+      const d = near[Math.floor(Math.random() * near.length)];
+      s.g = 1;
+      d.g = Math.max(d.g, 0.6);
+    };
+
+    const drawSweep = () => {
+      const cx = W * 0.5;
+      const cy = H * 0.38;
+      for (let i = 0; i < 50; i += 1) {
+        const a = (i / 50) * Math.PI * 2 + sweepAngle;
+        const r1 = W * 0.25;
+        const r2 = W * 0.85;
+        const x1 = cx + Math.cos(a) * r1;
+        const y1 = cy + Math.sin(a) * r1 * 0.6;
+        const x2 = cx + Math.cos(a + 0.18) * r2;
+        const y2 = cy + Math.sin(a + 0.18) * r2 * 0.55;
+        const op = (0.025 + Math.abs(Math.sin(a * 3 + sweepAngle * 2)) * 0.045) * os();
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.strokeStyle = `rgba(${C()},${op})`;
+        ctx.lineWidth = 0.6;
+        ctx.stroke();
+      }
+      sweepAngle += 0.0008;
+    };
+
+    const draw = () => {
+      ctx.clearRect(0, 0, W, H);
+      drawSweep();
+
+      nodes.forEach((n) => {
+        n.x += n.vx;
+        n.y += n.vy;
+        if (n.x < 0 || n.x > W) n.vx *= -1;
+        if (n.y < 0 || n.y > H) n.vy *= -1;
+        n.g = Math.max(0, n.g - 0.012);
+      });
+
+      if (Math.random() < 0.045) fire();
+
+      for (let i = 0; i < nodes.length; i += 1) {
+        for (let j = i + 1; j < nodes.length; j += 1) {
+          const a = nodes[i];
+          const b = nodes[j];
+          const d = Math.hypot(a.x - b.x, a.y - b.y);
+          if (d < 190) {
+            const op = ((1 - d / 190) * 0.12 + (a.g + b.g) * 0.09) * os();
+            ctx.beginPath();
+            ctx.moveTo(a.x, a.y);
+            ctx.lineTo(b.x, b.y);
+            ctx.strokeStyle = `rgba(${C()},${op})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        }
+      }
+
+      nodes.forEach((n) => {
+        if (n.g > 0.15) {
+          const gr = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.r * 9);
+          gr.addColorStop(0, `rgba(${C()},${n.g * 0.35})`);
+          gr.addColorStop(1, `rgba(${C()},0)`);
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, n.r * 9, 0, Math.PI * 2);
+          ctx.fillStyle = gr;
+          ctx.fill();
+        }
+
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${C()},${Math.min(1, (0.18 + n.g * 0.7) * os())})`;
+        ctx.fill();
+      });
+
+      raf = requestAnimationFrame(draw);
+    };
+
+    resize();
+    draw();
+
+    window.addEventListener("resize", () => {
+      cancelAnimationFrame(raf);
+      resize();
+      draw();
     });
-  });
+  })();
 
-  document.addEventListener("click", (event) => {
-    if (!topNav || !navMedia.matches) return;
-    if (!topNav.contains(event.target as Node)) closeNav();
-  });
+  (() => {
+    const zone = document.getElementById("light-zone");
+    const veil = document.getElementById("lace-flash-veil");
+    const trigger = document.querySelector(".platform-intro-sub");
+    const home = document.querySelector(".official-home");
+    if (!zone || !veil || !trigger || !home) return;
 
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") closeNav();
-  });
+    let isLight = false;
+    let flashTimer = null;
+    let initialCheck = true;
 
-  const syncNavForViewport = () => {
-    if (navMedia.matches) {
-      setNavOpen(false);
-      return;
+    const clearFlash = () => {
+      if (flashTimer) { clearTimeout(flashTimer); flashTimer = null; }
+      veil.classList.remove("flash-to-light", "flash-to-dark");
+    };
+
+    const applyLight = (on) => {
+      if (on) {
+        zone.classList.add("is-light");
+        home.classList.add("canvas-dim");
+      } else {
+        zone.classList.remove("is-light");
+        home.classList.remove("canvas-dim");
+      }
+    };
+
+    const flash = (toLight) => {
+      clearFlash();
+      veil.classList.add(toLight ? "flash-to-light" : "flash-to-dark");
+      // swap colors at peak of flash (~90ms in)
+      flashTimer = setTimeout(() => { applyLight(toLight); }, 90);
+      // clean up animation class after it completes
+      setTimeout(clearFlash, 520);
+    };
+
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !isLight) {
+            isLight = true;
+            if (initialCheck) {
+              // Page loaded with trigger already in view — apply immediately, no flash
+              applyLight(true);
+            } else {
+              flash(true);
+            }
+          } else if (!entry.isIntersecting && isLight) {
+            // check if we scrolled back up above the trigger
+            if (entry.boundingClientRect.top > 0) {
+              isLight = false;
+              if (initialCheck) {
+                applyLight(false);
+              } else {
+                flash(false);
+              }
+            }
+          }
+          initialCheck = false;
+        });
+      },
+      { threshold: 0, rootMargin: "0px 0px -5% 0px" }
+    );
+
+    // Also handle the case where the page loads scrolled well past the trigger
+    // (trigger above viewport — boundingClientRect.top < 0, not intersecting)
+    const rect = trigger.getBoundingClientRect();
+    if (rect.bottom < 0) {
+      // Trigger is entirely above the viewport — we're deep in the light zone
+      isLight = true;
+      applyLight(true);
     }
-    setNavOpen(false);
-    navPanel?.removeAttribute("hidden");
-  };
 
-  syncNavForViewport();
-  navMedia.addEventListener("change", syncNavForViewport);
+    obs.observe(trigger);
+  })();
 </script>

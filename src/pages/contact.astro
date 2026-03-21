@@ -1,0 +1,399 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Contact | Determinant Systems"
+  description="Get in touch with Determinant Systems to discuss enterprise AI workflows, LACE, and governed AI deployments."
+  theme="midnight"
+  lang="en"
+>
+  <main class="contact-page">
+    <div class="noise-layer"></div>
+
+    <section class="contact-shell ds-site">
+      <header class="contact-nav" data-reveal>
+        <a href="/" class="brand-wordmark">
+          <span class="brand-dot"></span>
+          <span>Determinant Systems</span>
+        </a>
+        <a href="/" class="contact-nav-link">Back home</a>
+      </header>
+
+      <section class="contact-hero" data-reveal data-reveal-delay="60">
+        <div class="contact-copy">
+          <p class="eyebrow">Contact</p>
+          <h1>Tell us what you&apos;re trying to build.</h1>
+          <div class="contact-direct">
+            <a href="tel:+15205550199" class="contact-direct-item">
+              <span class="contact-direct-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M7.2 4.5h3.1l1.2 4.1-1.9 1.9a15.4 15.4 0 0 0 3.9 3.9l1.9-1.9 4.1 1.2v3.1a1.2 1.2 0 0 1-1.2 1.2A13.8 13.8 0 0 1 4.5 5.7 1.2 1.2 0 0 1 5.7 4.5h1.5Z"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                </svg>
+              </span>
+              <span>+1 (727) 282-4564</span>
+            </a>
+
+            <a href="mailto:hello@determinantsystems.com" class="contact-direct-item">
+              <span class="contact-direct-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M4 7.5A1.5 1.5 0 0 1 5.5 6h13A1.5 1.5 0 0 1 20 7.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 16.5v-9Z"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                  ></path>
+                  <path
+                    d="m5 8 7 5 7-5"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                </svg>
+              </span>
+              <span>info@determinantsystems.com</span>
+            </a>
+          </div>
+          <p class="lede">
+            We help teams turn fragile AI experiments into governed systems. Send over a
+            short note and we&apos;ll mock up the right next conversation.
+          </p>
+
+       
+        </div>
+
+        <div class="contact-panel" data-reveal data-reveal-delay="140">
+          <form
+            class="contact-form"
+            action="https://formsubmit.co/d1e3b5774e70ec164af913ce6cee03da"
+            method="POST"
+          >
+            <input type="hidden" name="_subject" value="New contact form submission from determinantsystems.com" />
+            <input type="hidden" name="_next" value="https://determinantsystems.com/contact/success" />
+            <input type="hidden" name="_template" value="table" />
+            <input type="hidden" name="_replyto" value="email" />
+            <div class="field-row">
+              <label class="field">
+                <span>Name</span>
+                <input type="text" name="name" placeholder="Jane Smith" required />
+              </label>
+
+              <label class="field">
+                <span>Email</span>
+                <input type="email" name="email" placeholder="jane@company.com" required />
+              </label>
+            </div>
+
+            <label class="field">
+              <span>Company</span>
+              <input type="text" name="company" placeholder="Company or team name" />
+            </label>
+
+            <label class="field">
+              <span>What do you need help with?</span>
+              <textarea
+                name="message"
+                rows="6"
+                placeholder="We need a governed workflow for document review, approvals, and AI-assisted drafting..."
+                required
+              ></textarea>
+            </label>
+
+            <div class="field-row">
+              <label class="field">
+                <span>Timeline</span>
+                <select name="timeline">
+                  <option>Exploring options</option>
+                  <option>This quarter</option>
+                  <option>Immediately</option>
+                </select>
+              </label>
+
+              <label class="field">
+                <span>Deployment preference</span>
+                <select name="deployment">
+                  <option>Not sure yet</option>
+                  <option>Cloud hosted</option>
+                  <option>Private environment</option>
+                </select>
+              </label>
+            </div>
+
+            <button type="submit" class="submit-button">Send inquiry</button>
+          </form>
+        </div>
+      </section>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .contact-page {
+    position: relative;
+    min-height: 100vh;
+    overflow: clip;
+  }
+
+  .contact-page::before,
+  .contact-page::after {
+    content: "";
+    position: absolute;
+    border-radius: 999px;
+    filter: blur(18px);
+    opacity: 0.7;
+    pointer-events: none;
+  }
+
+  .contact-page::before {
+    width: 28rem;
+    height: 28rem;
+    top: 6rem;
+    right: -7rem;
+    background: radial-gradient(circle, rgba(110, 153, 255, 0.24) 0%, transparent 70%);
+  }
+
+  .contact-page::after {
+    width: 22rem;
+    height: 22rem;
+    bottom: 3rem;
+    left: -5rem;
+    background: radial-gradient(circle, rgba(69, 214, 182, 0.18) 0%, transparent 72%);
+  }
+
+  .contact-shell {
+    position: relative;
+    z-index: 1;
+    padding-top: 1.25rem;
+  }
+
+  .contact-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: clamp(2.5rem, 5vw, 4rem);
+    padding: 0.95rem 1rem;
+    border: 1px solid var(--line);
+    background: rgba(7, 9, 12, 0.62);
+    backdrop-filter: blur(14px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .contact-nav-link {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.92rem;
+  }
+
+  .contact-nav-link:hover {
+    color: var(--text);
+  }
+
+  .contact-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+    gap: clamp(1.5rem, 4vw, 3rem);
+    align-items: start;
+  }
+
+  .contact-copy,
+  .contact-panel {
+    position: relative;
+    border: 1px solid var(--line);
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.015)),
+      rgba(6, 8, 11, 0.76);
+    box-shadow: var(--shadow-lg);
+    backdrop-filter: blur(16px);
+  }
+
+  .contact-copy {
+    padding: clamp(1.6rem, 4vw, 3rem);
+    min-height: 100%;
+  }
+
+  .eyebrow {
+    margin-bottom: 0.85rem;
+    color: #d9dee7;
+    font-size: 0.82rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .lede {
+    max-width: 38rem;
+    margin-top: 1.25rem;
+    font-size: 1.02rem;
+  }
+
+  .contact-direct {
+    display: grid;
+    gap: 0.75rem;
+    margin-top: 1.35rem;
+  }
+
+  .contact-direct-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: fit-content;
+    color: var(--text);
+    font-size: 1rem;
+    line-height: 1.35;
+    text-decoration: none;
+  }
+
+  .contact-direct-item:hover {
+    color: #dfeaff;
+  }
+
+  .contact-direct-icon {
+    display: inline-flex;
+    flex: 0 0 2.2rem;
+    align-items: center;
+    justify-content: center;
+    width: 2.2rem;
+    height: 2.2rem;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 0.3rem;
+  }
+
+  .contact-direct-icon svg {
+    display: block;
+    flex: none;
+    width: 1.05rem !important;
+    min-width: 1.05rem;
+    max-width: 1.05rem;
+    height: 1.05rem !important;
+  }
+
+  .contact-panel {
+    padding: clamp(1.2rem, 3vw, 2rem);
+    color-scheme: dark;
+  }
+
+  .contact-form {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .field-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .field {
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .field span {
+    color: var(--text);
+    font-size: 0.92rem;
+  }
+
+  .field input,
+  .field textarea,
+  .field select {
+    appearance: none;
+    -webkit-appearance: none;
+    color-scheme: dark;
+    width: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background-color: #171a1f;
+    color: var(--text);
+    font: inherit;
+    padding: 0.95rem 1rem;
+    outline: none;
+    transition: border-color 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
+  }
+
+  .field textarea {
+    resize: vertical;
+    min-height: 10rem;
+  }
+
+  .field select {
+    padding-right: 3rem;
+    border-color: rgba(255, 255, 255, 0.16);
+    background-image:
+      linear-gradient(45deg, transparent 50%, rgba(243, 245, 248, 0.92) 50%),
+      linear-gradient(135deg, rgba(243, 245, 248, 0.92) 50%, transparent 50%);
+    background-position:
+      calc(100% - 1.1rem) calc(50% - 0.16rem),
+      calc(100% - 0.75rem) calc(50% - 0.16rem);
+    background-size: 0.38rem 0.38rem, 0.38rem 0.38rem;
+    background-repeat: no-repeat;
+  }
+
+  .field select option {
+    color: #f3f5f8;
+    background: #111418;
+  }
+
+  .field select::-ms-expand {
+    display: none;
+  }
+
+  .field input::placeholder,
+  .field textarea::placeholder {
+    color: rgba(243, 245, 248, 0.46);
+  }
+
+  .field input:focus,
+  .field textarea:focus,
+  .field select:focus {
+    border-color: rgba(110, 153, 255, 0.55);
+    background: rgba(255, 255, 255, 0.06);
+    box-shadow: 0 0 0 3px rgba(110, 153, 255, 0.12);
+  }
+
+  .submit-button {
+    justify-self: start;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: linear-gradient(135deg, rgba(94, 143, 255, 0.25), rgba(77, 220, 190, 0.15));
+    color: var(--text);
+    font: inherit;
+    font-weight: 500;
+    padding: 0.95rem 1.4rem;
+    cursor: pointer;
+    transition: transform 160ms ease, border-color 160ms ease, background-color 160ms ease;
+  }
+
+  .submit-button:hover {
+    transform: translateY(-1px);
+    border-color: rgba(255, 255, 255, 0.28);
+  }
+
+  @media (max-width: 900px) {
+    .contact-hero,
+    .field-row {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .contact-shell {
+      padding-top: 0.8rem;
+    }
+
+    .contact-nav {
+      padding: 0.85rem 0.9rem;
+    }
+
+    .contact-nav,
+    .contact-copy,
+    .contact-panel {
+      border-radius: 0.35rem;
+    }
+  }
+</style>

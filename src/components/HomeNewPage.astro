@@ -233,6 +233,12 @@ const copy = isSpanish
     };
 
 const useCaseIcons = ["→", "◻", "⊕", "◈", "⋯", "⬡"];
+const heroTitleWords = copy.heroTitle.split(" ");
+const heroDesktopTitleLead = heroTitleWords.slice(0, 4).join(" ");
+const heroDesktopTitleRest = heroTitleWords.slice(4).join(" ");
+const heroMobileTitleLines = isSpanish
+  ? ["Haz", "IA", "para", "tu", "empresa."]
+  : ["Make", "AI", "work", "for", "you."];
 
 const year = new Date().getFullYear();
 ---
@@ -298,9 +304,24 @@ const year = new Date().getFullYear();
         <span>{copy.systemStatus}</span>
       </div> -->
 
-      <h1>
-        {copy.heroTitle.split(" ").slice(0, 4).join(" ")}<br />
-        <span class="accent-glow">{copy.heroTitle.split(" ").slice(4).join(" ")}</span>
+      <h1 aria-label={copy.heroTitle}>
+        <span class="hero-title-desktop" aria-hidden="true">
+          {heroDesktopTitleLead}<br />
+          <span class="accent-glow">{heroDesktopTitleRest}</span>
+        </span>
+        <span class="hero-title-mobile" aria-hidden="true">
+          {heroMobileTitleLines.map((line, index) => (
+            <span
+              class:list={[
+                "hero-title-line",
+                `hero-title-line-${index + 1}`,
+                index === heroMobileTitleLines.length - 1 && "accent-glow"
+              ]}
+            >
+              {line}
+            </span>
+          ))}
+        </span>
       </h1>
 
       <p class="hero-intro">{copy.heroIntro}</p>

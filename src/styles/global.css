@@ -1714,6 +1714,10 @@ li {
   font-size: clamp(3.1rem, 9vw, 5.0rem);
 }
 
+.official-home .hero-title-mobile {
+  display: none;
+}
+
 .official-home .accent-glow {
   background: linear-gradient(135deg, var(--oh-accent-2), #00fdc1);
   -webkit-background-clip: text;
@@ -3493,9 +3497,25 @@ li {
 
   /* Hero font sizes */
   .official-home .official-hero h1 {
-    font-size: clamp(1.65rem, 7.2vw, 3rem);
-    line-height: 0.98;
-    letter-spacing: -0.03em;
+    font-size: clamp(4.25rem, 19vw, 7.4rem);
+    line-height: 0.86;
+    letter-spacing: -0.06em;
+  }
+
+  .official-home .hero-title-desktop {
+    display: none;
+  }
+
+  .official-home .hero-title-mobile {
+    display: grid;
+    justify-items: center;
+    gap: 0.04em;
+  }
+
+  .official-home .hero-title-line {
+    display: block;
+    line-height: 0.86;
+    white-space: nowrap;
   }
 
   .official-home .hero-intro {
@@ -3583,9 +3603,9 @@ li {
   .official-home .problem-scroll-line,
   .official-home .problem-scroll-final,
   .official-home .problem-scroll-lace {
-    width: min(100%, 12ch);
-    font-size: clamp(1.5rem, 8.8vw, 2.55rem) !important;
-    line-height: 1 !important;
+    width: min(100%, 13ch);
+    font-size: clamp(2.05rem, 10.5vw, 3.15rem) !important;
+    line-height: 0.98 !important;
     text-wrap: balance;
   }
 
@@ -5608,9 +5628,9 @@ li {
   }
 
   .official-home h2 {
-    font-size: 34px !important;
-    line-height: 1.08 !important;
-    letter-spacing: -0.02em !important;
+    font-size: clamp(2.65rem, 6.2vw, 3.7rem) !important;
+    line-height: 1.02 !important;
+    letter-spacing: -0.035em !important;
     text-wrap: balance;
     overflow-wrap: anywhere;
   }
@@ -5730,13 +5750,13 @@ li {
 
 @media (max-width: 680px) {
   .official-home h2 {
-    font-size: 28px !important;
-    line-height: 1.1 !important;
+    font-size: clamp(2.35rem, 10.8vw, 3.2rem) !important;
+    line-height: 1.03 !important;
   }
 
   .official-home .final-cta h2 {
-    font-size: 30px !important;
-    line-height: 1.08 !important;
+    font-size: clamp(2.45rem, 11vw, 3.25rem) !important;
+    line-height: 1.02 !important;
   }
 
   .official-home .official-topnav-inner {

@@ -1,4 +1,5 @@
 ---
+import { Image } from "astro:assets";
 import {
   getHomeNewContent,
   type HomeLocale
@@ -6,6 +7,8 @@ import {
 import WorkflowStorySection from "./workflow-story/WorkflowStorySection.astro";
 import whitepaperEnglish from "../assets/docs/lace_enterprise_overview_v2_ENGLISH.pdf";
 import whitepaperSpanish from "../assets/docs/LACE_Enterprise_Overview_v2_SPANISH.pdf";
+import laceScreen1 from "../assets/images/lace-screen1.png";
+import laceScreen2 from "../assets/images/lace-screen2.png";
 
 interface Props {
   locale?: HomeLocale;
@@ -151,8 +154,8 @@ const copy = isSpanish
       systemStatus: "System active // protocol online",
       whoLabel: "Who We Are",
       whoIndex: "01 // Identity",
-      whoTitleLead: "An AI Consultancy",
-      whoTitleAccent: " Built for the Agentic Era.",
+      whoTitleLead: "AI that is Grounded",
+      whoTitleAccent: " In your business.",
       whoTitle: "An AI consultancy with its own infrastructure.",
       whoBody:
         "Determinant Systems helps organizations move from AI experiments to AI systems they can run in production. We implement enterprise AI workflows, build agentic systems for complex business processes, and deploy our own platform - LACE - for organizations that need full control over how AI operates inside their environment.",
@@ -380,10 +383,40 @@ const year = new Date().getFullYear();
   <div id="light-zone" class="lace-light-zone">
 
   <section class="platform-intro section-shell">
-    <div class="platform-intro-head" data-r>
-      <p class="section-kicker">{copy.ourPlatformLabel}</p>
-      <p class="platform-intro-body">{copy.ourPlatformBody}</p>
-      <p class="platform-intro-sub">{copy.ourPlatformSub}</p>
+    <div class="platform-intro-layout" data-r>
+      <div class="platform-intro-copy">
+        <h2 class="platform-intro-title">
+          <span class="platform-intro-title-accent">AGENTIC AI</span>
+          <span class="platform-intro-title-rest">
+            POLICY GOVERNED,<br />
+            WITH AN AUDIT TRAIL
+          </span>
+        </h2>
+        <p class="platform-intro-body">{copy.ourPlatformBody}</p>
+        <!-- <p class="platform-intro-sub">{copy.ourPlatformSub}</p> -->
+      </div>
+
+      <div class="platform-intro-showcase" aria-label="LACE platform screenshots">
+        <figure class="platform-intro-card platform-intro-card-back" aria-hidden="true">
+          <Image
+            src={laceScreen1}
+            alt=""
+            class="platform-intro-shot-image"
+            widths={[760, 980, 1260]}
+            sizes="(max-width: 980px) 86vw, 42vw"
+          />
+        </figure>
+
+        <figure class="platform-intro-card platform-intro-card-front">
+          <Image
+            src={laceScreen2}
+            alt="LACE platform workflow orchestration screenshot"
+            class="platform-intro-shot-image"
+            widths={[760, 980, 1260, 1500]}
+            sizes="(max-width: 980px) 96vw, 58vw"
+          />
+        </figure>
+      </div>
     </div>
   </section>
 

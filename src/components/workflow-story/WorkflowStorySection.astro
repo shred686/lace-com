@@ -274,7 +274,7 @@ const normalizedAccent = headlineAccent.trim();
           scrollTrigger: {
             trigger: root,
             start: "top top",
-            end: () => `+=${Math.round(window.innerHeight * 3.6)}`,
+            end: () => `+=${Math.round(window.innerHeight * Math.max(3.6, stepMeta.length * 0.78))}`,
             pin: frame,
             scrub: 0.65,
             anticipatePin: 1,

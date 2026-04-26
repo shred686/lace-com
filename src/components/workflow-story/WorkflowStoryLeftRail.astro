@@ -34,7 +34,7 @@ const { sectionEyebrow, headlineLead, headlineAccent, steps } = Astro.props;
       <span>/ {String(steps.length).padStart(2, "0")}</span>
     </div>
 
-    <div class="workflow-story__progress-dots">
+    <div class="workflow-story__progress-dots" style={`--workflow-step-count:${steps.length};`}>
       {steps.map((step, index) => (
         <span
           class:list={["workflow-story__progress-dot", index === 0 && "is-current"]}

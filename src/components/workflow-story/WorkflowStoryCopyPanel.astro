@@ -17,6 +17,7 @@ const { step, index } = Astro.props;
   data-progress-end={step.progressEnd}
   aria-hidden={index === 0 ? "false" : "true"}
 >
+  <!-- <p class="workflow-story__copy-eyebrow">{step.eyebrow}</p> -->
   <h3 class="workflow-story__copy-title">{step.title}</h3>
   <p class="workflow-story__copy-body">{step.body}</p>
 </article>

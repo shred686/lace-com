@@ -97,7 +97,7 @@ const connectorPath = (...points: PathPoint[]) => roundedPath(points);
 
 const en: WorkflowStoryContent = {
   meta: {
-    sectionEyebrow: "Workflow Story",
+    sectionEyebrow: "",
     graphLabel: "LACE // GOVERNED WORKFLOW",
     graphTitle: "Proposal assembly runtime",
     runId: "run cf2a91b0",
@@ -108,46 +108,64 @@ const en: WorkflowStoryContent = {
   },
   steps: [
     {
-      id: "ingest-brief",
-      eyebrow: "01 // Ingest the brief",
-      title: "Start with mission constraints, not a blank prompt.",
+      id: "intro",
+      eyebrow: "INTRO",
+      title: "State of the art modeling",
       body:
-        "We load objectives, evaluation criteria, approved language, and operating limits before any synthesis begins, so the run starts inside a defined operating envelope.",
+        "LACE starts with the knowledge, rules, documents, and workflows that already run your organization. Then it turns them into governed AI applications that can answer, act, draft, review, and produce work with source grounding and operational control.",
       progressStart: 0,
-      progressEnd: 0.22
+      progressEnd: 0.16
     },
     {
-      id: "retrieve-context",
-      eyebrow: "02 // Retrieve public + private context",
-      title: "Pull the evidence that should shape the run.",
+      id: "ingestion",
+      eyebrow: "01 // Ingestion",
+      title: "Ingestion - Building your enterprise knowledge base",
       body:
-        "The workflow searches public sources, retrieves internal corpus, and ranks both into a working context pack instead of asking the model to rely on memory.",
-      progressStart: 0.22,
-      progressEnd: 0.58
+        "LACE helps turn your internal materials into an AI-ready knowledge base: policies, proposals, reports, manuals, financial decks, RFPs, standards, contracts, product documentation, and operational records. Instead of flattening everything into generic text, LACE is designed to preserve the structure that matters: sections, tables, charts, figures, facts, claims, and source relationships.",
+      progressStart: 0.16,
+      progressEnd: 0.32
     },
     {
-      id: "build-decision",
-      eyebrow: "03 // Build governed decision context",
-      title: "Turn raw evidence into a route the team can inspect.",
+      id: "retrieval",
+      eyebrow: "02 // Retrieval",
+      title: "Retrieval",
       body:
-        "LACE composes source weights, policy rails, and approval logic so the next action is selected inside rules your team can trace, review, and override.",
-      progressStart: 0.58,
-      progressEnd: 0.82
+        "When a user asks a question or starts a workflow, LACE does not simply search for a nearby paragraph. It looks for the right evidence. That may mean finding an exact fact in a table, pulling context from a source document, comparing across reports, grounding an answer in a chart or figure, or recognizing when a broader corpus-wide review is required.",
+      progressStart: 0.32,
+      progressEnd: 0.52
     },
     {
-      id: "synthesize-export",
-      eyebrow: "04 // Synthesize and export",
-      title: "Draft, review, and ship without losing provenance.",
+      id: "workflow-planning",
+      eyebrow: "03 // Workflow Planning",
+      title: "Workflow Planning",
       body:
-        "The system produces a governed draft, routes it through review gates, and exports a packet whose claims stay tied to the evidence that produced them.",
-      progressStart: 0.82,
+        "LACE converts user intent into a governed plan. The platform determines what needs to happen, which sources and tools are relevant, what policies apply, what level of confidence is required, and where human review should remain in the loop.",
+      progressStart: 0.52,
+      progressEnd: 0.68
+    },
+    {
+      id: "execution",
+      eyebrow: "04 // Execution",
+      title: "Execution",
+      body:
+        "LACE runs the work through structured workflows that can combine AI reasoning, retrieval, business logic, approved tools, document generation, artifact editing, and human approvals. The result can be an answer, a revised document, a compliance review, a proposal section, a report, or an entire application workflow.",
+      progressStart: 0.68,
+      progressEnd: 0.84
+    },
+    {
+      id: "validation-audit",
+      eyebrow: "05 // Validation and Audit Trail",
+      title: "Validation and Audit Trail",
+      body:
+        "LACE keeps AI outputs accountable. Sources can be inspected, citations can be checked, proposed changes can be reviewed before they are applied, and every run leaves behind a trace of what happened. Teams get the speed of AI with the auditability required for real enterprise work.",
+      progressStart: 0.84,
       progressEnd: 1
     }
   ],
   nodes: [
     {
       id: "load-brief",
-      stepId: "ingest-brief",
+      stepId: "ingestion",
       badge: "Load",
       title: "Load brief",
       detail: "Mission priorities, approved language, proposal rules, and source requirements are mounted into the run context.",
@@ -163,7 +181,7 @@ const en: WorkflowStoryContent = {
     },
     {
       id: "search-public-web",
-      stepId: "retrieve-context",
+      stepId: "retrieval",
       badge: "Search",
       title: "Search public web",
       detail: "Public programs, grants, and modernization guidance are retrieved against the brief before drafting starts.",
@@ -179,7 +197,7 @@ const en: WorkflowStoryContent = {
     },
     {
       id: "retrieve-private-corpus",
-      stepId: "retrieve-context",
+      stepId: "retrieval",
       badge: "Retrieve",
       title: "Retrieve private corpus",
       detail: "Past proposals, policy packs, and capability notes are pulled in alongside public evidence for governed grounding.",
@@ -195,7 +213,7 @@ const en: WorkflowStoryContent = {
     },
     {
       id: "build-context-pack",
-      stepId: "retrieve-context",
+      stepId: "retrieval",
       badge: "Context",
       title: "Build context pack",
       detail: "Evidence, source weights, and policy rails are composed into one ranked decision surface for the run.",
@@ -211,7 +229,7 @@ const en: WorkflowStoryContent = {
     },
     {
       id: "decide-route",
-      stepId: "build-decision",
+      stepId: "workflow-planning",
       badge: "Decide",
       title: "Decide route",
       detail: "Risk, fit, and scope gates select the next branch instead of letting the system improvise execution order.",
@@ -227,7 +245,7 @@ const en: WorkflowStoryContent = {
     },
     {
       id: "draft-response",
-      stepId: "build-decision",
+      stepId: "execution",
       badge: "Draft",
       title: "Draft response",
       detail: "Executive summary, workplan, and differentiators are generated inside the governed context that was just assembled.",
@@ -243,7 +261,7 @@ const en: WorkflowStoryContent = {
     },
     {
       id: "review-export",
-      stepId: "synthesize-export",
+      stepId: "validation-audit",
       badge: "Deliver",
       title: "Review + export",
       detail: "The packet is routed through approval, citations stay attached, and the final deliverable is exported with provenance intact.",
@@ -261,43 +279,43 @@ const en: WorkflowStoryContent = {
   connectors: [
     {
       id: "route-1",
-      stepId: "ingest-brief",
+      stepId: "ingestion",
       revealNodeId: "load-brief",
       path: connectorPath([356, 84], [356, 184], [304, 184])
     },
     {
       id: "route-2",
-      stepId: "retrieve-context",
+      stepId: "retrieval",
       revealNodeId: "search-public-web",
       path: connectorPath([304, 184], [356, 184], [356, 600], [388, 600])
     },
     {
       id: "route-3",
-      stepId: "retrieve-context",
+      stepId: "retrieval",
       revealNodeId: "retrieve-private-corpus",
       path: connectorPath([388, 600], [356, 600], [356, 760], [344, 760])
     },
     {
       id: "route-4",
-      stepId: "retrieve-context",
+      stepId: "retrieval",
       revealNodeId: "build-context-pack",
       path: connectorPath([344, 760], [356, 760], [356, 920], [388, 920])
     },
     {
       id: "route-5",
-      stepId: "build-decision",
+      stepId: "workflow-planning",
       revealNodeId: "decide-route",
       path: connectorPath([388, 920], [356, 920], [356, 1124], [344, 1124])
     },
     {
       id: "route-6",
-      stepId: "build-decision",
+      stepId: "execution",
       revealNodeId: "draft-response",
       path: connectorPath([344, 1124], [356, 1124], [356, 1366], [392, 1366])
     },
     {
       id: "route-7",
-      stepId: "synthesize-export",
+      stepId: "validation-audit",
       revealNodeId: "review-export",
       path: connectorPath([392, 1366], [356, 1366], [356, 1540])
     }

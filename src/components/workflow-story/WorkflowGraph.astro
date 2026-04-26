@@ -1,0 +1,44 @@
+---
+import WorkflowConnectorPath from "./WorkflowConnectorPath.astro";
+import WorkflowNodeCard from "./WorkflowNodeCard.astro";
+import type {
+  WorkflowConnector,
+  WorkflowGraphNode,
+  WorkflowStoryMeta
+} from "../../data/workflowStoryContent";
+
+interface Props {
+  meta: WorkflowStoryMeta;
+  nodes: WorkflowGraphNode[];
+  connectors: WorkflowConnector[];
+}
+
+const { meta, nodes, connectors } = Astro.props;
+---
+
+<div class="workflow-story__right-rail" data-workflow-right-rail>
+  <div class="workflow-graph" data-workflow-graph>
+    <div class="workflow-graph__viewport" data-workflow-graph-viewport>
+      <div
+        class="workflow-graph__artboard"
+        data-workflow-artboard
+        style={`--graph-width:${meta.graphWidth}px;--graph-height:${meta.graphHeight}px;`}
+      >
+        <svg
+          class="workflow-graph__canvas"
+          viewBox={`0 0 ${meta.graphWidth} ${meta.graphHeight}`}
+          fill="none"
+          aria-hidden="true"
+        >
+          {connectors.map((connector) => (
+            <WorkflowConnectorPath connector={connector} />
+          ))}
+        </svg>
+
+        {nodes.map((node, index) => (
+          <WorkflowNodeCard node={node} order={index + 1} />
+        ))}
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,51 @@
+---
+import type { WorkflowGraphNode } from "../../data/workflowStoryContent";
+
+interface Props {
+  node: WorkflowGraphNode;
+  order: number;
+}
+
+const { node, order } = Astro.props;
+const workflowSpineX = 356;
+const junctionX = node.align === "center" ? node.width / 2 : workflowSpineX - node.x;
+const junctionY = node.align === "center" ? 0 : node.height / 2;
+
+const style = [
+  `--node-x:${node.x}px`,
+  `--node-y:${node.y}px`,
+  `--node-width:${node.width}px`,
+  `--node-height:${node.height}px`,
+  `--junction-x:${junctionX}px`,
+  `--junction-y:${junctionY}px`,
+  `--entry-x:${node.entryX}px`,
+  `--entry-y:${node.entryY}px`
+].join(";");
+---
+
+<article
+  class:list={[
+    "workflow-node-card",
+    `workflow-node-card--${node.align}`,
+    order === 1 && "is-current",
+    order === 1 && "is-visible"
+  ]}
+  data-workflow-node
+  data-node-id={node.id}
+  data-step-id={node.stepId}
+  data-order={order}
+  style={style}
+  aria-hidden="false"
+>
+  <div class="workflow-node-card__top">
+    <span>{String(order).padStart(2, "0")} // {node.badge}</span>
+    <strong>{node.runtime}</strong>
+  </div>
+
+  <h4>{node.title}</h4>
+  <p>{node.detail}</p>
+
+  <div class="workflow-node-card__footer">
+    <span>{node.footer}</span>
+  </div>
+</article>

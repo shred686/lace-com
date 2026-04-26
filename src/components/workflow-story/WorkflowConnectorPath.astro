@@ -1,0 +1,19 @@
+---
+import type { WorkflowConnector } from "../../data/workflowStoryContent";
+
+interface Props {
+  connector: WorkflowConnector;
+}
+
+const { connector } = Astro.props;
+---
+
+<g
+  class="workflow-connector"
+  data-workflow-connector
+  data-step-id={connector.stepId}
+  data-node-id={connector.revealNodeId}
+>
+  <path class="workflow-connector-base" d={connector.path}></path>
+  <path class="workflow-connector-path" data-workflow-connector-path d={connector.path}></path>
+</g>

@@ -35,7 +35,6 @@ interface UseCase {
 }
 
 interface HomeNewContent {
-  heroProofs: string[];
   capabilityTags: string[];
   valuePillars: ValuePillar[];
   workflowSteps: WorkflowStep[];
@@ -48,7 +47,6 @@ interface HomeNewContent {
 }
 
 const en: HomeNewContent = {
-  heroProofs: ["Model business workflows", "Policy-governed execution", "Deployable AI apps"],
   capabilityTags: [
     "Enterprise AI",
     "Workflow Modeling",
@@ -292,7 +290,6 @@ const en: HomeNewContent = {
 };
 
 const es: HomeNewContent = {
-  heroProofs: ["Modela flujos de negocio", "Ejecucion gobernada por politicas", "Apps de IA desplegables"],
   capabilityTags: [
     "IA Empresarial",
     "Modelado de Flujos",

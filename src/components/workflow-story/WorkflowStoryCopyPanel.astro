@@ -1,0 +1,22 @@
+---
+import type { WorkflowStoryStep } from "../../data/workflowStoryContent";
+
+interface Props {
+  step: WorkflowStoryStep;
+  index: number;
+}
+
+const { step, index } = Astro.props;
+---
+
+<article
+  class:list={["workflow-story__copy-panel", index === 0 && "is-current"]}
+  data-workflow-copy-panel
+  data-step-id={step.id}
+  data-progress-start={step.progressStart}
+  data-progress-end={step.progressEnd}
+  aria-hidden={index === 0 ? "false" : "true"}
+>
+  <h3 class="workflow-story__copy-title">{step.title}</h3>
+  <p class="workflow-story__copy-body">{step.body}</p>
+</article>

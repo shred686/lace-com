@@ -1,0 +1,366 @@
+---
+import WorkflowGraph from "./WorkflowGraph.astro";
+import WorkflowStoryLeftRail from "./WorkflowStoryLeftRail.astro";
+import { getWorkflowStoryContent } from "../../data/workflowStoryContent";
+import type { HomeLocale } from "../../data/homeNewContent";
+
+interface Props {
+  locale: HomeLocale;
+  headlineLead: string;
+  headlineAccent: string;
+}
+
+const { locale, headlineLead, headlineAccent } = Astro.props;
+const story = getWorkflowStoryContent(locale);
+const normalizedAccent = headlineAccent.trim();
+---
+
+<section id="lace" class="workflow-story section-shell" data-workflow-story>
+  <div class="workflow-story__sticky-frame" data-workflow-frame>
+    <WorkflowStoryLeftRail
+      sectionEyebrow={story.meta.sectionEyebrow}
+      headlineLead={headlineLead}
+      headlineAccent={normalizedAccent}
+      steps={story.steps}
+    />
+
+    <WorkflowGraph
+      meta={story.meta}
+      steps={story.steps}
+      nodes={story.nodes}
+      connectors={story.connectors}
+    />
+  </div>
+</section>
+
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+
+  const resetStaticState = (root, panels, nodes, connectors, progressDots) => {
+    root.classList.remove("is-enhanced");
+
+    panels.forEach((panel, index) => {
+      panel.classList.toggle("is-current", index === 0);
+      panel.classList.remove("is-past");
+      panel.setAttribute("aria-hidden", "false");
+      panel.style.removeProperty("opacity");
+      panel.style.removeProperty("visibility");
+      panel.style.removeProperty("transform");
+      panel.style.removeProperty("pointer-events");
+    });
+
+    nodes.forEach((node, index) => {
+      node.classList.toggle("is-visible", index === 0);
+      node.classList.toggle("is-current", index === 0);
+      node.classList.remove("is-complete");
+      node.setAttribute("aria-hidden", "false");
+      node.style.removeProperty("opacity");
+      node.style.removeProperty("visibility");
+      node.style.removeProperty("transform");
+    });
+
+    connectors.forEach((connector) => {
+      connector.classList.remove("is-current", "is-complete");
+      connector.style.removeProperty("opacity");
+      connector.style.removeProperty("stroke-dasharray");
+      connector.style.removeProperty("stroke-dashoffset");
+    });
+
+    progressDots.forEach((dot, index) => {
+      dot.classList.toggle("is-current", index === 0);
+      dot.classList.remove("is-complete");
+      dot.style.setProperty("--segment-progress", index === 0 ? "1" : "0");
+    });
+  };
+
+  const initializeWorkflowStory = (root) => {
+    if (!(root instanceof HTMLElement)) return;
+
+    const frame = root.querySelector("[data-workflow-frame]");
+    const copyShell = root.querySelector("[data-workflow-copy-shell]");
+    const viewport = root.querySelector("[data-workflow-graph-viewport]");
+    const artboard = root.querySelector("[data-workflow-artboard]");
+    const activeTitle = root.querySelector("[data-workflow-active-title]");
+    const currentNode = root.querySelector("[data-workflow-node-current]");
+    const currentStep = root.querySelector("[data-workflow-step-current]");
+
+    if (!(frame instanceof HTMLElement) || !(copyShell instanceof HTMLElement) || !(viewport instanceof HTMLElement) || !(artboard instanceof HTMLElement)) {
+      return;
+    }
+
+    const panels = Array.from(root.querySelectorAll("[data-workflow-copy-panel]"));
+    const nodes = Array.from(root.querySelectorAll("[data-workflow-node]")).sort(
+      (a, b) => Number(a.getAttribute("data-order")) - Number(b.getAttribute("data-order"))
+    );
+    const connectors = Array.from(root.querySelectorAll("[data-workflow-connector-path]"));
+    const progressDots = Array.from(root.querySelectorAll("[data-workflow-progress-dot]"));
+
+    if (!panels.length || !nodes.length) return;
+
+    const stepMeta = panels.map((panel) => ({
+      id: panel.getAttribute("data-step-id") || "",
+      start: Number(panel.getAttribute("data-progress-start") || "0"),
+      end: Number(panel.getAttribute("data-progress-end") || "1"),
+      panel
+    }));
+
+    const nodesByStep = new Map(
+      stepMeta.map((step) => [
+        step.id,
+        nodes.filter((node) => node.getAttribute("data-step-id") === step.id)
+      ])
+    );
+
+    const revealMeta = [];
+
+    stepMeta.forEach((step) => {
+      const stepNodes = nodesByStep.get(step.id) || [];
+      const span = step.end - step.start;
+      const inset = Math.min(0.045, span * 0.24);
+
+      stepNodes.forEach((node, index) => {
+        let revealAt = step.start + inset;
+
+        if (stepNodes.length > 1) {
+          const usableSpan = Math.max(0.02, span - inset * 2);
+          const stride = usableSpan / (stepNodes.length - 1);
+          revealAt = step.start + inset + stride * index;
+        } else {
+          revealAt = step.start + Math.min(0.06, span * 0.38);
+        }
+
+        revealMeta.push({
+          node,
+          stepId: step.id,
+          revealAt
+        });
+      });
+    });
+
+    revealMeta.sort((a, b) => a.revealAt - b.revealAt);
+
+    const revealByNodeId = new Map(revealMeta.map((item) => [item.node.getAttribute("data-node-id"), item]));
+
+    const mm = gsap.matchMedia();
+
+    mm.add("(min-width: 1320px) and (prefers-reduced-motion: no-preference)", () => {
+      root.classList.add("is-enhanced");
+
+      const setCopyShellHeight = () => {
+        const maxHeight = Math.max(...panels.map((panel) => panel.offsetHeight));
+        copyShell.style.setProperty("--copy-shell-height", `${maxHeight}px`);
+      };
+
+      const updateState = (progress) => {
+        const activeStepIndex = stepMeta.findIndex((step, index) => {
+          const isLast = index === stepMeta.length - 1;
+          return progress >= step.start && (isLast ? progress <= step.end : progress < step.end);
+        });
+        const resolvedStepIndex = activeStepIndex === -1 ? stepMeta.length - 1 : activeStepIndex;
+        const activeStep = stepMeta[resolvedStepIndex];
+
+        let activeNodeIndex = 0;
+        revealMeta.forEach((item, index) => {
+          if (progress >= item.revealAt - 0.01) activeNodeIndex = index;
+        });
+
+        const activeNodeData = revealMeta[activeNodeIndex];
+        const visibleCount = revealMeta.filter((item) => progress >= item.revealAt - 0.01).length;
+
+        panels.forEach((panel, index) => {
+          const isCurrent = index === resolvedStepIndex;
+          panel.classList.toggle("is-current", isCurrent);
+          panel.classList.toggle("is-past", index < resolvedStepIndex);
+          panel.setAttribute("aria-hidden", isCurrent ? "false" : "true");
+        });
+
+        nodes.forEach((node) => {
+          const nodeId = node.getAttribute("data-node-id");
+          const nodeReveal = revealByNodeId.get(nodeId);
+
+          if (!nodeReveal) return;
+
+          const isVisible = progress >= nodeReveal.revealAt - 0.01;
+          const isCurrent = nodeId === activeNodeData?.node.getAttribute("data-node-id");
+          const isComplete = isVisible && !isCurrent;
+
+          node.classList.toggle("is-visible", isVisible);
+          node.classList.toggle("is-current", isCurrent);
+          node.classList.toggle("is-complete", isComplete);
+          node.setAttribute("aria-hidden", isVisible ? "false" : "true");
+        });
+
+        connectors.forEach((connector) => {
+          const nodeId = connector.parentElement?.getAttribute("data-node-id");
+          const nodeReveal = revealByNodeId.get(nodeId);
+
+          if (!nodeReveal) return;
+
+          const isVisible = progress >= nodeReveal.revealAt - 0.01;
+          const isCurrent = nodeId === activeNodeData?.node.getAttribute("data-node-id");
+
+          connector.classList.toggle("is-complete", isVisible && !isCurrent);
+          connector.classList.toggle("is-current", isCurrent);
+        });
+
+        progressDots.forEach((dot) => {
+          const stepId = dot.getAttribute("data-step-id");
+          const step = stepMeta.find((item) => item.id === stepId);
+
+          if (!step) return;
+
+          const localProgress = clamp((progress - step.start) / (step.end - step.start), 0, 1);
+          const isCurrent = step.id === activeStep.id;
+          const isComplete = progress >= step.end;
+
+          dot.classList.toggle("is-current", isCurrent);
+          dot.classList.toggle("is-complete", isComplete);
+          dot.style.setProperty("--segment-progress", String(isComplete ? 1 : isCurrent ? localProgress : 0));
+        });
+
+        if (activeTitle) activeTitle.textContent = activeNodeData?.node.querySelector("h4")?.textContent || activeStep.panel.querySelector("h3")?.textContent || "";
+        if (currentNode) currentNode.textContent = String(Math.max(1, visibleCount)).padStart(2, "0");
+        if (currentStep) currentStep.textContent = String(resolvedStepIndex + 1).padStart(2, "0");
+      };
+
+      const context = gsap.context(() => {
+        setCopyShellHeight();
+
+        connectors.forEach((path) => {
+          if (!(path instanceof SVGPathElement)) return;
+          const length = path.getTotalLength();
+          gsap.set(path, {
+            strokeDasharray: length,
+            strokeDashoffset: length,
+            opacity: 0
+          });
+        });
+
+        gsap.set(panels, {
+          autoAlpha: 0,
+          y: 20
+        });
+
+        gsap.set(panels[0], {
+          autoAlpha: 1,
+          y: 0
+        });
+
+        gsap.set(nodes, {
+          autoAlpha: 0,
+          x: (_, element) => Number(element.style.getPropertyValue("--entry-x").replace("px", "")) || 0,
+          y: (_, element) => Number(element.style.getPropertyValue("--entry-y").replace("px", "")) || 0,
+          scale: 0.975
+        });
+
+        gsap.set(nodes[0], {
+          autoAlpha: 1,
+          x: 0,
+          y: 0,
+          scale: 1
+        });
+
+        const travel = () => Math.max(0, artboard.offsetHeight - viewport.offsetHeight + 64);
+
+        const timeline = gsap.timeline({
+          defaults: {
+            ease: "power2.out"
+          },
+          scrollTrigger: {
+            trigger: root,
+            start: "top top",
+            end: () => `+=${Math.round(window.innerHeight * 3.6)}`,
+            pin: frame,
+            scrub: 0.65,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+            onRefresh: () => setCopyShellHeight(),
+            onUpdate: (self) => updateState(self.progress)
+          }
+        });
+
+        timeline.to(
+          artboard,
+          {
+            y: () => -travel(),
+            ease: "none",
+            duration: 1
+          },
+          0
+        );
+
+        revealMeta.forEach((item, index) => {
+          const targetNodeId = item.node.getAttribute("data-node-id");
+          const relatedPaths = connectors.filter(
+            (connector) => connector.parentElement?.getAttribute("data-node-id") === targetNodeId
+          );
+
+          timeline.to(
+            relatedPaths,
+            {
+              strokeDashoffset: 0,
+              opacity: 0.82,
+              duration: 0.08,
+              stagger: 0.02
+            },
+            Math.max(0, item.revealAt - 0.04)
+          );
+
+          timeline.to(
+            item.node,
+            {
+              autoAlpha: 1,
+              x: 0,
+              y: 0,
+              scale: 1,
+              duration: 0.09
+            },
+            item.revealAt
+          );
+        });
+
+        stepMeta.forEach((step, index) => {
+          if (index === 0) return;
+
+          const previous = stepMeta[index - 1];
+
+          timeline.to(
+            previous.panel,
+            {
+              autoAlpha: 0,
+              y: -18,
+              duration: 0.08
+            },
+            Math.max(previous.start + 0.1, step.start - 0.05)
+          );
+
+          timeline.to(
+            step.panel,
+            {
+              autoAlpha: 1,
+              y: 0,
+              duration: 0.08
+            },
+            step.start
+          );
+        });
+
+        updateState(0);
+      }, root);
+
+      return () => {
+        context.revert();
+        copyShell.style.removeProperty("--copy-shell-height");
+        artboard.style.removeProperty("transform");
+        resetStaticState(root, panels, nodes, connectors, progressDots);
+      };
+    });
+  };
+
+  document.querySelectorAll("[data-workflow-story]").forEach((root) => initializeWorkflowStory(root));
+</script>

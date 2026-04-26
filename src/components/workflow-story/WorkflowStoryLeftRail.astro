@@ -1,0 +1,48 @@
+---
+import WorkflowStoryCopyPanel from "./WorkflowStoryCopyPanel.astro";
+import type { WorkflowStoryStep } from "../../data/workflowStoryContent";
+
+interface Props {
+  sectionEyebrow: string;
+  headlineLead: string;
+  headlineAccent: string;
+  steps: WorkflowStoryStep[];
+}
+
+const { sectionEyebrow, headlineLead, headlineAccent, steps } = Astro.props;
+---
+
+<div class="workflow-story__left-rail" data-workflow-left-rail>
+  <p class="workflow-story__eyebrow">{sectionEyebrow}</p>
+
+  <h2 class="workflow-story__headline">
+    {headlineLead}
+    <span>{headlineAccent}</span>
+  </h2>
+
+  <div class="workflow-story__copy-shell" data-workflow-copy-shell>
+    <div class="workflow-story__copy-stack" data-workflow-copy-stack>
+      {steps.map((step, index) => (
+        <WorkflowStoryCopyPanel step={step} index={index} />
+      ))}
+    </div>
+  </div>
+
+  <div class="workflow-story__progress-row" aria-hidden="true">
+    <div class="workflow-story__step-counter">
+      <span data-workflow-step-current>{String(1).padStart(2, "0")}</span>
+      <span>/ {String(steps.length).padStart(2, "0")}</span>
+    </div>
+
+    <div class="workflow-story__progress-dots">
+      {steps.map((step, index) => (
+        <span
+          class:list={["workflow-story__progress-dot", index === 0 && "is-current"]}
+          data-workflow-progress-dot
+          data-step-id={step.id}
+          style={index === 0 ? "--segment-progress:1;" : "--segment-progress:0;"}
+        ></span>
+      ))}
+    </div>
+  </div>
+</div>

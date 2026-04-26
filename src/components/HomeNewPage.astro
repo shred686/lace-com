@@ -35,8 +35,8 @@ const problemLeadStart = isSpanish
   ? "La mayoria de las herramientas de IA son"
   : "Most AI tools are";
 const problemSlotWords = isSpanish
-  ? ["rapidas", "inteligentes", "impresionantes"]
-  : ["fast", "smart", "impressive"];
+  ? ["rapidas.", "inteligentes.", "impresionantes."]
+  : ["fast.", "smart.", "impressive."];
 const problemFinalLine = isSpanish
   ? "Muy pocas son confiables."
   : "Very few are trustworthy.";
@@ -342,7 +342,7 @@ const year = new Date().getFullYear();
           <span>{problemLeadStart}</span>
           <span class="problem-slot" aria-live="polite">
             <span data-problem-word>{problemSlotWords[0]}</span>
-          </span><span>.</span>
+          </span>
         </h2>
         <h2 class="problem-scroll-final lace-accent-word" data-problem-final>{problemFinalLine}</h2>
         <h2
@@ -595,7 +595,7 @@ const year = new Date().getFullYear();
     const home = document.querySelector(".official-home");
     if (!line || !finalLine || !laceLine || !word || !slot || !zone || !veil || !home) return;
 
-    const configuredWords = (line.getAttribute("data-problem-words") || "fast|smart|impressive").split("|");
+    const configuredWords = (line.getAttribute("data-problem-words") || "fast.|smart.|impressive.").split("|");
     let activeWord = configuredWords[0];
     let isLight = false;
     let flashTimer = 0;

@@ -3493,7 +3493,9 @@ li {
 
   /* Hero font sizes */
   .official-home .official-hero h1 {
-    font-size: clamp(2rem, 9vw, 5.0rem);
+    font-size: clamp(1.65rem, 7.2vw, 3rem);
+    line-height: 0.98;
+    letter-spacing: -0.03em;
   }
 
   .official-home .hero-intro {
@@ -3502,7 +3504,7 @@ li {
 
   .official-home .hero-detail {
     font-size: 0.9rem;
-    max-width: 100%;
+    max-width: 31ch;
   }
 
   .official-home .hero-status-pill span,
@@ -3512,16 +3514,24 @@ li {
   }
 
   .official-home .official-hero-content {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
     padding: 0 1.25rem;
   }
 
   .official-home .hero-actions {
     flex-direction: column;
     align-items: stretch;
+    width: min(100%, 330px);
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .official-home .hero-btn {
     justify-content: center;
+    width: 100%;
+    box-sizing: border-box;
     padding: 0.9rem 1.5rem;
   }
 
@@ -3543,22 +3553,47 @@ li {
   }
 
   .official-home .problem-scroll-section {
+    min-height: 560svh;
     padding: 0;
+  }
+
+  .official-home .problem-platform-anchor {
+    top: 396svh;
+  }
+
+  .official-home .problem-scroll-pin::before {
+    width: min(520px, 116vw);
+    height: min(360px, 86vw);
+  }
+
+  .official-home .problem-scroll-pin::after {
+    opacity: 0.7;
   }
 
   .official-home .problem-scroll-copy {
     width: min(100%, calc(100% - 1.5rem));
+    min-height: 42svh;
+    padding-bottom: 4svh;
+  }
+
+  .official-home .problem-scroll-kicker {
+    letter-spacing: min(var(--problem-kicker-letter, 0.3em), 0.3em);
   }
 
   .official-home .problem-scroll-line,
   .official-home .problem-scroll-final,
   .official-home .problem-scroll-lace {
-    font-size: clamp(1.82rem, 10vw, 3rem) !important;
+    width: min(100%, 12ch);
+    font-size: clamp(1.5rem, 8.8vw, 2.55rem) !important;
+    line-height: 1 !important;
+    text-wrap: balance;
   }
 
   .official-home .problem-slot {
-    display: inline-grid;
-    min-width: 100%;
+    display: grid;
+    width: 100%;
+    min-width: 0;
+    margin-top: 0.08em;
     text-align: center;
   }
 
@@ -4365,7 +4400,7 @@ li {
 
 @media (max-width: 980px) {
   .official-home .workflow-story {
-    padding: 4.8rem 0;
+    padding: 4.8rem 0 5.25rem;
   }
 
   .official-home .workflow-story__sticky-frame {
@@ -4373,9 +4408,21 @@ li {
     gap: 2rem;
   }
 
+  .official-home .workflow-story__left-rail {
+    max-width: none;
+  }
+
   .official-home .workflow-story__headline {
     font-size: 2.9rem;
     line-height: 0.98;
+  }
+
+  .official-home .workflow-story__copy-shell {
+    margin-top: 2.2rem;
+  }
+
+  .official-home .workflow-story__copy-stack {
+    gap: 0.85rem;
   }
 
   .official-home .workflow-story__copy-title {
@@ -4389,6 +4436,10 @@ li {
   .official-home .workflow-story__progress-row {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .official-home .workflow-story__right-rail {
+    width: 100%;
   }
 
   .official-home .workflow-graph {
@@ -4413,29 +4464,100 @@ li {
   .official-home .workflow-graph__viewport {
     min-height: auto;
     overflow: visible;
+    border-radius: 0.9rem;
   }
 
   .official-home .workflow-graph__viewport::before,
   .official-home .workflow-graph__viewport::after {
     display: none;
   }
+
+  .official-home .workflow-graph__artboard {
+    width: 100%;
+    min-height: 0;
+    height: auto;
+    gap: 0.85rem;
+    padding: 0.95rem 0.55rem 0.95rem 1.65rem;
+  }
+
+  .official-home .workflow-graph__artboard::before {
+    content: "";
+    position: absolute;
+    top: 1.45rem;
+    bottom: 1.45rem;
+    left: 0.82rem;
+    width: 1px;
+    background: linear-gradient(
+      180deg,
+      rgba(186, 244, 223, 0),
+      rgba(186, 244, 223, 0.28) 12%,
+      rgba(186, 244, 223, 0.18) 88%,
+      rgba(186, 244, 223, 0)
+    );
+    box-shadow: 0 0 18px rgba(80, 185, 145, 0.2);
+    pointer-events: none;
+  }
+
+  .official-home .workflow-graph__canvas {
+    display: none;
+  }
+
+  .official-home .workflow-node-card,
+  .official-home .workflow-node-card--right,
+  .official-home .workflow-node-card--center {
+    width: 100%;
+    max-width: none;
+    min-height: 0;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .official-home .workflow-node-card::before {
+    left: -0.83rem;
+    top: 1.22rem;
+    width: 0.62rem;
+    height: 0.62rem;
+    transform: translate(-50%, 0);
+    border-width: 1px;
+  }
+
+  .official-home .workflow-node-card__top,
+  .official-home .workflow-node-card__footer {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .official-home .workflow-node-card__top strong {
+    margin-left: auto;
+  }
 }
 
 @media (max-width: 680px) {
   .official-home .workflow-story {
-    padding: 4.1rem 0;
+    padding: 4rem 0 4.55rem;
   }
 
   .official-home .workflow-story__sticky-frame {
     width: min(100%, calc(100% - 1rem));
+    gap: 1.65rem;
   }
 
   .official-home .workflow-story__headline {
-    font-size: 2.4rem;
+    font-size: 2.25rem;
+    line-height: 1;
+  }
+
+  .official-home .workflow-story__copy-shell {
+    margin-top: 1.75rem;
   }
 
   .official-home .workflow-story__copy-panel {
-    padding-left: 1rem;
+    padding: 1.05rem 0 1.05rem 0.95rem;
+  }
+
+  .official-home .workflow-story__progress-row {
+    gap: 0.85rem;
+    margin-top: 1.45rem;
   }
 
   .official-home .workflow-graph__hud {
@@ -4446,8 +4568,46 @@ li {
     grid-template-columns: 1fr;
   }
 
+  .official-home .workflow-graph {
+    padding: 0.58rem;
+    border-radius: 0.95rem;
+  }
+
+  .official-home .workflow-graph__artboard {
+    gap: 0.72rem;
+    padding: 0.72rem 0.28rem 0.78rem 1.35rem;
+  }
+
+  .official-home .workflow-graph__artboard::before {
+    top: 1.15rem;
+    bottom: 1.15rem;
+    left: 0.66rem;
+  }
+
   .official-home .workflow-node-card {
     padding: 0.85rem 0.9rem 0.92rem;
+  }
+
+  .official-home .workflow-node-card::before {
+    left: -0.68rem;
+    top: 1rem;
+  }
+
+  .official-home .workflow-node-card__top,
+  .official-home .workflow-node-card__footer {
+    gap: 0.42rem;
+  }
+
+  .official-home .workflow-node-card__top span,
+  .official-home .workflow-node-card__footer span,
+  .official-home .workflow-node-card__top strong {
+    font-size: 0.48rem;
+    letter-spacing: 0.13em;
+  }
+
+  .official-home .workflow-node-card h4 {
+    margin-top: 0.62rem;
+    font-size: 0.92rem;
   }
 }
 

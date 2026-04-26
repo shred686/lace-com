@@ -651,29 +651,37 @@ const year = new Date().getFullYear();
       const labelHoldEnd = 0.055;
       const labelSettleEnd = 0.14;
       const entryEase = easeOut(entryProgress);
-      let labelScale = lerp(0.72, 3.35, entryEase);
-      let labelY = lerp(1.4, 7.2, entryEase);
-      let labelLetter = lerp(0.46, 0.34, entryEase);
+      const isMobile = window.innerWidth <= 680;
+      const labelStartScale = isMobile ? 0.82 : 0.72;
+      const labelPeakScale = isMobile ? 2.05 : 3.35;
+      const labelStartY = isMobile ? 0.8 : 1.4;
+      const labelPeakY = isMobile ? 3.8 : 7.2;
+      const labelStartLetter = isMobile ? 0.34 : 0.46;
+      const labelPeakLetter = isMobile ? 0.24 : 0.34;
+      const labelSettleLetter = isMobile ? 0.24 : 0.3;
+      let labelScale = lerp(labelStartScale, labelPeakScale, entryEase);
+      let labelY = lerp(labelStartY, labelPeakY, entryEase);
+      let labelLetter = lerp(labelStartLetter, labelPeakLetter, entryEase);
       let labelGlow = entryEase;
       let labelOpacity = entryProgress;
 
       if (progress > 0 && progress < labelHoldEnd) {
-        labelScale = 3.35;
-        labelY = 7.2;
-        labelLetter = 0.34;
+        labelScale = labelPeakScale;
+        labelY = labelPeakY;
+        labelLetter = labelPeakLetter;
         labelGlow = 1;
         labelOpacity = 1;
       } else if (progress >= labelHoldEnd && progress < labelSettleEnd) {
         const settleProgress = easeOut((progress - labelHoldEnd) / (labelSettleEnd - labelHoldEnd));
-        labelScale = lerp(3.35, 1, settleProgress);
-        labelY = lerp(7.2, 0, settleProgress);
-        labelLetter = lerp(0.34, 0.3, settleProgress);
+        labelScale = lerp(labelPeakScale, 1, settleProgress);
+        labelY = lerp(labelPeakY, 0, settleProgress);
+        labelLetter = lerp(labelPeakLetter, labelSettleLetter, settleProgress);
         labelGlow = lerp(1, 0.28, settleProgress);
         labelOpacity = 1;
       } else if (progress >= labelSettleEnd) {
         labelScale = 1;
         labelY = 0;
-        labelLetter = 0.3;
+        labelLetter = labelSettleLetter;
         labelGlow = 0.28;
         labelOpacity = 1;
       }

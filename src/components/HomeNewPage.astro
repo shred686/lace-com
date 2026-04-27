@@ -373,7 +373,7 @@ const getBodyParagraphs = (body: string | string[]) =>
 const year = new Date().getFullYear();
 ---
 
-<main class="official-home">
+<main class:list={["official-home", isSpanish && "official-home-es"]}>
   <canvas id="neural-canvas" class="neural-canvas" aria-hidden="true"></canvas>
   <div class="scan-line" aria-hidden="true"></div>
 

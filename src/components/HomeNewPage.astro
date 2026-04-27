@@ -22,8 +22,7 @@ const {
   capabilityTags,
   deploymentOptions,
   trustItems,
-  useCases,
-  workflowSteps
+  useCases
 } = getHomeNewContent(locale);
 
 const isSpanish = locale === "es";
@@ -35,10 +34,10 @@ const languageToggleLabel = isSpanish ? "English" : "Español";
 const brandHref = isSpanish ? "/es/" : "/";
 const whitepaperUrl = isSpanish ? whitepaperSpanish : whitepaperEnglish;
 const problemLeadStart = isSpanish
-  ? "La mayoria de las herramientas de IA son"
+  ? "La mayoría de las herramientas de AI son"
   : "Most AI tools are";
 const problemSlotWords = isSpanish
-  ? ["rapidas.", "inteligentes.", "impresionantes."]
+  ? ["rápidas.", "inteligentes.", "impresionantes."]
   : ["fast.", "smart.", "impressive."];
 const problemFinalLine = isSpanish
   ? "Ninguna de ellas es confiable."
@@ -46,26 +45,27 @@ const problemFinalLine = isSpanish
 
 const copy = isSpanish
   ? {
-      toggleNav: "Alternar navegacion",
+      toggleNav: "Alternar navegación",
+      navCompany: "Empresa",
       navPlatform: "Plataforma",
       navUseCases: "Casos de uso",
       navTrust: "Confianza",
       navContact: "Contáctanos",
-      heroTitle: "Haz que la IA funcione para tu empresa.",
-      heroIntro: "Infraestructura para IA empresarial.",
+      heroTitle: "Haz que AI funcione para tu empresa.",
+      heroIntro: "Infraestructura para enterprise AI.",
       heroDetail:
-        "LACE te permite modelar un caso de uso de negocio, ejecutar IA con reglas y politicas definidas, y desplegar una aplicacion completa.",
-      heroCtaPrimary: "DOWNLOAD WHITEPAPER",
-      systemStatus: "Sistema activo // protocolo en linea",
-      whoLabel: "Quienes somos",
+        "Determinant Systems ayuda a las empresas a diseñar, construir y desplegar AI workflows controlados, confiables y útiles en producción.",
+      heroCtaPrimary: "DESCARGAR WHITEPAPER",
+      systemStatus: "Sistema activo // protocolo online",
+      whoLabel: "Quiénes somos",
       whoIndex: "01 // Identidad",
-      whoTitleLead: "Una consultoria de IA construida",
-      whoTitleAccent: "para la era agentica.",
-      whoTitle: "Una consultoria de IA con infraestructura propia.",
+      whoTitleLead: "AI fundamentada",
+      whoTitleAccent: "en tu negocio.",
+      whoTitle: "Una consultoría de AI con infraestructura propia.",
       whoBody:
-        "Determinant Systems ayuda a organizaciones a pasar de experimentos de IA a sistemas de IA que pueden operar en produccion. Implementamos flujos de trabajo de IA empresariales, construimos sistemas agenticos para procesos complejos de negocio, y desplegamos nuestra propia plataforma - LACE - para organizaciones que necesitan control total de como opera la IA dentro de su entorno.",
+        "Determinant Systems ayuda a las organizaciones a pasar de experimentos de AI a sistemas de AI que pueden operar en producción. Implementamos enterprise AI workflows, construimos agentic systems para procesos de negocio complejos y desplegamos nuestra propia plataforma - LACE - para organizaciones que necesitan control total sobre cómo opera AI dentro de su entorno.",
       whoBody2:
-        "Trabajamos con empresas que no pueden permitir resultados impredecibles: industrias reguladas, programas gubernamentales, servicios profesionales y cualquier equipo donde una respuesta incorrecta no es solo molesta - es una responsabilidad.",
+        "Trabajamos con empresas que no pueden permitirse outputs impredecibles: industrias reguladas, programas gubernamentales, servicios profesionales y cualquier equipo donde una respuesta incorrecta no es solo molesta - es una responsabilidad.",
       whoCta: "Arquitectura del protocolo",
       whoDiagramTop: "Ingestion",
       whoDiagramCore: "LACE ORCHESTRATION",
@@ -76,72 +76,135 @@ const copy = isSpanish
       whoDiagramRail: "WORKFLOW-COMPILED // POLICY-BOUND",
       whoDiagramVersion: "LACE CORE // v4.2",
       introLabel: "El problema",
-      introTitle: "La mayoria de las herramientas de IA son rapidas.",
+      introTitle: "La mayoría de las herramientas de AI son rápidas.",
       introBody: "Muy pocas son confiables.",
       problemCards: [
         {
-          title: "Chatbots genericos",
+          title: "Chatbots genéricos",
           body:
-            "Rapidos y capaces, pero imposibles de gobernar. Sin politicas, sin rastro de auditoria y sin forma de imponer consistencia. Haz la misma pregunta dos veces y obtendras respuestas distintas. Inaceptable en cualquier entorno regulado o de alto riesgo."
+            "Rápidos y capaces, pero imposibles de gobernar. Sin policies, sin audit trail y sin forma de imponer consistencia. Haz la misma pregunta dos veces y obtendrás dos respuestas distintas. Inaceptable en cualquier entorno regulado o de alto riesgo."
         },
         {
-          title: "Desarrollos de IA a medida",
+          title: "Custom AI builds",
           body:
-            "Precisos y controlables, pero caros, lentos y fragiles. Cada uno se construye desde cero, tarda meses en entregarse y resuelve exactamente un caso de uso. Cuando cambian los requisitos, hay que empezar de nuevo."
+            "Precisos y controlables, pero caros, lentos y frágiles. Cada uno se construye desde cero, tarda meses en entregarse y sirve exactamente a un use case. Cuando cambian los requisitos, empiezas de nuevo."
         },
         {
           title: "Lo que realmente se necesita",
           body:
-            "IA que opere dentro de reglas reales de negocio. Salidas auditables. Resultados consistentes. La capacidad de revisar, aprobar y rastrear cada decision sin un ciclo de desarrollo de seis meses para cada nuevo flujo."
+            "AI que opere dentro de reglas reales de negocio. Outputs auditables. Resultados consistentes. La capacidad de revisar, aprobar y rastrear cada decisión sin un ciclo de desarrollo de seis meses para cada nuevo workflow."
         }
       ],
-      workflowLabel: "Plataforma // Flujo",
-      workflowTitle: "Como un caso de uso se convierte en un sistema funcional.",
+      workflowLabel: "Plataforma // Workflow",
+      workflowTitle: "Cómo un use case se convierte en un sistema funcional.",
       workflowBody:
-        "En lugar de pedir respuestas aisladas, los equipos definen el flujo una vez y LACE lo ejecuta como un proceso gobernado, reutilizable e inspeccionable.",
+        "En lugar de pedirle a AI respuestas aisladas, los equipos definen el workflow una vez y dejan que LACE lo ejecute como un proceso gobernado que pueden reutilizar, inspeccionar y mejorar.",
       ourPlatformLabel: "Nuestra plataforma",
       ourPlatformTitle: "Presentamos LACE.",
       ourPlatformBody:
-        "LACE es una plataforma de IA empresarial que convierte flujos de trabajo en sistemas gobernados y repetibles. Tu defines lo que debe hacer el proceso — las entradas, las reglas, las salidas — y LACE lo compila en un pipeline que ejecuta IA dentro de pasos controlados, valida cada resultado antes de que cuente y mantiene un registro completo de todo lo que ocurrio.",
+        "LACE es una enterprise AI platform que convierte business workflows en sistemas gobernados y repetibles. Tú defines lo que debe hacer el proceso — los inputs, las reglas, los outputs — y LACE lo compila en un pipeline que ejecuta AI dentro de pasos controlados, valida cada resultado antes de que cuente y mantiene un registro completo de todo lo que ocurrió.",
       ourPlatformSub:
-        "Piensa en ello como la capa operacional que se sienta entre un modelo de IA poderoso y tu negocio real — asegurando que la IA haga lo que necesitas, de la manera que lo necesitas, cada vez.",
-      howItWorksLabel: "Como funciona",
-      howItWorksTitle: "De proceso de negocio a sistema de IA gobernado en cuatro pasos.",
+        "Piensa en ello como la capa operativa entre un modelo de AI potente y tu negocio real — asegurando que AI haga lo que necesitas, de la manera que lo necesitas, cada vez.",
+      platformIntroTitleAccent: "AGENTIC AI",
+      platformIntroTitleRestLines: ["GOBERNADA POR POLICY,", "CON AUDIT TRAIL"],
+      ragTitleStruck: "Chat sobre tus documentos",
+      ragTitleActive: "Desbloquea inteligencia en toda tu empresa",
+      ragTitleActiveLines: ["Desbloquea inteligencia", "en toda tu empresa"],
+      ragOverviewTitle: "Retrieval Augmented Generation",
+      ragOverviewLead:
+        "La mayoría de los productos RAG recuperan TEXT. LACE recupera EVIDENCE.",
+      ragOverviewBody:
+        "Esta es la diferencia entre un sistema que suena correcto y un sistema que puede demostrarlo.",
+      ragPositioningLabel: "Posicionamiento RAG v2",
+      ragOverviewItems: [
+        {
+          title: "Documentos, comprendidos por completo",
+          body: [
+            "Los documentos no se aplanan; se modelan.",
+            "Tablas, charts, cláusulas, secciones y contexto narrativo se convierten en un sistema estructurado y multimodal sobre el que el modelo puede razonar."
+          ]
+        },
+        {
+          title: "Evidencia, no chunks",
+          body: [
+            "Facts, claims, celdas de tabla, regiones visuales y source links son objetos de primera clase.",
+            "Los text chunks son solo una proyección, no la base."
+          ]
+        },
+        {
+          title: "Retrieval que coincide con la pregunta",
+          body: [
+            "Cada pregunta es distinta.",
+            "Numeric lookup, table execution, semantic search, graph traversal, multi-hop reasoning: LACE enruta la query antes de gastar compute."
+          ]
+        },
+        {
+          title: "Respuestas desde la fuente correcta",
+          body: [
+            "Si la respuesta es un número, viene de una tabla. Si es una explicación, viene del contexto.",
+            "No más adivinar desde párrafos."
+          ]
+        },
+        {
+          title: "Un graph de evidencia",
+          body: [
+            "Cada pieza de evidencia está conectada:",
+            "Qué pasó → dónde aparece → qué lo explica → qué lo respalda o contradice",
+            "El sistema no solo hace retrieval; razona sobre relaciones."
+          ]
+        },
+        {
+          title: "Cuando search no basta",
+          body: [
+            "Algunas preguntas requieren todo.",
+            "Auditorías, trend analysis, comparaciones full-corpus: LACE puede pasar de retrieval a procesamiento exhaustivo cuando la precisión importa."
+          ]
+        },
+        {
+          title: "Respuestas en las que puedes confiar",
+          body: [
+            "Cada respuesta está grounded en structured evidence.",
+            "Generation y verification están separadas, para que puedas inspeccionar el razonamiento antes de confiar en el output."
+          ]
+        }
+      ],
       capabilitiesLabel: "Capacidades de la plataforma",
-      capabilitiesTitle: "Lo que hace a LACE diferente de un wrapper de IA.",
+      capabilitiesTitle: "Lo que hace que LACE sea distinto de un AI wrapper.",
       capabilitiesBody:
-        "LACE no es una capa delgada sobre una API de IA. Es un entorno de ejecucion completo — con pipelines verificados por tipo, una capa de cumplimiento de politicas, proveniencia completa en cada salida y un sistema de publicacion que convierte flujos probados en software desplegable.",
+        "LACE no es una capa delgada sobre una AI API. Es un execution environment completo — con type-checked pipelines, una policy enforcement layer, provenance completa en cada output y un publishing system que convierte workflows probados en software desplegable.",
       useCasesLabel: "Casos de uso",
-      useCasesTitle: "Todo negocio tiene un proceso que la IA podria manejar — pero no puede confiar en que lo haga.",
+      useCasesTitle: "Toda empresa tiene un proceso que AI podría manejar — pero no puede confiar en que lo haga.",
       useCasesBody:
-        "LACE no reemplaza esos instintos. Le da a la IA la estructura, las reglas y la supervision que la hace utilizable en entornos reales de negocio.",
+        "LACE no reemplaza esos instintos. Le da a AI la estructura, las reglas y la supervisión que la hacen utilizable en entornos reales de negocio.",
       spotlight: "Destacado",
-      typicalInputs: "Entradas tipicas",
-      laceFit: "Como encaja LACE",
+      typicalInputs: "Inputs típicos",
+      laceFit: "Cómo encaja LACE",
       whatYouGet: "Lo que obtienes",
       trustTitle: "Controles de confianza",
-      trustHeading: "IA que puedes auditar, no IA que suele acertar.",
+      trustHeading: "AI que puedes auditar, no AI que suele acertar.",
       deploymentTitle: "Opciones de despliegue",
       deploymentHeading: "Despliega en cualquier lugar. Tu entorno, tus reglas.",
       ctaLabel: "Comienza",
-      ctaTitle: "Listo para ejecutar IA de la manera correcta?",
+      ctaTitle: "¿Listo para ejecutar AI de la manera correcta?",
+      ctaTitleAccent: "de la manera correcta?",
       ctaBody:
-        "Cuentanos que proceso intentas gobernar. Te mostraremos como LACE lo maneja - o lo construiremos por ti.",
+        "Cuéntanos qué proceso intentas gobernar. Te mostraremos cómo LACE lo maneja - o lo construiremos por ti.",
       ctaPrimary: "Habla con nosotros",
-      ctaSecondary: "Descarga el resumen empresarial →",
-      runtime: "PROTOCOLO_RUNTIME_LACE_V3",
-      sourceGrounded: "Basado en fuentes",
-      footerTagline: "Infraestructura de IA empresarial",
+      ctaSecondary: "Descargar enterprise overview →",
+      runtime: "LACE_RUNTIME_PROTOCOL_V3",
+      sourceGrounded: "Source-grounded",
+      footerTagline: "Infraestructura de enterprise AI",
       security: "Seguridad",
       privacy: "Privacidad",
-      workflows: "Flujos",
+      workflows: "Workflows",
       traceable: "Trazable",
-      blackBoxes: "Cajas negras",
+      blackBoxes: "Black Boxes",
       deployModes: "Modos de despliegue",
       readyForExecution: "LISTO_PARA_EJECUTAR"
     }
   : {
       toggleNav: "Toggle navigation",
+      navCompany: "Company",
       navPlatform: "Platform",
       navUseCases: "Use Cases",
       navTrust: "Trust",
@@ -200,8 +263,69 @@ const copy = isSpanish
         "LACE is an enterprise AI platform that turns business workflows into governed, repeatable systems. You define what the process should do — the inputs, the rules, the outputs — and LACE compiles it into a pipeline that runs AI inside controlled steps, validates every result before it counts, and keeps a complete record of everything that happened.",
       ourPlatformSub:
         "Think of it as the operational layer that sits between a powerful AI model and your actual business — making sure the AI does what you need, the way you need it, every time.",
-      howItWorksLabel: "How It Works",
-      howItWorksTitle: "From business process to governed AI system in four steps.",
+      platformIntroTitleAccent: "AGENTIC AI",
+      platformIntroTitleRestLines: ["POLICY GOVERNED,", "WITH AN AUDIT TRAIL"],
+      ragTitleStruck: "Chat over your documents",
+      ragTitleActive: "Unlock intelligence over your entire enterprise",
+      ragTitleActiveLines: ["Unlock intelligence", "over your entire enterprise"],
+      ragOverviewTitle: "Retrieval Augmented Generation",
+      ragOverviewLead:
+        "Most RAG products retrieve TEXT. LACE retrieves EVIDENCE.",
+      ragOverviewBody:
+        "This is the difference between a system that sounds right and a system that can prove it.",
+      ragPositioningLabel: "RAG v2 positioning",
+      ragOverviewItems: [
+        {
+          title: "Documents, fully understood",
+          body: [
+            "Documents aren’t flattened—they’re modeled.",
+            "Tables, charts, clauses, sections, and narrative context become a structured, multimodal system the model can reason over."
+          ]
+        },
+        {
+          title: "Evidence, not chunks",
+          body: [
+            "Facts, claims, table cells, visual regions, and source links are first-class objects.",
+            "Text chunks are just one projection—not the foundation."
+          ]
+        },
+        {
+          title: "Retrieval that matches the question",
+          body: [
+            "Every question is different.",
+            "Numeric lookup, table execution, semantic search, graph traversal, multi-hop reasoning—LACE routes the query before it spends compute."
+          ]
+        },
+        {
+          title: "Answers from the right source",
+          body: [
+            "If the answer is a number, it comes from a table. If it’s an explanation, it comes from context.",
+            "No more guessing from paragraphs."
+          ]
+        },
+        {
+          title: "A graph of evidence",
+          body: [
+            "Every piece of evidence is connected:",
+            "What happened → where it appears → what explains it → what supports or contradicts it",
+            "The system doesn’t just retrieve—it reasons over relationships."
+          ]
+        },
+        {
+          title: "When search isn’t enough",
+          body: [
+            "Some questions require everything.",
+            "Audits, trend analysis, full-corpus comparisons—LACE can shift from retrieval to exhaustive processing when precision matters."
+          ]
+        },
+        {
+          title: "Answers you can trust",
+          body: [
+            "Every response is grounded in structured evidence.",
+            "Generation and verification are separated—so you can inspect the reasoning before trusting the output."
+          ]
+        }
+      ],
       capabilitiesLabel: "Platform Capabilities",
       capabilitiesTitle: "What makes LACE different from an AI wrapper.",
       capabilitiesBody:
@@ -220,6 +344,7 @@ const copy = isSpanish
       deploymentHeading: "Deploy anywhere. Your environment, your rules.",
       ctaLabel: "Get started",
       ctaTitle: "Ready to run AI the right way?",
+      ctaTitleAccent: "the right way?",
       ctaBody:
         "Tell us what process you're trying to govern. We'll show you how LACE handles it - or build it for you.",
       ctaPrimary: "Talk to us",
@@ -240,8 +365,10 @@ const heroTitleWords = copy.heroTitle.split(" ");
 const heroDesktopTitleLead = heroTitleWords.slice(0, 4).join(" ");
 const heroDesktopTitleRest = heroTitleWords.slice(4).join(" ");
 const heroMobileTitleLines = isSpanish
-  ? ["Haz", "IA", "para", "tu", "empresa."]
+  ? ["Haz", "que AI", "funcione", "para", "tu empresa."]
   : ["Make", "AI", "work", "for", "you."];
+const getBodyParagraphs = (body: string | string[]) =>
+  Array.isArray(body) ? body : [body];
 
 const year = new Date().getFullYear();
 ---
@@ -266,9 +393,9 @@ const year = new Date().getFullYear();
         <span></span>
       </button>
 
-      <div class="official-topnav-panel" id="topNavPanel">
-        <nav class="official-topnav-links" aria-label="Primary">
-          <a href="#lace">Company</a>
+        <div class="official-topnav-panel" id="topNavPanel">
+          <nav class="official-topnav-links" aria-label="Primary">
+          <a href="#lace">{copy.navCompany}</a>
           <a href="#platform">{copy.navPlatform}</a>
           <a href="#use-cases">{copy.navUseCases}</a>
           <!-- <a href="#trust">{copy.navTrust}</a> -->
@@ -283,22 +410,6 @@ const year = new Date().getFullYear();
   </header>
 
   <section class="official-hero section-shell">
-    <div class="hero-vertical-lines" aria-hidden="true">
-      <div class="hero-line hero-line-a">
-        <div class="pulse-dot dot-a"></div>
-        <div class="small-dot dot-b"></div>
-      </div>
-      <div class="hero-line hero-line-b">
-        <div class="small-dot dot-c"></div>
-      </div>
-      <div class="hero-line hero-line-c"></div>
-      <div class="hero-line hero-line-d"></div>
-      <div class="hero-line hero-line-e">
-        <div class="pulse-dot dot-d"></div>
-        <div class="small-dot dot-e"></div>
-      </div>
-    </div>
-
     <div class="hero-radial-glow" aria-hidden="true"></div>
 
     <div class="official-hero-content" data-r>
@@ -378,18 +489,20 @@ const year = new Date().getFullYear();
     </div>
   </section>
 
-  <div class="neural-separator section-shell" aria-hidden="true"></div>
-
   <div id="light-zone" class="lace-light-zone">
 
   <section class="platform-intro section-shell">
     <div class="platform-intro-layout" data-r>
       <div class="platform-intro-copy">
         <h2 class="platform-intro-title">
-          <span class="platform-intro-title-accent">AGENTIC AI</span>
+          <span class="platform-intro-title-accent">{copy.platformIntroTitleAccent}</span>
           <span class="platform-intro-title-rest">
-            POLICY GOVERNED,<br />
-            WITH AN AUDIT TRAIL
+            {copy.platformIntroTitleRestLines.map((line, index) => (
+              <>
+                {line}
+                {index < copy.platformIntroTitleRestLines.length - 1 && <br />}
+              </>
+            ))}
           </span>
         </h2>
         <p class="platform-intro-body">{copy.ourPlatformBody}</p>
@@ -430,22 +543,45 @@ const year = new Date().getFullYear();
 
   <div class="neural-separator section-shell" aria-hidden="true"></div>
 
-  <section class="how-it-works section-shell">
-    <div class="section-head" data-r>
-      <p class="section-kicker">{copy.howItWorksLabel}</p>
-      <h2>{copy.howItWorksTitle}</h2>
+  <section class="how-it-works rag-overview section-shell">
+    <div class="rag-scroll-stage" data-rag-scroll>
+      <div class="rag-scroll-pin">
+        <div class="rag-scroll-copy">
+          <h2 class="rag-scroll-title" aria-label={`${copy.ragTitleStruck}. ${copy.ragTitleActive}`}>
+            <s class="rag-scroll-struck">{copy.ragTitleStruck}</s>
+            <span class="rag-scroll-active" aria-hidden="true">
+              {copy.ragTitleActiveLines.map((line) => (
+                <span>{line}</span>
+              ))}
+            </span>
+          </h2>
+        </div>
+      </div>
     </div>
 
-    <div class="pipeline-cards hiw-cards">
-      {workflowSteps.map((step, index) => (
-        <article class="glass-card pipeline-step-card" data-r data-reveal-delay={80 + index * 80} data-step={index + 1}>
-          <div class="step-number-box">{step.step}</div>
-          <div>
-            <h3>{step.title}</h3>
-            <p>{step.description}</p>
-          </div>
-        </article>
-      ))}
+    <div class="rag-overview-content">
+      <h2 class="rag-overview-title" data-r data-reveal-delay="0">{copy.ragOverviewTitle}</h2>
+
+      <div class="rag-overview-intro" data-r data-reveal-delay="80">
+        <p class="rag-overview-lead">{copy.ragOverviewLead}</p>
+        <p>{copy.ragOverviewBody}</p>
+      </div>
+
+      <!-- <div class="rag-positioning-label" data-r data-reveal-delay="140">{copy.ragPositioningLabel}</div> -->
+
+      <div class="rag-overview-grid">
+        {copy.ragOverviewItems.map((item, index) => (
+          <article class="glass-card rag-evidence-card" data-r data-reveal-delay={180 + index * 55}>
+            <span class="rag-evidence-index">{String(index + 1).padStart(2, "0")}</span>
+            <div>
+              <h3>{item.title}</h3>
+              {getBodyParagraphs(item.body).map((paragraph) => (
+                <p>{paragraph}</p>
+              ))}
+            </div>
+          </article>
+        ))}
+      </div>
     </div>
   </section>
 
@@ -550,7 +686,7 @@ const year = new Date().getFullYear();
         <span>{copy.ctaLabel}</span>
       </div>
 
-      <h2 data-r data-reveal-delay="60" set:html={copy.ctaTitle.replace("the right way?", '<span class="lace-accent-word">the right way?</span>')}></h2>
+      <h2 data-r data-reveal-delay="60" set:html={copy.ctaTitle.replace(copy.ctaTitleAccent, `<span class="lace-accent-word">${copy.ctaTitleAccent}</span>`)}></h2>
 
       <p data-r data-reveal-delay="140">{copy.ctaBody}</p>
 
@@ -773,6 +909,118 @@ const year = new Date().getFullYear();
   })();
 
   (() => {
+    const stage = document.querySelector("[data-rag-scroll]");
+    if (!stage) return;
+
+    const clampValue = (value, min, max) => Math.min(max, Math.max(min, value));
+    const easeOut = (value) => 1 - Math.pow(1 - value, 3);
+    const easeInOut = (value) =>
+      value < 0.5 ? 4 * value * value * value : 1 - Math.pow(-2 * value + 2, 3) / 2;
+    const lerp = (start, end, value) => start + (end - start) * value;
+    let raf = 0;
+
+    const update = () => {
+      raf = 0;
+      const rect = stage.getBoundingClientRect();
+      const travel = Math.max(1, rect.height - window.innerHeight);
+      const progress = Math.min(1, Math.max(0, -rect.top / travel));
+      const entryProgress = clampValue(1 - rect.top / window.innerHeight, 0, 1);
+      const entryEase = easeOut(entryProgress);
+      const isMobile = window.innerWidth <= 680;
+
+      const peakScale = isMobile ? 1 : 1.04;
+      const finalScale = isMobile ? 0.58 : 0.5;
+      const finalY = isMobile ? -12.4 : -12.5;
+      const activeFinalY = isMobile ? 7.6 : 8.2;
+      const activeStartY = isMobile ? 16 : 18;
+
+      let struckScale = lerp(isMobile ? 0.8 : 0.72, peakScale, entryEase);
+      let struckY = lerp(isMobile ? 2.2 : 3.2, 0, entryEase);
+      let struckOpacity = entryProgress;
+      let struckColorOpacity = 1;
+      let strikeProgress = 0;
+      let activeOpacity = 0;
+      let activeY = activeStartY;
+      let activeScale = 0.9;
+      let activeGlow = 0;
+      let activeStamp = 0;
+      let activeBoxIn = 0;
+      let activeBoxOut = 0;
+
+      if (progress > 0 && progress < 0.08) {
+        struckScale = peakScale;
+        struckY = 0;
+        struckOpacity = 1;
+      }
+
+      if (progress >= 0.08) {
+        strikeProgress = easeInOut(clampValue((progress - 0.08) / 0.14, 0, 1));
+        struckColorOpacity = lerp(1, 0.36, strikeProgress);
+      }
+
+      if (progress >= 0.23) {
+        const settleProgress = easeOut(clampValue((progress - 0.23) / 0.15, 0, 1));
+        struckScale = lerp(peakScale, finalScale, settleProgress);
+        struckY = lerp(0, finalY, settleProgress);
+      }
+
+      if (progress >= 0.28) {
+        activeOpacity = easeOut(clampValue((progress - 0.28) / 0.14, 0, 1));
+        activeY = lerp(activeStartY, activeFinalY, activeOpacity);
+        activeScale = lerp(0.96, 1, activeOpacity);
+        activeGlow = activeOpacity;
+        activeBoxIn = easeInOut(clampValue((progress - 0.28) / 0.24, 0, 1));
+      }
+
+      if (isMobile && progress >= 0.28) {
+        const mobileStruckFade = easeOut(clampValue((progress - 0.28) / 0.12, 0, 1));
+        struckOpacity = lerp(struckOpacity, 0, mobileStruckFade);
+      }
+
+      if (progress >= 0.8) {
+        activeStamp = easeInOut(clampValue((progress - 0.8) / 0.1, 0, 1));
+        activeScale = lerp(activeScale, 1, activeStamp);
+        activeGlow = lerp(activeGlow, 0, activeStamp);
+      }
+
+      if (progress >= 0.79) {
+        const exitRaw = clampValue((progress - 0.79) / 0.21, 0, 1);
+        const exitProgress = easeInOut(exitRaw);
+        const exitTravel = easeInOut(clampValue((exitRaw - 0.75) / 0.25, 0, 1));
+        const struckFade = easeOut(clampValue(exitRaw / 0.22, 0, 1));
+        activeBoxIn = 1;
+        activeBoxOut = exitProgress;
+        activeY = lerp(activeFinalY, activeFinalY - (isMobile ? 88 : 104), exitTravel);
+        struckY = lerp(finalY, finalY - (isMobile ? 16 : 20), exitTravel);
+        struckOpacity = lerp(struckOpacity, 0, struckFade);
+      }
+
+      stage.style.setProperty("--rag-struck-scale", String(struckScale));
+      stage.style.setProperty("--rag-struck-y", `${struckY}svh`);
+      stage.style.setProperty("--rag-struck-opacity", String(struckOpacity));
+      stage.style.setProperty("--rag-struck-color-opacity", String(struckColorOpacity));
+      stage.style.setProperty("--rag-strike-progress", String(strikeProgress));
+      stage.style.setProperty("--rag-active-opacity", String(activeOpacity));
+      stage.style.setProperty("--rag-active-y", `${activeY}svh`);
+      stage.style.setProperty("--rag-active-scale", String(activeScale));
+      stage.style.setProperty("--rag-active-blur", `${(1 - activeOpacity) * 2}px`);
+      stage.style.setProperty("--rag-active-glow", String(activeGlow));
+      stage.style.setProperty("--rag-active-stamp", String(activeStamp));
+      stage.style.setProperty("--rag-active-box-enter-cut", `${(1 - activeBoxIn) * 100}%`);
+      stage.style.setProperty("--rag-active-box-exit-cut", `${activeBoxOut * 100}%`);
+    };
+
+    const requestUpdate = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(update);
+    };
+
+    update();
+    window.addEventListener("scroll", requestUpdate, { passive: true });
+    window.addEventListener("resize", requestUpdate);
+  })();
+
+  (() => {
     const els = Array.from(document.querySelectorAll("[data-r]"));
     els.forEach((el, i) => {
       const explicit = Number(el.getAttribute("data-reveal-delay"));
@@ -868,7 +1116,7 @@ const year = new Date().getFullYear();
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const C = "0,255,194";
+    const C = "255,216,111";
     let W = 0;
     let H = 0;
     let offset = 0;
@@ -974,111 +1222,290 @@ const year = new Date().getFullYear();
 
     const home = document.querySelector(".official-home");
     const isLight = () => !!(home && home.classList.contains("canvas-dim"));
-    // Dark: bright teal. Light: vivid medium green — clearly colored on white.
-    const C = () => isLight() ? "0,168,128" : "0,255,194";
+    // Dark: honey yellow. Light: deeper amber so the network remains visible on white.
+    const C = () => isLight() ? "154,111,14" : "255,216,111";
     // Opacity scale: base values were tuned for dark bg; boost them for white.
-    const os = () => isLight() ? 2.6 : 1;
+    const os = () => isLight() ? 2.1 : 1;
     let nodes = [];
+    let links = [];
+    let layers = [];
+    let signals = [];
     let W = 0;
     let H = 0;
     let raf = 0;
-    let sweepAngle = 0;
+    let lastTs = 0;
+    let nextSignalAt = 0;
+
+    const clampValue = (value, min, max) => Math.min(max, Math.max(min, value));
+    const lerp = (start, end, value) => start + (end - start) * value;
+
+    const createLayeredNetwork = () => {
+      nodes = [];
+      links = [];
+      layers = [];
+      const isSmall = W <= 680;
+      const counts = isSmall ? [1, 4, 4, 1] : [1, 5, 6, 1];
+      const layerX = isSmall ? [0.055, 0.32, 0.68, 0.945] : [0.045, 0.31, 0.69, 0.955];
+      const centerY = H * 0.5;
+      const spread = Math.min(H * (isSmall ? 0.56 : 0.62), isSmall ? 430 : 560);
+
+      const addNode = (x, y, layer, ordinal) => {
+        const index = nodes.length;
+        nodes.push({
+          x,
+          y,
+          bx: x,
+          by: y,
+          layer,
+          ordinal,
+          phase: Math.random() * Math.PI * 2,
+          r: layer === 0 || layer === counts.length - 1 ? 1.7 : 1.1 + Math.random() * 0.5,
+          g: Math.random() * 0.2
+        });
+        return index;
+      };
+
+      const seen = new Set();
+      const addLink = (a, b) => {
+        const key = a < b ? `${a}:${b}` : `${b}:${a}`;
+        if (seen.has(key)) return;
+        seen.add(key);
+        links.push({
+          a,
+          b,
+          fromLayer: nodes[a].layer,
+          toLayer: nodes[b].layer,
+          seed: Math.random()
+        });
+      };
+
+      counts.forEach((count, layer) => {
+        const layerNodes = [];
+        const x = W * layerX[layer];
+        for (let ordinal = 0; ordinal < count; ordinal += 1) {
+          const t = count === 1 ? 0.5 : ordinal / (count - 1);
+          const y = count === 1 ? centerY : centerY - spread / 2 + spread * t;
+          const xJitter = count === 1 ? 0 : (Math.random() - 0.5) * (isSmall ? 10 : 22);
+          const yJitter = count === 1 ? (Math.random() - 0.5) * 24 : (Math.random() - 0.5) * 28;
+          layerNodes.push(addNode(x + xJitter, y + yJitter, layer, ordinal));
+        }
+        layers.push(layerNodes);
+      });
+
+      layers[0].forEach((source) => {
+        layers[1].forEach((target) => addLink(source, target));
+      });
+
+      layers[1].forEach((source, sourceIndex) => {
+        const targetCount = layers[2].length;
+        const targetOrdinals = new Set([
+          sourceIndex % targetCount,
+          (targetCount - 1 - sourceIndex + targetCount) % targetCount,
+          (sourceIndex + 2) % targetCount
+        ]);
+
+        targetOrdinals.forEach((targetOrdinal) => {
+          addLink(source, layers[2][targetOrdinal]);
+        });
+      });
+
+      layers[2].forEach((source) => {
+        layers[3].forEach((target) => addLink(source, target));
+      });
+    };
 
     const resize = () => {
       W = canvas.width = window.innerWidth;
       H = canvas.height = window.innerHeight;
-      nodes = [];
-      const count = Math.max(10, Math.floor((W * H) / 18000));
-      for (let i = 0; i < count; i += 1) {
-        nodes.push({
-          x: Math.random() * W,
-          y: Math.random() * H,
-          vx: (Math.random() - 0.5) * 0.22,
-          vy: (Math.random() - 0.5) * 0.22,
-          r: Math.random() * 1.4 + 0.4,
-          g: Math.random() * 0.2
-        });
-      }
+      signals = [];
+      lastTs = 0;
+      createLayeredNetwork();
+      nextSignalAt = 0;
     };
 
-    const fire = () => {
-      const s = nodes[Math.floor(Math.random() * nodes.length)];
-      const near = nodes.filter((n) => n !== s && Math.hypot(n.x - s.x, n.y - s.y) < 220);
-      if (!near.length) return;
-      const d = near[Math.floor(Math.random() * near.length)];
-      s.g = 1;
-      d.g = Math.max(d.g, 0.6);
+    const layerLinks = (fromLayer, toLayer) =>
+      links.filter((link) => link.fromLayer === fromLayer && link.toLayer === toLayer);
+
+    const linkDelay = (link, stageIndex) => {
+      const from = nodes[link.a];
+      const to = nodes[link.b];
+      if (stageIndex === 0) return to.ordinal * 34;
+      if (stageIndex === 2) return from.ordinal * 30;
+      return (from.ordinal * 24 + to.ordinal * 17 + link.seed * 42) % 150;
     };
 
-    const drawSweep = () => {
-      const cx = W * 0.5;
-      const cy = H * 0.38;
-      for (let i = 0; i < 50; i += 1) {
-        const a = (i / 50) * Math.PI * 2 + sweepAngle;
-        const r1 = W * 0.25;
-        const r2 = W * 0.85;
-        const x1 = cx + Math.cos(a) * r1;
-        const y1 = cy + Math.sin(a) * r1 * 0.6;
-        const x2 = cx + Math.cos(a + 0.18) * r2;
-        const y2 = cy + Math.sin(a + 0.18) * r2 * 0.55;
-        const op = (0.025 + Math.abs(Math.sin(a * 3 + sweepAngle * 2)) * 0.045) * os();
-        ctx.beginPath();
-        ctx.moveTo(x1, y1);
-        ctx.lineTo(x2, y2);
-        ctx.strokeStyle = `rgba(${C()},${op})`;
-        ctx.lineWidth = 0.6;
-        ctx.stroke();
-      }
-      sweepAngle += 0.0008;
-    };
-
-    const draw = () => {
-      ctx.clearRect(0, 0, W, H);
-      drawSweep();
-
-      nodes.forEach((n) => {
-        n.x += n.vx;
-        n.y += n.vy;
-        if (n.x < 0 || n.x > W) n.vx *= -1;
-        if (n.y < 0 || n.y > H) n.vy *= -1;
-        n.g = Math.max(0, n.g - 0.012);
+    const spawnSignal = (now) => {
+      if (signals.length > 1 || layers.length < 4) return;
+      const traceMs = 540 + Math.random() * 90;
+      const stageGap = 110;
+      const stages = [0, 1, 2].map((stageIndex) => {
+        const stageLinks = layerLinks(stageIndex, stageIndex + 1);
+        return {
+          startOffset: stageIndex * (traceMs + stageGap),
+          traceMs,
+          links: stageLinks.map((link) => ({
+            ...link,
+            delay: linkDelay(link, stageIndex)
+          }))
+        };
       });
 
-      if (Math.random() < 0.045) fire();
+      if (stages.some((stage) => !stage.links.length)) return;
+      signals.push({
+        stages,
+        source: layers[0][0],
+        start: now,
+        glowMs: 700
+      });
+    };
 
-      for (let i = 0; i < nodes.length; i += 1) {
-        for (let j = i + 1; j < nodes.length; j += 1) {
-          const a = nodes[i];
-          const b = nodes[j];
-          const d = Math.hypot(a.x - b.x, a.y - b.y);
-          if (d < 190) {
-            const op = ((1 - d / 190) * 0.12 + (a.g + b.g) * 0.09) * os();
-            ctx.beginPath();
-            ctx.moveTo(a.x, a.y);
-            ctx.lineTo(b.x, b.y);
-            ctx.strokeStyle = `rgba(${C()},${op})`;
-            ctx.lineWidth = 0.5;
-            ctx.stroke();
+    const stageEnd = (stage) => {
+      let maxDelay = 0;
+      stage.links.forEach((link) => {
+        maxDelay = Math.max(maxDelay, link.delay);
+      });
+      return stage.startOffset + maxDelay + stage.traceMs;
+    };
+
+    const signalDuration = (signal) => {
+      let end = 0;
+      signal.stages.forEach((stage) => {
+        end = Math.max(end, stageEnd(stage));
+      });
+      return end + signal.glowMs;
+    };
+
+    const applyNodeGlow = (nodeIndex, elapsed, fireAt, duration) => {
+      if (elapsed < fireAt) return;
+      const glow = clampValue(1 - (elapsed - fireAt) / duration, 0, 1);
+      if (glow > 0) nodes[nodeIndex].g = Math.max(nodes[nodeIndex].g, glow);
+    };
+
+    const updateNodePositions = (now) => {
+      const drift = W <= 680 ? 4 : 7;
+      nodes.forEach((node) => {
+        node.x = node.bx + Math.sin(now * 0.00018 + node.phase) * drift;
+        node.y = node.by + Math.cos(now * 0.00016 + node.phase * 0.7) * drift * 0.55;
+        node.g = Math.max(0, node.g - 0.018);
+      });
+    };
+
+    const drawReceivingNodes = (signal, elapsed) => {
+      applyNodeGlow(signal.source, elapsed, 0, signal.glowMs);
+      signal.stages.forEach((stage) => {
+        stage.links.forEach((link) => {
+          applyNodeGlow(link.b, elapsed, stage.startOffset + link.delay + stage.traceMs, signal.glowMs);
+        });
+      });
+    };
+
+    const drawStageTraces = (signal, elapsed, color, scale) => {
+      signal.stages.forEach((stage, stageIndex) => {
+        stage.links.forEach((link) => {
+          const progress = (elapsed - stage.startOffset - link.delay) / stage.traceMs;
+          const a = nodes[link.a];
+          const b = nodes[link.b];
+
+          if (progress >= 0 && progress <= 1) {
+            const head = clampValue(progress, 0, 1);
+            const alpha = (0.1 + Math.sin(head * Math.PI) * 0.08) * scale;
+            drawTrace(a, b, head, alpha, color);
+          } else if (progress > 1 && progress < 1.24) {
+            const fade = 1 - (progress - 1) / 0.24;
+            drawStroke(a, b, (stageIndex === 1 ? 0.075 : 0.06) * fade * scale, 0.74, color);
           }
-        }
-      }
+        });
+      });
+    };
 
+    const drawIdleNetwork = (color, scale) => {
+      links.forEach((link) => {
+        const a = nodes[link.a];
+        const b = nodes[link.b];
+        const op = (0.018 + (a.g + b.g) * 0.024) * scale;
+        drawStroke(a, b, op, 0.38, color);
+      });
+    };
+
+    const drawNodes = (color, scale) => {
       nodes.forEach((n) => {
         if (n.g > 0.15) {
-          const gr = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.r * 9);
-          gr.addColorStop(0, `rgba(${C()},${n.g * 0.35})`);
-          gr.addColorStop(1, `rgba(${C()},0)`);
+          const gr = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.r * 10);
+          gr.addColorStop(0, `rgba(${color},${n.g * 0.34 * scale})`);
+          gr.addColorStop(1, `rgba(${color},0)`);
           ctx.beginPath();
-          ctx.arc(n.x, n.y, n.r * 9, 0, Math.PI * 2);
+          ctx.arc(n.x, n.y, n.r * 10, 0, Math.PI * 2);
           ctx.fillStyle = gr;
           ctx.fill();
         }
 
         ctx.beginPath();
         ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${C()},${Math.min(1, (0.18 + n.g * 0.7) * os())})`;
+        ctx.fillStyle = `rgba(${color},${Math.min(1, (0.12 + n.g * 0.72) * scale)})`;
         ctx.fill();
       });
+    };
+
+    const drawStroke = (a, b, alpha, width, color) => {
+      ctx.beginPath();
+      ctx.moveTo(a.x, a.y);
+      ctx.lineTo(b.x, b.y);
+      ctx.strokeStyle = `rgba(${color},${alpha})`;
+      ctx.lineWidth = width;
+      ctx.stroke();
+    };
+
+    const drawTrace = (a, b, progress, alpha, color) => {
+      const head = clampValue(progress, 0, 1);
+      if (head <= 0) return;
+      const to = {
+        x: lerp(a.x, b.x, head),
+        y: lerp(a.y, b.y, head)
+      };
+      const trace = ctx.createLinearGradient(a.x, a.y, to.x, to.y);
+      trace.addColorStop(0, `rgba(${color},${alpha * 0.12})`);
+      trace.addColorStop(0.58, `rgba(${color},${alpha * 0.42})`);
+      trace.addColorStop(1, `rgba(255,243,184,${alpha})`);
+
+      ctx.beginPath();
+      ctx.moveTo(a.x, a.y);
+      ctx.lineTo(to.x, to.y);
+      ctx.strokeStyle = trace;
+      ctx.lineWidth = 1.08;
+      ctx.lineCap = "butt";
+      ctx.stroke();
+    };
+
+    const drawSignal = (signal, now, color, scale) => {
+      const elapsed = now - signal.start;
+      drawReceivingNodes(signal, elapsed);
+
+      ctx.save();
+      ctx.shadowColor = `rgba(${color},0.5)`;
+      ctx.shadowBlur = 10;
+      drawStageTraces(signal, elapsed, color, scale);
+      ctx.restore();
+
+      return elapsed < signalDuration(signal);
+    };
+
+    const draw = (ts) => {
+      const now = ts || performance.now();
+      lastTs = now;
+      const color = C();
+      const scale = os();
+
+      ctx.clearRect(0, 0, W, H);
+      updateNodePositions(now);
+
+      if (now >= nextSignalAt) {
+        spawnSignal(now);
+        nextSignalAt = now + 1600 + Math.random() * 1800;
+      }
+
+      drawIdleNetwork(color, scale);
+      signals = signals.filter((signal) => drawSignal(signal, now, color, scale));
+      drawNodes(color, scale);
 
       raf = requestAnimationFrame(draw);
     };

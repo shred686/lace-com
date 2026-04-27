@@ -291,123 +291,123 @@ const en: HomeNewContent = {
 
 const es: HomeNewContent = {
   capabilityTags: [
-    "IA Empresarial",
-    "Modelado de Flujos",
-    "Pipelines Deterministas",
-    "Controles de Politica",
-    "Supervision de Ejecucion",
-    "Publicacion de Apps"
+    "Enterprise AI",
+    "Workflow Modeling",
+    "Deterministic Pipelines",
+    "Policy Controls",
+    "Run Supervision",
+    "App Publishing"
   ],
   valuePillars: [
     {
-      title: "Modela el flujo, no el prompt",
+      title: "Modela el workflow, no el prompt",
       copy:
-        "Define entradas, pasos de razonamiento, reglas y salidas para una tarea real. LACE convierte ese diseno en un pipeline repetible, no en una cadena fragil de prompts."
+        "Define inputs, pasos de razonamiento, reglas y outputs para una tarea real de negocio. LACE convierte ese diseño en un pipeline repetible en lugar de una prompt chain frágil."
     },
     {
-      title: "IA gobernada por politicas",
+      title: "AI gobernada por policy",
       copy:
-        "Envuelve cada ejecucion con restricciones de flujos aprobados, manejo de datos, limites de presupuesto, uso de modelos y niveles de autorizacion."
+        "Envuelve cada run en restricciones sobre approved workflows, manejo de datos, límites de presupuesto, uso de modelos y niveles de autoridad."
     },
     {
-      title: "Ejecucion determinista",
+      title: "Ejecución determinista",
       copy:
-        "Mismas entradas, mismo proceso, pasos inspeccionables. El modelo aporta razonamiento, pero la plataforma controla como se realiza y acepta el trabajo."
+        "Mismos inputs, mismo proceso, pasos inspeccionables. El modelo aporta reasoning power, pero la plataforma controla cómo se realiza y acepta el trabajo."
     },
     {
-      title: "Construido para documentos largos",
+      title: "Diseñado para documentos largos",
       copy:
-        "Desde propuestas tecnicas hasta planes complejos, LACE maneja artefactos extensos sin perder consistencia."
+        "Desde volúmenes de propuesta hasta planes técnicos, LACE maneja artifacts extensos sin perder el hilo."
     },
     {
-      title: "Salida fundamentada y verificable",
+      title: "Output grounded y verificable",
       copy:
-        "LACE reduce alucinaciones al fundamentar redaccion en tus fuentes reales, validar afirmaciones contra evidencia disponible y generar secciones listas para cita y revision."
+        "LACE está diseñado para reducir hallucinations al fundamentar la redacción en tus source documents reales, revisar claims contra la evidencia disponible y producir secciones citation-ready para revisión."
     },
     {
-      title: "Del flujo al producto",
+      title: "Del workflow al producto",
       copy:
-        "Cuando un flujo demuestra valor, LACE puede empaquetarlo como herramienta interna reutilizable o aplicacion independiente para clientes."
+        "Una vez que un workflow demuestra valor, LACE puede empaquetarlo como herramienta interna reutilizable o como aplicación independiente orientada al cliente."
     }
   ],
   workflowSteps: [
     {
       step: "01",
-      title: "Define el flujo",
+      title: "Define el workflow",
       description:
-        "Describe lo que hace el proceso: que informacion entra, que decisiones se toman, como luce el resultado. LACE convierte eso en un pipeline estructurado — no un prompt, un sistema real y repetible."
+        "Describe qué hace el proceso: qué información entra, qué decisiones se toman, cómo se ve el output. LACE convierte eso en un pipeline estructurado — no un prompt, sino un sistema real y repetible."
     },
     {
       step: "02",
       title: "Establece las reglas",
       description:
-        "Adjunta los controles: que fuentes de datos estan aprobadas, que lenguaje se requiere, que limites de presupuesto aplican, que acciones necesitan aprobacion humana antes de continuar. Las reglas viajan con el pipeline, en cada ejecucion."
+        "Adjunta los guardrails: qué data sources están aprobadas, qué lenguaje se requiere, qué budget limits aplican, qué acciones necesitan human sign-off antes de continuar. Las reglas viajan con el pipeline, en cada run."
     },
     {
       step: "03",
-      title: "Ejecutalo — paso a paso",
+      title: "Ejecútalo — paso a paso",
       description:
-        "LACE ejecuta el flujo en orden. La IA razona y genera dentro de cada paso, pero el resultado se trata como propuesta — no se vuelve real hasta que pasa tus verificaciones definidas. Ningun paso puede saltarse."
+        "LACE ejecuta el workflow en orden. AI razona y genera dentro de cada paso, pero el output se trata como una propuesta — no se vuelve real hasta que pasa tus checks definidos. Ningún paso puede saltarse."
     },
     {
       step: "04",
       title: "Revisa, mejora y despliega",
       description:
-        "Inspecciona cualquier ejecucion, traza cualquier resultado a su fuente, exige aprobacion humana en momentos clave. Una vez que un flujo se prueba, publicalcomo herramienta interna o aplicacion para clientes — sin escribir nueva infraestructura."
+        "Inspecciona cualquier run, rastrea cualquier output hasta su source y exige aprobación humana en momentos clave. Una vez que un workflow demuestra valor, publícalo como herramienta interna o como aplicación completa orientada al cliente — sin escribir nueva infraestructura."
     }
   ],
   capabilities: [
     {
       icon: "→",
       title: "Pipelines deterministas",
-      body: "Mismas entradas, mismo proceso, pasos inspeccionables — siempre. LACE no improvisa. Cada ejecucion sigue la secuencia exacta que definiste, con salidas forzadas en cada etapa. Cuando algo falla, sabes exactamente donde y por que."
+      body: "Mismos inputs, mismo proceso, pasos inspeccionables — siempre. LACE no improvisa. Cada run sigue la secuencia exacta que definiste, con outputs obligatorios en cada stage. Cuando algo falla, sabes exactamente dónde y por qué."
     },
     {
       icon: "◻",
-      title: "Ejecucion gobernada por politicas",
-      body: "Cada pipeline corre dentro de un envolvente de politica: fuentes de datos aprobadas, restricciones de modelo, presupuestos de tokens, niveles de autoridad y puertas de revision humana. Las politicas las define tu equipo y las hace cumplir la plataforma."
+      title: "Ejecución gobernada por policy",
+      body: "Cada pipeline corre dentro de un policy envelope: approved data sources, model constraints, token budgets, authority levels y human review gates. Las policies las define tu equipo y las hace cumplir la plataforma, no AI por buen comportamiento."
     },
     {
       icon: "⊕",
-      title: "IA como motor de propuestas",
-      body: "La IA genera contenido — la plataforma decide si se acepta. Nada de lo que produce la IA toca tu documento final sin pasar verificaciones de precision, fundamento en evidencia y cumplimiento de politica. El modelo sugiere. LACE aprueba."
+      title: "AI como motor de propuestas",
+      body: "AI genera contenido; la plataforma decide si se acepta. Nada de lo que produce AI toca tu documento final sin pasar validation checks de precisión, evidence grounding y policy compliance. El modelo sugiere. LACE aprueba."
     },
     {
       icon: "◈",
-      title: "Proveniencia completa en cada salida",
-      body: "Cada oracion en una salida de LACE puede rastrearse a la fuente de origen, la restriccion que la moldeo y el paso que la produjo. Si un auditor pregunta de donde vino una afirmacion, tienes la respuesta — hasta la pagina y el parrafo."
+      title: "Full provenance, cada output",
+      body: "Cada oración en un output de LACE puede rastrearse al source del que vino, la constraint que la moldeó y el step que la produjo. Si un auditor pregunta de dónde vino un claim, tienes la respuesta — hasta la página y el párrafo."
     },
     {
       icon: "⋯",
-      title: "Construido para documentos grandes y complejos",
-      body: "La mayoria de herramientas de IA pierden coherencia en documentos largos. LACE fue construido para ellos. Ingiere y organiza archivos de gran tamano, selecciona el material mas relevante para cada paso y mantiene consistencia en todo el documento."
+      title: "Diseñado para documentos grandes y complejos",
+      body: "La mayoría de las herramientas de AI pierden coherencia en documentos largos. LACE fue construido para ellos. Ingiere y organiza source files extensos, selecciona el material más relevante para cada step y mantiene consistencia a lo largo de todo el documento."
     },
     {
       icon: "⬡",
-      title: "Del flujo al producto publicado",
-      body: "Una vez que un flujo demuestra su valor, LACE puede empaquetarlo como aplicacion independiente — con gestion de usuarios, facturacion e infraestructura. Tu aportas el conocimiento del dominio; la plataforma se encarga del resto."
+      title: "Del workflow al producto publicado",
+      body: "Una vez que un workflow demuestra valor, LACE puede empaquetarlo como standalone application — completa con user management, billing y hosting. Tú aportas el domain knowledge; la plataforma maneja la infraestructura para convertirlo en software."
     }
   ],
   operatingModes: [
     {
       badge: "POL",
-      name: "Envolvente de politica",
-      detail: "Define modelos permitidos, presupuestos, reglas de datos y niveles de autorizacion alrededor de un flujo."
+      name: "Policy envelope",
+      detail: "Define modelos permitidos, budgets, data rules y authority levels alrededor de un workflow."
     },
     {
       badge: "APP",
-      name: "Publicacion de apps",
-      detail: "Empaqueta un flujo validado como aplicacion web independiente bajo una URL."
+      name: "App publishing",
+      detail: "Empaqueta un workflow probado como standalone web application detrás de una URL."
     },
     {
       badge: "SUP",
-      name: "Supervision de ejecucion",
-      detail: "Observa, recomienda, pausa, reintenta o exige revision humana cuando el proceso lo requiere."
+      name: "Run supervision",
+      detail: "Observa, recomienda, pausa, reintenta o exige human review cuando el proceso lo requiere."
     },
     {
       badge: "OPS",
       name: "Infraestructura compartida",
-      detail: "Reutiliza hosting, escalamiento, multi-tenant y controles en multiples productos de IA."
+      detail: "Reutiliza hosting, scaling, multi-tenancy y controles en muchos AI products."
     }
   ],
   useCases: [
@@ -415,126 +415,126 @@ const es: HomeNewContent = {
       id: "proposals",
       tabTitle: "Propuestas y Licitaciones",
       heading: "Propuestas y Licitaciones",
-      tagline: "Propuestas que ganan — sin el caos de ultimo momento.",
+      tagline: "Redactar propuestas que ganan — sin el caos de último momento.",
       summary:
-        "Construye un flujo gobernado de propuestas que ingiere requisitos, alinea narrativa entre secciones y mantiene salidas fundamentadas bajo revision.",
+        "Construye un proposal workflow gobernado que puede ingerir requisitos, alinear la narrativa entre secciones y mantener el output grounded bajo revisión.",
       detail:
-        "Los equipos de propuestas pasan la mayor parte del tiempo formateando, haciendo referencias cruzadas y reescribiendo contenido que ya existe en algun lugar. LACE ingiere tus materiales fuente — propuestas anteriores, especificaciones tecnicas, requisitos de cumplimiento — y genera secciones fundamentadas en evidencia real, alineadas a los criterios de evaluacion y consistentes en un documento de cien paginas.",
+        "Los equipos de propuestas pasan la mayor parte del tiempo formateando, cruzando referencias y reescribiendo contenido que ya existe en algún lugar. LACE ingiere tus source materials — propuestas anteriores, technical specs, compliance requirements — y genera secciones grounded en evidencia real, alineadas con los evaluation criteria y consistentes en un documento de cien páginas. El equipo revisa y aprueba. La plataforma maneja el resto.",
       documents: [
-        "RFP o documento de licitacion",
-        "Narrativas de desempeno previo y registros de proyectos",
-        "Especificaciones tecnicas y estructuras de costo aprobadas",
-        "Requisitos de cumplimiento y certificacion"
+        "RFP o solicitation document",
+        "Past performance write-ups y registros de proyectos",
+        "Technical specifications y estructuras de costo aprobadas",
+        "Compliance and certification requirements"
       ],
       output:
-        "Una propuesta completamente redactada, seccion por seccion, donde cada afirmacion enlaza a una fuente, cada seccion cumple los requisitos y el equipo puede ver exactamente que aporto la IA versus lo que escribieron ellos mismos."
+        "Una propuesta completamente redactada, sección por sección, donde cada claim enlaza a un source, cada sección cumple los requisitos establecidos y el equipo puede ver exactamente qué aportó AI frente a lo que escribieron ellos."
     },
     {
       id: "regulatory-compliance",
-      tabTitle: "Regulacion y Cumplimiento",
-      heading: "Regulacion y Cumplimiento",
-      tagline: "Respuestas de cumplimiento sin la carga de la investigacion.",
+      tabTitle: "Regulación y Cumplimiento",
+      heading: "Regulación y Cumplimiento",
+      tagline: "Responder compliance questions sin la carga de investigación.",
       summary:
-        "Modela un flujo regulatorio capaz de recuperar reglas por jurisdiccion, estructurar respuestas y mantener salidas atadas al texto fuente.",
+        "Modela un regulatory research workflow que puede recuperar reglas específicas por jurisdicción, estructurar la respuesta y mantener outputs atados al source text.",
       detail:
-        'Cada vez que un cliente o equipo interno pregunta "cumple esto con la regulacion?" alguien tiene que encontrar la norma, leerla y escribir la respuesta. LACE convierte esa tarea recurrente en un flujo gobernado: extrae el codigo o guia relevante, identifica lo que aplica, estructura la respuesta y cita la fuente. El mismo flujo corre para cada jurisdiccion, cada vez.',
+        "Cada vez que un cliente o equipo interno pregunta \"¿esto cumple con la regulación?\" alguien tiene que encontrar la regulación, leerla y escribir la respuesta. LACE convierte esa tarea recurrente de research en un workflow gobernado: trae el code o guidance relevante, extrae lo que aplica, estructura la respuesta y cita el source. El mismo workflow corre para cada jurisdicción, cada vez — no el enfoque personal de cada analyst.",
       documents: [
-        "Codigos municipales, regulaciones estatales, guias federales",
-        "Interpretaciones de agencias y precedentes de cumplimiento",
-        "Detalles de proyectos o solicitudes de permiso"
+        "Municipal codes, state regulations, federal guidance",
+        "Agency interpretations y enforcement precedents",
+        "Detalles de proyecto del cliente o permit applications"
       ],
       output:
-        "Resumenes de cumplimiento estructurados y fundamentados en texto fuente actual — no en la memoria del analista sobre lo que decia la regulacion hace seis meses. Repetible para cada nuevo proyecto y jurisdiccion."
+        "Compliance summaries estructurados y grounded en source text actual — no en la memoria del analyst sobre lo que decía la regulación hace seis meses. Repetible para cada nuevo proyecto, cada nueva jurisdicción."
     },
     {
       id: "contracts",
       tabTitle: "Legal y Contratos",
       heading: "Legal y Contratos",
-      tagline: "Redaccion y revision de contratos con reglas que realmente se cumplen.",
+      tagline: "Redactar y revisar contratos con reglas que realmente se sostienen.",
       summary:
-        "Crea un flujo de redaccion y redline por clausulas que aplique lenguaje aprobado bajo reglas de negocio y conserve revisabilidad.",
+        "Crea un workflow de drafting y redlining clause-aware que aplica lenguaje aprobado bajo reglas de negocio y preserva reviewability.",
       detail:
-        "Los equipos legales saben exactamente como luce el lenguaje aprobado — el problema es aplicarlo consistentemente en decenas de contratos por semana. LACE ejecuta un flujo de redaccion gobernado: aplica bibliotecas de clausulas aprobadas, marca desviaciones de terminos estandar, resalta lo que requiere revision de abogado y produce un redline limpio con cada cambio documentado.",
+        "Los equipos legales saben exactamente cómo se ve el lenguaje aprobado; el problema es aplicarlo de forma consistente en decenas de contratos por semana. LACE ejecuta un governed drafting workflow: aplica approved clause libraries, marca desviaciones de standard terms, resalta cualquier cosa que requiera attorney review y produce un redline limpio con cada cambio documentado. Lo que antes le tomaba un día a un paralegal toma una hora.",
       documents: [
-        "Biblioteca de clausulas aprobadas y posiciones de respaldo",
-        "Borrador de la contraparte para revisar o redlinear",
-        "Parametros especificos del acuerdo (plazo, jurisdiccion, partes)"
+        "Approved clause library y fallback positions",
+        "Counterparty draft para revisar o redline",
+        "Deal-specific parameters (term, jurisdiction, parties)"
       ],
       output:
-        "Un contrato de primer borrador con lenguaje aprobado aplicado, desviaciones marcadas y atencion del abogado dirigida a los elementos que realmente lo necesitan — no al formato o texto estandar."
+        "Un first-pass contract con lenguaje aprobado aplicado, desviaciones marcadas y la atención del attorney dirigida a los elementos que realmente la necesitan — no al formato ni al boilerplate."
     },
     {
       id: "policy-updates",
-      tabTitle: "Politicas y Estandares",
-      heading: "Politicas y Estandares",
-      tagline: "Mantener los documentos de politica actualizados cuando cambian las regulaciones.",
+      tabTitle: "Políticas y Estándares",
+      heading: "Políticas y Estándares",
+      tagline: "Mantener policy documents actualizados cuando cambian las regulaciones.",
       summary:
-        "Convierte actualizaciones recurrentes de estandares en un flujo de revision controlado, con lenguaje consistente y puntos de control.",
+        "Convierte standards updates recurrentes en un controlled revision workflow con lenguaje consistente, policy checks y review checkpoints.",
       detail:
-        "Cuando una regulacion se actualiza, cada politica que la referencia necesita revisarse y posiblemente revisarse. En organizaciones grandes, esto es un proyecto de varias semanas de encontrar las politicas afectadas, redactar revisiones, obtener aprobaciones y distribuir los cambios. LACE lo convierte en un flujo controlado: identifica secciones afectadas, genera lenguaje propuesto y produce un documento con seguimiento de cambios para aprobacion final.",
+        "Cuando una regulación se actualiza, cada policy que la referencia necesita ser revisada y posiblemente modificada. En organizaciones grandes, esto es un proyecto de varias semanas: encontrar las policies afectadas, redactar revisiones, obtener approvals y distribuir los cambios. LACE lo convierte en un controlled workflow: identifica secciones afectadas, genera lenguaje propuesto, pasa la revisión por un review gate y produce un tracked-changes document para aprobación final.",
       documents: [
-        "Biblioteca de politicas existente",
-        "Texto de regulacion nueva o enmendada",
-        "Terminologia aprobada y guias de estilo"
+        "Existing policy library",
+        "Texto de regulación nueva o enmendada",
+        "Approved terminology y house style guidelines"
       ],
       output:
-        "Un flujo de revision de politicas que identifica lo que necesita cambiar, propone ediciones especificas en el lenguaje de tu organizacion y enruta a los aprobadores — sin empezar desde un documento en blanco cada vez."
+        "Un policy revision workflow que muestra qué necesita cambiar, propone edits específicos en el lenguaje de tu organización y enruta a approvers — sin empezar desde un documento en blanco cada vez."
     },
     {
       id: "financial-analysis",
-      tabTitle: "Analisis Financiero",
-      heading: "Analisis Financiero",
-      tagline: "Convertir informes financieros en inteligencia estructurada.",
+      tabTitle: "Análisis Financiero",
+      heading: "Análisis Financiero",
+      tagline: "Convertir financial filings en inteligencia estructurada.",
       summary:
-        "Construye un flujo de extraccion gobernado para informes de ganancias, declaraciones y datos financieros con citas completas de fuente.",
+        "Construye un governed extraction workflow para earnings reports, filings y financial data con full source citations.",
       detail:
-        "Leer informes de ganancias, extraer los numeros que importan, compararlos entre trimestres y competidores — es tedioso, repetitivo y propenso a errores cuando se hace manualmente. LACE ingiere documentos financieros, extrae datos estructurados de tablas y texto, verifica la consistencia interna de las cifras y produce resumenes donde cada numero se rastrea a la pagina y seccion fuente.",
+        "Leer earnings reports, extraer los números que importan, compararlos entre trimestres y competidores: toma tiempo, se repite y es propenso a errores cuando se hace manualmente. LACE ingiere documentos financieros, extrae structured data de tablas y texto, revisa las cifras por consistencia interna y produce summaries donde cada número se rastrea a la source page y section. Los analysts pasan su tiempo en interpretación, no en extraction.",
       documents: [
-        "Informes de ganancias, 10-K, declaraciones anuales",
-        "Documentos de periodos anteriores para comparacion",
-        "Conjuntos de preguntas de analistas o puntos de datos especificos"
+        "Earnings reports, 10-Ks, annual filings",
+        "Documentos de periodos anteriores para comparación",
+        "Analyst question sets o data points específicos a extraer"
       ],
       output:
-        "Resumenes financieros estructurados con citas completas de fuente — extraidos de tus documentos reales, no recordados de los datos de entrenamiento del modelo. Numeros que puedes verificar en treinta segundos."
+        "Structured financial summaries con full source citations — extraídos de tus documentos reales, no recordados desde los training data de un modelo. Números que puedes verificar en treinta segundos."
     },
     {
       id: "intelligence-defense",
       tabTitle: "Inteligencia y Defensa",
       heading: "Inteligencia y Defensa",
-      tagline: "Construir sistemas de conocimiento que resistan el escrutinio.",
+      tagline: "Construir knowledge systems que resistan el escrutinio.",
       summary:
-        "Implementa un flujo estructurado de generacion de conocimiento para programas de defensa e inteligencia que requieren repetibilidad, trazabilidad y control.",
+        "Levanta un structured knowledge-generation workflow para programas de defensa e inteligencia que necesitan repeatability, traceability y control.",
       detail:
-        "Los programas de defensa e inteligencia necesitan IA que pueda operar en entornos restringidos, mantener trazas de auditoria completas y producir salidas que los analistas puedan verificar — no confiar ciegamente. LACE fue disenado para esto: despliegue air-gapped, cero llamadas a APIs externas, hosting de modelos on-premise y una capa de gobernanza que registra cada decision tomada durante una ejecucion.",
+        "Los programas de defensa e inteligencia necesitan AI que pueda operar en restricted environments, mantener full audit trails y producir outputs que los analysts puedan verificar de verdad — no confiar por fe. LACE fue diseñado exactamente para esto: air-gapped deployment, cero external API calls, on-premise model hosting y una governance layer que registra cada decisión tomada durante un run. Ya sea ontology construction, document analysis o large-scale knowledge extraction, el output viene con complete provenance.",
       documents: [
         "Documentos fuente clasificados o restringidos",
-        "Bases de conocimiento existentes o marcos ontologicos",
-        "Requisitos especificos del programa para extraccion y salida"
+        "Existing knowledge bases u ontology frameworks",
+        "Program-specific extraction and output requirements"
       ],
       output:
-        "Analisis y construccion de conocimiento asistido por IA que opera completamente dentro de tu perimetro de seguridad, sin datos saliendo de tu entorno y con cadena de custodia completa en cada salida."
+        "AI-assisted analysis y knowledge construction que opera completamente dentro de tu security boundary, sin datos saliendo de tu entorno y con complete chain of custody en cada output."
     }
   ],
   assuranceTags: [
-    "Plano de Control",
-    "Revision Humana",
-    "Topes de Presupuesto",
-    "Pipelines Permitidos",
+    "Control Plane",
+    "Human Review",
+    "Budget Caps",
+    "Allowed Pipelines",
     "On-Prem"
   ],
   trustItems: [
-    "Cada ejecucion puede envolverse en un plano de control para politicas de modelo, presupuesto, datos y autoridad",
-    "La salida de IA se trata como propuesta dentro de una ruta de aceptacion definida, no como verdad final",
-    "Se pueden exigir checkpoints humanos para acciones sensibles o aprobacion final",
-    "Entradas, pasos, salidas e intervenciones permanecen trazables",
-    "El objetivo es una IA auditable, no una IA que acierta la mayoria de veces"
+    "Cada run puede envolverse en un control plane para policies de modelo, presupuesto, datos y autoridad",
+    "El AI output se trata como una propuesta dentro de una acceptance path definida, no como verdad final",
+    "Se pueden exigir human checkpoints para acciones sensibles o aprobación final",
+    "Inputs, steps, outputs e interventions permanecen traceable",
+    "El objetivo es AI que puedes auditar, no AI que suele acertar"
   ],
   deploymentOptions: [
-    "Publica un flujo como herramienta interna detras de una URL",
-    "Lanza apps LACE independientes sobre infraestructura compartida",
-    "Despliega en nube privada, on-prem o entornos aislados",
-    "Soporta flexibilidad de proveedores, escalamiento y multi-tenant en la capa de plataforma",
-    "Usa la misma base para productos SaaS y entregas enterprise personalizadas"
+    "Publica un workflow como herramienta interna detrás de una URL",
+    "Lanza standalone LACE apps sobre infraestructura compartida",
+    "Despliega en private cloud, on-prem o air-gapped environments",
+    "Soporta provider flexibility, scaling y multi-tenancy en la platform layer",
+    "Usa la misma foundation para SaaS products y custom enterprise delivery"
   ]
 };
 

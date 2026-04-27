@@ -1235,6 +1235,7 @@ const year = new Date().getFullYear();
     let raf = 0;
     let lastTs = 0;
     let nextSignalAt = 0;
+    let nextSignalDirection = "forward";
 
     const clampValue = (value, min, max) => Math.min(max, Math.max(min, value));
     const lerp = (start, end, value) => start + (end - start) * value;
@@ -1321,6 +1322,7 @@ const year = new Date().getFullYear();
       lastTs = 0;
       createLayeredNetwork();
       nextSignalAt = 0;
+      nextSignalDirection = "forward";
     };
 
     const layerLinks = (fromLayer, toLayer) =>
@@ -1336,10 +1338,24 @@ const year = new Date().getFullYear();
 
     const spawnSignal = (now) => {
       if (signals.length > 1 || layers.length < 4) return;
-      const traceMs = 540 + Math.random() * 90;
-      const stageGap = 110;
+      const direction = nextSignalDirection;
+      const isBackward = direction === "backward";
+      nextSignalDirection = isBackward ? "forward" : "backward";
+      const traceMs = isBackward ? 440 + Math.random() * 80 : 540 + Math.random() * 90;
+      const stageGap = isBackward ? 85 : 110;
       const stages = [0, 1, 2].map((stageIndex) => {
-        const stageLinks = layerLinks(stageIndex, stageIndex + 1);
+        const fromLayer = isBackward ? 3 - stageIndex : stageIndex;
+        const toLayer = isBackward ? 2 - stageIndex : stageIndex + 1;
+        const stageLinks = isBackward
+          ? layerLinks(toLayer, fromLayer).map((link) => ({
+              ...link,
+              a: link.b,
+              b: link.a,
+              fromLayer,
+              toLayer
+            }))
+          : layerLinks(fromLayer, toLayer);
+
         return {
           startOffset: stageIndex * (traceMs + stageGap),
           traceMs,
@@ -1353,9 +1369,10 @@ const year = new Date().getFullYear();
       if (stages.some((stage) => !stage.links.length)) return;
       signals.push({
         stages,
-        source: layers[0][0],
+        direction,
+        source: isBackward ? layers[3][0] : layers[0][0],
         start: now,
-        glowMs: 700
+        glowMs: isBackward ? 560 : 700
       });
     };
 
@@ -1408,11 +1425,13 @@ const year = new Date().getFullYear();
 
           if (progress >= 0 && progress <= 1) {
             const head = clampValue(progress, 0, 1);
-            const alpha = (0.1 + Math.sin(head * Math.PI) * 0.08) * scale;
+            const directionScale = signal.direction === "backward" ? 0.74 : 1;
+            const alpha = (0.1 + Math.sin(head * Math.PI) * 0.08) * scale * directionScale;
             drawTrace(a, b, head, alpha, color);
           } else if (progress > 1 && progress < 1.24) {
             const fade = 1 - (progress - 1) / 0.24;
-            drawStroke(a, b, (stageIndex === 1 ? 0.075 : 0.06) * fade * scale, 0.74, color);
+            const directionScale = signal.direction === "backward" ? 0.68 : 1;
+            drawStroke(a, b, (stageIndex === 1 ? 0.075 : 0.06) * fade * scale * directionScale, 0.74, color);
           }
         });
       });

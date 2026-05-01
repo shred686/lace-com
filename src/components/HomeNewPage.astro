@@ -7,7 +7,6 @@ import {
 import WorkflowStorySection from "./workflow-story/WorkflowStorySection.astro";
 import whitepaperEnglish from "../assets/docs/lace_enterprise_overview_v2_ENGLISH.pdf";
 import whitepaperSpanish from "../assets/docs/LACE_Enterprise_Overview_v2_SPANISH.pdf";
-import laceScreen1 from "../assets/images/lace-screen1.png";
 import laceScreen2 from "../assets/images/lace-screen2.png";
 
 interface Props {
@@ -486,6 +485,18 @@ const year = new Date().getFullYear();
           set:html={copy.ourPlatformTitle.replace("LACE", '<span class="lace-accent-word">LACE</span>')}
         ></h2>
       </div>
+
+      <div class="problem-platform-preview" data-platform-preview aria-label="LACE platform screenshot">
+        <figure class="problem-platform-card problem-platform-card-front">
+          <Image
+            src={laceScreen2}
+            alt="LACE platform workflow orchestration screenshot"
+            class="problem-platform-shot-image"
+            widths={[760, 980, 1260, 1500]}
+            sizes="(max-width: 980px) 96vw, 72vw"
+          />
+        </figure>
+      </div>
     </div>
   </section>
 
@@ -507,28 +518,6 @@ const year = new Date().getFullYear();
         </h2>
         <p class="platform-intro-body">{copy.ourPlatformBody}</p>
         <!-- <p class="platform-intro-sub">{copy.ourPlatformSub}</p> -->
-      </div>
-
-      <div class="platform-intro-showcase" aria-label="LACE platform screenshots">
-        <figure class="platform-intro-card platform-intro-card-back" aria-hidden="true">
-          <Image
-            src={laceScreen1}
-            alt=""
-            class="platform-intro-shot-image"
-            widths={[760, 980, 1260]}
-            sizes="(max-width: 980px) 86vw, 42vw"
-          />
-        </figure>
-
-        <figure class="platform-intro-card platform-intro-card-front">
-          <Image
-            src={laceScreen2}
-            alt="LACE platform workflow orchestration screenshot"
-            class="platform-intro-shot-image"
-            widths={[760, 980, 1260, 1500]}
-            sizes="(max-width: 980px) 96vw, 58vw"
-          />
-        </figure>
       </div>
     </div>
   </section>
@@ -779,11 +768,13 @@ const year = new Date().getFullYear();
     const finalLine = section.querySelector("[data-problem-final]");
     const laceLine = section.querySelector("[data-problem-lace]");
     const word = section.querySelector("[data-problem-word]");
+    const copyBlock = section.querySelector("[data-problem-copy]");
+    const platformPreview = section.querySelector("[data-platform-preview]");
     const slot = word ? word.parentElement : null;
     const zone = document.getElementById("light-zone");
     const veil = document.getElementById("lace-flash-veil");
     const home = document.querySelector(".official-home");
-    if (!line || !finalLine || !laceLine || !word || !slot || !zone || !veil || !home) return;
+    if (!line || !finalLine || !laceLine || !word || !slot || !copyBlock || !platformPreview || !zone || !veil || !home) return;
 
     const configuredWords = (line.getAttribute("data-problem-words") || "fast.|smart.|impressive.").split("|");
     let activeWord = configuredWords[0];
@@ -836,12 +827,16 @@ const year = new Date().getFullYear();
       const progress = Math.min(1, Math.max(0, -rect.top / travel));
       const clampValue = (value, min, max) => Math.min(max, Math.max(min, value));
       const easeOut = (value) => 1 - Math.pow(1 - value, 3);
+      const easeInOut = (value) =>
+        value < 0.5 ? 4 * value * value * value : 1 - Math.pow(-2 * value + 2, 3) / 2;
       const lerp = (start, end, value) => start + (end - start) * value;
       const entryProgress = clampValue(1 - rect.top / window.innerHeight, 0, 1);
+      const isMobile = window.innerWidth <= 680;
+      const storyEnd = isMobile ? 0.756 : 0.78;
+      const storyProgress = clampValue(progress / storyEnd, 0, 1);
       const labelHoldEnd = 0.055;
       const labelSettleEnd = 0.14;
       const entryEase = easeOut(entryProgress);
-      const isMobile = window.innerWidth <= 680;
       const labelStartScale = isMobile ? 0.82 : 0.72;
       const labelPeakScale = isMobile ? 2.05 : 3.35;
       const labelStartY = isMobile ? 0.8 : 1.4;
@@ -855,20 +850,20 @@ const year = new Date().getFullYear();
       let labelGlow = entryEase;
       let labelOpacity = entryProgress;
 
-      if (progress > 0 && progress < labelHoldEnd) {
+      if (storyProgress > 0 && storyProgress < labelHoldEnd) {
         labelScale = labelPeakScale;
         labelY = labelPeakY;
         labelLetter = labelPeakLetter;
         labelGlow = 1;
         labelOpacity = 1;
-      } else if (progress >= labelHoldEnd && progress < labelSettleEnd) {
-        const settleProgress = easeOut((progress - labelHoldEnd) / (labelSettleEnd - labelHoldEnd));
+      } else if (storyProgress >= labelHoldEnd && storyProgress < labelSettleEnd) {
+        const settleProgress = easeOut((storyProgress - labelHoldEnd) / (labelSettleEnd - labelHoldEnd));
         labelScale = lerp(labelPeakScale, 1, settleProgress);
         labelY = lerp(labelPeakY, 0, settleProgress);
         labelLetter = lerp(labelPeakLetter, labelSettleLetter, settleProgress);
         labelGlow = lerp(1, 0.28, settleProgress);
         labelOpacity = 1;
-      } else if (progress >= labelSettleEnd) {
+      } else if (storyProgress >= labelSettleEnd) {
         labelScale = 1;
         labelY = 0;
         labelLetter = labelSettleLetter;
@@ -883,15 +878,33 @@ const year = new Date().getFullYear();
       section.style.setProperty("--problem-kicker-opacity", String(labelOpacity));
 
       section.classList.toggle("is-label-visible", progress >= 0);
-      line.classList.toggle("is-visible", progress >= 0.14 && progress < 0.76);
-      line.classList.toggle("is-exiting", progress >= 0.73 && progress < 0.78);
-      finalLine.classList.toggle("is-visible", progress >= 0.72 && progress < 0.86);
-      laceLine.classList.toggle("is-visible", progress >= 0.86);
-      setLight(progress >= 0.84);
+      line.classList.toggle("is-visible", storyProgress >= 0.14 && storyProgress < 0.76);
+      line.classList.toggle("is-exiting", storyProgress >= 0.73 && storyProgress < 0.78);
+      finalLine.classList.toggle("is-visible", storyProgress >= 0.74 && storyProgress < 0.94);
+      laceLine.classList.toggle("is-visible", storyProgress >= 0.94);
+      setLight(storyProgress >= 0.84);
 
-      if (progress < 0.34) {
+      const previewStart = storyEnd;
+      const previewEnd = 1;
+      const previewRawProgress = (progress - previewStart) / (previewEnd - previewStart);
+      const previewProgress = clampValue(previewRawProgress, 0, 1);
+      const previewTravelProgress = Math.max(0, previewRawProgress);
+      const previewEase = easeInOut(previewProgress);
+      const previewOpacity = progress >= previewStart ? 1 : 0;
+      const copyFadeStart = isMobile ? 0.85 : 0.85;
+      const copyFade = easeOut(clampValue((progress - copyFadeStart) / 0.075, 0, 1));
+      const previewStartY = isMobile ? 86 : 112;
+      const previewEndY = isMobile ? 2 : 8.5;
+
+      section.style.setProperty("--problem-copy-opacity", String(1 - copyFade));
+      section.style.setProperty("--problem-copy-y", `${lerp(0, isMobile ? -8 : -10, copyFade)}svh`);
+      section.style.setProperty("--platform-preview-opacity", String(previewOpacity));
+      section.style.setProperty("--platform-preview-y", `${lerp(previewStartY, previewEndY, previewTravelProgress)}svh`);
+      section.style.setProperty("--platform-preview-halo-opacity", String(lerp(0.35, 0.8, previewEase)));
+
+      if (storyProgress < 0.34) {
         setWord(configuredWords[0]);
-      } else if (progress < 0.54) {
+      } else if (storyProgress < 0.54) {
         setWord(configuredWords[1]);
       } else {
         setWord(configuredWords[2]);

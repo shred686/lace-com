@@ -1812,10 +1812,10 @@ li {
   width: var(--oh-shell);
   margin: 0 auto;
   display: grid;
-  grid-template-columns: minmax(18rem, 35%) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 56rem);
   align-items: start;
-  gap: clamp(2.25rem, 4.5vw, 5.5rem);
-  min-height: clamp(520px, 47vw, 700px);
+  justify-content: center;
+  min-height: 0;
 }
 
 .official-home .platform-intro-copy {
@@ -2809,7 +2809,7 @@ li {
   --problem-bg: transparent;
   --problem-bright: var(--oh-bright);
   --problem-muted: var(--oh-accent);
-  min-height: 896svh;
+  min-height: 1120svh;
   padding: 0;
   background: var(--problem-bg);
   transition: background-color 0.45s ease;
@@ -2826,7 +2826,7 @@ li {
 
 .official-home .problem-platform-anchor {
   position: absolute;
-  top: 685svh;
+  top: 750svh;
   left: 0;
   width: 1px;
   height: 1px;
@@ -2865,13 +2865,17 @@ li {
 
 .official-home .problem-scroll-copy {
   position: relative;
-  z-index: 2;
+  z-index: 3;
   width: min(1100px, calc(100% - 2rem));
   min-height: 34svh;
   display: grid;
   align-content: center;
   justify-items: center;
   text-align: center;
+  opacity: var(--problem-copy-opacity, 1);
+  transform: translate3d(0, var(--problem-copy-y, 0), 0);
+  will-change: opacity, transform;
+  transition: none;
 }
 
 .official-home .problem-scroll-kicker {
@@ -2963,6 +2967,105 @@ li {
     transform: translateY(0) rotateX(0deg);
     opacity: 1;
   }
+}
+
+.official-home .problem-platform-preview {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 4;
+  width: 95vw;
+  max-width: none;
+  aspect-ratio: 1.575 / 1;
+  pointer-events: none;
+  opacity: var(--platform-preview-opacity, 0);
+  transform: translate3d(-50%, calc(-50% + var(--platform-preview-y, 112svh)), 0);
+  transform-origin: 50% 76%;
+  backface-visibility: hidden;
+  contain: layout style;
+  isolation: isolate;
+  will-change: opacity, transform;
+  transition: none;
+}
+
+.official-home .problem-platform-preview::before {
+  content: "";
+  position: absolute;
+  inset: 5% 2% -8%;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: 18px;
+  background:
+    radial-gradient(ellipse at 50% 24%, rgba(0, 255, 194, 0.22), transparent 58%),
+    radial-gradient(ellipse at 50% 100%, rgba(0, 168, 130, 0.16), transparent 66%);
+  filter: blur(22px);
+  opacity: var(--platform-preview-halo-opacity, 0.35);
+  transform: translateZ(0);
+  will-change: opacity;
+}
+
+.official-home .problem-platform-card {
+  position: absolute;
+  margin: 0;
+  aspect-ratio: 1.575 / 1;
+  padding: 7px;
+  overflow: hidden;
+  border: 1px solid rgba(247, 250, 255, 0.2);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(54, 60, 64, 0.96) 0%, rgba(22, 25, 27, 0.98) 48%, rgba(10, 11, 12, 0.98) 100%),
+    #101214;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  box-shadow:
+    0 0 0 1px rgba(0, 255, 194, 0.48),
+    0 0 26px rgba(0, 255, 194, 0.3),
+    0 22px 48px rgba(2, 10, 14, 0.26),
+    0 0 0 1px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.72);
+}
+
+.official-home .problem-platform-card::before {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  z-index: 2;
+  pointer-events: none;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 4px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.22);
+}
+
+.official-home .problem-platform-card::after {
+  content: "";
+  position: absolute;
+  left: 1rem;
+  right: 1rem;
+  top: 0;
+  z-index: 3;
+  height: 1px;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.34), transparent);
+}
+
+.official-home .problem-platform-card-front {
+  inset: 0;
+  z-index: 2;
+}
+
+.official-home .problem-platform-shot-image {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  object-fit: cover;
+  object-position: center;
 }
 
 .official-home .pipeline-layout {
@@ -4020,12 +4123,12 @@ li {
   }
 
   .official-home .problem-scroll-section {
-    min-height: 448svh;
+    min-height: 560svh;
     padding: 0;
   }
 
   .official-home .problem-platform-anchor {
-    top: 300svh;
+    top: 327svh;
   }
 
   .official-home .problem-scroll-pin::before {

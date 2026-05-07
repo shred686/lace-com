@@ -28,12 +28,3 @@ This repository includes a workflow at `.github/workflows/deploy.yml` that build
   - `SITE_URL` (example: `https://example.com`)
   - `BASE_PATH` (example: `/lace-com`)
 
-## Notes
-
-- Landing content is based on `docs/LACE-LANDING-PAGE-CONTENT.md`.
-- Theme routes:
-  - `/themes/midnight` (dark, subtle glow, GitHub-home-inspired direction)
-  - `/themes/blueprint`
-  - `/themes/circuit`
-  - `/themes/forge`
-  - `/themes/review` (side-by-side iframe comparison)

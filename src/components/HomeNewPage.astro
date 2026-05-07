@@ -1,28 +1,15 @@
 ---
-import { Image } from "astro:assets";
 import {
-  getHomeNewContent,
   type HomeLocale
 } from "../data/homeNewContent";
-import WorkflowStorySection from "./workflow-story/WorkflowStorySection.astro";
 import whitepaperEnglish from "../assets/docs/lace_enterprise_overview_v2_ENGLISH.pdf";
 import whitepaperSpanish from "../assets/docs/LACE_Enterprise_Overview_v2_SPANISH.pdf";
-import laceScreen2 from "../assets/images/lace-screen2.png";
 
 interface Props {
   locale?: HomeLocale;
 }
 
 const { locale = "en" } = Astro.props;
-
-const {
-  assuranceTags,
-  capabilities,
-  capabilityTags,
-  deploymentOptions,
-  trustItems,
-  useCases
-} = getHomeNewContent(locale);
 
 const isSpanish = locale === "es";
 const currentPath = Astro.url.pathname;
@@ -32,29 +19,19 @@ const languageToggleHref = isSpanish ? englishPath : spanishPath;
 const languageToggleLabel = isSpanish ? "English" : "Español";
 const brandHref = isSpanish ? "/es/" : "/";
 const whitepaperUrl = isSpanish ? whitepaperSpanish : whitepaperEnglish;
-const problemLeadStart = isSpanish
-  ? "La mayoría de las herramientas de AI son"
-  : "Most AI tools are";
-const problemSlotWords = isSpanish
-  ? ["rápidas.", "inteligentes.", "impresionantes."]
-  : ["fast.", "smart.", "impressive."];
-const problemFinalLine = isSpanish
-  ? "Ninguna de ellas es confiable."
-  : "None are trustworthy.";
-
 const copy = isSpanish
   ? {
       toggleNav: "Alternar navegación",
-      navCompany: "Empresa",
-      navPlatform: "Plataforma",
-      navUseCases: "Casos de uso",
-      navTrust: "Confianza",
       navContact: "Contáctanos",
       heroTitle: "Haz que AI funcione para tu empresa.",
       heroIntro: "Infraestructura para enterprise AI.",
       heroDetail:
         "Determinant Systems ayuda a las empresas a diseñar, construir y desplegar AI workflows controlados, confiables y útiles en producción.",
       heroCtaPrimary: "DESCARGAR WHITEPAPER",
+      comingSoonKicker: "INTRODUCING LACE",
+      comingSoonTitle: "Coming soon.",
+      comingSoonBody:
+        "Estamos preparando una vista más clara de la plataforma LACE. Mientras la construimos, mantenemos esta página enfocada en lo esencial.",
       systemStatus: "Sistema activo // protocolo online",
       whoLabel: "Quiénes somos",
       whoIndex: "01 // Identidad",
@@ -190,6 +167,23 @@ const copy = isSpanish
         "Cuéntanos qué proceso intentas gobernar. Te mostraremos cómo LACE lo maneja - o lo construiremos por ti.",
       ctaPrimary: "Habla con nosotros",
       ctaSecondary: "Descargar enterprise overview →",
+      contactDirectTitle: "Contacto directo",
+      contactDirectBody:
+        "También puedes escribirnos o llamarnos si prefieres empezar la conversación directamente.",
+      contactName: "Nombre",
+      contactNamePlaceholder: "Jane Smith",
+      contactEmail: "Email",
+      contactEmailPlaceholder: "jane@company.com",
+      contactCompany: "Empresa",
+      contactCompanyPlaceholder: "Empresa o equipo",
+      contactMessage: "¿Con qué necesitas ayuda?",
+      contactMessagePlaceholder:
+        "Necesitamos un workflow gobernado para revisión de documentos, aprobaciones y drafting asistido por AI...",
+      contactTimeline: "Timeline",
+      contactTimelineOptions: ["Explorando opciones", "Este trimestre", "Inmediatamente"],
+      contactDeployment: "Preferencia de despliegue",
+      contactDeploymentOptions: ["No estoy seguro", "Cloud hosted", "Entorno privado"],
+      contactSubmit: "Enviar consulta",
       runtime: "LACE_RUNTIME_PROTOCOL_V3",
       sourceGrounded: "Source-grounded",
       footerTagline: "Infraestructura de enterprise AI",
@@ -203,16 +197,16 @@ const copy = isSpanish
     }
   : {
       toggleNav: "Toggle navigation",
-      navCompany: "Company",
-      navPlatform: "Platform",
-      navUseCases: "Use Cases",
-      navTrust: "Trust",
       navContact: "Contact us",
       heroTitle: "Make AI work for your company.",
       heroIntro: "Infrastructure for enterprise AI.",
       heroDetail:
         "Determinant Systems helps companies design, build, and deploy AI workflows that are controlled, reliable, and useful in production.",
       heroCtaPrimary: "DOWNLOAD WHITEPAPER",
+      comingSoonKicker: "INTRODUCING LACE",
+      comingSoonTitle: "Coming soon.",
+      comingSoonBody:
+        "We're preparing a clearer view of the LACE platform. While it is in development, this page stays focused on the essentials.",
       systemStatus: "System active // protocol online",
       whoLabel: "Who We Are",
       whoIndex: "01 // Identity",
@@ -348,6 +342,23 @@ const copy = isSpanish
         "Tell us what process you're trying to govern. We'll show you how LACE handles it - or build it for you.",
       ctaPrimary: "Talk to us",
       ctaSecondary: "Download the enterprise overview →",
+      contactDirectTitle: "Direct contact",
+      contactDirectBody:
+        "You can also email or call if you would rather start the conversation directly.",
+      contactName: "Name",
+      contactNamePlaceholder: "Jane Smith",
+      contactEmail: "Email",
+      contactEmailPlaceholder: "jane@company.com",
+      contactCompany: "Company",
+      contactCompanyPlaceholder: "Company or team name",
+      contactMessage: "What do you need help with?",
+      contactMessagePlaceholder:
+        "We need a governed workflow for document review, approvals, and AI-assisted drafting...",
+      contactTimeline: "Timeline",
+      contactTimelineOptions: ["Exploring options", "This quarter", "Immediately"],
+      contactDeployment: "Deployment preference",
+      contactDeploymentOptions: ["Not sure yet", "Cloud hosted", "Private environment"],
+      contactSubmit: "Send inquiry",
       runtime: "LACE_RUNTIME_PROTOCOL_V3",
       sourceGrounded: "Source-grounded",
       footerTagline: "Enterprise AI infrastructure",
@@ -359,15 +370,12 @@ const copy = isSpanish
       readyForExecution: "READY_FOR_EXECUTION"
     };
 
-const useCaseIcons = ["→", "◻", "⊕", "◈", "⋯", "⬡"];
 const heroTitleWords = copy.heroTitle.split(" ");
 const heroDesktopTitleLead = heroTitleWords.slice(0, 4).join(" ");
 const heroDesktopTitleRest = heroTitleWords.slice(4).join(" ");
 const heroMobileTitleLines = isSpanish
   ? ["Haz", "que AI", "funcione", "para", "tu empresa."]
   : ["Make", "AI", "work", "for", "you."];
-const getBodyParagraphs = (body: string | string[]) =>
-  Array.isArray(body) ? body : [body];
 
 const year = new Date().getFullYear();
 ---
@@ -394,15 +402,12 @@ const year = new Date().getFullYear();
 
         <div class="official-topnav-panel" id="topNavPanel">
           <nav class="official-topnav-links" aria-label="Primary">
-          <a href="#lace">{copy.navCompany}</a>
-          <a href="#platform">{copy.navPlatform}</a>
-          <a href="#use-cases">{copy.navUseCases}</a>
-          <!-- <a href="#trust">{copy.navTrust}</a> -->
+          <a href="#coming-soon">LACE</a>
         </nav>
 
         <div class="official-topnav-actions">
           <a href={languageToggleHref} class="nav-language-toggle">{languageToggleLabel}</a>
-          <a href="/contact" class="nav-deploy-link">{copy.navContact}</a>
+          <a href="#contact" class="nav-deploy-link">{copy.navContact}</a>
         </div>
       </div>
     </div>
@@ -454,242 +459,129 @@ const year = new Date().getFullYear();
     <div class="hero-bottom-glow" aria-hidden="true"></div>
   </section>
 
-  <!-- <div class="official-marquee section-shell" aria-hidden="true">
-    <div class="marquee-fade-left"></div>
-    <div class="marquee-fade-right"></div>
-    <div class="mq-track">
-      {[...capabilityTags, ...capabilityTags].map((tag) => (
-        <>
-          <span>{tag}</span>
-          <strong>-</strong>
-        </>
-      ))}
-    </div>
-  </div> -->
-
-  <section class="company-intro problem-scroll-section section-shell" data-problem-scroll>
-    <span id="platform" class="problem-platform-anchor" aria-hidden="true"></span>
-    <div class="problem-scroll-pin">
-      <div class="problem-scroll-copy" data-problem-copy>
-        <p class="section-kicker problem-scroll-kicker">{copy.introLabel}</p>
-        <h2 class="problem-scroll-line" data-problem-line data-problem-words={problemSlotWords.join("|")}>
-          <span>{problemLeadStart}</span>
-          <span class="problem-slot" aria-live="polite">
-            <span data-problem-word>{problemSlotWords[0]}</span>
-          </span>
-        </h2>
-        <h2 class="problem-scroll-final lace-accent-word" data-problem-final>{problemFinalLine}</h2>
-        <h2
-          class="problem-scroll-lace"
-          data-problem-lace
-          set:html={copy.ourPlatformTitle.replace("LACE", '<span class="lace-accent-word">LACE</span>')}
-        ></h2>
-      </div>
-
-      <div class="problem-platform-preview" data-platform-preview aria-label="LACE platform screenshot">
-        <figure class="problem-platform-card problem-platform-card-front">
-          <Image
-            src={laceScreen2}
-            alt="LACE platform workflow orchestration screenshot"
-            class="problem-platform-shot-image"
-            widths={[760, 980, 1260, 1500]}
-            sizes="(max-width: 980px) 96vw, 72vw"
-          />
-        </figure>
-      </div>
+  <section id="coming-soon" class="coming-soon-lace section-shell" data-r>
+    <div class="coming-soon-lace-inner">
+      <p class="section-kicker">{copy.comingSoonKicker}</p>
+      <h2>{copy.comingSoonTitle}</h2>
+      <p>{copy.comingSoonBody}</p>
     </div>
   </section>
 
-  <div id="light-zone" class="lace-light-zone">
-
-  <section class="platform-intro section-shell">
-    <div class="platform-intro-layout" data-r>
-      <div class="platform-intro-copy">
-        <h2 class="platform-intro-title">
-          <span class="platform-intro-title-accent">{copy.platformIntroTitleAccent}</span>
-          <span class="platform-intro-title-rest">
-            {copy.platformIntroTitleRestLines.map((line, index) => (
-              <>
-                {line}
-                {index < copy.platformIntroTitleRestLines.length - 1 && <br />}
-              </>
-            ))}
-          </span>
-        </h2>
-        <p class="platform-intro-body">{copy.ourPlatformBody}</p>
-        <!-- <p class="platform-intro-sub">{copy.ourPlatformSub}</p> -->
-      </div>
-    </div>
-  </section>
-
-  <div class="neural-separator section-shell" aria-hidden="true"></div>
-
-  <WorkflowStorySection
-    locale={locale}
-    headlineLead={copy.whoTitleLead}
-    headlineAccent={copy.whoTitleAccent}
-  />
-
-  <div class="neural-separator section-shell" aria-hidden="true"></div>
-
-  <section class="how-it-works rag-overview section-shell">
-    <div class="rag-scroll-stage" data-rag-scroll>
-      <div class="rag-scroll-pin">
-        <div class="rag-scroll-copy">
-          <h2 class="rag-scroll-title" aria-label={`${copy.ragTitleStruck}. ${copy.ragTitleActive}`}>
-            <s class="rag-scroll-struck">{copy.ragTitleStruck}</s>
-            <span class="rag-scroll-active" aria-hidden="true">
-              {copy.ragTitleActiveLines.map((line) => (
-                <span>{line}</span>
-              ))}
-            </span>
-          </h2>
-        </div>
-      </div>
-    </div>
-
-    <div class="rag-overview-content">
-      <h2 class="rag-overview-title" data-r data-reveal-delay="0">{copy.ragOverviewTitle}</h2>
-
-      <div class="rag-overview-intro" data-r data-reveal-delay="80">
-        <p class="rag-overview-lead">{copy.ragOverviewLead}</p>
-        <p>{copy.ragOverviewBody}</p>
-      </div>
-
-      <!-- <div class="rag-positioning-label" data-r data-reveal-delay="140">{copy.ragPositioningLabel}</div> -->
-
-      <div class="rag-overview-grid">
-        {copy.ragOverviewItems.map((item, index) => (
-          <article class="glass-card rag-evidence-card" data-r data-reveal-delay={180 + index * 55}>
-            <span class="rag-evidence-index">{String(index + 1).padStart(2, "0")}</span>
-            <div>
-              <h3>{item.title}</h3>
-              {getBodyParagraphs(item.body).map((paragraph) => (
-                <p>{paragraph}</p>
-              ))}
-            </div>
-          </article>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <div class="neural-separator section-shell" aria-hidden="true"></div>
-
-  <section class="platform-capabilities section-shell">
-    <div class="section-head" data-r>
-      <p class="section-kicker">{copy.capabilitiesLabel}</p>
-      <h2>{copy.capabilitiesTitle}</h2>
-      <p>{copy.capabilitiesBody}</p>
-    </div>
-
-    <div class="capabilities-grid">
-      {capabilities.map((cap, index) => (
-        <article class="glass-card capability-card" data-r data-reveal-delay={80 + index * 60}>
-          <span class="capability-icon">{cap.icon}</span>
-          <h4>{cap.title}</h4>
-          <p>{cap.body}</p>
-        </article>
-      ))}
-    </div>
-  </section>
-
-  <div class="neural-separator section-shell" aria-hidden="true"></div>
-
-  <section id="use-cases" class="use-cases section-shell">
-    <div class="section-head use-cases-head-new" data-r>
-      <p class="section-kicker">{copy.useCasesLabel}</p>
-      <h2>{copy.useCasesTitle}</h2>
-      <p>{copy.useCasesBody}</p>
-    </div>
-
-    <div class="use-case-card-grid" data-r>
-      {useCases.map((useCase, index) => (
-        <article class="use-case-hover-card glass-card" data-r data-reveal-delay={80 + index * 45}>
-          <span class="use-case-hover-icon">{useCaseIcons[index % useCaseIcons.length]}</span>
-          <div class="use-case-hover-content">
-            <h3>{useCase.tabTitle}</h3>
-            <p>{useCase.summary}</p>
-          </div>
-        </article>
-      ))}
-    </div>
-  </section>
-
-  <div class="neural-separator section-shell" aria-hidden="true"></div>
-
-  <section id="trust" class="trust-and-deploy section-shell">
-    <div class="official-marquee reverse" aria-hidden="true">
-      <div class="marquee-fade-left"></div>
-      <div class="marquee-fade-right"></div>
-      <div class="mq-track mq-track-r">
-        {[...assuranceTags, ...assuranceTags].map((tag) => (
-          <>
-            <span>{tag}</span>
-            <strong>-</strong>
-          </>
-        ))}
-      </div>
-    </div>
-
-    <div class="trust-grid">
-      <article class="glass-card trust-panel" data-r data-reveal-delay="80">
-        <p class="section-kicker">{copy.trustTitle}</p>
-        <h3>{copy.trustHeading}</h3>
-        <ul>
-          {trustItems.map((item) => (
-            <li>{item}</li>
-          ))}
-        </ul>
-      </article>
-
-      <article class="glass-card trust-panel" data-r data-reveal-delay="180">
-        <p class="section-kicker">{copy.deploymentTitle}</p>
-        <h3>{copy.deploymentHeading}</h3>
-        <ul>
-          {deploymentOptions.map((item) => (
-            <li>{item}</li>
-          ))}
-        </ul>
-        <div class="deploy-tags">
-          <span>SaaS</span>
-          <span>On-Prem</span>
-          <span>Air-Gapped</span>
-          <span>Private Cloud</span>
-        </div>
-      </article>
-    </div>
-  </section>
-
-  </div><!-- /.lace-light-zone -->
-
-  <div id="lace-flash-veil" aria-hidden="true"></div>
-
-  <section id="cta-section" class="final-cta">
+  <section id="contact" class="final-cta contact-cta">
     <canvas id="cta-canvas" class="cta-canvas" aria-hidden="true"></canvas>
     <div class="cta-vignette" aria-hidden="true"></div>
 
-    <div class="final-cta-content section-shell">
+    <div class="final-cta-content contact-cta-content section-shell">
       <div class="cta-pill" data-r>
         <div class="pulse-dot tiny"></div>
         <span>{copy.ctaLabel}</span>
       </div>
 
-      <h2 data-r data-reveal-delay="60" set:html={copy.ctaTitle.replace(copy.ctaTitleAccent, `<span class="lace-accent-word">${copy.ctaTitleAccent}</span>`)}></h2>
+      <h2
+        data-r
+        data-reveal-delay="60"
+        set:html={copy.ctaTitle.replace(copy.ctaTitleAccent, `<span class="lace-accent-word">${copy.ctaTitleAccent}</span>`)}
+      ></h2>
 
-      <p data-r data-reveal-delay="140">{copy.ctaBody}</p>
+      <p class="contact-cta-lede" data-r data-reveal-delay="140">{copy.ctaBody}</p>
 
-      <div class="hero-actions cta-actions" data-r data-reveal-delay="220">
-        <a href="/contact" class="hero-btn hero-btn-primary">
-          {copy.ctaPrimary}
-        </a>
-        <a href={whitepaperUrl} target="_blank" rel="noopener noreferrer" class="hero-btn hero-btn-ghost">{copy.ctaSecondary}</a>
-      </div>
+      <div class="contact-cta-grid" data-r data-reveal-delay="220">
+        <aside class="contact-direct-card">
+          <h3>{copy.contactDirectTitle}</h3>
+          <p>{copy.contactDirectBody}</p>
 
-      <div class="cta-stats" data-r data-reveal-delay="300">
-        <div><strong>∞</strong><span>{copy.workflows}</span></div>
-        <div><strong>100%</strong><span>{copy.traceable}</span></div>
-        <div><strong>0</strong><span>{copy.blackBoxes}</span></div>
+          <div class="contact-direct-list">
+            <a href="tel:+17272824564" class="contact-direct-link">
+              <span class="contact-direct-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M7.2 4.5h3.1l1.2 4.1-1.9 1.9a15.4 15.4 0 0 0 3.9 3.9l1.9-1.9 4.1 1.2v3.1a1.2 1.2 0 0 1-1.2 1.2A13.8 13.8 0 0 1 4.5 5.7 1.2 1.2 0 0 1 5.7 4.5h1.5Z"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                </svg>
+              </span>
+              <span>+1 (727) 282-4564</span>
+            </a>
+
+            <a href="mailto:info@determinantsystems.com" class="contact-direct-link">
+              <span class="contact-direct-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M4 7.5A1.5 1.5 0 0 1 5.5 6h13A1.5 1.5 0 0 1 20 7.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 16.5v-9Z"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                  ></path>
+                  <path
+                    d="m5 8 7 5 7-5"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                </svg>
+              </span>
+              <span>info@determinantsystems.com</span>
+            </a>
+          </div>
+        </aside>
+
+        <form
+          class="contact-form-home"
+          action="https://formsubmit.co/d1e3b5774e70ec164af913ce6cee03da"
+          method="POST"
+        >
+          <input type="hidden" name="_subject" value="New contact form submission from determinantsystems.com" />
+          <input type="hidden" name="_next" value="https://determinantsystems.com/contact/success" />
+          <input type="hidden" name="_template" value="table" />
+          <input type="hidden" name="_replyto" value="email" />
+
+          <div class="field-row-home">
+            <label class="field-home">
+              <span>{copy.contactName}</span>
+              <input type="text" name="name" placeholder={copy.contactNamePlaceholder} required />
+            </label>
+
+            <label class="field-home">
+              <span>{copy.contactEmail}</span>
+              <input type="email" name="email" placeholder={copy.contactEmailPlaceholder} required />
+            </label>
+          </div>
+
+          <label class="field-home">
+            <span>{copy.contactCompany}</span>
+            <input type="text" name="company" placeholder={copy.contactCompanyPlaceholder} />
+          </label>
+
+          <label class="field-home">
+            <span>{copy.contactMessage}</span>
+            <textarea name="message" rows="6" placeholder={copy.contactMessagePlaceholder} required></textarea>
+          </label>
+
+          <div class="field-row-home">
+            <label class="field-home">
+              <span>{copy.contactTimeline}</span>
+              <select name="timeline">
+                {copy.contactTimelineOptions.map((option) => (
+                  <option>{option}</option>
+                ))}
+              </select>
+            </label>
+
+            <label class="field-home">
+              <span>{copy.contactDeployment}</span>
+              <select name="deployment">
+                {copy.contactDeploymentOptions.map((option) => (
+                  <option>{option}</option>
+                ))}
+              </select>
+            </label>
+          </div>
+
+          <button type="submit" class="submit-button-home">{copy.contactSubmit}</button>
+        </form>
       </div>
     </div>
   </section>

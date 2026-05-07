@@ -1728,6 +1728,48 @@ li {
   z-index: 1;
 }
 
+.official-home .coming-soon-lace {
+  position: relative;
+  z-index: 2;
+  min-height: 52svh;
+  display: grid;
+  place-items: center;
+  padding: clamp(5rem, 12vw, 9rem) 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  background:
+    linear-gradient(180deg, rgba(0, 255, 194, 0.04), rgba(5, 5, 5, 0.86) 64%),
+    #070707;
+}
+
+.official-home .coming-soon-lace-inner {
+  width: min(820px, 100%);
+  margin: 0 auto;
+  text-align: center;
+}
+
+.official-home .coming-soon-lace .section-kicker {
+  margin-bottom: 1.5rem;
+}
+
+.official-home .coming-soon-lace h2 {
+  margin: 0;
+  color: var(--oh-bright);
+  font-family: "Space Grotesk", "JetBrains Mono", monospace;
+  font-size: clamp(3rem, 9vw, 7.4rem);
+  font-weight: 900;
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+
+.official-home .coming-soon-lace p:not(.section-kicker) {
+  max-width: 620px;
+  margin: 1.35rem auto 0;
+  color: var(--oh-muted);
+  font-size: clamp(1rem, 1.6vw, 1.2rem);
+  line-height: 1.7;
+}
+
 .official-home .official-marquee {
   position: relative;
   z-index: 2;
@@ -3707,6 +3749,187 @@ li {
   letter-spacing: 0.24em;
 }
 
+.official-home .contact-cta .final-cta-content {
+  width: var(--oh-shell);
+  margin: 0 auto;
+  padding-bottom: 6rem;
+}
+
+.official-home .contact-cta-lede {
+  max-width: 620px;
+}
+
+.official-home .contact-cta-grid {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.7fr) minmax(360px, 1fr);
+  gap: clamp(1rem, 3vw, 2rem);
+  align-items: start;
+  margin-top: clamp(2.4rem, 5vw, 4rem);
+  text-align: left;
+}
+
+.official-home .contact-direct-card,
+.official-home .contact-form-home {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.018)),
+    rgba(9, 11, 14, 0.78);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.38);
+  backdrop-filter: blur(16px);
+}
+
+.official-home .contact-direct-card {
+  padding: clamp(1.3rem, 3vw, 2rem);
+}
+
+.official-home .contact-direct-card h3 {
+  margin: 0;
+  color: var(--oh-bright);
+  font-family: "Space Grotesk", "JetBrains Mono", monospace;
+  font-size: clamp(1.2rem, 2vw, 1.6rem);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+}
+
+.official-home .contact-direct-card p {
+  margin: 0.95rem 0 0;
+  color: #888;
+  line-height: 1.72;
+}
+
+.official-home .contact-direct-list {
+  display: grid;
+  gap: 0.85rem;
+  margin-top: 1.6rem;
+}
+
+.official-home .contact-direct-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: fit-content;
+  color: var(--oh-bright);
+  text-decoration: none;
+  line-height: 1.35;
+  transition: color 180ms ease;
+}
+
+.official-home .contact-direct-link:hover {
+  color: var(--oh-accent);
+}
+
+.official-home .contact-direct-icon {
+  display: inline-flex;
+  flex: 0 0 2.2rem;
+  align-items: center;
+  justify-content: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.official-home .contact-direct-icon svg {
+  display: block;
+  width: 1.05rem;
+  height: 1.05rem;
+}
+
+.official-home .contact-form-home {
+  display: grid;
+  gap: 1rem;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  color-scheme: dark;
+}
+
+.official-home .field-row-home {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.official-home .field-home {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.official-home .field-home span {
+  color: var(--oh-bright);
+  font-size: 0.92rem;
+}
+
+.official-home .field-home input,
+.official-home .field-home textarea,
+.official-home .field-home select {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background-color: #171a1f;
+  color: var(--oh-bright);
+  font: inherit;
+  padding: 0.95rem 1rem;
+  outline: none;
+  transition: border-color 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
+}
+
+.official-home .field-home textarea {
+  min-height: 10rem;
+  resize: vertical;
+}
+
+.official-home .field-home select {
+  padding-right: 3rem;
+  background-image:
+    linear-gradient(45deg, transparent 50%, rgba(243, 245, 248, 0.92) 50%),
+    linear-gradient(135deg, rgba(243, 245, 248, 0.92) 50%, transparent 50%);
+  background-position:
+    calc(100% - 1.1rem) calc(50% - 0.16rem),
+    calc(100% - 0.75rem) calc(50% - 0.16rem);
+  background-size: 0.38rem 0.38rem, 0.38rem 0.38rem;
+  background-repeat: no-repeat;
+}
+
+.official-home .field-home select option {
+  color: #f3f5f8;
+  background: #111418;
+}
+
+.official-home .field-home input::placeholder,
+.official-home .field-home textarea::placeholder {
+  color: rgba(243, 245, 248, 0.46);
+}
+
+.official-home .field-home input:focus,
+.official-home .field-home textarea:focus,
+.official-home .field-home select:focus {
+  border-color: rgba(0, 255, 194, 0.52);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 0 0 3px rgba(0, 255, 194, 0.12);
+}
+
+.official-home .submit-button-home {
+  justify-self: start;
+  border: 0;
+  background: linear-gradient(135deg, var(--oh-accent-2), var(--oh-accent));
+  color: #000;
+  font: inherit;
+  font-family: "Space Grotesk", "JetBrains Mono", monospace;
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.95rem 1.4rem;
+  cursor: pointer;
+  transition: transform 160ms ease, background 160ms ease;
+}
+
+.official-home .submit-button-home:hover {
+  transform: translateY(-1px);
+  background: #fff;
+}
+
 .official-home .official-footer {
   position: relative;
   z-index: 2;
@@ -4279,6 +4502,17 @@ li {
 
   .official-home .final-cta p {
     max-width: 100%;
+  }
+
+  .official-home .contact-cta .final-cta-content {
+    width: min(100%, calc(100% - 2rem));
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .official-home .contact-cta-grid,
+  .official-home .field-row-home {
+    grid-template-columns: 1fr;
   }
 
   .official-home .cta-stats {

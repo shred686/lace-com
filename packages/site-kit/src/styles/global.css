@@ -2833,6 +2833,14 @@ li {
   pointer-events: none;
 }
 
+.official-home.lace-platform-home .problem-scroll-section {
+  min-height: 860svh;
+}
+
+.official-home.lace-platform-home .problem-platform-anchor {
+  top: 577svh;
+}
+
 .official-home .problem-scroll-pin {
   position: sticky;
   top: 0;
@@ -4129,6 +4137,14 @@ li {
 
   .official-home .problem-platform-anchor {
     top: 327svh;
+  }
+
+  .official-home.lace-platform-home .problem-scroll-section {
+    min-height: 430svh;
+  }
+
+  .official-home.lace-platform-home .problem-platform-anchor {
+    top: 252svh;
   }
 
   .official-home .problem-scroll-pin::before {

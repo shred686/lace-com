@@ -457,6 +457,7 @@ const year = new Date().getFullYear();
     if (!line || !finalLine || !laceLine || !word || !slot || !copyBlock || !platformPreview || !zone || !veil || !home) return;
 
     const configuredWords = (line.getAttribute("data-problem-words") || "fast.|smart.|impressive.").split("|");
+    const problemAutoplayEnabled = false;
     let activeWord = configuredWords[0];
     let isLight = false;
     let flashTimer = 0;
@@ -514,6 +515,7 @@ const year = new Date().getFullYear();
       const isMobile = window.innerWidth <= 680;
       const storyEnd = isMobile ? 0.756 : 0.78;
       const storyProgress = clampValue(progress / storyEnd, 0, 1);
+      const laceRevealStart = 0.94;
       const labelHoldEnd = 0.055;
       const labelSettleEnd = 0.14;
       const entryEase = easeOut(entryProgress);
@@ -560,9 +562,9 @@ const year = new Date().getFullYear();
       section.classList.toggle("is-label-visible", progress >= 0);
       line.classList.toggle("is-visible", storyProgress >= 0.14 && storyProgress < 0.76);
       line.classList.toggle("is-exiting", storyProgress >= 0.73 && storyProgress < 0.78);
-      finalLine.classList.toggle("is-visible", storyProgress >= 0.74 && storyProgress < 0.94);
-      laceLine.classList.toggle("is-visible", storyProgress >= 0.94);
-      setLight(storyProgress >= 0.84);
+      finalLine.classList.toggle("is-visible", storyProgress >= 0.74 && storyProgress < laceRevealStart);
+      laceLine.classList.toggle("is-visible", storyProgress >= laceRevealStart);
+      setLight(storyProgress >= laceRevealStart);
 
       const previewStart = storyEnd;
       const previewEnd = 1;
@@ -596,7 +598,71 @@ const year = new Date().getFullYear();
       raf = requestAnimationFrame(update);
     };
 
+    const startProblemAutoplay = () => {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+      const getBounds = () => {
+        const rect = section.getBoundingClientRect();
+        const top = rect.top + window.scrollY;
+        const travel = Math.max(1, section.scrollHeight - window.innerHeight);
+        const isMobile = window.innerWidth <= 680;
+        const storyEnd = isMobile ? 0.756 : 0.78;
+        const previewPeekProgress = storyEnd + (isMobile ? 0.085 : 0.05);
+        return {
+          start: top,
+          end: top + travel * previewPeekProgress
+        };
+      };
+
+      let autoplayRaf = 0;
+      let lastFrame = 0;
+      let userScrollUntil = 0;
+
+      const noteUserScroll = () => {
+        userScrollUntil = performance.now() + 180;
+      };
+
+      window.addEventListener("wheel", noteUserScroll, { passive: true });
+      window.addEventListener("touchmove", noteUserScroll, { passive: true });
+      window.addEventListener("keydown", (event) => {
+        const scrollingKeys = [" ", "ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End"];
+        if (scrollingKeys.includes(event.key)) noteUserScroll();
+      });
+
+      const step = (timestamp) => {
+        const { start, end } = getBounds();
+        const currentY = window.scrollY;
+
+        if (currentY >= end - 1 || currentY < start - window.innerHeight * 0.2) {
+          autoplayRaf = 0;
+          return;
+        }
+
+        if (!lastFrame) lastFrame = timestamp;
+        const elapsed = Math.min(80, timestamp - lastFrame);
+        lastFrame = timestamp;
+
+        if (performance.now() < userScrollUntil) {
+          autoplayRaf = requestAnimationFrame(step);
+          return;
+        }
+
+        const autoplayDuration = 8400;
+        const distance = ((end - start) / autoplayDuration) * elapsed;
+        const nextY = Math.min(end, Math.max(start, currentY) + distance);
+
+        window.scrollTo(window.scrollX, nextY);
+        requestUpdate();
+        autoplayRaf = requestAnimationFrame(step);
+      };
+
+      window.setTimeout(() => {
+        if (!autoplayRaf) autoplayRaf = requestAnimationFrame(step);
+      }, 1000);
+    };
+
     update();
+    if (problemAutoplayEnabled) startProblemAutoplay();
     window.addEventListener("scroll", requestUpdate, { passive: true });
     window.addEventListener("resize", requestUpdate);
   })();
@@ -865,8 +931,8 @@ const year = new Date().getFullYear();
       links = [];
       layers = [];
       const isSmall = W <= 680;
-      const counts = isSmall ? [1, 4, 4, 1] : [1, 5, 6, 1];
-      const layerX = isSmall ? [0.055, 0.32, 0.68, 0.945] : [0.045, 0.31, 0.69, 0.955];
+      const counts = isSmall ? [1, 8, 8, 8, 1] : [1, 10, 12, 10, 1];
+      const layerX = isSmall ? [0.055, 0.27, 0.5, 0.73, 0.945] : [0.045, 0.26, 0.5, 0.74, 0.955];
       const centerY = H * 0.5;
       const spread = Math.min(H * (isSmall ? 0.56 : 0.62), isSmall ? 430 : 560);
 
@@ -906,32 +972,36 @@ const year = new Date().getFullYear();
         for (let ordinal = 0; ordinal < count; ordinal += 1) {
           const t = count === 1 ? 0.5 : ordinal / (count - 1);
           const y = count === 1 ? centerY : centerY - spread / 2 + spread * t;
-          const xJitter = count === 1 ? 0 : (Math.random() - 0.5) * (isSmall ? 10 : 22);
-          const yJitter = count === 1 ? (Math.random() - 0.5) * 24 : (Math.random() - 0.5) * 28;
-          layerNodes.push(addNode(x + xJitter, y + yJitter, layer, ordinal));
+          layerNodes.push(addNode(x, y, layer, ordinal));
         }
         layers.push(layerNodes);
       });
 
-      layers[0].forEach((source) => {
-        layers[1].forEach((target) => addLink(source, target));
-      });
+      layers.slice(0, -1).forEach((sourceLayer, layerIndex) => {
+        const targetLayer = layers[layerIndex + 1];
+        const isEdgeHop = layerIndex === 0 || layerIndex === layers.length - 2;
 
-      layers[1].forEach((source, sourceIndex) => {
-        const targetCount = layers[2].length;
-        const targetOrdinals = new Set([
-          sourceIndex % targetCount,
-          (targetCount - 1 - sourceIndex + targetCount) % targetCount,
-          (sourceIndex + 2) % targetCount
-        ]);
+        sourceLayer.forEach((source, sourceIndex) => {
+          if (isEdgeHop) {
+            targetLayer.forEach((target) => addLink(source, target));
+            return;
+          }
 
-        targetOrdinals.forEach((targetOrdinal) => {
-          addLink(source, layers[2][targetOrdinal]);
+          const targetCount = targetLayer.length;
+          const sourceCount = sourceLayer.length;
+          const projected = sourceCount === 1 ? 0 : Math.round((sourceIndex / (sourceCount - 1)) * (targetCount - 1));
+          const shift = Math.max(2, Math.round(targetCount * 0.32));
+          const targetOrdinals = new Set([
+            projected,
+            targetCount - 1 - projected,
+            (projected + shift) % targetCount,
+            (projected + targetCount - Math.max(1, Math.round(shift * 0.62))) % targetCount
+          ]);
+
+          targetOrdinals.forEach((targetOrdinal) => {
+            addLink(source, targetLayer[targetOrdinal]);
+          });
         });
-      });
-
-      layers[2].forEach((source) => {
-        layers[3].forEach((target) => addLink(source, target));
       });
     };
 
@@ -950,49 +1020,85 @@ const year = new Date().getFullYear();
     const linkDelay = (link, stageIndex) => {
       const from = nodes[link.a];
       const to = nodes[link.b];
-      if (stageIndex === 0) return to.ordinal * 34;
-      if (stageIndex === 2) return from.ordinal * 30;
-      return (from.ordinal * 24 + to.ordinal * 17 + link.seed * 42) % 150;
+      const lastStageIndex = layers.length - 2;
+      if (stageIndex === 0) return to.ordinal * 48;
+      if (stageIndex === lastStageIndex) return from.ordinal * 44;
+      return (from.ordinal * 34 + to.ordinal * 25 + link.seed * 68) % 230;
     };
 
     const spawnSignal = (now) => {
-      if (signals.length > 1 || layers.length < 4) return;
+      if (signals.length > 1 || layers.length < 2) return;
       const direction = nextSignalDirection;
       const isBackward = direction === "backward";
       nextSignalDirection = isBackward ? "forward" : "backward";
       const traceMs = isBackward ? 440 + Math.random() * 80 : 540 + Math.random() * 90;
-      const stageGap = isBackward ? 85 : 110;
-      const stages = [0, 1, 2].map((stageIndex) => {
-        const fromLayer = isBackward ? 3 - stageIndex : stageIndex;
-        const toLayer = isBackward ? 2 - stageIndex : stageIndex + 1;
-        const stageLinks = isBackward
-          ? layerLinks(toLayer, fromLayer).map((link) => ({
+      const stageGap = isBackward ? 125 : 155;
+      const lastLayerIndex = layers.length - 1;
+      const chooseTargets = (layerIndex) => {
+        const layerNodes = layers[layerIndex];
+        if (layerIndex === 0 || layerIndex === lastLayerIndex) return layerNodes;
+
+        const minActive = Math.max(2, Math.floor(layerNodes.length * 0.36));
+        const maxActive = Math.max(minActive, layerNodes.length - 1);
+        const activeCount = minActive + Math.floor(Math.random() * (maxActive - minActive + 1));
+        return layerNodes
+          .map((node) => ({ node, sort: Math.random() }))
+          .sort((a, b) => a.sort - b.sort)
+          .slice(0, activeCount)
+          .map(({ node }) => node);
+      };
+
+      const buildStages = () => {
+        let activeSources = new Set([isBackward ? layers[lastLayerIndex][0] : layers[0][0]]);
+        const builtStages = [];
+
+        for (let stageIndex = 0; stageIndex < lastLayerIndex; stageIndex += 1) {
+          const fromLayer = isBackward ? lastLayerIndex - stageIndex : stageIndex;
+          const toLayer = isBackward ? lastLayerIndex - stageIndex - 1 : stageIndex + 1;
+          const targetPool = new Set(chooseTargets(toLayer));
+          const stageLinks = (isBackward
+            ? layerLinks(toLayer, fromLayer).map((link) => ({
+                ...link,
+                a: link.b,
+                b: link.a,
+                fromLayer,
+                toLayer
+              }))
+            : layerLinks(fromLayer, toLayer)
+          ).filter((link) => activeSources.has(link.a) && targetPool.has(link.b));
+
+          if (!stageLinks.length) return null;
+
+          builtStages.push({
+            startOffset: stageIndex * (traceMs + stageGap),
+            traceMs,
+            links: stageLinks.map((link) => ({
               ...link,
-              a: link.b,
-              b: link.a,
-              fromLayer,
-              toLayer
+              delay: linkDelay(link, stageIndex)
             }))
-          : layerLinks(fromLayer, toLayer);
+          });
 
-        return {
-          startOffset: stageIndex * (traceMs + stageGap),
-          traceMs,
-          links: stageLinks.map((link) => ({
-            ...link,
-            delay: linkDelay(link, stageIndex)
-          }))
-        };
-      });
+          activeSources = new Set(stageLinks.map((link) => link.b));
+        }
 
-      if (stages.some((stage) => !stage.links.length)) return;
-      signals.push({
+        return builtStages;
+      };
+
+      let stages = null;
+      for (let attempt = 0; attempt < 6 && !stages; attempt += 1) {
+        stages = buildStages();
+      }
+
+      if (!stages) return null;
+      const signal = {
         stages,
         direction,
-        source: isBackward ? layers[3][0] : layers[0][0],
+        source: isBackward ? layers[lastLayerIndex][0] : layers[0][0],
         start: now,
         glowMs: isBackward ? 560 : 700
-      });
+      };
+      signals.push(signal);
+      return signal;
     };
 
     const stageEnd = (stage) => {
@@ -1018,10 +1124,9 @@ const year = new Date().getFullYear();
     };
 
     const updateNodePositions = (now) => {
-      const drift = W <= 680 ? 4 : 7;
       nodes.forEach((node) => {
-        node.x = node.bx + Math.sin(now * 0.00018 + node.phase) * drift;
-        node.y = node.by + Math.cos(now * 0.00016 + node.phase * 0.7) * drift * 0.55;
+        node.x = node.bx;
+        node.y = node.by;
         node.g = Math.max(0, node.g - 0.018);
       });
     };
@@ -1133,14 +1238,15 @@ const year = new Date().getFullYear();
       ctx.clearRect(0, 0, W, H);
       updateNodePositions(now);
 
-      if (now >= nextSignalAt) {
-        spawnSignal(now);
-        nextSignalAt = now + 1600 + Math.random() * 1800;
-      }
-
       drawIdleNetwork(C);
       signals = signals.filter((signal) => drawSignal(signal, now, C));
       drawNodes(C);
+
+      if (signals.length === 0 && now >= nextSignalAt) {
+        const signal = spawnSignal(now);
+        const roundPause = signal?.direction === "forward" ? 120 + Math.random() * 120 : 1200 + Math.random() * 1400;
+        nextSignalAt = signal ? now + signalDuration(signal) + roundPause : now + 600;
+      }
 
       raf = requestAnimationFrame(draw);
     };

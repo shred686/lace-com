@@ -1,0 +1,1157 @@
+---
+import { Image } from "astro:assets";
+import { getHomeNewContent } from "../data/homeNewContent";
+import WorkflowStorySection from "./workflow-story/WorkflowStorySection.astro";
+import whitepaperEnglish from "../assets/docs/lace_enterprise_overview_v2_ENGLISH.pdf";
+import laceScreen2 from "../assets/images/lace-screen2.png";
+
+const {
+  assuranceTags,
+  capabilities,
+  deploymentOptions,
+  trustItems,
+  useCases
+} = getHomeNewContent("en");
+
+const copy = {
+  toggleNav: "Toggle navigation",
+  navPlatform: "Platform",
+  navUseCases: "Use Cases",
+  navTrust: "Trust",
+  navContact: "Contact us",
+  introLabel: "The Problem",
+  ourPlatformTitle: "Introducing LACE.",
+  ourPlatformBody:
+    "LACE is an enterprise AI platform that turns business workflows into governed, repeatable systems. You define what the process should do — the inputs, the rules, the outputs — and LACE compiles it into a pipeline that runs AI inside controlled steps, validates every result before it counts, and keeps a complete record of everything that happened.",
+  platformIntroTitleAccent: "AGENTIC AI",
+  platformIntroTitleRestLines: ["POLICY GOVERNED,", "WITH AN AUDIT TRAIL"],
+  ragTitleStruck: "Chat over your documents",
+  ragTitleActive: "Unlock intelligence over your entire enterprise",
+  ragTitleActiveLines: ["Unlock intelligence", "over your entire enterprise"],
+  ragOverviewTitle: "Retrieval Augmented Generation",
+  ragOverviewLead: "Most RAG products retrieve TEXT. LACE retrieves EVIDENCE.",
+  ragOverviewBody:
+    "This is the difference between a system that sounds right and a system that can prove it.",
+  ragOverviewItems: [
+    {
+      title: "Documents, fully understood",
+      body: [
+        "Documents aren't flattened - they're modeled.",
+        "Tables, charts, clauses, sections, and narrative context become a structured, multimodal system the model can reason over."
+      ]
+    },
+    {
+      title: "Evidence, not chunks",
+      body: [
+        "Facts, claims, table cells, visual regions, and source links are first-class objects.",
+        "Text chunks are just one projection, not the foundation."
+      ]
+    },
+    {
+      title: "Retrieval that matches the question",
+      body: [
+        "Every question is different.",
+        "Numeric lookup, table execution, semantic search, graph traversal, multi-hop reasoning: LACE routes the query before it spends compute."
+      ]
+    },
+    {
+      title: "Answers from the right source",
+      body: [
+        "If the answer is a number, it comes from a table. If it's an explanation, it comes from context.",
+        "No more guessing from paragraphs."
+      ]
+    },
+    {
+      title: "A graph of evidence",
+      body: [
+        "Every piece of evidence is connected:",
+        "What happened -> where it appears -> what explains it -> what supports or contradicts it",
+        "The system doesn't just retrieve; it reasons over relationships."
+      ]
+    },
+    {
+      title: "When search isn't enough",
+      body: [
+        "Some questions require everything.",
+        "Audits, trend analysis, full-corpus comparisons: LACE can shift from retrieval to exhaustive processing when precision matters."
+      ]
+    },
+    {
+      title: "Answers you can trust",
+      body: [
+        "Every response is grounded in structured evidence.",
+        "Generation and verification are separated, so you can inspect the reasoning before trusting the output."
+      ]
+    }
+  ],
+  capabilitiesLabel: "Platform Capabilities",
+  capabilitiesTitle: "What makes LACE different from an AI wrapper.",
+  capabilitiesBody:
+    "LACE isn't a thin layer on top of an AI API. It's a full execution environment - with type-checked pipelines, a policy enforcement layer, full provenance on every output, and a publishing system that turns proven workflows into deployable software.",
+  useCasesLabel: "Use Cases",
+  useCasesTitle: "Every business has a process that AI could handle - but can't trust it to.",
+  useCasesBody:
+    "LACE gives AI the structure, the rules, and the oversight that makes it usable in real business environments.",
+  trustTitle: "Trust controls",
+  trustHeading: "AI you can audit, not AI that is usually right.",
+  deploymentTitle: "Deployment options",
+  deploymentHeading: "Deploy anywhere. Your environment, your rules.",
+  ctaLabel: "Get started",
+  ctaTitle: "Ready to run AI the right way?",
+  ctaTitleAccent: "the right way?",
+  ctaBody:
+    "Tell us what process you're trying to govern. We'll show you how LACE handles it - or build it for you.",
+  ctaPrimary: "Talk to us",
+  ctaSecondary: "Download the enterprise overview ->",
+  workflows: "Workflows",
+  traceable: "Traceable",
+  blackBoxes: "Black Boxes",
+  footerTagline: "Enterprise AI infrastructure",
+  security: "Security",
+  privacy: "Privacy"
+};
+
+const useCaseIcons = ["->", "[]", "+", "<>", "...", "##"];
+const problemLeadStart = "Most AI tools are";
+const problemSlotWords = ["fast.", "smart.", "impressive."];
+const problemFinalLine = "None are trustworthy.";
+const getBodyParagraphs = (body: string | string[]) =>
+  Array.isArray(body) ? body : [body];
+const year = new Date().getFullYear();
+---
+
+<main class="official-home lace-platform-home">
+  <canvas id="neural-canvas" class="neural-canvas" aria-hidden="true"></canvas>
+  <div class="scan-line" aria-hidden="true"></div>
+
+  <header id="topnav" class="official-topnav" data-r>
+    <div class="official-topnav-inner">
+      <a href="/" class="brand-mark">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+          <circle cx="9" cy="9" r="3" fill="#00FFC2"></circle>
+          <circle cx="9" cy="9" r="6.5" stroke="#00FFC2" stroke-width="0.5" opacity="0.4"></circle>
+          <circle cx="9" cy="9" r="9" stroke="#00FFC2" stroke-width="0.3" opacity="0.15"></circle>
+        </svg>
+        <span>LACE</span>
+      </a>
+
+      <button class="official-topnav-toggle" type="button" aria-expanded="false" aria-label={copy.toggleNav}>
+        <span></span>
+        <span></span>
+      </button>
+
+      <div class="official-topnav-panel" id="topNavPanel">
+        <nav class="official-topnav-links" aria-label="Primary">
+          <a href="#platform">{copy.navPlatform}</a>
+          <a href="#use-cases">{copy.navUseCases}</a>
+          <a href="#trust">{copy.navTrust}</a>
+        </nav>
+
+        <div class="official-topnav-actions">
+          <a href="/contact" class="nav-deploy-link">{copy.navContact}</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="company-intro problem-scroll-section section-shell" data-problem-scroll>
+    <span id="platform" class="problem-platform-anchor" aria-hidden="true"></span>
+    <div class="problem-scroll-pin">
+      <div class="problem-scroll-copy" data-problem-copy>
+        <p class="section-kicker problem-scroll-kicker">{copy.introLabel}</p>
+        <h2 class="problem-scroll-line" data-problem-line data-problem-words={problemSlotWords.join("|")}>
+          <span>{problemLeadStart}</span>
+          <span class="problem-slot" aria-live="polite">
+            <span data-problem-word>{problemSlotWords[0]}</span>
+          </span>
+        </h2>
+        <h2 class="problem-scroll-final lace-accent-word" data-problem-final>{problemFinalLine}</h2>
+        <h2
+          class="problem-scroll-lace"
+          data-problem-lace
+          set:html={copy.ourPlatformTitle.replace("LACE", '<span class="lace-accent-word">LACE</span>')}
+        ></h2>
+      </div>
+
+      <div class="problem-platform-preview" data-platform-preview aria-label="LACE platform screenshot">
+        <figure class="problem-platform-card problem-platform-card-front">
+          <Image
+            src={laceScreen2}
+            alt="LACE platform workflow orchestration screenshot"
+            class="problem-platform-shot-image"
+            widths={[760, 980, 1260, 1500]}
+            sizes="(max-width: 980px) 96vw, 72vw"
+          />
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <div id="light-zone" class="lace-light-zone">
+
+    <section class="platform-intro section-shell">
+      <div class="platform-intro-layout" data-r>
+        <div class="platform-intro-copy">
+          <h2 class="platform-intro-title">
+            <span class="platform-intro-title-accent">{copy.platformIntroTitleAccent}</span>
+            <span class="platform-intro-title-rest">
+              {copy.platformIntroTitleRestLines.map((line, index) => (
+                <>
+                  {line}
+                  {index < copy.platformIntroTitleRestLines.length - 1 && <br />}
+                </>
+              ))}
+            </span>
+          </h2>
+          <p class="platform-intro-body">{copy.ourPlatformBody}</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="neural-separator section-shell" aria-hidden="true"></div>
+
+    <WorkflowStorySection
+      locale="en"
+      headlineLead="AI that is Grounded"
+      headlineAccent=" In your business."
+    />
+
+    <div class="neural-separator section-shell" aria-hidden="true"></div>
+
+    <section class="how-it-works rag-overview section-shell">
+      <div class="rag-scroll-stage" data-rag-scroll>
+        <div class="rag-scroll-pin">
+          <div class="rag-scroll-copy">
+            <h2 class="rag-scroll-title" aria-label={`${copy.ragTitleStruck}. ${copy.ragTitleActive}`}>
+              <s class="rag-scroll-struck">{copy.ragTitleStruck}</s>
+              <span class="rag-scroll-active" aria-hidden="true">
+                {copy.ragTitleActiveLines.map((line) => (
+                  <span>{line}</span>
+                ))}
+              </span>
+            </h2>
+          </div>
+        </div>
+      </div>
+
+      <div class="rag-overview-content">
+        <h2 class="rag-overview-title" data-r data-reveal-delay="0">{copy.ragOverviewTitle}</h2>
+
+        <div class="rag-overview-intro" data-r data-reveal-delay="80">
+          <p class="rag-overview-lead">{copy.ragOverviewLead}</p>
+          <p>{copy.ragOverviewBody}</p>
+        </div>
+
+        <div class="rag-overview-grid">
+          {copy.ragOverviewItems.map((item, index) => (
+            <article class="glass-card rag-evidence-card" data-r data-reveal-delay={180 + index * 55}>
+              <span class="rag-evidence-index">{String(index + 1).padStart(2, "0")}</span>
+              <div>
+                <h3>{item.title}</h3>
+                {getBodyParagraphs(item.body).map((paragraph) => (
+                  <p>{paragraph}</p>
+                ))}
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <div class="neural-separator section-shell" aria-hidden="true"></div>
+
+    <section class="platform-capabilities section-shell">
+      <div class="section-head" data-r>
+        <p class="section-kicker">{copy.capabilitiesLabel}</p>
+        <h2>{copy.capabilitiesTitle}</h2>
+        <p>{copy.capabilitiesBody}</p>
+      </div>
+
+      <div class="capabilities-grid">
+        {capabilities.map((cap, index) => (
+          <article class="glass-card capability-card" data-r data-reveal-delay={80 + index * 60}>
+            <span class="capability-icon">{cap.icon}</span>
+            <h4>{cap.title}</h4>
+            <p>{cap.body}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <div class="neural-separator section-shell" aria-hidden="true"></div>
+
+    <section id="use-cases" class="use-cases section-shell">
+      <div class="section-head use-cases-head-new" data-r>
+        <p class="section-kicker">{copy.useCasesLabel}</p>
+        <h2>{copy.useCasesTitle}</h2>
+        <p>{copy.useCasesBody}</p>
+      </div>
+
+      <div class="use-case-card-grid" data-r>
+        {useCases.map((useCase, index) => (
+          <article class="use-case-hover-card glass-card" data-r data-reveal-delay={80 + index * 45}>
+            <span class="use-case-hover-icon">{useCaseIcons[index % useCaseIcons.length]}</span>
+            <div class="use-case-hover-content">
+              <h3>{useCase.tabTitle}</h3>
+              <p>{useCase.summary}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <div class="neural-separator section-shell" aria-hidden="true"></div>
+
+    <section id="trust" class="trust-and-deploy section-shell">
+      <div class="official-marquee reverse" aria-hidden="true">
+        <div class="marquee-fade-left"></div>
+        <div class="marquee-fade-right"></div>
+        <div class="mq-track mq-track-r">
+          {[...assuranceTags, ...assuranceTags].map((tag) => (
+            <>
+              <span>{tag}</span>
+              <strong>-</strong>
+            </>
+          ))}
+        </div>
+      </div>
+
+      <div class="trust-grid">
+        <article class="glass-card trust-panel" data-r data-reveal-delay="80">
+          <p class="section-kicker">{copy.trustTitle}</p>
+          <h3>{copy.trustHeading}</h3>
+          <ul>
+            {trustItems.map((item) => (
+              <li>{item}</li>
+            ))}
+          </ul>
+        </article>
+
+        <article class="glass-card trust-panel" data-r data-reveal-delay="180">
+          <p class="section-kicker">{copy.deploymentTitle}</p>
+          <h3>{copy.deploymentHeading}</h3>
+          <ul>
+            {deploymentOptions.map((item) => (
+              <li>{item}</li>
+            ))}
+          </ul>
+          <div class="deploy-tags">
+            <span>SaaS</span>
+            <span>On-Prem</span>
+            <span>Air-Gapped</span>
+            <span>Private Cloud</span>
+          </div>
+        </article>
+      </div>
+    </section>
+  </div>
+
+  <div id="lace-flash-veil" aria-hidden="true"></div>
+
+  <section id="cta-section" class="final-cta">
+    <canvas id="cta-canvas" class="cta-canvas" aria-hidden="true"></canvas>
+    <div class="cta-vignette" aria-hidden="true"></div>
+
+    <div class="final-cta-content section-shell">
+      <div class="cta-pill" data-r>
+        <div class="pulse-dot tiny"></div>
+        <span>{copy.ctaLabel}</span>
+      </div>
+
+      <h2 data-r data-reveal-delay="60" set:html={copy.ctaTitle.replace(copy.ctaTitleAccent, `<span class="lace-accent-word">${copy.ctaTitleAccent}</span>`)}></h2>
+
+      <p data-r data-reveal-delay="140">{copy.ctaBody}</p>
+
+      <div class="hero-actions cta-actions" data-r data-reveal-delay="220">
+        <a href="/contact" class="hero-btn hero-btn-primary">{copy.ctaPrimary}</a>
+        <a href={whitepaperEnglish} target="_blank" rel="noopener noreferrer" class="hero-btn hero-btn-ghost">{copy.ctaSecondary}</a>
+      </div>
+
+      <div class="cta-stats" data-r data-reveal-delay="300">
+        <div><strong>∞</strong><span>{copy.workflows}</span></div>
+        <div><strong>100%</strong><span>{copy.traceable}</span></div>
+        <div><strong>0</strong><span>{copy.blackBoxes}</span></div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="official-footer">
+    <div class="section-shell footer-inner">
+      <div>
+        <div class="footer-brand">
+          <svg width="14" height="14" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+            <circle cx="9" cy="9" r="3" fill="#00FFC2"></circle>
+            <circle cx="9" cy="9" r="6.5" stroke="#00FFC2" stroke-width="0.5" opacity="0.4"></circle>
+          </svg>
+          <span>LACE</span>
+        </div>
+        <p>© {year} LACE // {copy.footerTagline}</p>
+      </div>
+      <div class="footer-links">
+        <a href="#">{copy.security}</a>
+        <a href="#">{copy.privacy}</a>
+      </div>
+    </div>
+  </footer>
+</main>
+
+<script>
+  (() => {
+    const topnav = document.getElementById("topnav");
+    const toggle = document.querySelector(".official-topnav-toggle");
+    const panel = document.getElementById("topNavPanel");
+
+    if (topnav && toggle && panel) {
+      const setOpen = (open) => {
+        topnav.classList.toggle("is-open", open);
+        toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      };
+
+      toggle.addEventListener("click", () => {
+        const open = !topnav.classList.contains("is-open");
+        setOpen(open);
+      });
+
+      panel.querySelectorAll("a").forEach((link) => {
+        link.addEventListener("click", () => setOpen(false));
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") setOpen(false);
+      });
+
+      document.addEventListener("click", (event) => {
+        if (!topnav.contains(event.target)) setOpen(false);
+      });
+
+      let navRaf = 0;
+      const updateNav = () => {
+        navRaf = 0;
+        const progress = Math.min(1, Math.max(0, (window.scrollY - 20) / 100));
+        topnav.style.setProperty("--nav-progress", String(progress));
+      };
+      const requestNav = () => {
+        if (navRaf) return;
+        navRaf = requestAnimationFrame(updateNav);
+      };
+      updateNav();
+      window.addEventListener("scroll", requestNav, { passive: true });
+      window.addEventListener("resize", requestNav);
+    }
+  })();
+
+  (() => {
+    const section = document.querySelector("[data-problem-scroll]");
+    if (!section) return;
+
+    const line = section.querySelector("[data-problem-line]");
+    const finalLine = section.querySelector("[data-problem-final]");
+    const laceLine = section.querySelector("[data-problem-lace]");
+    const word = section.querySelector("[data-problem-word]");
+    const copyBlock = section.querySelector("[data-problem-copy]");
+    const platformPreview = section.querySelector("[data-platform-preview]");
+    const slot = word ? word.parentElement : null;
+    const zone = document.getElementById("light-zone");
+    const veil = document.getElementById("lace-flash-veil");
+    const home = document.querySelector(".official-home");
+    if (!line || !finalLine || !laceLine || !word || !slot || !copyBlock || !platformPreview || !zone || !veil || !home) return;
+
+    const configuredWords = (line.getAttribute("data-problem-words") || "fast.|smart.|impressive.").split("|");
+    let activeWord = configuredWords[0];
+    let isLight = false;
+    let flashTimer = 0;
+    let flipTimer = 0;
+    let raf = 0;
+
+    const clearFlash = () => {
+      if (flashTimer) window.clearTimeout(flashTimer);
+      flashTimer = 0;
+      veil.classList.remove("flash-to-light", "flash-to-dark");
+    };
+
+    const applyLight = (on) => {
+      section.classList.toggle("is-light", on);
+      zone.classList.toggle("is-light", on);
+      home.classList.toggle("canvas-dim", on);
+    };
+
+    const setLight = (on) => {
+      if (on === isLight) return;
+      isLight = on;
+      clearFlash();
+      veil.classList.add(on ? "flash-to-light" : "flash-to-dark");
+      flashTimer = window.setTimeout(() => {
+        applyLight(on);
+        flashTimer = 0;
+      }, 90);
+      window.setTimeout(clearFlash, 520);
+    };
+
+    const setWord = (nextWord) => {
+      if (nextWord === activeWord) return;
+      activeWord = nextWord;
+      slot.classList.remove("is-flipping");
+      void slot.offsetWidth;
+      slot.classList.add("is-flipping");
+      if (flipTimer) window.clearTimeout(flipTimer);
+      flipTimer = window.setTimeout(() => {
+        word.textContent = nextWord;
+        flipTimer = 0;
+      }, 170);
+    };
+
+    const update = () => {
+      raf = 0;
+      const rect = section.getBoundingClientRect();
+      const travel = Math.max(1, rect.height - window.innerHeight);
+      const progress = Math.min(1, Math.max(0, -rect.top / travel));
+      const clampValue = (value, min, max) => Math.min(max, Math.max(min, value));
+      const easeOut = (value) => 1 - Math.pow(1 - value, 3);
+      const easeInOut = (value) =>
+        value < 0.5 ? 4 * value * value * value : 1 - Math.pow(-2 * value + 2, 3) / 2;
+      const lerp = (start, end, value) => start + (end - start) * value;
+      const entryProgress = clampValue(1 - rect.top / window.innerHeight, 0, 1);
+      const isMobile = window.innerWidth <= 680;
+      const storyEnd = isMobile ? 0.756 : 0.78;
+      const storyProgress = clampValue(progress / storyEnd, 0, 1);
+      const labelHoldEnd = 0.055;
+      const labelSettleEnd = 0.14;
+      const entryEase = easeOut(entryProgress);
+      const labelStartScale = isMobile ? 0.82 : 0.72;
+      const labelPeakScale = isMobile ? 2.05 : 3.35;
+      const labelStartY = isMobile ? 0.8 : 1.4;
+      const labelPeakY = isMobile ? 3.8 : 7.2;
+      const labelStartLetter = isMobile ? 0.34 : 0.46;
+      const labelPeakLetter = isMobile ? 0.24 : 0.34;
+      const labelSettleLetter = isMobile ? 0.24 : 0.3;
+      let labelScale = lerp(labelStartScale, labelPeakScale, entryEase);
+      let labelY = lerp(labelStartY, labelPeakY, entryEase);
+      let labelLetter = lerp(labelStartLetter, labelPeakLetter, entryEase);
+      let labelGlow = entryEase;
+      let labelOpacity = entryProgress;
+
+      if (storyProgress > 0 && storyProgress < labelHoldEnd) {
+        labelScale = labelPeakScale;
+        labelY = labelPeakY;
+        labelLetter = labelPeakLetter;
+        labelGlow = 1;
+        labelOpacity = 1;
+      } else if (storyProgress >= labelHoldEnd && storyProgress < labelSettleEnd) {
+        const settleProgress = easeOut((storyProgress - labelHoldEnd) / (labelSettleEnd - labelHoldEnd));
+        labelScale = lerp(labelPeakScale, 1, settleProgress);
+        labelY = lerp(labelPeakY, 0, settleProgress);
+        labelLetter = lerp(labelPeakLetter, labelSettleLetter, settleProgress);
+        labelGlow = lerp(1, 0.28, settleProgress);
+        labelOpacity = 1;
+      } else if (storyProgress >= labelSettleEnd) {
+        labelScale = 1;
+        labelY = 0;
+        labelLetter = labelSettleLetter;
+        labelGlow = 0.28;
+        labelOpacity = 1;
+      }
+
+      section.style.setProperty("--problem-kicker-scale", String(labelScale));
+      section.style.setProperty("--problem-kicker-y", `${labelY}svh`);
+      section.style.setProperty("--problem-kicker-letter", `${labelLetter}em`);
+      section.style.setProperty("--problem-kicker-glow", String(labelGlow));
+      section.style.setProperty("--problem-kicker-opacity", String(labelOpacity));
+
+      section.classList.toggle("is-label-visible", progress >= 0);
+      line.classList.toggle("is-visible", storyProgress >= 0.14 && storyProgress < 0.76);
+      line.classList.toggle("is-exiting", storyProgress >= 0.73 && storyProgress < 0.78);
+      finalLine.classList.toggle("is-visible", storyProgress >= 0.74 && storyProgress < 0.94);
+      laceLine.classList.toggle("is-visible", storyProgress >= 0.94);
+      setLight(storyProgress >= 0.84);
+
+      const previewStart = storyEnd;
+      const previewEnd = 1;
+      const previewRawProgress = (progress - previewStart) / (previewEnd - previewStart);
+      const previewProgress = clampValue(previewRawProgress, 0, 1);
+      const previewTravelProgress = Math.max(0, previewRawProgress);
+      const previewEase = easeInOut(previewProgress);
+      const previewOpacity = progress >= previewStart ? 1 : 0;
+      const copyFadeStart = isMobile ? 0.85 : 0.85;
+      const copyFade = easeOut(clampValue((progress - copyFadeStart) / 0.075, 0, 1));
+      const previewStartY = isMobile ? 86 : 112;
+      const previewEndY = isMobile ? 2 : 8.5;
+
+      section.style.setProperty("--problem-copy-opacity", String(1 - copyFade));
+      section.style.setProperty("--problem-copy-y", `${lerp(0, isMobile ? -8 : -10, copyFade)}svh`);
+      section.style.setProperty("--platform-preview-opacity", String(previewOpacity));
+      section.style.setProperty("--platform-preview-y", `${lerp(previewStartY, previewEndY, previewTravelProgress)}svh`);
+      section.style.setProperty("--platform-preview-halo-opacity", String(lerp(0.35, 0.8, previewEase)));
+
+      if (storyProgress < 0.34) {
+        setWord(configuredWords[0]);
+      } else if (storyProgress < 0.54) {
+        setWord(configuredWords[1]);
+      } else {
+        setWord(configuredWords[2]);
+      }
+    };
+
+    const requestUpdate = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(update);
+    };
+
+    update();
+    window.addEventListener("scroll", requestUpdate, { passive: true });
+    window.addEventListener("resize", requestUpdate);
+  })();
+
+  (() => {
+    const stage = document.querySelector("[data-rag-scroll]");
+    if (!stage) return;
+
+    const clampValue = (value, min, max) => Math.min(max, Math.max(min, value));
+    const easeOut = (value) => 1 - Math.pow(1 - value, 3);
+    const easeInOut = (value) =>
+      value < 0.5 ? 4 * value * value * value : 1 - Math.pow(-2 * value + 2, 3) / 2;
+    const lerp = (start, end, value) => start + (end - start) * value;
+    let raf = 0;
+
+    const update = () => {
+      raf = 0;
+      const rect = stage.getBoundingClientRect();
+      const travel = Math.max(1, rect.height - window.innerHeight);
+      const progress = Math.min(1, Math.max(0, -rect.top / travel));
+      const entryProgress = clampValue(1 - rect.top / window.innerHeight, 0, 1);
+      const entryEase = easeOut(entryProgress);
+      const isMobile = window.innerWidth <= 680;
+
+      const peakScale = isMobile ? 1 : 1.04;
+      const finalScale = isMobile ? 0.58 : 0.5;
+      const finalY = isMobile ? -12.4 : -12.5;
+      const activeFinalY = isMobile ? 7.6 : 8.2;
+      const activeStartY = isMobile ? 16 : 18;
+
+      let struckScale = lerp(isMobile ? 0.8 : 0.72, peakScale, entryEase);
+      let struckY = lerp(isMobile ? 2.2 : 3.2, 0, entryEase);
+      let struckOpacity = entryProgress;
+      let struckColorOpacity = 1;
+      let strikeProgress = 0;
+      let activeOpacity = 0;
+      let activeY = activeStartY;
+      let activeScale = 0.9;
+      let activeGlow = 0;
+      let activeStamp = 0;
+      let activeBoxIn = 0;
+      let activeBoxOut = 0;
+
+      if (progress > 0 && progress < 0.08) {
+        struckScale = peakScale;
+        struckY = 0;
+        struckOpacity = 1;
+      }
+
+      if (progress >= 0.08) {
+        strikeProgress = easeInOut(clampValue((progress - 0.08) / 0.14, 0, 1));
+        struckColorOpacity = lerp(1, 0.36, strikeProgress);
+      }
+
+      if (progress >= 0.23) {
+        const settleProgress = easeOut(clampValue((progress - 0.23) / 0.15, 0, 1));
+        struckScale = lerp(peakScale, finalScale, settleProgress);
+        struckY = lerp(0, finalY, settleProgress);
+      }
+
+      if (progress >= 0.28) {
+        activeOpacity = easeOut(clampValue((progress - 0.28) / 0.14, 0, 1));
+        activeY = lerp(activeStartY, activeFinalY, activeOpacity);
+        activeScale = lerp(0.96, 1, activeOpacity);
+        activeGlow = activeOpacity;
+        activeBoxIn = easeInOut(clampValue((progress - 0.28) / 0.24, 0, 1));
+      }
+
+      if (isMobile && progress >= 0.28) {
+        const mobileStruckFade = easeOut(clampValue((progress - 0.28) / 0.12, 0, 1));
+        struckOpacity = lerp(struckOpacity, 0, mobileStruckFade);
+      }
+
+      if (progress >= 0.8) {
+        activeStamp = easeInOut(clampValue((progress - 0.8) / 0.1, 0, 1));
+        activeScale = lerp(activeScale, 1, activeStamp);
+        activeGlow = lerp(activeGlow, 0, activeStamp);
+      }
+
+      if (progress >= 0.79) {
+        const exitRaw = clampValue((progress - 0.79) / 0.21, 0, 1);
+        const exitProgress = easeInOut(exitRaw);
+        const exitTravel = easeInOut(clampValue((exitRaw - 0.75) / 0.25, 0, 1));
+        const struckFade = easeOut(clampValue(exitRaw / 0.22, 0, 1));
+        activeBoxIn = 1;
+        activeBoxOut = exitProgress;
+        activeY = lerp(activeFinalY, activeFinalY - (isMobile ? 88 : 104), exitTravel);
+        struckY = lerp(finalY, finalY - (isMobile ? 16 : 20), exitTravel);
+        struckOpacity = lerp(struckOpacity, 0, struckFade);
+      }
+
+      stage.style.setProperty("--rag-struck-scale", String(struckScale));
+      stage.style.setProperty("--rag-struck-y", `${struckY}svh`);
+      stage.style.setProperty("--rag-struck-opacity", String(struckOpacity));
+      stage.style.setProperty("--rag-struck-color-opacity", String(struckColorOpacity));
+      stage.style.setProperty("--rag-strike-progress", String(strikeProgress));
+      stage.style.setProperty("--rag-active-opacity", String(activeOpacity));
+      stage.style.setProperty("--rag-active-y", `${activeY}svh`);
+      stage.style.setProperty("--rag-active-scale", String(activeScale));
+      stage.style.setProperty("--rag-active-blur", `${(1 - activeOpacity) * 2}px`);
+      stage.style.setProperty("--rag-active-glow", String(activeGlow));
+      stage.style.setProperty("--rag-active-stamp", String(activeStamp));
+      stage.style.setProperty("--rag-active-box-enter-cut", `${(1 - activeBoxIn) * 100}%`);
+      stage.style.setProperty("--rag-active-box-exit-cut", `${activeBoxOut * 100}%`);
+    };
+
+    const requestUpdate = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(update);
+    };
+
+    update();
+    window.addEventListener("scroll", requestUpdate, { passive: true });
+    window.addEventListener("resize", requestUpdate);
+  })();
+
+  (() => {
+    const els = Array.from(document.querySelectorAll("[data-r]"));
+    els.forEach((el, i) => {
+      const explicit = Number(el.getAttribute("data-reveal-delay"));
+      const delay = Number.isFinite(explicit) ? explicit : i * 25;
+      el.style.setProperty("--rd", `${delay}ms`);
+    });
+
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("vis");
+            obs.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: "0px 0px -4% 0px" }
+    );
+
+    els.forEach((el) => obs.observe(el));
+  })();
+
+  (() => {
+    const canvas = document.getElementById("cta-canvas");
+    if (!(canvas instanceof HTMLCanvasElement)) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const C = "255,216,111";
+    let W = 0;
+    let H = 0;
+    let offset = 0;
+    let glints = [];
+    let raf = 0;
+
+    const resize = () => {
+      const host = canvas.parentElement;
+      if (!host) return;
+      W = canvas.width = host.offsetWidth;
+      H = canvas.height = host.offsetHeight;
+    };
+
+    const drawLines = () => {
+      const numLines = 90;
+      for (let i = 0; i < numLines; i += 1) {
+        const t = i / numLines;
+        const y = t * H;
+        const curl = (t - 0.5) * H * 0.55;
+        const cp1x = W * 0.25;
+        const cp1y = y - curl * 0.6;
+        const cp2x = W * 0.75;
+        const cp2y = y + curl * 0.4;
+        const dy = (offset * 0.4) % (H / numLines);
+        const fy = y + dy;
+        const dist = Math.abs(t - 0.5);
+        const baseOp = Math.max(0.02, 0.22 - dist * 0.35);
+
+        ctx.beginPath();
+        ctx.moveTo(0, fy);
+        ctx.bezierCurveTo(cp1x, cp1y + dy, cp2x, cp2y + dy, W, fy - curl * 0.08);
+        ctx.strokeStyle = `rgba(${C},${baseOp})`;
+        ctx.lineWidth = 0.55;
+        ctx.stroke();
+      }
+    };
+
+    const spawnGlint = () => {
+      glints.push({
+        x: Math.random() * W * 0.8 + W * 0.1,
+        y: Math.random() * H,
+        life: 1,
+        size: Math.random() * 3 + 2
+      });
+    };
+
+    const drawGlints = () => {
+      glints = glints.filter((g) => g.life > 0);
+      glints.forEach((g) => {
+        const op = g.life * 0.85;
+        const gr = ctx.createRadialGradient(g.x, g.y, 0, g.x, g.y, g.size * 5);
+        gr.addColorStop(0, `rgba(${C},${op})`);
+        gr.addColorStop(0.3, `rgba(${C},${op * 0.4})`);
+        gr.addColorStop(1, `rgba(${C},0)`);
+
+        ctx.beginPath();
+        ctx.arc(g.x, g.y, g.size * 5, 0, Math.PI * 2);
+        ctx.fillStyle = gr;
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(g.x, g.y, g.size * 0.6, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${op})`;
+        ctx.fill();
+
+        g.life -= 0.025;
+      });
+    };
+
+    const draw = () => {
+      ctx.clearRect(0, 0, W, H);
+      drawLines();
+      drawGlints();
+      offset += 1;
+      if (Math.random() < 0.04) spawnGlint();
+      raf = requestAnimationFrame(draw);
+    };
+
+    resize();
+    draw();
+
+    if (window.ResizeObserver) {
+      const ro = new ResizeObserver(() => {
+        cancelAnimationFrame(raf);
+        resize();
+        draw();
+      });
+      if (canvas.parentElement) ro.observe(canvas.parentElement);
+    } else {
+      window.addEventListener("resize", () => {
+        cancelAnimationFrame(raf);
+        resize();
+        draw();
+      });
+    }
+  })();
+
+  (() => {
+    const canvas = document.getElementById("neural-canvas");
+    if (!(canvas instanceof HTMLCanvasElement)) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const C = "154,111,14";
+    let nodes = [];
+    let links = [];
+    let layers = [];
+    let signals = [];
+    let W = 0;
+    let H = 0;
+    let raf = 0;
+    let nextSignalAt = 0;
+    let nextSignalDirection = "forward";
+
+    const clampValue = (value, min, max) => Math.min(max, Math.max(min, value));
+    const lerp = (start, end, value) => start + (end - start) * value;
+
+    const createLayeredNetwork = () => {
+      nodes = [];
+      links = [];
+      layers = [];
+      const isSmall = W <= 680;
+      const counts = isSmall ? [1, 4, 4, 1] : [1, 5, 6, 1];
+      const layerX = isSmall ? [0.055, 0.32, 0.68, 0.945] : [0.045, 0.31, 0.69, 0.955];
+      const centerY = H * 0.5;
+      const spread = Math.min(H * (isSmall ? 0.56 : 0.62), isSmall ? 430 : 560);
+
+      const addNode = (x, y, layer, ordinal) => {
+        const index = nodes.length;
+        nodes.push({
+          x,
+          y,
+          bx: x,
+          by: y,
+          layer,
+          ordinal,
+          phase: Math.random() * Math.PI * 2,
+          r: layer === 0 || layer === counts.length - 1 ? 1.7 : 1.1 + Math.random() * 0.5,
+          g: Math.random() * 0.2
+        });
+        return index;
+      };
+
+      const seen = new Set();
+      const addLink = (a, b) => {
+        const key = a < b ? `${a}:${b}` : `${b}:${a}`;
+        if (seen.has(key)) return;
+        seen.add(key);
+        links.push({
+          a,
+          b,
+          fromLayer: nodes[a].layer,
+          toLayer: nodes[b].layer,
+          seed: Math.random()
+        });
+      };
+
+      counts.forEach((count, layer) => {
+        const layerNodes = [];
+        const x = W * layerX[layer];
+        for (let ordinal = 0; ordinal < count; ordinal += 1) {
+          const t = count === 1 ? 0.5 : ordinal / (count - 1);
+          const y = count === 1 ? centerY : centerY - spread / 2 + spread * t;
+          const xJitter = count === 1 ? 0 : (Math.random() - 0.5) * (isSmall ? 10 : 22);
+          const yJitter = count === 1 ? (Math.random() - 0.5) * 24 : (Math.random() - 0.5) * 28;
+          layerNodes.push(addNode(x + xJitter, y + yJitter, layer, ordinal));
+        }
+        layers.push(layerNodes);
+      });
+
+      layers[0].forEach((source) => {
+        layers[1].forEach((target) => addLink(source, target));
+      });
+
+      layers[1].forEach((source, sourceIndex) => {
+        const targetCount = layers[2].length;
+        const targetOrdinals = new Set([
+          sourceIndex % targetCount,
+          (targetCount - 1 - sourceIndex + targetCount) % targetCount,
+          (sourceIndex + 2) % targetCount
+        ]);
+
+        targetOrdinals.forEach((targetOrdinal) => {
+          addLink(source, layers[2][targetOrdinal]);
+        });
+      });
+
+      layers[2].forEach((source) => {
+        layers[3].forEach((target) => addLink(source, target));
+      });
+    };
+
+    const resize = () => {
+      W = canvas.width = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+      signals = [];
+      createLayeredNetwork();
+      nextSignalAt = 0;
+      nextSignalDirection = "forward";
+    };
+
+    const layerLinks = (fromLayer, toLayer) =>
+      links.filter((link) => link.fromLayer === fromLayer && link.toLayer === toLayer);
+
+    const linkDelay = (link, stageIndex) => {
+      const from = nodes[link.a];
+      const to = nodes[link.b];
+      if (stageIndex === 0) return to.ordinal * 34;
+      if (stageIndex === 2) return from.ordinal * 30;
+      return (from.ordinal * 24 + to.ordinal * 17 + link.seed * 42) % 150;
+    };
+
+    const spawnSignal = (now) => {
+      if (signals.length > 1 || layers.length < 4) return;
+      const direction = nextSignalDirection;
+      const isBackward = direction === "backward";
+      nextSignalDirection = isBackward ? "forward" : "backward";
+      const traceMs = isBackward ? 440 + Math.random() * 80 : 540 + Math.random() * 90;
+      const stageGap = isBackward ? 85 : 110;
+      const stages = [0, 1, 2].map((stageIndex) => {
+        const fromLayer = isBackward ? 3 - stageIndex : stageIndex;
+        const toLayer = isBackward ? 2 - stageIndex : stageIndex + 1;
+        const stageLinks = isBackward
+          ? layerLinks(toLayer, fromLayer).map((link) => ({
+              ...link,
+              a: link.b,
+              b: link.a,
+              fromLayer,
+              toLayer
+            }))
+          : layerLinks(fromLayer, toLayer);
+
+        return {
+          startOffset: stageIndex * (traceMs + stageGap),
+          traceMs,
+          links: stageLinks.map((link) => ({
+            ...link,
+            delay: linkDelay(link, stageIndex)
+          }))
+        };
+      });
+
+      if (stages.some((stage) => !stage.links.length)) return;
+      signals.push({
+        stages,
+        direction,
+        source: isBackward ? layers[3][0] : layers[0][0],
+        start: now,
+        glowMs: isBackward ? 560 : 700
+      });
+    };
+
+    const stageEnd = (stage) => {
+      let maxDelay = 0;
+      stage.links.forEach((link) => {
+        maxDelay = Math.max(maxDelay, link.delay);
+      });
+      return stage.startOffset + maxDelay + stage.traceMs;
+    };
+
+    const signalDuration = (signal) => {
+      let end = 0;
+      signal.stages.forEach((stage) => {
+        end = Math.max(end, stageEnd(stage));
+      });
+      return end + signal.glowMs;
+    };
+
+    const applyNodeGlow = (nodeIndex, elapsed, fireAt, duration) => {
+      if (elapsed < fireAt) return;
+      const glow = clampValue(1 - (elapsed - fireAt) / duration, 0, 1);
+      if (glow > 0) nodes[nodeIndex].g = Math.max(nodes[nodeIndex].g, glow);
+    };
+
+    const updateNodePositions = (now) => {
+      const drift = W <= 680 ? 4 : 7;
+      nodes.forEach((node) => {
+        node.x = node.bx + Math.sin(now * 0.00018 + node.phase) * drift;
+        node.y = node.by + Math.cos(now * 0.00016 + node.phase * 0.7) * drift * 0.55;
+        node.g = Math.max(0, node.g - 0.018);
+      });
+    };
+
+    const drawStroke = (a, b, alpha, width, color) => {
+      ctx.beginPath();
+      ctx.moveTo(a.x, a.y);
+      ctx.lineTo(b.x, b.y);
+      ctx.strokeStyle = `rgba(${color},${alpha})`;
+      ctx.lineWidth = width;
+      ctx.stroke();
+    };
+
+    const drawTrace = (a, b, progress, alpha, color) => {
+      const head = clampValue(progress, 0, 1);
+      if (head <= 0) return;
+      const to = {
+        x: lerp(a.x, b.x, head),
+        y: lerp(a.y, b.y, head)
+      };
+      const trace = ctx.createLinearGradient(a.x, a.y, to.x, to.y);
+      trace.addColorStop(0, `rgba(${color},${alpha * 0.12})`);
+      trace.addColorStop(0.58, `rgba(${color},${alpha * 0.42})`);
+      trace.addColorStop(1, `rgba(255,243,184,${alpha})`);
+
+      ctx.beginPath();
+      ctx.moveTo(a.x, a.y);
+      ctx.lineTo(to.x, to.y);
+      ctx.strokeStyle = trace;
+      ctx.lineWidth = 1.08;
+      ctx.lineCap = "butt";
+      ctx.stroke();
+    };
+
+    const drawReceivingNodes = (signal, elapsed) => {
+      applyNodeGlow(signal.source, elapsed, 0, signal.glowMs);
+      signal.stages.forEach((stage) => {
+        stage.links.forEach((link) => {
+          applyNodeGlow(link.b, elapsed, stage.startOffset + link.delay + stage.traceMs, signal.glowMs);
+        });
+      });
+    };
+
+    const drawStageTraces = (signal, elapsed, color) => {
+      signal.stages.forEach((stage, stageIndex) => {
+        stage.links.forEach((link) => {
+          const progress = (elapsed - stage.startOffset - link.delay) / stage.traceMs;
+          const a = nodes[link.a];
+          const b = nodes[link.b];
+
+          if (progress >= 0 && progress <= 1) {
+            const head = clampValue(progress, 0, 1);
+            const directionScale = signal.direction === "backward" ? 0.74 : 1;
+            const alpha = (0.1 + Math.sin(head * Math.PI) * 0.08) * 2.1 * directionScale;
+            drawTrace(a, b, head, alpha, color);
+          } else if (progress > 1 && progress < 1.24) {
+            const fade = 1 - (progress - 1) / 0.24;
+            const directionScale = signal.direction === "backward" ? 0.68 : 1;
+            drawStroke(a, b, (stageIndex === 1 ? 0.075 : 0.06) * fade * 2.1 * directionScale, 0.74, color);
+          }
+        });
+      });
+    };
+
+    const drawIdleNetwork = (color) => {
+      links.forEach((link) => {
+        const a = nodes[link.a];
+        const b = nodes[link.b];
+        const op = (0.018 + (a.g + b.g) * 0.024) * 2.1;
+        drawStroke(a, b, op, 0.38, color);
+      });
+    };
+
+    const drawNodes = (color) => {
+      nodes.forEach((n) => {
+        if (n.g > 0.15) {
+          const gr = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.r * 10);
+          gr.addColorStop(0, `rgba(${color},${n.g * 0.34 * 2.1})`);
+          gr.addColorStop(1, `rgba(${color},0)`);
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, n.r * 10, 0, Math.PI * 2);
+          ctx.fillStyle = gr;
+          ctx.fill();
+        }
+
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${color},${Math.min(1, (0.12 + n.g * 0.72) * 2.1)})`;
+        ctx.fill();
+      });
+    };
+
+    const drawSignal = (signal, now, color) => {
+      const elapsed = now - signal.start;
+      drawReceivingNodes(signal, elapsed);
+
+      ctx.save();
+      ctx.shadowColor = `rgba(${color},0.5)`;
+      ctx.shadowBlur = 10;
+      drawStageTraces(signal, elapsed, color);
+      ctx.restore();
+
+      return elapsed < signalDuration(signal);
+    };
+
+    const draw = (ts) => {
+      const now = ts || performance.now();
+
+      ctx.clearRect(0, 0, W, H);
+      updateNodePositions(now);
+
+      if (now >= nextSignalAt) {
+        spawnSignal(now);
+        nextSignalAt = now + 1600 + Math.random() * 1800;
+      }
+
+      drawIdleNetwork(C);
+      signals = signals.filter((signal) => drawSignal(signal, now, C));
+      drawNodes(C);
+
+      raf = requestAnimationFrame(draw);
+    };
+
+    resize();
+    draw();
+
+    window.addEventListener("resize", () => {
+      cancelAnimationFrame(raf);
+      resize();
+      draw();
+    });
+  })();
+</script>

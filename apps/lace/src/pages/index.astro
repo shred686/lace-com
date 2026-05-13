@@ -1,0 +1,355 @@
+---
+import { Image } from "astro:assets";
+import BaseLayout from "@determinant/site-kit/layouts/BaseLayout.astro";
+import laceScreen from "@determinant/site-kit/assets/images/lace-screen2.png";
+import whitepaperEnglish from "@determinant/site-kit/assets/docs/lace_enterprise_overview_v2_ENGLISH.pdf";
+import { laceSite } from "../site.config";
+
+const platformPillars = [
+  {
+    title: "Workflow compiled",
+    copy:
+      "Turn repeatable business work into explicit AI pipelines with defined inputs, checks, approvals, and outputs."
+  },
+  {
+    title: "Policy governed",
+    copy:
+      "Keep model usage, data handling, authority levels, and review gates attached to every run."
+  },
+  {
+    title: "Evidence grounded",
+    copy:
+      "Connect outputs to source material so teams can inspect claims before they become final work."
+  },
+  {
+    title: "Ready to publish",
+    copy:
+      "Promote proven workflows into internal tools or customer-facing applications without rebuilding the platform layer."
+  }
+];
+
+const useCases = [
+  "Proposal and bid drafting",
+  "Regulatory and compliance research",
+  "Contract review workflows",
+  "Financial document analysis",
+  "Policy and standards updates",
+  "Technical documentation systems"
+];
+---
+
+<BaseLayout title={laceSite.title} description={laceSite.description} theme="midnight" lang="en">
+  <main class="lace-site">
+    <div class="noise-layer" aria-hidden="true"></div>
+
+    <header class="lace-nav" data-reveal>
+      <a href="/" class="brand-wordmark">
+        <span class="brand-dot" aria-hidden="true"></span>
+        {laceSite.name}
+      </a>
+      <nav aria-label="Primary">
+        <a href="#platform">Platform</a>
+        <a href="#use-cases">Use cases</a>
+        <a href="/contact">Contact</a>
+      </nav>
+    </header>
+
+    <section class="lace-hero" data-reveal data-reveal-delay="60">
+      <div class="lace-hero-copy">
+        <p class="lace-kicker">Governed AI workflow infrastructure</p>
+        <h1>Build AI systems your business can actually trust.</h1>
+        <p class="lace-lede">
+          LACE turns business workflows into repeatable AI pipelines with policy controls,
+          source grounding, review gates, and an audit trail for every output.
+        </p>
+        <div class="lace-actions">
+          <a href="/contact" class="hero-btn hero-btn-primary">Talk to us</a>
+          <a href={whitepaperEnglish} class="hero-btn hero-btn-secondary" target="_blank" rel="noopener noreferrer">
+            Read overview
+          </a>
+        </div>
+      </div>
+
+      <figure class="lace-hero-visual" aria-label="LACE platform interface preview">
+        <Image
+          src={laceScreen}
+          alt="LACE workflow orchestration interface"
+          widths={[640, 960, 1280]}
+          sizes="(max-width: 900px) 92vw, 48vw"
+          class="lace-screen"
+        />
+      </figure>
+    </section>
+
+    <section id="platform" class="lace-section" data-reveal>
+      <div class="lace-section-head">
+        <p class="lace-kicker">Platform</p>
+        <h2>Model the process once. Run it with controls every time.</h2>
+      </div>
+      <div class="lace-pillar-grid">
+        {platformPillars.map((pillar) => (
+          <article class="lace-card">
+            <h3>{pillar.title}</h3>
+            <p>{pillar.copy}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section id="use-cases" class="lace-section lace-use-cases" data-reveal>
+      <div class="lace-section-head">
+        <p class="lace-kicker">Use cases</p>
+        <h2>For long-form, high-stakes work that cannot rely on prompt luck.</h2>
+      </div>
+      <ul class="lace-use-list">
+        {useCases.map((useCase) => (
+          <li>{useCase}</li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="lace-cta" data-reveal>
+      <p class="lace-kicker">Start with one workflow</p>
+      <h2>Show us the process. We will show you how LACE runs it.</h2>
+      <a href="/contact" class="hero-btn hero-btn-primary">Start a conversation</a>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .lace-site {
+    position: relative;
+    min-height: 100vh;
+    overflow: clip;
+    padding: 1.25rem clamp(1rem, 3vw, 2.5rem) 4rem;
+  }
+
+  .lace-nav {
+    position: sticky;
+    top: 1rem;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    width: min(1180px, 100%);
+    margin: 0 auto;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--line);
+    background: rgba(7, 9, 12, 0.74);
+    box-shadow: var(--shadow-md);
+    backdrop-filter: blur(16px);
+  }
+
+  .lace-nav nav {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.75rem, 2vw, 1.4rem);
+    font-size: 0.92rem;
+  }
+
+  .lace-nav a {
+    color: var(--muted);
+    text-decoration: none;
+  }
+
+  .lace-nav a:hover,
+  .lace-nav .brand-wordmark {
+    color: var(--text);
+  }
+
+  .lace-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 0.95fr) minmax(320px, 1.05fr);
+    gap: clamp(2rem, 6vw, 5rem);
+    align-items: center;
+    width: min(1180px, 100%);
+    min-height: calc(100svh - 8rem);
+    margin: 0 auto;
+    padding: clamp(4rem, 9vw, 7rem) 0 clamp(3rem, 7vw, 5rem);
+  }
+
+  .lace-hero-copy {
+    max-width: 44rem;
+  }
+
+  .lace-kicker {
+    margin-bottom: 1rem;
+    color: #8ee5d2;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .lace-hero h1,
+  .lace-section h2,
+  .lace-cta h2 {
+    max-width: 13ch;
+    font-size: clamp(3.2rem, 8vw, 6.8rem);
+    line-height: 0.9;
+    letter-spacing: 0;
+  }
+
+  .lace-section h2,
+  .lace-cta h2 {
+    max-width: 16ch;
+    font-size: clamp(2.25rem, 5vw, 4.5rem);
+  }
+
+  .lace-lede {
+    max-width: 42rem;
+    margin-top: 1.35rem;
+    color: var(--muted);
+    font-size: clamp(1.05rem, 2vw, 1.28rem);
+  }
+
+  .lace-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+    margin-top: 2rem;
+  }
+
+  .hero-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 3.1rem;
+    padding: 0.85rem 1.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    color: var(--text);
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .hero-btn-primary {
+    border-color: rgba(142, 229, 210, 0.45);
+    color: #06100d;
+    background: linear-gradient(135deg, #8ee5d2, #d9e6ff);
+  }
+
+  .hero-btn-secondary {
+    background: rgba(255, 255, 255, 0.045);
+  }
+
+  .lace-hero-visual {
+    position: relative;
+    margin: 0;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+    box-shadow: 0 2rem 5rem rgba(0, 0, 0, 0.38);
+  }
+
+  .lace-hero-visual::before {
+    content: "";
+    position: absolute;
+    inset: -18%;
+    z-index: -1;
+    background:
+      radial-gradient(circle at 15% 20%, rgba(108, 151, 255, 0.34), transparent 34%),
+      radial-gradient(circle at 80% 70%, rgba(74, 214, 184, 0.28), transparent 35%);
+    filter: blur(10px);
+  }
+
+  .lace-screen {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .lace-section,
+  .lace-cta {
+    width: min(1180px, 100%);
+    margin: 0 auto;
+    padding: clamp(3.5rem, 8vw, 6rem) 0;
+  }
+
+  .lace-section-head {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: clamp(1.5rem, 4vw, 4rem);
+    align-items: end;
+    margin-bottom: 1.5rem;
+  }
+
+  .lace-pillar-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1px;
+    border: 1px solid var(--line);
+    background: var(--line);
+  }
+
+  .lace-card {
+    min-height: 17rem;
+    padding: clamp(1.25rem, 2.5vw, 1.8rem);
+    background: rgba(7, 9, 12, 0.86);
+  }
+
+  .lace-card h3 {
+    margin-bottom: 0.85rem;
+    font-size: 1.1rem;
+  }
+
+  .lace-card p {
+    color: var(--muted);
+    font-size: 0.98rem;
+  }
+
+  .lace-use-list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem;
+    padding: 0;
+    list-style: none;
+  }
+
+  .lace-use-list li {
+    min-height: 5rem;
+    padding: 1.1rem;
+    border: 1px solid var(--line);
+    color: var(--text);
+    background: rgba(255, 255, 255, 0.035);
+  }
+
+  .lace-cta {
+    display: grid;
+    gap: 1.5rem;
+    border-top: 1px solid var(--line);
+  }
+
+  @media (max-width: 900px) {
+    .lace-nav {
+      position: static;
+    }
+
+    .lace-hero,
+    .lace-section-head {
+      grid-template-columns: 1fr;
+    }
+
+    .lace-hero {
+      min-height: auto;
+    }
+
+    .lace-pillar-grid,
+    .lace-use-list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 620px) {
+    .lace-nav,
+    .lace-nav nav,
+    .lace-actions {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .lace-pillar-grid,
+    .lace-use-list {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,78 @@
+---
+import BaseLayout from "@determinant/site-kit/layouts/BaseLayout.astro";
+
+const baseUrl = import.meta.env.BASE_URL;
+const withBase = (path: string) => `${baseUrl}${path.replace(/^\/+/, "")}`;
+
+const previews = [
+  {
+    id: "midnight",
+    label: "Midnight",
+    note: "Dark, subtle glow, product-first presentation",
+    href: withBase("/themes/midnight")
+  },
+  {
+    id: "blueprint",
+    label: "Blueprint",
+    note: "Crisp systems aesthetic",
+    href: withBase("/themes/blueprint")
+  },
+  {
+    id: "circuit",
+    label: "Circuit",
+    note: "Sharp neon flow-map energy",
+    href: withBase("/themes/circuit")
+  },
+  {
+    id: "forge",
+    label: "Forge",
+    note: "Warm industrial architecture tone",
+    href: withBase("/themes/forge")
+  }
+];
+---
+
+<BaseLayout title="LACE Theme Review" theme="midnight">
+  <main class="review-page">
+    <header class="review-header" data-reveal>
+      <p class="eyebrow">LACE Theme Review</p>
+      <h1>Side-by-Side Variant Comparison</h1>
+      <p>
+        Each panel below is a dedicated route rendering the same landing
+        content with a different visual system.
+      </p>
+      <div class="hero-actions">
+        <a href={withBase("/themes/midnight")} class="btn btn-primary">
+          Open Midnight
+        </a>
+        <a href={withBase("/themes/blueprint")} class="btn btn-ghost">
+          Open Blueprint
+        </a>
+        <a href={withBase("/themes/circuit")} class="btn btn-ghost">
+          Open Circuit
+        </a>
+        <a href={withBase("/themes/forge")} class="btn btn-ghost">
+          Open Forge
+        </a>
+      </div>
+    </header>
+
+    <section class="preview-grid" data-reveal>
+      {previews.map((preview) => (
+        <article class="preview-card">
+          <div class="preview-head">
+            <h2>{preview.label}</h2>
+            <p>{preview.note}</p>
+            <a href={preview.href} class="btn btn-ghost">Open Full Route</a>
+          </div>
+          <iframe
+            title={`${preview.label} theme preview`}
+            src={preview.href}
+            loading="lazy"
+          >
+          </iframe>
+        </article>
+      ))}
+    </section>
+  </main>
+</BaseLayout>

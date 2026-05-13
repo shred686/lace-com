@@ -1,0 +1,15 @@
+{
+  "name": "@determinant/site-kit",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./*": "./src/*"
+  },
+  "dependencies": {
+    "gsap": "^3.14.2"
+  },
+  "peerDependencies": {
+    "astro": "^5.3.0"
+  }
+}

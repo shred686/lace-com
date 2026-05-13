@@ -1,17 +1,21 @@
 {
-  "name": "lace-website",
+  "name": "determinant-sites",
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
-    "dev": "astro dev",
-    "start": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview",
-    "astro": "astro"
-  },
-  "dependencies": {
-    "astro": "^5.3.0",
-    "gsap": "^3.14.2"
+    "dev:determinant": "npm --workspace apps/determinant run dev",
+    "build:determinant": "npm --workspace apps/determinant run build",
+    "preview:determinant": "npm --workspace apps/determinant run preview",
+    "dev:lace": "npm --workspace apps/lace run dev",
+    "build:lace": "npm --workspace apps/lace run build",
+    "preview:lace": "npm --workspace apps/lace run preview",
+    "build": "npm run build:determinant && npm run build:lace",
+    "check:domains": "node scripts/check-domain-leakage.mjs",
+    "check": "npm run check:domains && npm run build"
   }
 }

@@ -1,0 +1,36 @@
+name: Verify sites
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check domain leakage
+        run: npm run check:domains
+
+      - name: Build Determinant site
+        run: npm run build:determinant
+
+      - name: Build LACE site
+        run: npm run build:lace

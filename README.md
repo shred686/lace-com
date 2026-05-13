@@ -1,39 +1,79 @@
-# LACE Website
+# Determinant Sites
 
-Astro-based landing page mockup for LACE (Long-Form Artifact Construction Engine).
+One npm-workspace repo for two static Astro sites:
 
-## Run locally
+- `apps/determinant` -> `determinantsystems.com`
+- `apps/lace` -> `laceplatform.com`
+- `packages/site-kit` -> shared Astro layout, styles, components, assets, and interaction code
 
-1. Install dependencies:
-   - `npm install`
-2. Start dev server:
-   - `npm run dev`
-3. Build production output:
-   - `npm run build`
+## Local Development
 
-## Deploy to GitHub Pages
+Install from the repo root:
 
-This repository includes a workflow at `.github/workflows/deploy.yml` that builds and deploys the Astro output to GitHub Pages.
+```sh
+npm ci
+```
 
-1. Push this repo to GitHub.
-2. In GitHub, open `Settings -> Pages`.
-3. Set `Source` to `GitHub Actions`.
-4. Push to `main` (or `master`) to trigger deployment.
+Run either site:
 
-### URL behavior
+```sh
+npm run dev:determinant
+npm run dev:lace
+```
 
-- During GitHub Actions deploy builds, the Astro `base` path is set to `/lace-com/`.
-- During local development (`npm run dev`), the `base` path remains `/`.
-- Override defaults with environment variables:
-  - `SITE_URL` (example: `https://example.com`)
-  - `BASE_PATH` (example: `/lace-com`)
+Build and verify:
+
+```sh
+npm run check:domains
+npm run build:determinant
+npm run build:lace
+npm run build
+```
+
+## Cloudflare Pages
+
+Use two Cloudflare Pages projects connected to the same GitHub repo. Leave each Pages project's root directory blank so Cloudflare installs from the repo root and uses the workspace-aware `package-lock.json`.
+
+### determinant-systems
+
+- Framework preset: Astro
+- Production branch: `main`
+- Root directory: leave blank
+- Build command: `npm run build:determinant`
+- Build output directory: `apps/determinant/dist`
+- Custom domains: `determinantsystems.com`, optionally `www.determinantsystems.com`
+- Build watch include paths:
+  - `apps/determinant/*`
+  - `packages/site-kit/*`
+  - `package.json`
+  - `package-lock.json`
+  - `.node-version`
+  - `.github/workflows/*`
+
+### lace-platform
+
+- Framework preset: Astro
+- Production branch: `main`
+- Root directory: leave blank
+- Build command: `npm run build:lace`
+- Build output directory: `apps/lace/dist`
+- Custom domains: `laceplatform.com`, optionally `www.laceplatform.com`
+- Build watch include paths:
+  - `apps/lace/*`
+  - `packages/site-kit/*`
+  - `package.json`
+  - `package-lock.json`
+  - `.node-version`
+  - `.github/workflows/*`
+
+Build watch paths reduce unnecessary builds in the monorepo, but they are not a correctness boundary. Cloudflare may still build on very large pushes.
+
+## Domain Setup
+
+For apex domains, add each domain as a Cloudflare zone and point the registrar nameservers to Cloudflare before attaching it to Pages. Attach domains through each Pages project's Custom domains flow. For `www`, attach the hostname as an additional custom domain or add a Cloudflare Bulk Redirect to the apex.
 
 ## Notes
 
-- Landing content is based on `docs/LACE-LANDING-PAGE-CONTENT.md`.
-- Theme routes:
-  - `/themes/midnight` (dark, subtle glow, GitHub-home-inspired direction)
-  - `/themes/blueprint`
-  - `/themes/circuit`
-  - `/themes/forge`
-  - `/themes/review` (side-by-side iframe comparison)
+Both Astro apps are static builds and intentionally do not use `@astrojs/cloudflare`. Add the Cloudflare adapter only if a site later needs on-demand rendering, Pages Functions, bindings, or API routes.
+
+Cloudflare references: [Astro guide](https://developers.cloudflare.com/pages/framework-guides/deploy-an-astro-site/), [build configuration](https://developers.cloudflare.com/pages/configuration/build-configuration/), [monorepos](https://developers.cloudflare.com/pages/configuration/monorepos/), [build watch paths](https://developers.cloudflare.com/pages/configuration/build-watch-paths/), [custom domains](https://developers.cloudflare.com/pages/configuration/custom-domains/), [preview deployments](https://developers.cloudflare.com/pages/configuration/preview-deployments/), [GitHub integration](https://developers.cloudflare.com/pages/configuration/git-integration/github-integration/), and [www redirects](https://developers.cloudflare.com/pages/how-to/www-redirect/).

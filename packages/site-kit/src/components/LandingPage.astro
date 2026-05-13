@@ -1,0 +1,468 @@
+---
+import { Image } from "astro:assets";
+import {
+  deploymentOptions,
+  documentSources,
+  trustItems,
+  useCases,
+  valuePillars,
+  workflowSteps
+} from "../data/landingContent";
+import heroScreen1 from "../assets/images/lace-screen1.png";
+import heroScreen2 from "../assets/images/lace-screen2.png";
+import heroScreen3 from "../assets/images/lace-screen3.png";
+import whitepaperEnglish from "../assets/docs/lace_enterprise_overview_v2_ENGLISH.pdf";
+import whitepaperSpanish from "../assets/docs/LACE_Enterprise_Overview_v2_SPANISH.pdf";
+
+interface Props {
+  activeTheme?: string;
+}
+
+
+const spotlightUseCase =
+  useCases.find((useCase) => useCase.id === "government-proposals") ?? useCases[0];
+const featuredUseCases = useCases
+  .filter((useCase) => useCase.id !== spotlightUseCase.id)
+  .slice(0, 6);
+const connectedSources = documentSources.slice(0, 4);
+const capabilityTags = [
+  "Deterministic Generation",
+  "Audit Trails",
+  "Source Grounding",
+  "Section-Level Regeneration",
+  "Policy-Aware Outputs",
+  "Enterprise Deployment"
+];
+const assuranceTags = [
+  "On-Prem + Cloud",
+  "Model Provider Flexibility",
+  "Regulated Workflow Support",
+  "Reviewable Change History",
+  "Enterprise Controls"
+];
+---
+
+<main class="ds-site">
+  <div class="noise-layer" aria-hidden="true"></div>
+
+  <header class="top-nav" data-reveal data-reveal-delay="40">
+    <a href="/" class="brand-wordmark">
+      <span class="brand-dot" aria-hidden="true"></span>
+      Determinant Systems
+    </a>
+
+    <button
+      type="button"
+      class="top-nav-toggle"
+      aria-expanded="false"
+      aria-controls="topNavPanel"
+      aria-label="Toggle navigation"
+    >
+      <span class="top-nav-toggle-line"></span>
+      <span class="top-nav-toggle-line"></span>
+    </button>
+
+    <div class="top-nav-panel" id="topNavPanel">
+      <nav class="top-links" aria-label="Primary">
+        <a href="#lace">LACE</a>
+        <a href="#platform">Platform</a>
+        <a href="#use-cases">Use Cases</a>
+        <a href="#trust">Trust</a>
+      </nav>
+
+      <a href={whitepaperEnglish} class="nav-cta" target="_blank" rel="noopener noreferrer">
+        Read whitepaper
+      </a>
+    </div>
+  </header>
+
+  <section class="hero" data-reveal data-reveal-delay="90">
+    <div class="hero-copy">
+      <p class="kicker">Determinant Systems</p>
+      <h1>Make AI work for your company.</h1>
+      <p class="hero-intro">Deterministic Infrastructure for Enterprise AI.</p>
+      <p class="hero-detail">
+        We build structured, auditable AI systems designed for high-trust,
+        mission-critical environments.
+      </p>
+
+      <div class="hero-actions">
+        <a
+          href={whitepaperEnglish}
+          class="btn btn-primary"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Explore LACE
+        </a>
+        <a href={whitepaperSpanish} class="btn btn-ghost" target="_blank" rel="noopener noreferrer">
+          Whitepaper (Spanish)
+        </a>
+      </div>
+
+    </div>
+
+    <div
+      class="hero-visual"
+      aria-label="LACE platform previews"
+      data-parallax
+      data-parallax-axis="y"
+      data-parallax-speed="14"
+    >
+      <div class="hero-ambient hero-ambient-blue" aria-hidden="true"></div>
+      <div class="hero-ambient hero-ambient-teal" aria-hidden="true"></div>
+
+      <div class="shot shot-back shot-left" aria-hidden="true">
+        <Image
+          src={heroScreen1}
+          alt=""
+          class="shot-image"
+          widths={[380, 560, 760]}
+          sizes="(max-width: 1020px) 72vw, 320px"
+        />
+      </div>
+
+      <button type="button" class="shot shot-main" data-lightbox-trigger>
+        <Image
+          src={heroScreen2}
+          alt="LACE platform workflow and orchestration view"
+          class="shot-image"
+          widths={[560, 900, 1280]}
+          sizes="(max-width: 1020px) 88vw, 560px"
+        />
+      </button>
+
+      <div class="shot shot-back shot-right" aria-hidden="true">
+        <Image
+          src={heroScreen3}
+          alt=""
+          class="shot-image"
+          widths={[380, 560, 760]}
+          sizes="(max-width: 1020px) 72vw, 320px"
+        />
+      </div>
+    </div>
+
+    <dialog class="lightbox" data-lightbox>
+      <button class="lightbox-close" aria-label="Close">&times;</button>
+      <Image
+        src={heroScreen2}
+        alt="LACE platform workflow and orchestration view"
+        class="lightbox-image"
+        widths={[1024, 1440, 1920]}
+        sizes="95vw"
+      />
+    </dialog>
+  </section>
+
+  <div class="capability-marquee" aria-hidden="true" data-parallax data-parallax-axis="y" data-parallax-speed="6">
+    <div class="capability-track">
+      {[...capabilityTags, ...capabilityTags].map((tag) => (
+        <span>{tag}</span>
+      ))}
+    </div>
+  </div>
+
+  <section id="intro" class="section intro" data-reveal>
+    <div class="section-head">
+      <p class="section-label">Company</p>
+      <h2>Built for organizations that need deterministic outcomes, not prompt luck.</h2>
+    </div>
+
+    <div class="intro-grid">
+      <p>
+        Determinant Systems develops infrastructure for teams where compliance,
+        reliability, and reviewability are mandatory. Our systems keep generation
+        controlled and measurable from first draft to final deliverable.
+      </p>
+      <ul class="intro-list">
+        <li>Deterministic generation pipelines</li>
+        <li>Traceable outputs and source mapping</li>
+        <li>Audit-friendly workflow orchestration</li>
+        <li>Deployable in regulated enterprise environments</li>
+      </ul>
+    </div>
+
+    <div
+      class="intro-graphics"
+      aria-hidden="true"
+      data-parallax
+      data-parallax-axis="y"
+      data-parallax-speed="10"
+      data-parallax-rotate="0.9"
+    >
+      <div class="intro-ring intro-ring-one"></div>
+      <div class="intro-ring intro-ring-two"></div>
+      <div class="intro-node intro-node-a"></div>
+      <div class="intro-node intro-node-b"></div>
+      <div class="intro-node intro-node-c"></div>
+      <div class="intro-beam"></div>
+    </div>
+  </section>
+
+  <section id="lace" class="section lace-overview" data-reveal>
+    <div class="section-head">
+      <p class="section-label">Product</p>
+      <h2>LACE powers long-form, high-stakes document systems.</h2>
+      <p>
+        LACE (Long-Form Artifact Construction Engine) helps teams generate and
+        maintain complex documentation that must stay consistent across sections,
+        reviews, and updates.
+      </p>
+    </div>
+
+    <div class="pillars-grid">
+      {valuePillars.map((pillar, index) => (
+        <article
+          class={`surface-card pillar-card ${index === 0 ? "pillar-feature" : ""}`}
+          data-reveal
+          data-reveal-delay={120 + index * 80}
+        >
+          <h3>{pillar.title}</h3>
+          <p>{pillar.copy}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section id="platform" class="section split platform-section" data-reveal>
+    <article class="surface-card block workflow-panel" data-reveal data-reveal-delay="70">
+      <h2>How teams run LACE</h2>
+      <div class="workflow-grid">
+        {workflowSteps.map((step, index) => (
+          <article class="workflow-step" data-reveal data-reveal-delay={140 + index * 80}>
+            <p class="step-number">{step.step}</p>
+            <h3>{step.title}</h3>
+            <p>{step.description}</p>
+          </article>
+        ))}
+      </div>
+    </article>
+
+    <article class="surface-card block platform-panel" data-reveal data-reveal-delay="140">
+      <h2>Context-rich platform workspace</h2>
+      <p>
+        Structured retrieval, deterministic regeneration, and review-state visibility
+        in one operator surface.
+      </p>
+
+      <div
+        class="platform-scene"
+        aria-hidden="true"
+        data-parallax
+        data-parallax-axis="y"
+        data-parallax-speed="11"
+      >
+        <div class="platform-glow platform-glow-a"></div>
+        <div class="platform-glow platform-glow-b"></div>
+        <Image
+          src={heroScreen1}
+          alt=""
+          class="platform-image platform-image-main"
+          widths={[500, 760, 980]}
+          sizes="(max-width: 1120px) 86vw, 420px"
+        />
+        <Image
+          src={heroScreen3}
+          alt=""
+          class="platform-image platform-image-back"
+          widths={[340, 520, 700]}
+          sizes="(max-width: 1120px) 68vw, 280px"
+        />
+        <span class="platform-tag platform-tag-one">Traceable updates</span>
+        <span class="platform-tag platform-tag-two">Source-grounded outputs</span>
+      </div>
+
+      <div class="source-grid">
+        {connectedSources.map((source, index) => (
+          <article class="source-item" data-reveal data-reveal-delay={220 + index * 70}>
+            <div class="source-badge">{source.badge}</div>
+            <h3>{source.name}</h3>
+            <p>{source.detail}</p>
+          </article>
+        ))}
+      </div>
+    </article>
+  </section>
+
+  <section id="use-cases" class="section use-cases-section" data-reveal>
+    <div class="section-head">
+      <p class="section-label">Use Cases</p>
+      <h2>Where LACE creates immediate leverage</h2>
+      <p>
+        Teams with long, interdependent documentation and strict review standards
+        see the fastest payoff.
+      </p>
+    </div>
+
+    <div class="use-case-stage">
+      <article
+        class="surface-card use-case-spotlight"
+        data-reveal
+        data-reveal-delay="80"
+        data-parallax
+        data-parallax-axis="y"
+        data-parallax-speed="9"
+      >
+        <p class="section-label">Spotlight</p>
+        <h3>{spotlightUseCase.heading}</h3>
+        <p>{spotlightUseCase.problems[0]}</p>
+        <div class="spotlight-columns">
+          <div>
+            <p class="case-label">Typical documents</p>
+            <ul>
+              {spotlightUseCase.documents.slice(0, 4).map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <p class="case-label">How LACE fits</p>
+            <ul>
+              {spotlightUseCase.laceFit.slice(0, 4).map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <div class="use-case-list">
+        {featuredUseCases.map((useCase, index) => (
+          <article class="surface-card use-case-row" data-reveal data-reveal-delay={140 + index * 70}>
+            <h3>{useCase.tabTitle}</h3>
+            <p>{useCase.problems[0]}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section id="trust" class="section trust-section" data-reveal>
+    <div
+      class="assurance-ticker"
+      aria-hidden="true"
+      data-parallax
+      data-parallax-axis="y"
+      data-parallax-speed="7"
+    >
+      <div class="assurance-track">
+        {[...assuranceTags, ...assuranceTags].map((tag) => (
+          <span>{tag}</span>
+        ))}
+      </div>
+    </div>
+
+    <div class="trust-grid">
+      <article class="surface-card block" data-reveal data-reveal-delay="70">
+        <h2>Trust controls</h2>
+        <ul>
+          {trustItems.map((item) => (
+            <li>{item}</li>
+          ))}
+        </ul>
+      </article>
+
+      <article class="surface-card block" data-reveal data-reveal-delay="150">
+        <h2>Deployment options</h2>
+        <ul>
+          {deploymentOptions.map((item) => (
+            <li>{item}</li>
+          ))}
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <section class="section cta" data-reveal>
+    <p class="section-label">Get Started</p>
+    <h2>Deploy LACE with Determinant Systems.</h2>
+    <p>
+      Build reliable AI workflows for the documents your company is judged on.
+    </p>
+    <div class="hero-actions">
+      <a href={whitepaperEnglish} class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+        Read the Enterprise Overview
+      </a>
+      <a href="#platform" class="btn btn-ghost">View Platform Flow</a>
+    </div>
+  </section>
+</main>
+
+<script>
+  const lightboxTrigger = document.querySelector<HTMLButtonElement>("[data-lightbox-trigger]");
+  const lightbox = document.querySelector<HTMLDialogElement>("[data-lightbox]");
+
+  if (lightboxTrigger && lightbox) {
+    lightboxTrigger.addEventListener("click", () => lightbox.showModal());
+
+    lightbox.querySelector(".lightbox-close")?.addEventListener("click", () => {
+      lightbox.close();
+    });
+
+    lightbox.addEventListener("click", (event) => {
+      if (event.target === lightbox) {
+        lightbox.close();
+      }
+    });
+  }
+
+
+  // Mobile nav
+  const topNav = document.querySelector<HTMLElement>(".top-nav");
+  const navToggle = document.querySelector<HTMLButtonElement>(".top-nav-toggle");
+  const navPanel = document.getElementById("topNavPanel");
+  const navTargets = document.querySelectorAll<HTMLAnchorElement>(".top-links a, .nav-cta");
+  const navMedia = window.matchMedia("(max-width: 900px)");
+
+  const setNavOpen = (open: boolean) => {
+    if (!topNav || !navToggle) return;
+    topNav.classList.toggle("is-open", open);
+    navToggle.setAttribute("aria-expanded", open ? "true" : "false");
+
+    if (navPanel && navMedia.matches) {
+      navPanel.toggleAttribute("hidden", !open);
+    } else if (navPanel) {
+      navPanel.removeAttribute("hidden");
+    }
+  };
+
+  const closeNav = () => {
+    setNavOpen(false);
+  };
+
+  const toggleNav = () => {
+    if (!topNav) return;
+    const nextOpen = !topNav.classList.contains("is-open");
+    setNavOpen(nextOpen);
+  };
+
+  navToggle?.addEventListener("click", toggleNav);
+
+  navTargets.forEach((target) => {
+    target.addEventListener("click", () => {
+      if (navMedia.matches) closeNav();
+    });
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!topNav || !navMedia.matches) return;
+    if (!topNav.contains(event.target as Node)) closeNav();
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") closeNav();
+  });
+
+  const syncNavForViewport = () => {
+    if (navMedia.matches) {
+      setNavOpen(false);
+      return;
+    }
+    setNavOpen(false);
+    navPanel?.removeAttribute("hidden");
+  };
+
+  syncNavForViewport();
+  navMedia.addEventListener("change", syncNavForViewport);
+</script>

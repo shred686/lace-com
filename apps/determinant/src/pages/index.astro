@@ -1,0 +1,14 @@
+---
+import HomeNewPage from "@determinant/site-kit/components/HomeNewPage.astro";
+import BaseLayout from "@determinant/site-kit/layouts/BaseLayout.astro";
+import { determinantSite } from "../site.config";
+---
+
+<BaseLayout
+  title={determinantSite.title}
+  description={determinantSite.description}
+  theme="midnight"
+  lang="en"
+>
+  <HomeNewPage locale="en" />
+</BaseLayout>

@@ -6642,9 +6642,13 @@ li {
   flex-direction: column;
   gap: 0.55rem;
   padding: 1.5rem 1.4rem 1.3rem;
-  background: var(--oh-panel);
-  border: 1px solid var(--oh-line-soft);
-  border-top: 2px solid color-mix(in srgb, var(--tile-accent) 65%, transparent);
+  background:
+    linear-gradient(155deg, color-mix(in srgb, var(--tile-accent) 6%, transparent), transparent 60%),
+    var(--oh-panel);
+  border: 1px solid color-mix(in srgb, var(--tile-accent) 30%, transparent);
+  box-shadow:
+    0 0 22px -14px var(--tile-accent),
+    inset 0 0 26px -20px var(--tile-accent);
   text-decoration: none;
   backdrop-filter: blur(18px);
   transition: border-color 260ms ease, transform 260ms ease, box-shadow 260ms ease;
@@ -6652,8 +6656,11 @@ li {
 
 .official-home.home-v2 .v2-tile:hover {
   transform: translateY(-3px);
-  border-color: color-mix(in srgb, var(--tile-accent) 45%, transparent);
-  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.45);
+  border-color: color-mix(in srgb, var(--tile-accent) 55%, transparent);
+  box-shadow:
+    0 0 28px -10px var(--tile-accent),
+    inset 0 0 26px -18px var(--tile-accent),
+    0 18px 44px rgba(0, 0, 0, 0.45);
 }
 
 .official-home.home-v2 .v2-tile-icon {
@@ -6753,11 +6760,10 @@ li {
   content: "";
   position: absolute;
   left: 0;
-  top: 0.42rem;
-  width: 0.5rem;
-  height: 0.5rem;
-  background: rgba(var(--svc-rgb), 0.16);
-  border: 1px solid rgba(var(--svc-rgb), 0.75);
+  top: 0.6em;
+  width: 0.8rem;
+  height: 2px;
+  background: rgba(var(--svc-rgb), 0.8);
 }
 
 .official-home.home-v2 .v2-points strong {
@@ -6800,10 +6806,9 @@ li {
   position: relative;
   margin-top: 1.1rem;
   font-family: "Space Grotesk", "JetBrains Mono", monospace;
-  font-size: 0.56rem;
-  letter-spacing: 0.26em;
-  text-transform: uppercase;
-  color: rgba(var(--svc-rgb), 0.75);
+  font-size: 0.68rem;
+  letter-spacing: 0.05em;
+  color: rgba(var(--svc-rgb), 0.72);
 }
 
 /* Workflow visual — zapier-style chain */
@@ -7603,33 +7608,9 @@ li {
 }
 
 .official-home.home-v2 .v2-engage-step {
-  padding: 1.4rem 1.6rem;
+  padding: 1.5rem 1.6rem;
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  grid-template-rows: auto auto;
-  column-gap: 1.2rem;
-  row-gap: 0.45rem;
-  align-items: center;
-}
-
-.official-home.home-v2 .v2-engage-step .v2-step-number {
-  grid-row: 1 / span 2;
-  align-self: center;
-}
-
-.official-home.home-v2 .v2-engage-step h3 {
-  align-self: end;
-}
-
-.official-home.home-v2 .v2-step-number {
-  align-self: flex-start;
-  padding: 0.3rem 0.55rem;
-  font-family: "Space Grotesk", "JetBrains Mono", monospace;
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  color: var(--oh-accent);
-  border: 1px solid rgba(0, 255, 194, 0.4);
+  gap: 0.5rem;
 }
 
 .official-home.home-v2 .v2-engage-step h3 {

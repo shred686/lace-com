@@ -70,6 +70,7 @@ const copy = {
 
   introKicker: "Who We Are",
   introTitle: "We build the layer between AI models and your business.",
+  introTitleAccent: "the layer",
   introLead:
     "The models are already good. The hard part is making them work inside a real company — connected to your data, aware of your rules, and accountable for what they produce. That's our job.",
   introBody:
@@ -123,8 +124,9 @@ const serviceTiles = [
 
 const services = {
   workflows: {
-    kicker: "01 · AI Integrations",
+    kicker: "AI Integrations",
     title: "LLM-powered workflows, wired into the systems you already use.",
+    titleAccent: "the systems you already use",
     paragraphs: [
       "Most AI projects stall at the demo stage — impressive in a browser tab, useless in your operation. We take a process your team runs every week — intake, triage, drafting, review, reporting — and build it as a workflow the AI executes step by step, inside your systems.",
       "Each step has defined inputs, outputs, and checks. If a result doesn't pass, it routes to a person instead of going out the door. If it does pass, the next step picks it up automatically."
@@ -145,8 +147,9 @@ const services = {
     ]
   },
   rag: {
-    kicker: "02 · Retrieval-Augmented Generation",
+    kicker: "Retrieval-Augmented Generation",
     title: "Answers from your documents, not from the model's memory.",
+    titleAccent: "your documents",
     paragraphs: [
       "On its own, a language model answers from whatever it absorbed during training — which is why it sounds confident about things it can't possibly know, like your contracts. Retrieval-augmented generation fixes that: the system finds the relevant passages in your documents first, then writes the answer from what it found.",
       "We build the version of this that survives real documents. Tables stay tables. Sections keep their context. A numeric question is answered from the actual figure in the actual table — and the citation takes you straight to it."
@@ -167,8 +170,9 @@ const services = {
     ]
   },
   search: {
-    kicker: "03 · Enterprise Search",
+    kicker: "Enterprise Search",
     title: "One search across everything your company knows.",
+    titleAccent: "everything your company knows",
     paragraphs: [
       "The answer usually exists. It's in SharePoint, or a shared drive, or a wiki, or a database someone set up in 2019. The problem isn't that your company lacks information — it's that nobody can find it.",
       "We build search that spans those sources in a single query, understands what you mean rather than just matching keywords, and respects permissions — people only ever see results they're allowed to see."
@@ -189,8 +193,9 @@ const services = {
     ]
   },
   graphs: {
-    kicker: "04 · Knowledge Graphs",
+    kicker: "Knowledge Graphs",
     title: "Turn a pile of documents into a map of facts.",
+    titleAccent: "a map of facts",
     paragraphs: [
       "Search finds documents. A knowledge graph finds what's inside them: the companies, people, contracts, dates, and amounts — and how they connect. Which agreements renew this quarter? Which vendors touch customer data? Questions that used to mean a week of reading become a query.",
       "Every fact in the graph links back to the passage it came from, so you can verify it in seconds. And when two sources disagree, the graph keeps both versions and flags the conflict instead of quietly picking one."
@@ -269,25 +274,26 @@ const lace = {
 const engagement = {
   kicker: "Working With Us",
   title: "Start with one workflow. Prove it. Expand.",
+  titleAccent: "one workflow",
   lead: "We're a small senior team, and we work in weeks, not quarters.",
   steps: [
     {
-      step: "01",
       title: "Scope",
       body: "We pick one process together — something recurring, measurable, and painful — and define what “working” means before anything gets built."
     },
     {
-      step: "02",
       title: "Build",
       body: "You get a working system on your own data, usually within a few weeks. You judge it on real output, not slides."
     },
     {
-      step: "03",
       title: "Run",
       body: "We deploy it where you need it — cloud, private cloud, or fully on-premise — and either operate it with you or hand it over."
     }
   ]
 };
+
+const emphasize = (title: string, accent?: string) =>
+  accent ? title.replace(accent, `<span class="lace-accent-word">${accent}</span>`) : title;
 
 const heroTitleWords = copy.heroTitle.split(" ");
 const heroDesktopTitleLead = heroTitleWords.slice(0, 4).join(" ");
@@ -378,7 +384,7 @@ const year = new Date().getFullYear();
     <div class="v2-wrap">
       <div class="v2-intro-copy" data-r>
         <p class="section-kicker">{copy.introKicker}</p>
-        <h2 class="v2-h2">{copy.introTitle}</h2>
+        <h2 class="v2-h2" set:html={emphasize(copy.introTitle, copy.introTitleAccent)} />
         <p class="v2-lead">{copy.introLead}</p>
         <p class="v2-body">{copy.introBody}</p>
       </div>
@@ -439,7 +445,7 @@ const year = new Date().getFullYear();
     <div class="v2-wrap">
       <div class="v2-copy" data-r>
         <p class="v2-kicker">{services.workflows.kicker}</p>
-        <h2 class="v2-h2">{services.workflows.title}</h2>
+        <h2 class="v2-h2" set:html={emphasize(services.workflows.title, services.workflows.titleAccent)} />
         {services.workflows.paragraphs.map((paragraph) => (
           <p class="v2-body">{paragraph}</p>
         ))}
@@ -474,7 +480,7 @@ const year = new Date().getFullYear();
               </>
             ))}
           </div>
-          <div class="v2-visual-caption">EVERY STEP CHECKED // EVERY RUN LOGGED</div>
+          <div class="v2-visual-caption">Every step checked, every run logged</div>
         </div>
       </div>
     </div>
@@ -497,7 +503,7 @@ const year = new Date().getFullYear();
     <div class="v2-wrap">
       <div class="v2-copy" data-r>
         <p class="v2-kicker">{services.rag.kicker}</p>
-        <h2 class="v2-h2">{services.rag.title}</h2>
+        <h2 class="v2-h2" set:html={emphasize(services.rag.title, services.rag.titleAccent)} />
         {services.rag.paragraphs.map((paragraph) => (
           <p class="v2-body">{paragraph}</p>
         ))}
@@ -556,7 +562,7 @@ const year = new Date().getFullYear();
             <div class="v2-rag-answer-foot">2 sources · both verifiable</div>
           </div>
         </div>
-        <div class="v2-visual-caption">GROUNDED IN YOUR DOCUMENTS // CITED TO THE PAGE</div>
+        <div class="v2-visual-caption">Grounded in your documents, cited to the page</div>
       </div>
     </div>
   </section>
@@ -566,7 +572,7 @@ const year = new Date().getFullYear();
     <div class="v2-wrap">
       <div class="v2-copy" data-r>
         <p class="v2-kicker">{services.search.kicker}</p>
-        <h2 class="v2-h2">{services.search.title}</h2>
+        <h2 class="v2-h2" set:html={emphasize(services.search.title, services.search.titleAccent)} />
         {services.search.paragraphs.map((paragraph) => (
           <p class="v2-body">{paragraph}</p>
         ))}
@@ -633,7 +639,7 @@ const year = new Date().getFullYear();
               </svg>
             </div>
           </div>
-          <div class="v2-visual-caption">ONE QUERY // PERMISSIONS ENFORCED</div>
+          <div class="v2-visual-caption">One query, permissions enforced</div>
         </div>
       </div>
     </div>
@@ -644,7 +650,7 @@ const year = new Date().getFullYear();
     <div class="v2-wrap">
       <div class="v2-copy" data-r>
         <p class="v2-kicker">{services.graphs.kicker}</p>
-        <h2 class="v2-h2">{services.graphs.title}</h2>
+        <h2 class="v2-h2" set:html={emphasize(services.graphs.title, services.graphs.titleAccent)} />
         {services.graphs.paragraphs.map((paragraph) => (
           <p class="v2-body">{paragraph}</p>
         ))}
@@ -667,7 +673,7 @@ const year = new Date().getFullYear();
             widths={[640, 980, 1400, 1860]}
             sizes="(max-width: 980px) 94vw, 640px"
           />
-          <div class="v2-visual-caption">FACTS, LINKED // EVIDENCE ATTACHED</div>
+          <div class="v2-visual-caption">Facts linked, evidence attached</div>
         </div>
       </div>
     </div>
@@ -751,14 +757,13 @@ const year = new Date().getFullYear();
     <div class="v2-wrap">
       <div class="v2-engage-head" data-r>
         <p class="section-kicker">{engagement.kicker}</p>
-        <h2 class="v2-h2">{engagement.title}</h2>
+        <h2 class="v2-h2" set:html={emphasize(engagement.title, engagement.titleAccent)} />
         <p class="v2-lead">{engagement.lead}</p>
       </div>
 
       <div class="v2-engage-grid">
         {engagement.steps.map((step, index) => (
           <article class="glass-card v2-engage-step" data-r data-reveal-delay={100 + index * 90}>
-            <span class="v2-step-number">{step.step}</span>
             <h3>{step.title}</h3>
             <p>{step.body}</p>
           </article>
@@ -810,7 +815,7 @@ const year = new Date().getFullYear();
           </svg>
           <span>Determinant Systems</span>
         </div>
-        <p>© {year} Determinant Systems // {copy.footerTagline}</p>
+        <p>© {year} Determinant Systems · {copy.footerTagline}</p>
       </div>
       <div class="footer-links">
         <a href="#">{copy.security}</a>

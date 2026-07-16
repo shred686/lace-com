@@ -2,7 +2,7 @@
 import { Image } from "astro:assets";
 import { getHomeNewContent } from "../data/homeNewContent";
 import WorkflowStorySection from "./workflow-story/WorkflowStorySection.astro";
-import whitepaperEnglish from "../assets/docs/lace_enterprise_overview_v2_ENGLISH.pdf";
+import whitepaperEnglish from "../assets/docs/LACE_Enterprise_Overview_v3.pdf";
 import laceScreen2 from "../assets/images/lace-screen2.png";
 
 const {
@@ -120,7 +120,7 @@ const getBodyParagraphs = (body: string | string[]) =>
 const year = new Date().getFullYear();
 ---
 
-<main class="official-home lace-platform-home">
+<main class="official-home lace-platform-home canvas-dim">
   <canvas id="neural-canvas" class="neural-canvas" aria-hidden="true"></canvas>
   <div class="scan-line" aria-hidden="true"></div>
 
@@ -154,21 +154,13 @@ const year = new Date().getFullYear();
     </div>
   </header>
 
-  <section class="company-intro problem-scroll-section section-shell" data-problem-scroll>
+  <section class="company-intro problem-scroll-section hero-scroll-section section-shell is-light" data-hero-scroll>
     <span id="platform" class="problem-platform-anchor" aria-hidden="true"></span>
     <div class="problem-scroll-pin">
       <div class="problem-scroll-copy" data-problem-copy>
-        <p class="section-kicker problem-scroll-kicker">{copy.introLabel}</p>
-        <h2 class="problem-scroll-line" data-problem-line data-problem-words={problemSlotWords.join("|")}>
-          <span>{problemLeadStart}</span>
-          <span class="problem-slot" aria-live="polite">
-            <span data-problem-word>{problemSlotWords[0]}</span>
-          </span>
-        </h2>
-        <h2 class="problem-scroll-final lace-accent-word" data-problem-final>{problemFinalLine}</h2>
         <h2
           class="problem-scroll-lace"
-          data-problem-lace
+          data-hero-lace
           set:html={copy.ourPlatformTitle.replace("LACE", '<span class="lace-accent-word">LACE</span>')}
         ></h2>
       </div>
@@ -187,9 +179,24 @@ const year = new Date().getFullYear();
     </div>
   </section>
 
-  <div id="light-zone" class="lace-light-zone">
+  <div id="light-zone" class="lace-light-zone is-light">
 
-    <section class="platform-intro section-shell">
+    <section class="company-intro problem-scroll-section problem-only-scroll section-shell is-light" data-problem-scroll>
+      <div class="problem-scroll-pin">
+        <div class="problem-scroll-copy" data-problem-copy>
+          <p class="section-kicker problem-scroll-kicker">{copy.introLabel}</p>
+          <h2 class="problem-scroll-line" data-problem-line data-problem-words={problemSlotWords.join("|")}>
+            <span>{problemLeadStart}</span>
+            <span class="problem-slot" aria-live="polite">
+              <span data-problem-word>{problemSlotWords[0]}</span>
+            </span>
+          </h2>
+          <h2 class="problem-scroll-final lace-accent-word" data-problem-final>{problemFinalLine}</h2>
+        </div>
+      </div>
+    </section>
+
+    <section class="platform-intro platform-after-problem section-shell">
       <div class="platform-intro-layout" data-r>
         <div class="platform-intro-copy">
           <h2 class="platform-intro-title">
@@ -441,52 +448,73 @@ const year = new Date().getFullYear();
   })();
 
   (() => {
+    const section = document.querySelector("[data-hero-scroll]");
+    if (!section) return;
+
+    const laceLine = section.querySelector("[data-hero-lace]");
+    const copyBlock = section.querySelector("[data-problem-copy]");
+    const platformPreview = section.querySelector("[data-platform-preview]");
+    const zone = document.getElementById("light-zone");
+    const home = document.querySelector(".official-home");
+    if (!laceLine || !copyBlock || !platformPreview || !zone || !home) return;
+
+    let raf = 0;
+
+    const update = () => {
+      raf = 0;
+      const rect = section.getBoundingClientRect();
+      const travel = Math.max(1, rect.height - window.innerHeight);
+      const progress = Math.min(1, Math.max(0, -rect.top / travel));
+      const clampValue = (value, min, max) => Math.min(max, Math.max(min, value));
+      const easeOut = (value) => 1 - Math.pow(1 - value, 3);
+      const easeInOut = (value) =>
+        value < 0.5 ? 4 * value * value * value : 1 - Math.pow(-2 * value + 2, 3) / 2;
+      const lerp = (start, end, value) => start + (end - start) * value;
+      const isMobile = window.innerWidth <= 680;
+
+      section.classList.add("is-label-visible");
+      section.classList.toggle("is-light", true);
+      zone.classList.toggle("is-light", true);
+      home.classList.toggle("canvas-dim", true);
+
+      const previewProgress = clampValue(progress / 0.88, 0, 1);
+      const previewEase = easeInOut(previewProgress);
+      const copyFade = easeOut(clampValue((previewProgress - 0.4) / 0.14, 0, 1));
+      const previewStartY = isMobile ? 86 : 112;
+      const previewEndY = isMobile ? 2 : 8.5;
+
+      laceLine.classList.toggle("is-visible", copyFade < 1);
+      section.style.setProperty("--problem-copy-opacity", String(1 - copyFade));
+      section.style.setProperty("--problem-copy-y", `${lerp(0, isMobile ? -8 : -10, copyFade)}svh`);
+      section.style.setProperty("--platform-preview-opacity", "1");
+      section.style.setProperty("--platform-preview-y", `${lerp(previewStartY, previewEndY, previewEase)}svh`);
+      section.style.setProperty("--platform-preview-halo-opacity", String(lerp(0.35, 0.8, previewEase)));
+    };
+
+    const requestUpdate = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(update);
+    };
+
+    update();
+    window.addEventListener("scroll", requestUpdate, { passive: true });
+    window.addEventListener("resize", requestUpdate);
+  })();
+
+  (() => {
     const section = document.querySelector("[data-problem-scroll]");
     if (!section) return;
 
     const line = section.querySelector("[data-problem-line]");
     const finalLine = section.querySelector("[data-problem-final]");
-    const laceLine = section.querySelector("[data-problem-lace]");
     const word = section.querySelector("[data-problem-word]");
-    const copyBlock = section.querySelector("[data-problem-copy]");
-    const platformPreview = section.querySelector("[data-platform-preview]");
     const slot = word ? word.parentElement : null;
-    const zone = document.getElementById("light-zone");
-    const veil = document.getElementById("lace-flash-veil");
-    const home = document.querySelector(".official-home");
-    if (!line || !finalLine || !laceLine || !word || !slot || !copyBlock || !platformPreview || !zone || !veil || !home) return;
+    if (!line || !finalLine || !word || !slot) return;
 
     const configuredWords = (line.getAttribute("data-problem-words") || "fast.|smart.|impressive.").split("|");
-    const problemAutoplayEnabled = false;
     let activeWord = configuredWords[0];
-    let isLight = false;
-    let flashTimer = 0;
     let flipTimer = 0;
     let raf = 0;
-
-    const clearFlash = () => {
-      if (flashTimer) window.clearTimeout(flashTimer);
-      flashTimer = 0;
-      veil.classList.remove("flash-to-light", "flash-to-dark");
-    };
-
-    const applyLight = (on) => {
-      section.classList.toggle("is-light", on);
-      zone.classList.toggle("is-light", on);
-      home.classList.toggle("canvas-dim", on);
-    };
-
-    const setLight = (on) => {
-      if (on === isLight) return;
-      isLight = on;
-      clearFlash();
-      veil.classList.add(on ? "flash-to-light" : "flash-to-dark");
-      flashTimer = window.setTimeout(() => {
-        applyLight(on);
-        flashTimer = 0;
-      }, 90);
-      window.setTimeout(clearFlash, 520);
-    };
 
     const setWord = (nextWord) => {
       if (nextWord === activeWord) return;
@@ -508,14 +536,9 @@ const year = new Date().getFullYear();
       const progress = Math.min(1, Math.max(0, -rect.top / travel));
       const clampValue = (value, min, max) => Math.min(max, Math.max(min, value));
       const easeOut = (value) => 1 - Math.pow(1 - value, 3);
-      const easeInOut = (value) =>
-        value < 0.5 ? 4 * value * value * value : 1 - Math.pow(-2 * value + 2, 3) / 2;
-      const lerp = (start, end, value) => start + (end - start) * value;
       const entryProgress = clampValue(1 - rect.top / window.innerHeight, 0, 1);
       const isMobile = window.innerWidth <= 680;
-      const storyEnd = isMobile ? 0.756 : 0.78;
-      const storyProgress = clampValue(progress / storyEnd, 0, 1);
-      const laceRevealStart = 0.94;
+      const storyProgress = progress;
       const labelHoldEnd = 0.055;
       const labelSettleEnd = 0.14;
       const entryEase = easeOut(entryProgress);
@@ -526,6 +549,7 @@ const year = new Date().getFullYear();
       const labelStartLetter = isMobile ? 0.34 : 0.46;
       const labelPeakLetter = isMobile ? 0.24 : 0.34;
       const labelSettleLetter = isMobile ? 0.24 : 0.3;
+      const lerp = (start, end, value) => start + (end - start) * value;
       let labelScale = lerp(labelStartScale, labelPeakScale, entryEase);
       let labelY = lerp(labelStartY, labelPeakY, entryEase);
       let labelLetter = lerp(labelStartLetter, labelPeakLetter, entryEase);
@@ -553,36 +577,20 @@ const year = new Date().getFullYear();
         labelOpacity = 1;
       }
 
+      const copyFade = easeOut(clampValue((progress - 0.92) / 0.08, 0, 1));
+
       section.style.setProperty("--problem-kicker-scale", String(labelScale));
       section.style.setProperty("--problem-kicker-y", `${labelY}svh`);
       section.style.setProperty("--problem-kicker-letter", `${labelLetter}em`);
       section.style.setProperty("--problem-kicker-glow", String(labelGlow));
       section.style.setProperty("--problem-kicker-opacity", String(labelOpacity));
+      section.style.setProperty("--problem-copy-opacity", String(1 - copyFade));
+      section.style.setProperty("--problem-copy-y", `${lerp(0, isMobile ? -8 : -10, copyFade)}svh`);
 
       section.classList.toggle("is-label-visible", progress >= 0);
       line.classList.toggle("is-visible", storyProgress >= 0.14 && storyProgress < 0.76);
       line.classList.toggle("is-exiting", storyProgress >= 0.73 && storyProgress < 0.78);
-      finalLine.classList.toggle("is-visible", storyProgress >= 0.74 && storyProgress < laceRevealStart);
-      laceLine.classList.toggle("is-visible", storyProgress >= laceRevealStart);
-      setLight(storyProgress >= laceRevealStart);
-
-      const previewStart = storyEnd;
-      const previewEnd = 1;
-      const previewRawProgress = (progress - previewStart) / (previewEnd - previewStart);
-      const previewProgress = clampValue(previewRawProgress, 0, 1);
-      const previewTravelProgress = Math.max(0, previewRawProgress);
-      const previewEase = easeInOut(previewProgress);
-      const previewOpacity = progress >= previewStart ? 1 : 0;
-      const copyFadeStart = isMobile ? 0.85 : 0.85;
-      const copyFade = easeOut(clampValue((progress - copyFadeStart) / 0.075, 0, 1));
-      const previewStartY = isMobile ? 86 : 112;
-      const previewEndY = isMobile ? 2 : 8.5;
-
-      section.style.setProperty("--problem-copy-opacity", String(1 - copyFade));
-      section.style.setProperty("--problem-copy-y", `${lerp(0, isMobile ? -8 : -10, copyFade)}svh`);
-      section.style.setProperty("--platform-preview-opacity", String(previewOpacity));
-      section.style.setProperty("--platform-preview-y", `${lerp(previewStartY, previewEndY, previewTravelProgress)}svh`);
-      section.style.setProperty("--platform-preview-halo-opacity", String(lerp(0.35, 0.8, previewEase)));
+      finalLine.classList.toggle("is-visible", storyProgress >= 0.74);
 
       if (storyProgress < 0.34) {
         setWord(configuredWords[0]);
@@ -598,71 +606,7 @@ const year = new Date().getFullYear();
       raf = requestAnimationFrame(update);
     };
 
-    const startProblemAutoplay = () => {
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-      const getBounds = () => {
-        const rect = section.getBoundingClientRect();
-        const top = rect.top + window.scrollY;
-        const travel = Math.max(1, section.scrollHeight - window.innerHeight);
-        const isMobile = window.innerWidth <= 680;
-        const storyEnd = isMobile ? 0.756 : 0.78;
-        const previewPeekProgress = storyEnd + (isMobile ? 0.085 : 0.05);
-        return {
-          start: top,
-          end: top + travel * previewPeekProgress
-        };
-      };
-
-      let autoplayRaf = 0;
-      let lastFrame = 0;
-      let userScrollUntil = 0;
-
-      const noteUserScroll = () => {
-        userScrollUntil = performance.now() + 180;
-      };
-
-      window.addEventListener("wheel", noteUserScroll, { passive: true });
-      window.addEventListener("touchmove", noteUserScroll, { passive: true });
-      window.addEventListener("keydown", (event) => {
-        const scrollingKeys = [" ", "ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End"];
-        if (scrollingKeys.includes(event.key)) noteUserScroll();
-      });
-
-      const step = (timestamp) => {
-        const { start, end } = getBounds();
-        const currentY = window.scrollY;
-
-        if (currentY >= end - 1 || currentY < start - window.innerHeight * 0.2) {
-          autoplayRaf = 0;
-          return;
-        }
-
-        if (!lastFrame) lastFrame = timestamp;
-        const elapsed = Math.min(80, timestamp - lastFrame);
-        lastFrame = timestamp;
-
-        if (performance.now() < userScrollUntil) {
-          autoplayRaf = requestAnimationFrame(step);
-          return;
-        }
-
-        const autoplayDuration = 8400;
-        const distance = ((end - start) / autoplayDuration) * elapsed;
-        const nextY = Math.min(end, Math.max(start, currentY) + distance);
-
-        window.scrollTo(window.scrollX, nextY);
-        requestUpdate();
-        autoplayRaf = requestAnimationFrame(step);
-      };
-
-      window.setTimeout(() => {
-        if (!autoplayRaf) autoplayRaf = requestAnimationFrame(step);
-      }, 1000);
-    };
-
     update();
-    if (problemAutoplayEnabled) startProblemAutoplay();
     window.addEventListener("scroll", requestUpdate, { passive: true });
     window.addEventListener("resize", requestUpdate);
   })();

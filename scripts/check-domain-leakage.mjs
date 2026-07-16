@@ -4,11 +4,14 @@ import { join } from "node:path";
 const checks = [
   {
     root: "apps/determinant/src",
-    forbidden: "laceplatform.com"
+    forbidden: "laceplatform.com",
+    // Intentional exceptions: shared contact inbox lives on the LACE domain.
+    allowed: ["sales@laceplatform.com"]
   },
   {
     root: "apps/lace/src",
-    forbidden: "determinantsystems.com"
+    forbidden: "determinantsystems.com",
+    allowed: ["sales@determinantsystems.com"]
   }
 ];
 
@@ -54,7 +57,11 @@ for (const check of checks) {
   const files = await walk(check.root);
 
   for (const file of files) {
-    const content = await readFile(file, "utf8");
+    let content = await readFile(file, "utf8");
+
+    for (const allowed of check.allowed ?? []) {
+      content = content.replaceAll(allowed, "");
+    }
 
     if (content.includes(check.forbidden)) {
       failures.push(`${file} contains ${check.forbidden}`);

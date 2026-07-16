@@ -1,6 +1,16 @@
 ---
 import "../styles/global.css";
 
+interface Organization {
+  name: string;
+  url: string;
+  description: string;
+  logo?: string;
+  email?: string;
+  telephone?: string;
+  sameAs?: readonly string[];
+}
+
 interface Props {
   title?: string;
   description?: string;
@@ -12,6 +22,11 @@ interface Props {
   siteName?: string;
   /** Set true on draft, theme, and thank-you pages to keep them out of the index. */
   noindex?: boolean;
+  /**
+   * Organization structured data. Pass only on the homepage so a single
+   * authoritative entity is declared for the site.
+   */
+  organization?: Organization;
 }
 
 const {
@@ -21,7 +36,8 @@ const {
   lang = "en",
   image = "/og-image.png",
   siteName,
-  noindex = false
+  noindex = false,
+  organization
 } = Astro.props;
 
 // Astro.site is set per app in astro.config.mjs; fall back gracefully if missing.
@@ -31,14 +47,22 @@ const ogImageURL = new URL(image, siteOrigin);
 const resolvedSiteName = siteName ?? title.split("|")[0].trim();
 const ogLocale = lang === "es" ? "es_ES" : "en_US";
 
-const organizationSchema = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  name: resolvedSiteName,
-  url: siteOrigin.origin,
-  logo: new URL("/apple-touch-icon.png", siteOrigin).href,
-  description
-};
+const organizationSchema = organization
+  ? {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "@id": new URL("#organization", organization.url).href,
+      name: organization.name,
+      url: organization.url,
+      ...(organization.logo ? { logo: organization.logo } : {}),
+      description: organization.description,
+      ...(organization.email ? { email: organization.email } : {}),
+      ...(organization.telephone ? { telephone: organization.telephone } : {}),
+      ...(organization.sameAs && organization.sameAs.length > 0
+        ? { sameAs: organization.sameAs }
+        : {})
+    }
+  : null;
 ---
 
 <!doctype html>
@@ -85,10 +109,14 @@ const organizationSchema = {
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageURL} />
 
-    <script
-      type="application/ld+json"
-      set:html={JSON.stringify(organizationSchema)}
-    />
+    {
+      organizationSchema && (
+        <script
+          type="application/ld+json"
+          set:html={JSON.stringify(organizationSchema)}
+        />
+      )
+    }
   </head>
   <body>
     <slot />

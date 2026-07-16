@@ -1,9 +1,15 @@
 ---
 import BaseLayout from "@determinant/site-kit/layouts/BaseLayout.astro";
 import LacePlatformPage from "@determinant/site-kit/components/LacePlatformPage.astro";
-import { laceSite } from "../site.config";
+import { laceSite, laceOrganization } from "../site.config";
 ---
 
-<BaseLayout title={laceSite.title} description={laceSite.description} theme="midnight" lang="en">
+<BaseLayout
+  title={laceSite.title}
+  description={laceSite.description}
+  theme="midnight"
+  lang="en"
+  organization={laceOrganization}
+>
   <LacePlatformPage />
 </BaseLayout>

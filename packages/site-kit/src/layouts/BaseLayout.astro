@@ -6,14 +6,39 @@ interface Props {
   description?: string;
   theme?: string;
   lang?: string;
+  /** OG/Twitter share image, resolved against the site origin. */
+  image?: string;
+  /** Human-readable site name for og:site_name / structured data. */
+  siteName?: string;
+  /** Set true on draft, theme, and thank-you pages to keep them out of the index. */
+  noindex?: boolean;
 }
 
 const {
   title = "Enterprise AI Systems",
   description = "Structured, auditable AI systems for mission-critical enterprise workflows.",
   theme = "midnight",
-  lang = "en"
+  lang = "en",
+  image = "/og-image.png",
+  siteName,
+  noindex = false
 } = Astro.props;
+
+// Astro.site is set per app in astro.config.mjs; fall back gracefully if missing.
+const siteOrigin = Astro.site ?? new URL(Astro.url.origin);
+const canonicalURL = new URL(Astro.url.pathname, siteOrigin);
+const ogImageURL = new URL(image, siteOrigin);
+const resolvedSiteName = siteName ?? title.split("|")[0].trim();
+const ogLocale = lang === "es" ? "es_ES" : "en_US";
+
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: resolvedSiteName,
+  url: siteOrigin.origin,
+  logo: new URL("/apple-touch-icon.png", siteOrigin).href,
+  description
+};
 ---
 
 <!doctype html>
@@ -21,6 +46,14 @@ const {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="canonical" href={canonicalURL} />
+    <meta name="robots" content={noindex ? "noindex, nofollow" : "index, follow"} />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#040506" />
+
     <link
       rel="preconnect"
       href="https://fonts.googleapis.com"
@@ -36,6 +69,26 @@ const {
     />
     <title>{title}</title>
     <meta name="description" content={description} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={resolvedSiteName} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={ogImageURL} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content={ogLocale} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageURL} />
+
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(organizationSchema)}
+    />
   </head>
   <body>
     <slot />

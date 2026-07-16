@@ -9,6 +9,7 @@
     "preview": "astro preview --port 4322"
   },
   "dependencies": {
+    "@astrojs/sitemap": "^3.7.3",
     "@determinant/site-kit": "file:../../packages/site-kit",
     "astro": "^5.3.0"
   }

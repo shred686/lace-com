@@ -10,16 +10,37 @@ export const laceSite = {
     "LACE turns business workflows into governed, repeatable AI systems with policy controls, evidence grounding, and auditable output."
 } as const;
 
-// Organization structured data (schema.org). Emitted on the homepage only.
-export const laceOrganization = {
-  name: laceSite.name,
-  url: `${laceSite.url}/`,
-  logo: `${laceSite.url}/apple-touch-icon.png`,
-  description:
-    "LACE is governed AI workflow infrastructure that turns business workflows into repeatable, auditable AI systems with policy controls and evidence grounding.",
-  email: laceSite.contactEmail,
-  telephone: "+1-727-282-4564",
-  // Add verified profile URLs (e.g. LinkedIn company page, GitHub org) to
-  // strengthen entity disambiguation in Search.
-  sameAs: [] as string[]
+// LACE is a product of Determinant Systems, not its own organization. Model it
+// as a SoftwareApplication published by the Determinant Systems org, referenced
+// by the same @id the org declares on determinantsystems.com. Emitted on the
+// homepage only.
+const determinantOrgId = "https://determinantsystems.com/#organization";
+
+export const laceJsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": determinantOrgId,
+      name: "Determinant Systems",
+      url: "https://determinantsystems.com/",
+      logo: "https://determinantsystems.com/apple-touch-icon.png",
+      sameAs: [
+        "https://www.linkedin.com/company/determinant-systems-inc/",
+        "https://github.com/Determinant-Systems"
+      ]
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": `${laceSite.url}/#lace`,
+      name: laceSite.name,
+      url: `${laceSite.url}/`,
+      description:
+        "LACE is governed AI workflow infrastructure that turns business workflows into repeatable, auditable AI systems with policy controls and evidence grounding.",
+      applicationCategory: "BusinessApplication",
+      operatingSystem: "Web",
+      image: `${laceSite.url}/og-image.png`,
+      publisher: { "@id": determinantOrgId }
+    }
+  ]
 };

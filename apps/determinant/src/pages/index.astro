@@ -1,7 +1,7 @@
 ---
 import HomeV2Page from "@determinant/site-kit/components/HomeV2Page.astro";
 import BaseLayout from "@determinant/site-kit/layouts/BaseLayout.astro";
-import { determinantSite, determinantOrganization } from "../site.config";
+import { determinantSite, determinantJsonLd } from "../site.config";
 ---
 
 <BaseLayout
@@ -9,7 +9,7 @@ import { determinantSite, determinantOrganization } from "../site.config";
   description={determinantSite.description}
   theme="midnight"
   lang="en"
-  organization={determinantOrganization}
+  jsonLd={determinantJsonLd}
 >
   <HomeV2Page />
 </BaseLayout>

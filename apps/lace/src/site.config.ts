@@ -12,7 +12,7 @@ export const laceSite = {
 
 // LACE is a product of Determinant Systems, not its own organization. Model it
 // as a SoftwareApplication published by the Determinant Systems org, referenced
-// by the same @id the org declares on determinantsystems.com. Emitted on the
+// by the same @id the org declares on its own domain. Emitted on the
 // homepage only.
 const determinantOrgId = "https://determinantsystems.com/#organization";
 

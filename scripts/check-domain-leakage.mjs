@@ -11,7 +11,9 @@ const checks = [
   {
     root: "apps/lace/src",
     forbidden: "determinantsystems.com",
-    allowed: ["sales@determinantsystems.com"]
+    // Intentional exceptions: shared contact inbox, plus the Determinant Systems
+    // org URLs referenced from LACE's schema.org publisher markup.
+    allowed: ["sales@determinantsystems.com", "https://determinantsystems.com"]
   }
 ];
 

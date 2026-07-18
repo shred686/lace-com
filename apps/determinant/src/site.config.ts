@@ -11,7 +11,7 @@ export const determinantSite = {
 } as const;
 
 // Stable schema.org node id for the Determinant Systems organization. LACE's
-// markup (on laceplatform.com) references this same id as its publisher.
+// markup references this same id as its publisher.
 export const determinantOrgId = `${determinantSite.url}/#organization`;
 
 // Organization structured data (schema.org). Emitted on the homepage only.

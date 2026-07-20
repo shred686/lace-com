@@ -1,0 +1,1580 @@
+---
+/**
+ * laceplatform.com — home page.
+ * Design language: a visible hairline grid the whole page is drawn on
+ * (Attio-style), sentence-case type, one product fragment per cell,
+ * almost no body copy. Green stays the only accent.
+ */
+import { Image } from "astro:assets";
+import LaceNav from "./LaceNav.astro";
+import LaceFooter from "./LaceFooter.astro";
+import LaceSearchDemo from "./LaceSearchDemo.astro";
+import whitepaper from "../../assets/docs/LACE_Enterprise_Overview_v3.pdf";
+import laceScreen2 from "../../assets/images/lace-screen2.png";
+import "../../styles/lace-site.css";
+
+/* Brand marks (simplified official logos). */
+const brandLogos: Record<string, string> = {
+  sharepoint: `<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9.5" cy="9" r="7" fill="#036C70"/><circle cx="16.5" cy="12.5" r="5.4" fill="#1A9BA1"/><circle cx="11.5" cy="17.5" r="4.2" fill="#37C6D0"/></svg>`,
+  gdrive: `<svg viewBox="0 0 24 22" aria-hidden="true"><path fill="#00AC47" d="M8.1 0 0 14.4l4.05 7.2 8.1-14.4z"/><path fill="#FFBA00" d="M8.1 0h7.8L24 14.4h-7.8z"/><path fill="#2684FC" d="M4.05 21.6h15.9L24 14.4H8.1z"/></svg>`,
+  onedrive: `<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#0364B8" d="M19.35 10.54A7.49 7.49 0 0 0 12 4.5a7.5 7.5 0 0 0-6.96 4.76A6 6 0 0 0 6 21.5h13a5 5 0 0 0 .35-9.96z"/></svg>`,
+  slack: `<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#E01E5A" d="M5.042 15.165a2.528 2.528 0 0 1-2.52 2.523A2.528 2.528 0 0 1 0 15.165a2.527 2.527 0 0 1 2.522-2.52h2.52v2.52zM6.313 15.165a2.527 2.527 0 0 1 2.521-2.52 2.527 2.527 0 0 1 2.521 2.52v6.313A2.528 2.528 0 0 1 8.834 24a2.528 2.528 0 0 1-2.521-2.522v-6.313z"/><path fill="#36C5F0" d="M8.834 5.042a2.528 2.528 0 0 1-2.521-2.52A2.528 2.528 0 0 1 8.834 0a2.528 2.528 0 0 1 2.521 2.522v2.52H8.834zM8.834 6.313a2.528 2.528 0 0 1 2.521 2.521 2.528 2.528 0 0 1-2.521 2.521H2.522A2.528 2.528 0 0 1 0 8.834a2.528 2.528 0 0 1 2.522-2.521h6.312z"/><path fill="#2EB67D" d="M18.956 8.834a2.528 2.528 0 0 1 2.522-2.521A2.528 2.528 0 0 1 24 8.834a2.528 2.528 0 0 1-2.522 2.521h-2.522V8.834zM17.688 8.834a2.528 2.528 0 0 1-2.523 2.521 2.527 2.527 0 0 1-2.52-2.521V2.522A2.527 2.527 0 0 1 15.165 0a2.528 2.528 0 0 1 2.523 2.522v6.312z"/><path fill="#ECB22E" d="M15.165 18.956a2.528 2.528 0 0 1 2.523 2.522A2.528 2.528 0 0 1 15.165 24a2.527 2.527 0 0 1-2.52-2.522v-2.522h2.52zM15.165 17.688a2.527 2.527 0 0 1-2.52-2.523 2.526 2.526 0 0 1 2.52-2.52h6.313A2.527 2.527 0 0 1 24 15.165a2.528 2.528 0 0 1-2.522 2.523h-6.313z"/></svg>`,
+  teams: `<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="19.6" cy="7" r="2.2" fill="#7B83EB"/><circle cx="13.4" cy="5.6" r="3" fill="#7B83EB"/><path fill="#7B83EB" d="M9 10.4h8.6c.4 0 .7.3.7.7v5.2a4.8 4.8 0 0 1-4.8 4.8h-.2A4.8 4.8 0 0 1 9 17.3z"/><rect x=".5" y="7" width="12.5" height="12.5" rx="1.4" fill="#6264A7"/><path fill="#fff" d="M9.6 10.3H4v1.8h1.9v5.7h1.9v-5.7h1.8z"/></svg>`,
+  notion: `<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.6" y="1.8" width="18.8" height="20.4" rx="2.2" fill="#fff" stroke="#37352F" stroke-width="1.1"/><path fill="#0b0b0b" d="M8.1 17.3V7.2l1.9-.15 4.4 7V7.5l2-.3v10l-2 .15-4.4-7v6.8z"/></svg>`,
+  dropbox: `<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#0061FF" d="M6 2 0 5.86l6 3.86 6-3.86zm12 0-6 3.86 6 3.86 6-3.86zM0 13.58l6 3.86 6-3.86-6-3.86zm18-3.86-6 3.86 6 3.86 6-3.86zM6 18.72l6 3.86 6-3.86-6-3.86z"/></svg>`,
+  gmail: `<svg viewBox="0 0 24 18" aria-hidden="true"><path fill="#4285F4" d="M1.636 18H5.4V8.864L0 4.815v11.549C0 17.268.732 18 1.636 18z"/><path fill="#34A853" d="M18.6 18h3.764c.904 0 1.636-.732 1.636-1.636V4.815l-5.4 4.049z"/><path fill="#FBBC04" d="M18.6 1.636v7.228l5.4-4.049V2.454c0-2.023-2.309-3.178-3.927-1.964z"/><path fill="#EA4335" d="M5.4 8.864V1.636L12 6.586l6.6-4.95v7.228L12 13.814z"/><path fill="#C5221F" d="M0 2.454v2.361l5.4 4.049V1.636L3.927.49C2.309-.724 0 .431 0 2.454z"/></svg>`,
+  s3: `<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#E25444" d="M4.2 5.5C4.2 4 7.7 3 12 3s7.8 1 7.8 2.5l-1.9 13.9c-.1 1.1-2.5 2.1-5.9 2.1s-5.8-1-5.9-2.1z"/><ellipse cx="12" cy="5.5" rx="7.8" ry="2.5" fill="#7B1D13"/></svg>`,
+  salesforce: `<svg viewBox="0 0 24 17" aria-hidden="true"><g fill="#00A1E0"><circle cx="6.4" cy="10.6" r="5.1"/><circle cx="12" cy="7.2" r="6"/><circle cx="17.8" cy="10.4" r="5.4"/><rect x="4.5" y="10" width="15" height="5.7" rx="2.8"/></g></svg>`,
+  postgres: `<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#336791" d="M4 6.2v11.6C4 19.6 7.6 21 12 21s8-1.4 8-3.2V6.2z"/><ellipse cx="12" cy="6.2" rx="8" ry="3.2" fill="#4A80AA"/></svg>`,
+};
+
+const connectors = [
+  { id: "sharepoint", name: "SharePoint" },
+  { id: "gdrive", name: "Google Drive" },
+  { id: "onedrive", name: "OneDrive" },
+  { id: "slack", name: "Slack" },
+  { id: "teams", name: "Teams" },
+  { id: "notion", name: "Notion" },
+  { id: "dropbox", name: "Dropbox" },
+  { id: "gmail", name: "Gmail" },
+  { id: "s3", name: "Amazon S3" },
+  { id: "salesforce", name: "Salesforce" },
+  { id: "postgres", name: "PostgreSQL" },
+];
+---
+
+<main class="lp-site lp2">
+  <LaceNav active="home" />
+
+  <div class="lp2-frame">
+    <!-- ── Hero ───────────────────────────────────────────────────── -->
+    <section class="lp2-hero">
+      <p class="lp2-eyebrow" data-r>The AI platform for the governed enterprise</p>
+      <h1 class="lp2-h1" data-r data-reveal-delay="80">
+        Most platforms run a model.<br />
+        <span class="lp-accent">LACE runs the enterprise.</span>
+      </h1>
+      <p class="lp2-sub" data-r data-reveal-delay="160">
+        Everything your organization knows — searched, mapped, staffed with
+        agents, shipped as software. With receipts.
+      </p>
+      <div class="lp2-actions" data-r data-reveal-delay="230">
+        <a href="/contact" class="lp-btn lp-btn-primary">Book a demo</a>
+        <a
+          href={whitepaper}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="lp-btn lp-btn-ghost"
+        >
+          Download the overview
+        </a>
+      </div>
+
+      <!-- Evidence-flow composition -->
+      <div class="lp2-flowpanel" data-r data-reveal-delay="300" aria-hidden="true">
+        <div class="lp2-flowgrid">
+          <div class="lp2-sources">
+            <div class="lp2-source">
+              <span class="lp2-source-logo" set:html={brandLogos.sharepoint} />
+              <span><strong>MSA-2024.pdf</strong><em>SharePoint · Legal</em></span>
+            </div>
+            <div class="lp2-source">
+              <span class="lp2-source-logo" set:html={brandLogos.slack} />
+              <span><strong>#meridian-risk</strong><em>Slack · 12 messages</em></span>
+            </div>
+            <div class="lp2-source">
+              <span class="lp2-source-logo" set:html={brandLogos.postgres} />
+              <span><strong>vendor_register</strong><em>PostgreSQL · 214 rows</em></span>
+            </div>
+          </div>
+
+          <svg class="lp2-wire lp2-wire-l" viewBox="0 0 100 200" preserveAspectRatio="none" fill="none">
+            <path class="lp2-wirepath" d="M0 30 C 55 30 45 100 100 100" />
+            <path class="lp2-wirepath" d="M0 100 H 100" />
+            <path class="lp2-wirepath" d="M0 170 C 55 170 45 100 100 100" />
+          </svg>
+
+          <div class="lp2-core">
+            <svg width="30" height="30" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+              <circle cx="9" cy="9" r="3" fill="#00A882"></circle>
+              <circle cx="9" cy="9" r="6.5" stroke="#00A882" stroke-width="0.7" opacity="0.5" class="lp2-ring"></circle>
+              <circle cx="9" cy="9" r="8.6" stroke="#00A882" stroke-width="0.45" opacity="0.22" class="lp2-ring lp2-ring-2"></circle>
+            </svg>
+            <strong>LACE</strong>
+            <span>Permissions checked</span>
+            <span>Policy enforced</span>
+            <span>Evidence linked</span>
+          </div>
+
+          <svg class="lp2-wire lp2-wire-r" viewBox="0 0 100 200" preserveAspectRatio="none" fill="none">
+            <path class="lp2-wirepath" d="M0 100 C 55 100 45 32 100 32" />
+            <path class="lp2-wirepath" d="M0 100 C 55 100 45 112 100 112" />
+            <path class="lp2-wirepath" d="M0 100 C 55 100 45 172 100 172" />
+          </svg>
+
+          <div class="lp2-outputs">
+            <div class="lp2-answer">
+              <em>Answer</em>
+              <p>Renews <strong>Jan 15, 2027</strong> at <strong>$1.2M/yr</strong></p>
+              <span><i>§4.2</i><i>Table 3</i></span>
+            </div>
+            <div class="lp2-outrow">
+              <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.7"/><path d="m8.5 12.2 2.4 2.4 4.8-5" stroke="currentColor" stroke-width="1.7"/></svg>
+              Approved · Counsel
+            </div>
+            <div class="lp2-outrow lp2-outrow-dim">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M6 3.5h9l3.5 3.5v13.5H6z" stroke="currentColor" stroke-width="1.7"/><path d="M9 10h6M9 13.5h6" stroke="currentColor" stroke-width="1.7"/></svg>
+              Run logged · trace #4821
+            </div>
+          </div>
+        </div>
+        <div class="lp2-flowfoot">
+          <span>Every source permission-checked</span>
+          <span>Every claim cited</span>
+          <span>Every run on the record</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Connector strip ────────────────────────────────────────── -->
+    <div class="lp2-logos" aria-hidden="true">
+      <div class="lp-marquee lp2-marquee">
+        <div class="lp-mq-track">
+          {
+            [0, 1].map(() => (
+              <>
+                {connectors.map((connector) => (
+                  <span class="lp-mq-item">
+                    <span class="lp-mq-logo" set:html={brandLogos[connector.id]} />
+                    {connector.name}
+                  </span>
+                ))}
+              </>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Editorial ──────────────────────────────────────────────── -->
+    <section class="lp2-editorial">
+      <p data-r>
+        <strong>Your organization already knows the answer.</strong>
+        LACE finds it, proves it, and puts it to work — one platform,
+        one audit trail.
+      </p>
+    </section>
+
+    <!-- ── Feature cells ──────────────────────────────────────────── -->
+    <section class="lp2-cells">
+      <!-- Full-width: live search -->
+      <div class="lp2-cell lp2-cell-full">
+        <div class="lp2-cell-copy" data-r>
+          <h2>Ask anything. Open the exact passage.</h2>
+          <p>Permissions-aware answers across every system you run.</p>
+        </div>
+        <div class="lp2-cell-demo" data-r data-reveal-delay="120">
+          <LaceSearchDemo />
+        </div>
+        <a class="lp2-cell-link" href="/platform/enterprise-search">Enterprise Search →</a>
+      </div>
+
+      <div class="lp2-row">
+        <!-- Bitemporal -->
+        <div class="lp2-cell">
+          <div class="lp2-cell-copy" data-r>
+            <h2>Ask what you knew in March.</h2>
+            <p>The graph remembers what was true — and when you learned it.</p>
+          </div>
+          <div class="lp2-fragment lp2-time" data-r data-reveal-delay="100" aria-hidden="true">
+            <div class="lp2-time-fact">
+              <span>Annual fee</span>
+              <span class="lp2-time-vals">
+                <strong class="lp2-val-then">$1.1M</strong>
+                <strong class="lp2-val-now">$1.2M</strong>
+              </span>
+              <i>Table 3</i>
+            </div>
+            <div class="lp2-time-scrub">
+              <span class="lp2-time-labels">
+                <em class="lp2-asof-then">as of · Mar 2025</em>
+                <em class="lp2-asof-now">as of · Jul 2026</em>
+              </span>
+              <div class="lp2-time-track">
+                <i class="lp2-time-knob"></i>
+              </div>
+              <div class="lp2-time-ticks"><span>2024</span><span>2025</span><span>2026</span></div>
+            </div>
+          </div>
+          <a class="lp2-cell-link" href="/platform/knowledge-graph">Knowledge Graph →</a>
+        </div>
+
+        <!-- Conflicts -->
+        <div class="lp2-cell">
+          <div class="lp2-cell-copy" data-r>
+            <h2>When sources disagree, you see both.</h2>
+            <p>Conflicts are flagged with evidence — never silently resolved.</p>
+          </div>
+          <div class="lp2-fragment lp2-conflict" data-r data-reveal-delay="100" aria-hidden="true">
+            <div class="lp2-conflict-pair">
+              <div class="lp2-evidence">
+                <em>Agreement · §7.1</em>
+                <p>“…written notice of <mark>ninety (90) days</mark>…”</p>
+              </div>
+              <span class="lp2-vs">vs</span>
+              <div class="lp2-evidence">
+                <em>Summary deck · p.4</em>
+                <p>“…terminable on <mark class="is-warn">60 days'</mark> notice…”</p>
+              </div>
+            </div>
+            <div class="lp2-conflict-flag">
+              <i></i> Conflict flagged · queued for review
+            </div>
+          </div>
+          <a class="lp2-cell-link" href="/platform/knowledge-graph">Conflict detection →</a>
+        </div>
+      </div>
+
+      <div class="lp2-row">
+        <!-- Approval gates -->
+        <div class="lp2-cell">
+          <div class="lp2-cell-copy" data-r>
+            <h2>Agents that ask before they act.</h2>
+            <p>The risky step pauses for a human. One click, on the record.</p>
+          </div>
+          <div class="lp2-fragment lp2-gatecard" data-r data-reveal-delay="100" aria-hidden="true">
+            <div class="lp2-draft">
+              <svg width="13" height="13" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="3" fill="#00A882"/><circle cx="9" cy="9" r="6.5" stroke="#00A882" stroke-width="0.9" opacity="0.5"/></svg>
+              <span>Reply drafted · cites <i>§4.2</i> and <i>Table 3</i></span>
+            </div>
+            <div class="lp2-gate">
+              <div>
+                <em>Approval required</em>
+                <strong>Send reply to vendor</strong>
+              </div>
+              <span class="lp2-approve">Approve</span>
+            </div>
+            <p class="lp2-gate-meta">counsel@ · budget $40/day · every action traced</p>
+          </div>
+          <a class="lp2-cell-link" href="/platform/agents">Agentic Platform →</a>
+        </div>
+
+        <!-- App builder -->
+        <div class="lp2-cell">
+          <div class="lp2-cell-copy" data-r>
+            <h2>Prompt at 9:00. Live URL by lunch.</h2>
+            <p>Sign-in, database, hosting, billing — rollback included.</p>
+          </div>
+          <div class="lp2-fragment lp2-build" data-r data-reveal-delay="100" aria-hidden="true">
+            <div class="lp2-prompt"><b>&gt;</b> an inventory tracker for our field teams…</div>
+            <div class="lp2-buildsteps">
+              <span style="--d: 0s">Plan</span>
+              <span style="--d: 1.5s">Build</span>
+              <span style="--d: 3s">Verify</span>
+              <span style="--d: 4.5s">Publish</span>
+            </div>
+            <div class="lp2-liveurl">
+              <i></i> inventory.acme-field.app <b>LIVE</b>
+            </div>
+          </div>
+          <a class="lp2-cell-link" href="/platform/app-builder">App Builder →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Governance ─────────────────────────────────────────────── -->
+    <section class="lp2-gov">
+      <div class="lp2-gov-copy" data-r>
+        <p>
+          <strong>The model proposes.<br />The platform enforces.</strong>
+          Budgets, permissions, approvals, and audit are system services — not
+          prompt suggestions.
+        </p>
+        <div class="lp2-gov-tags">
+          <span>Provenance</span><span>Permissions</span><span>Budgets</span><span>Approvals</span><span>Audit</span>
+        </div>
+      </div>
+
+      <div class="lp2-gov-visual" data-r data-reveal-delay="140" aria-hidden="true">
+        <div class="lp2-run">
+          <div class="lp2-runrow" style="--rd2: 0s">
+            <i class="lp2-runmark"></i>
+            <span><em>Email in</em><strong>Vendor asks about renewal terms</strong></span>
+          </div>
+          <div class="lp2-runrow" style="--rd2: 1.2s">
+            <i class="lp2-runmark"></i>
+            <span><em>Agent</em><strong>Drafts reply, citing §4.2</strong></span>
+          </div>
+          <div class="lp2-runrow" style="--rd2: 2.4s">
+            <i class="lp2-runmark"></i>
+            <span><em>Gate</em><strong>Counsel approves in one click</strong></span>
+          </div>
+          <div class="lp2-runrow" style="--rd2: 3.6s">
+            <i class="lp2-runmark"></i>
+            <span><em>Record</em><strong>Sent · evidence chain preserved</strong></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Stats ──────────────────────────────────────────────────── -->
+    <section class="lp2-stats" data-r>
+      <div><strong>∞</strong><span>Workflows</span></div>
+      <div><strong class="lp-accent">100%</strong><span>Traceable</span></div>
+      <div><strong>0</strong><span>Black boxes</span></div>
+    </section>
+
+    <!-- ── Screenshot ─────────────────────────────────────────────── -->
+    <section class="lp2-shot">
+      <div class="lp2-shot-head" data-r>
+        <h2>One workspace. <span class="lp-accent">Every answer accountable.</span></h2>
+      </div>
+      <div class="lp2-window" data-r data-reveal-delay="120">
+        <div class="lp2-window-bar">
+          <i></i><i></i><i></i>
+          <span>lace · governed workspace</span>
+        </div>
+        <Image
+          src={laceScreen2}
+          alt="LACE workspace showing a governed workflow run"
+          widths={[760, 1080, 1480]}
+          sizes="(max-width: 980px) 94vw, 1080px"
+        />
+      </div>
+    </section>
+
+    <!-- ── Deploy ─────────────────────────────────────────────────── -->
+    <section class="lp2-deploy">
+      <div data-r>
+        <h2>Runs where <span class="lp-accent">you run.</span></h2>
+        <p>Fully air-gapped if needed. No external AI calls.</p>
+      </div>
+      <div class="lp2-deploy-chips" data-r data-reveal-delay="100">
+        <span>Cloud</span>
+        <span>Private Cloud (VPC)</span>
+        <span>On-Premises</span>
+        <span>Air-Gapped</span>
+      </div>
+    </section>
+
+    <!-- ── CTA ────────────────────────────────────────────────────── -->
+    <section class="lp2-cta">
+      <div data-r>
+        <h2>See it on <span class="lp-accent">your documents.</span></h2>
+        <p>
+          We set up a pilot on your documents and one workflow your team
+          actually runs. You judge the working output — in weeks, not a
+          quarter-long project.
+        </p>
+        <div class="lp2-actions">
+          <a href="/contact" class="lp-btn lp-btn-primary lp-btn-lg">Book a demo</a>
+          <a
+            href={whitepaper}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="lp-btn lp-btn-ghost lp-btn-lg"
+          >
+            Download the overview →
+          </a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <LaceFooter />
+</main>
+
+<style>
+  /* ═══ The frame: hairline rails + crosshair intersections ═══════ */
+  .lp2 {
+    --hair: rgba(13, 27, 22, 0.09);
+    --hair-soft: rgba(13, 27, 22, 0.055);
+  }
+
+  .lp2-frame {
+    position: relative;
+    width: min(1180px, calc(100% - 3rem));
+    margin-inline: auto;
+    padding-top: clamp(7.5rem, 13vh, 10rem);
+  }
+
+  @media (min-width: 1080px) {
+    .lp2-frame::before,
+    .lp2-frame::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: var(--hair);
+    }
+
+    .lp2-frame::before { left: 0; }
+    .lp2-frame::after { right: 0; }
+
+    /* crosshairs where section borders meet the rails */
+    .lp2-frame > section {
+      position: relative;
+    }
+
+    .lp2-frame > section::before,
+    .lp2-frame > section::after {
+      content: "+";
+      position: absolute;
+      top: -0.72em;
+      z-index: 2;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.85rem;
+      font-weight: 400;
+      line-height: 1;
+      color: rgba(var(--lp-green-rgb), 0.65);
+      background: transparent;
+    }
+
+    .lp2-frame > section::before { left: -0.34em; }
+    .lp2-frame > section::after { right: -0.34em; }
+
+    .lp2-hero::before,
+    .lp2-hero::after {
+      content: none;
+    }
+  }
+
+  .lp2-frame > section {
+    border-top: 1px solid var(--hair);
+  }
+
+  .lp2-frame > .lp2-hero {
+    border-top: 0;
+  }
+
+  /* ═══ Type ══════════════════════════════════════════════════════ */
+  .lp2-eyebrow {
+    margin: 0 0 1.6rem;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.62rem;
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--lp-green-deep);
+  }
+
+  .lp2-h1 {
+    margin: 0;
+    font-family: "Space Grotesk", "Red Hat Display", sans-serif;
+    font-size: clamp(2.5rem, 5.6vw, 4.4rem);
+    font-weight: 500;
+    letter-spacing: -0.025em;
+    text-transform: uppercase;
+    line-height: 1;
+    color: var(--lp-ink);
+    text-wrap: balance;
+  }
+
+  .lp2-sub {
+    max-width: 480px;
+    margin: 1.5rem auto 0;
+    font-size: clamp(1rem, 1.4vw, 1.13rem);
+    line-height: 1.65;
+    color: var(--lp-muted);
+    text-wrap: balance;
+  }
+
+  .lp2 h2 {
+    font-family: "Space Grotesk", "Red Hat Display", sans-serif;
+    font-weight: 400;
+    letter-spacing: -0.015em;
+    text-transform: uppercase;
+    line-height: 1.05;
+    color: var(--lp-ink);
+  }
+
+  .lp2-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.9rem;
+    margin-top: 2.2rem;
+  }
+
+  /* ═══ Hero ══════════════════════════════════════════════════════ */
+  .lp2-hero {
+    padding: 0 0 clamp(3rem, 6vw, 5rem);
+    text-align: center;
+  }
+
+  /* Evidence-flow panel */
+  .lp2-flowpanel {
+    margin-top: clamp(3rem, 6vw, 4.5rem);
+    border: 1px solid var(--hair);
+    background:
+      radial-gradient(46rem 20rem at 50% -20%, rgba(var(--lp-green-rgb), 0.05), transparent 60%),
+      rgba(255, 255, 255, 0.55);
+  }
+
+  .lp2-flowgrid {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 2.4fr) minmax(0, 4fr) minmax(0, 2.4fr) minmax(0, 5.4fr);
+    align-items: center;
+    gap: 0;
+    padding: clamp(1.6rem, 3.5vw, 3rem) clamp(1.2rem, 3vw, 2.6rem);
+  }
+
+  .lp2-sources {
+    display: grid;
+    gap: 0.7rem;
+  }
+
+  .lp2-source {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.65rem 0.8rem;
+    border: 1px solid var(--lp-line);
+    border-radius: var(--lp-radius-lg);
+    background: #ffffff;
+    box-shadow: var(--lp-shadow-sm);
+    text-align: left;
+  }
+
+  .lp2-source-logo {
+    flex: none;
+    width: 1.15rem;
+    height: 1.15rem;
+  }
+
+  .lp2-source-logo :global(svg) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .lp2-source > span:last-child {
+    display: grid;
+    gap: 0.05rem;
+    min-width: 0;
+  }
+
+  .lp2-source strong {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: var(--lp-ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .lp2-source em {
+    font-style: normal;
+    font-size: 0.62rem;
+    color: var(--lp-faint);
+  }
+
+  .lp2-wire {
+    width: 100%;
+    height: 150px;
+  }
+
+  .lp2-wirepath {
+    stroke: rgba(var(--lp-green-rgb), 0.45);
+    stroke-width: 1.3;
+    stroke-dasharray: 3 5;
+    animation: lp2-flow 1.4s linear infinite;
+  }
+
+  @keyframes lp2-flow {
+    to {
+      stroke-dashoffset: -8;
+    }
+  }
+
+  .lp2-core {
+    display: grid;
+    justify-items: center;
+    gap: 0.22rem;
+    padding: 1.3rem 1rem 1.2rem;
+    border: 1px solid rgba(var(--lp-green-rgb), 0.45);
+    border-radius: var(--lp-radius-lg);
+    background: #ffffff;
+    box-shadow: 0 8px 30px -12px rgba(var(--lp-green-rgb), 0.45);
+  }
+
+  .lp2-ring {
+    transform-origin: center;
+    animation: lp2-spin 14s linear infinite;
+  }
+
+  .lp2-ring-2 {
+    animation-duration: 22s;
+    animation-direction: reverse;
+  }
+
+  @keyframes lp2-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .lp2-core strong {
+    margin-top: 0.3rem;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    color: var(--lp-ink);
+  }
+
+  .lp2-core span {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.56rem;
+    letter-spacing: 0.04em;
+    color: var(--lp-green-deep);
+  }
+
+  .lp2-core span::before {
+    content: "✓ ";
+  }
+
+  .lp2-outputs {
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  .lp2-answer {
+    padding: 0.8rem 0.95rem;
+    border: 1px solid rgba(var(--lp-green-rgb), 0.4);
+    border-radius: var(--lp-radius-lg);
+    background: #ffffff;
+    box-shadow: var(--lp-shadow-sm);
+    text-align: left;
+    display: grid;
+    gap: 0.3rem;
+  }
+
+  .lp2-answer em {
+    font-style: normal;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.52rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--lp-green-deep);
+  }
+
+  .lp2-answer p {
+    margin: 0;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: var(--lp-ink-soft);
+  }
+
+  .lp2-answer p strong {
+    color: var(--lp-ink);
+  }
+
+  .lp2-answer > span {
+    display: flex;
+    gap: 0.35rem;
+  }
+
+  .lp2-answer i {
+    font-style: normal;
+    padding: 0.14rem 0.45rem;
+    border: 1px solid rgba(var(--lp-green-rgb), 0.4);
+    border-radius: var(--lp-radius);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.55rem;
+    color: var(--lp-green-deep);
+  }
+
+  .lp2-outrow {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.55rem 0.8rem;
+    border: 1px solid var(--lp-line);
+    border-radius: var(--lp-radius-lg);
+    background: #ffffff;
+    font-size: 0.74rem;
+    font-weight: 500;
+    color: var(--lp-ink-soft);
+    text-align: left;
+  }
+
+  .lp2-outrow svg {
+    flex: none;
+    width: 0.95rem;
+    height: 0.95rem;
+    color: var(--lp-green-deep);
+  }
+
+  .lp2-outrow-dim {
+    color: var(--lp-faint);
+  }
+
+  .lp2-outrow-dim svg {
+    color: var(--lp-faint);
+  }
+
+  .lp2-flowfoot {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem 2.4rem;
+    padding: 0.85rem 1rem;
+    border-top: 1px solid var(--hair-soft);
+  }
+
+  .lp2-flowfoot span {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.56rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--lp-faint);
+  }
+
+  /* ═══ Logo strip ════════════════════════════════════════════════ */
+  .lp2-logos {
+    border-top: 1px solid var(--hair);
+  }
+
+  .lp2-marquee {
+    border: 0;
+    background: transparent;
+    padding: 1.15rem 0;
+  }
+
+  /* ═══ Editorial ═════════════════════════════════════════════════ */
+  .lp2-editorial {
+    padding: clamp(4rem, 8vw, 6.5rem) clamp(1.2rem, 4vw, 4rem);
+  }
+
+  .lp2-editorial p {
+    max-width: 32ch;
+    margin: 0;
+    font-family: "Space Grotesk", "Red Hat Display", sans-serif;
+    font-size: clamp(1.5rem, 3vw, 2.35rem);
+    font-weight: 400;
+    letter-spacing: -0.015em;
+    text-transform: uppercase;
+    line-height: 1.15;
+    color: var(--lp-faint);
+  }
+
+  .lp2-editorial strong {
+    display: block;
+    font-weight: 500;
+    color: var(--lp-ink);
+  }
+
+  /* ═══ Feature cells ═════════════════════════════════════════════ */
+  .lp2-cells {
+    display: grid;
+  }
+
+  .lp2-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-top: 1px solid var(--hair);
+  }
+
+  .lp2-row > .lp2-cell + .lp2-cell {
+    border-left: 1px solid var(--hair);
+  }
+
+  .lp2-cell {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 1.8rem;
+    padding: clamp(2.2rem, 4.5vw, 3.6rem) clamp(1.2rem, 3.5vw, 3.2rem);
+  }
+
+  .lp2-cell-full {
+    align-items: center;
+    text-align: center;
+  }
+
+  .lp2-cell-copy h2 {
+    margin: 0 0 0.55rem;
+    font-size: clamp(1.35rem, 2.3vw, 1.8rem);
+  }
+
+  .lp2-cell-copy p {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--lp-muted);
+  }
+
+  .lp2-cell-demo {
+    width: min(720px, 100%);
+  }
+
+  .lp2-cell-link {
+    margin-top: auto;
+    align-self: flex-start;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--lp-green-deep);
+    transition: opacity 160ms ease;
+  }
+
+  .lp2-cell-full .lp2-cell-link {
+    align-self: center;
+  }
+
+  .lp2-cell-link:hover {
+    opacity: 0.7;
+  }
+
+  /* fragments: single focal element, generous air, flat */
+  .lp2-fragment {
+    display: grid;
+    gap: 0.7rem;
+    width: min(430px, 100%);
+    margin-block: auto;
+  }
+
+  /* — bitemporal — */
+  .lp2-time-fact {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.8rem 0.95rem;
+    border: 1px solid var(--lp-line);
+    border-radius: var(--lp-radius-lg);
+    background: #ffffff;
+    box-shadow: var(--lp-shadow-sm);
+  }
+
+  .lp2-time-fact > span:first-child {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--lp-faint);
+  }
+
+  .lp2-time-vals {
+    position: relative;
+    display: inline-grid;
+  }
+
+  .lp2-time-vals strong {
+    grid-area: 1 / 1;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--lp-ink);
+  }
+
+  .lp2-val-then { animation: lp2-then 7s ease-in-out infinite; }
+  .lp2-val-now { animation: lp2-now 7s ease-in-out infinite; }
+
+  @keyframes lp2-then {
+    0%, 38% { opacity: 0; }
+    50%, 88% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  @keyframes lp2-now {
+    0%, 38% { opacity: 1; }
+    50%, 88% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+
+  .lp2-time-fact i {
+    margin-left: auto;
+    font-style: normal;
+    padding: 0.16rem 0.5rem;
+    border: 1px solid rgba(var(--lp-green-rgb), 0.4);
+    border-radius: var(--lp-radius);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.56rem;
+    color: var(--lp-green-deep);
+  }
+
+  .lp2-time-scrub {
+    padding: 0.8rem 0.95rem 0.9rem;
+    border: 1px solid var(--lp-line-soft);
+    border-radius: var(--lp-radius-lg);
+    background: rgba(255, 255, 255, 0.7);
+  }
+
+  .lp2-time-labels {
+    position: relative;
+    display: block;
+    height: 1.1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .lp2-time-labels em {
+    position: absolute;
+    left: 0;
+    font-style: normal;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--lp-ink-soft);
+  }
+
+  .lp2-asof-then { animation: lp2-then 7s ease-in-out infinite; }
+  .lp2-asof-now { animation: lp2-now 7s ease-in-out infinite; }
+
+  .lp2-time-track {
+    position: relative;
+    height: 3px;
+    border-radius: 2px;
+    background: rgba(13, 27, 22, 0.09);
+  }
+
+  .lp2-time-knob {
+    position: absolute;
+    top: 50%;
+    left: 85%;
+    width: 0.8rem;
+    height: 0.8rem;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    background: var(--lp-green);
+    box-shadow: 0 1px 6px rgba(15, 30, 26, 0.3);
+    transform: translate(-50%, -50%);
+    animation: lp2-scrub 7s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  }
+
+  @keyframes lp2-scrub {
+    0%, 38% { left: 85%; }
+    50%, 88% { left: 38%; }
+    100% { left: 85%; }
+  }
+
+  .lp2-time-ticks {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.45rem;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.55rem;
+    color: var(--lp-faint);
+  }
+
+  /* — conflict — */
+  .lp2-conflict-pair {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: stretch;
+    gap: 0.6rem;
+  }
+
+  .lp2-evidence {
+    padding: 0.75rem 0.85rem;
+    border: 1px solid var(--lp-line);
+    border-radius: var(--lp-radius-lg);
+    background: #ffffff;
+    box-shadow: var(--lp-shadow-sm);
+  }
+
+  .lp2-evidence em {
+    display: block;
+    margin-bottom: 0.35rem;
+    font-style: normal;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.54rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--lp-faint);
+  }
+
+  .lp2-evidence p {
+    margin: 0;
+    font-size: 0.76rem;
+    line-height: 1.55;
+    color: var(--lp-ink-soft);
+  }
+
+  .lp2-evidence mark {
+    padding: 0.05em 0.2em;
+    background: rgba(var(--lp-green-rgb), 0.16);
+    color: inherit;
+  }
+
+  .lp2-evidence mark.is-warn {
+    background: rgba(255, 190, 70, 0.3);
+  }
+
+  .lp2-vs {
+    align-self: center;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.6rem;
+    color: var(--lp-faint);
+  }
+
+  .lp2-conflict-flag {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 0.8rem;
+    border: 1px solid rgba(196, 132, 12, 0.4);
+    border-radius: var(--lp-radius-lg);
+    background: rgba(255, 216, 111, 0.12);
+    font-size: 0.74rem;
+    font-weight: 500;
+    color: #7a5200;
+  }
+
+  .lp2-conflict-flag i {
+    width: 0.42rem;
+    height: 0.42rem;
+    border-radius: 50%;
+    background: #d99a06;
+    animation: lp2-blink 2s ease-in-out infinite;
+  }
+
+  @keyframes lp2-blink {
+    50% { opacity: 0.35; }
+  }
+
+  /* — gate — */
+  .lp2-draft {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.65rem 0.85rem;
+    border: 1px solid var(--lp-line);
+    border-radius: var(--lp-radius-lg);
+    background: #ffffff;
+    box-shadow: var(--lp-shadow-sm);
+    font-size: 0.78rem;
+    color: var(--lp-ink-soft);
+  }
+
+  .lp2-draft svg {
+    flex: none;
+  }
+
+  .lp2-draft i {
+    font-style: normal;
+    padding: 0.08rem 0.35rem;
+    border: 1px solid rgba(var(--lp-green-rgb), 0.4);
+    border-radius: var(--lp-radius);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.6rem;
+    color: var(--lp-green-deep);
+  }
+
+  .lp2-gate {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8rem;
+    padding: 0.8rem 0.95rem;
+    border: 1px solid rgba(196, 132, 12, 0.45);
+    border-radius: var(--lp-radius-lg);
+    background: rgba(255, 216, 111, 0.1);
+  }
+
+  .lp2-gate em {
+    display: block;
+    font-style: normal;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.52rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #a06a00;
+  }
+
+  .lp2-gate strong {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--lp-ink);
+  }
+
+  .lp2-approve {
+    flex: none;
+    padding: 0.45rem 0.95rem;
+    border-radius: var(--lp-radius);
+    background: linear-gradient(135deg, #00b88d, #00d9ae);
+    color: var(--lp-green-ink);
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    box-shadow: 0 4px 14px -6px rgba(var(--lp-green-rgb), 0.7);
+  }
+
+  .lp2-gate-meta {
+    margin: 0;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.56rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--lp-faint);
+  }
+
+  /* — build — */
+  .lp2-prompt {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.7rem 0.85rem;
+    border: 1px solid var(--lp-line);
+    border-radius: var(--lp-radius-lg);
+    background: #ffffff;
+    box-shadow: var(--lp-shadow-sm);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.72rem;
+    color: var(--lp-ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .lp2-prompt b {
+    color: var(--lp-green);
+  }
+
+  .lp2-buildsteps {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.4rem;
+  }
+
+  .lp2-buildsteps span {
+    position: relative;
+    padding: 0.45rem 0.4rem 0.45rem 1.25rem;
+    border: 1px solid var(--lp-line-soft);
+    border-radius: var(--lp-radius);
+    background: #ffffff;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.56rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--lp-muted);
+  }
+
+  .lp2-buildsteps span::before {
+    content: "";
+    position: absolute;
+    left: 0.48rem;
+    top: 50%;
+    width: 0.42rem;
+    height: 0.42rem;
+    border-radius: 50%;
+    border: 1.5px solid rgba(13, 27, 22, 0.2);
+    transform: translateY(-50%);
+    animation: lp2-dot 6s ease-in-out infinite;
+    animation-delay: var(--d, 0s);
+  }
+
+  @keyframes lp2-dot {
+    0%, 100% { border-color: rgba(13, 27, 22, 0.2); background: transparent; }
+    8%, 18% { border-color: var(--lp-green); background: rgba(var(--lp-green-rgb), 0.35); }
+    24%, 96% { border-color: var(--lp-green); background: var(--lp-green); }
+  }
+
+  .lp2-liveurl {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.6rem 0.85rem;
+    border: 1px solid rgba(var(--lp-green-rgb), 0.5);
+    border-radius: var(--lp-radius-lg);
+    background: linear-gradient(90deg, rgba(var(--lp-green-rgb), 0.07), transparent 80%);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.72rem;
+    color: var(--lp-ink);
+  }
+
+  .lp2-liveurl i {
+    flex: none;
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 50%;
+    background: var(--lp-green);
+    animation: lp2-blink 1.8s ease-in-out infinite;
+  }
+
+  .lp2-liveurl b {
+    margin-left: auto;
+    padding: 0.16rem 0.45rem;
+    border-radius: var(--lp-radius);
+    background: var(--lp-green);
+    color: #fff;
+    font-size: 0.5rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+  }
+
+  /* ═══ Governance ════════════════════════════════════════════════ */
+  .lp2-gov {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  }
+
+  .lp2-gov-copy {
+    padding: clamp(2.6rem, 5vw, 4.5rem) clamp(1.2rem, 3.5vw, 3.2rem);
+  }
+
+  .lp2-gov-copy p {
+    max-width: 28ch;
+    margin: 0;
+    font-family: "Space Grotesk", "Red Hat Display", sans-serif;
+    font-size: clamp(1.5rem, 3vw, 2.35rem);
+    font-weight: 400;
+    letter-spacing: -0.015em;
+    text-transform: uppercase;
+    line-height: 1.15;
+    color: var(--lp-faint);
+  }
+
+  .lp2-gov-copy strong {
+    display: block;
+    font-weight: 500;
+    color: var(--lp-ink);
+  }
+
+  .lp2-gov-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin-top: 1.8rem;
+  }
+
+  .lp2-gov-tags span {
+    padding: 0.38rem 0.8rem;
+    border: 1px solid rgba(var(--lp-green-rgb), 0.35);
+    border-radius: 100px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--lp-green-deep);
+    background: rgba(255, 255, 255, 0.65);
+  }
+
+  .lp2-gov-visual {
+    display: grid;
+    align-content: center;
+    padding: clamp(2.6rem, 5vw, 4.5rem) clamp(1.2rem, 3.5vw, 3.2rem);
+    border-left: 1px solid var(--hair);
+  }
+
+  .lp2-run {
+    position: relative;
+    display: grid;
+    gap: 1.15rem;
+    padding-left: 0.2rem;
+  }
+
+  .lp2-run::before {
+    content: "";
+    position: absolute;
+    left: 0.42rem;
+    top: 0.6rem;
+    bottom: 0.6rem;
+    border-left: 1.5px dashed rgba(var(--lp-green-rgb), 0.45);
+  }
+
+  .lp2-runrow {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.9rem;
+  }
+
+  .lp2-runmark {
+    flex: none;
+    position: relative;
+    z-index: 1;
+    margin-top: 0.32rem;
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 50%;
+    border: 1.5px solid rgba(var(--lp-green-rgb), 0.6);
+    background: #ffffff;
+    animation: lp2-mark 4.8s ease-in-out infinite;
+    animation-delay: var(--rd2, 0s);
+  }
+
+  @keyframes lp2-mark {
+    0%, 20%, 100% { background: #ffffff; box-shadow: none; }
+    6%, 12% { background: var(--lp-green); box-shadow: 0 0 10px rgba(var(--lp-green-rgb), 0.6); }
+  }
+
+  .lp2-runrow > span {
+    display: grid;
+    gap: 0.1rem;
+  }
+
+  .lp2-runrow em {
+    font-style: normal;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.54rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--lp-green-deep);
+  }
+
+  .lp2-runrow strong {
+    font-size: 0.9rem;
+    font-weight: 500;
+    line-height: 1.45;
+    color: var(--lp-ink-soft);
+  }
+
+  /* ═══ Stats ═════════════════════════════════════════════════════ */
+  .lp2-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .lp2-stats > div {
+    padding: clamp(2.2rem, 4.5vw, 3.4rem) 1rem;
+    text-align: center;
+  }
+
+  .lp2-stats > div + div {
+    border-left: 1px solid var(--hair);
+  }
+
+  .lp2-stats strong {
+    display: block;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: clamp(2.4rem, 5.5vw, 4rem);
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--lp-ink);
+  }
+
+  .lp2-stats span {
+    display: block;
+    margin-top: 0.65rem;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.58rem;
+    font-weight: 500;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--lp-faint);
+  }
+
+  /* ═══ Screenshot ════════════════════════════════════════════════ */
+  .lp2-shot {
+    padding: clamp(3.5rem, 7vw, 5.5rem) clamp(1.2rem, 3.5vw, 3.2rem);
+    text-align: center;
+  }
+
+  .lp2-shot-head h2 {
+    margin: 0 0 clamp(2rem, 4vw, 3rem);
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+  }
+
+  .lp2-window {
+    max-width: 1080px;
+    margin-inline: auto;
+    border: 1px solid var(--lp-line);
+    border-radius: 10px;
+    overflow: hidden;
+    background: #ffffff;
+    box-shadow: 0 30px 80px -20px rgba(15, 30, 26, 0.28);
+  }
+
+  .lp2-window-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.6rem 0.9rem;
+    border-bottom: 1px solid var(--lp-line-soft);
+    background: #f6f7f8;
+  }
+
+  .lp2-window-bar i {
+    width: 0.62rem;
+    height: 0.62rem;
+    border-radius: 50%;
+    background: rgba(13, 27, 22, 0.12);
+  }
+
+  .lp2-window-bar i:nth-child(1) { background: #f57d72; }
+  .lp2-window-bar i:nth-child(2) { background: #f5c94e; }
+  .lp2-window-bar i:nth-child(3) { background: #55ca77; }
+
+  .lp2-window-bar span {
+    margin-inline: auto;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    color: var(--lp-faint);
+  }
+
+  .lp2-window img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* ═══ Deploy ════════════════════════════════════════════════════ */
+  .lp2-deploy {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.6rem;
+    padding: clamp(2.6rem, 5vw, 4rem) clamp(1.2rem, 3.5vw, 3.2rem);
+  }
+
+  .lp2-deploy h2 {
+    margin: 0 0 0.5rem;
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+  }
+
+  .lp2-deploy p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--lp-muted);
+  }
+
+  .lp2-deploy-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .lp2-deploy-chips span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.5rem 0.95rem;
+    border: 1px solid rgba(var(--lp-green-rgb), 0.32);
+    border-radius: var(--lp-radius);
+    background: rgba(255, 255, 255, 0.7);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--lp-ink-soft);
+  }
+
+  .lp2-deploy-chips span::before {
+    content: "";
+    width: 0.32rem;
+    height: 0.32rem;
+    border-radius: 50%;
+    background: var(--lp-green);
+  }
+
+  /* ═══ CTA ═══════════════════════════════════════════════════════ */
+  .lp2-cta {
+    padding: clamp(4rem, 8vw, 6.5rem) clamp(1.2rem, 3.5vw, 3.2rem);
+    text-align: center;
+    background:
+      radial-gradient(50rem 22rem at 50% 0%, rgba(var(--lp-green-rgb), 0.07), transparent 62%);
+  }
+
+  .lp2-cta h2 {
+    margin: 0 0 0.8rem;
+    font-size: clamp(1.9rem, 3.8vw, 3rem);
+  }
+
+  .lp2-cta p {
+    margin: 0;
+    font-size: 1rem;
+    color: var(--lp-muted);
+  }
+
+  .lp2-cta .lp2-actions {
+    margin-top: 2.2rem;
+  }
+
+  /* ═══ Responsive ════════════════════════════════════════════════ */
+  @media (max-width: 980px) {
+    .lp2-flowgrid {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      justify-items: center;
+    }
+
+    .lp2-wire {
+      display: none;
+    }
+
+    .lp2-sources,
+    .lp2-outputs {
+      width: min(360px, 100%);
+    }
+
+    .lp2-core {
+      width: min(280px, 100%);
+    }
+
+    .lp2-row {
+      grid-template-columns: 1fr;
+    }
+
+    .lp2-row > .lp2-cell + .lp2-cell {
+      border-left: 0;
+      border-top: 1px solid var(--hair);
+    }
+
+    .lp2-gov {
+      grid-template-columns: 1fr;
+    }
+
+    .lp2-gov-visual {
+      border-left: 0;
+      border-top: 1px solid var(--hair);
+    }
+  }
+
+  @media (max-width: 620px) {
+    .lp2-actions {
+      flex-direction: column;
+      align-items: stretch;
+      max-width: 20rem;
+      margin-inline: auto;
+    }
+
+    .lp2-cta .lp2-actions {
+      margin-inline: auto;
+    }
+
+    .lp2-stats strong {
+      font-size: 1.9rem;
+    }
+
+    .lp2-conflict-pair {
+      grid-template-columns: 1fr;
+    }
+
+    .lp2-vs {
+      justify-self: center;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lp2-wirepath,
+    .lp2-ring,
+    .lp2-time-knob,
+    .lp2-val-then,
+    .lp2-val-now,
+    .lp2-asof-then,
+    .lp2-asof-now,
+    .lp2-buildsteps span::before,
+    .lp2-runmark,
+    .lp2-conflict-flag i,
+    .lp2-liveurl i {
+      animation: none;
+    }
+
+    .lp2-val-then,
+    .lp2-asof-then {
+      opacity: 0;
+    }
+  }
+</style>

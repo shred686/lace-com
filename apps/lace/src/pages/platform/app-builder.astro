@@ -1,0 +1,87 @@
+---
+import BaseLayout from "@determinant/site-kit/layouts/BaseLayout.astro";
+import LaceOfferingShell from "@determinant/site-kit/components/lace/LaceOfferingShell.astro";
+import LaceBuildDemo from "@determinant/site-kit/components/lace/LaceBuildDemo.astro";
+import { laceSite } from "../../site.config";
+
+const content = {
+  kicker: "Platform · App Builder",
+  title: "From one prompt to a live application — in minutes.",
+  accent: "a live application",
+  lead: "Most great software ideas die in the backlog. LACE App Builder removes the bottleneck: describe the application you want, and LACE designs it, builds it in a safe sandbox, and deploys it as real, running software at a real web address.",
+  points: [
+    {
+      title: "One prompt to production",
+      detail:
+        "An AI builder plans the app, constructs it in a sandbox, shows a live preview, and publishes to a public URL — hosting, database, and sign-in included.",
+    },
+    {
+      title: "Real applications, not demos",
+      detail:
+        "Secure authentication, role management, structured data with an admin panel, versioned releases, gradual rollouts, one-click rollback.",
+    },
+    {
+      title: "Monetize from day one",
+      detail:
+        "Built-in subscription and billing infrastructure — launch, price, and sell on the same platform.",
+    },
+    {
+      title: "Every app can talk",
+      detail:
+        "Applications ship with a built-in AI assistant wired to the app's own data and tools. Every product you launch is an AI product.",
+    },
+    {
+      title: "Remix and reuse",
+      detail:
+        "See an app you like? Remix it into your own editable copy in seconds. Templates compound — your hundredth app is dramatically faster than your first.",
+    },
+    {
+      title: "A professional lane for developers",
+      detail:
+        "Local development that mirrors production, AI coding agents, automated verification, and push-to-deploy through the public SDK.",
+      link: { href: "/docs#sdk", label: "Explore the SDK →" },
+    },
+  ],
+  practice:
+    "“I described an inventory tracker in the Studio. Fifteen minutes later I opened a live URL, added our first records, and sent the link to my team.” That is the acceptance bar the App Builder is engineered — and tested — against.",
+  deepTitle: "A build pipeline you could show your auditors.",
+  deepAccent: "your auditors.",
+  deep: [
+    {
+      title: "An audited lifecycle",
+      detail:
+        "Intent → architect session → scaffold → validate → proof lanes → seal and package → publish. Every stage recorded, every release versioned.",
+    },
+    {
+      title: "Isolated sidecars",
+      detail:
+        "Published apps run as their own sidecar runtimes. Core never imports app code; apps never bypass tenant or policy checks.",
+    },
+    {
+      title: "The public SDK",
+      detail:
+        "Generated and hand-written apps target the same lace-app-sdk contracts — so tenancy, policy, data governance, and audit come for free.",
+    },
+  ],
+  related: [
+    { href: "/platform/enterprise-search", title: "Enterprise Search", line: "Cited answers, one bar." },
+    { href: "/platform/knowledge-graph", title: "Knowledge Graph", line: "Every fact receipted." },
+    { href: "/platform/agents", title: "Agentic Platform", line: "Agents inside your rules." },
+  ],
+  ctaTitle: "Describe the tool. Open the URL.",
+  ctaAccent: "Open the URL.",
+};
+---
+
+<BaseLayout
+  title={`App Builder | ${laceSite.name}`}
+  description="Describe an application in one prompt and watch it go live — UI, database, sign-in, hosting, billing, versioned releases, and rollback. A professional developer lane via the public lace-app-sdk."
+  theme="lace"
+  themeColor="#f6f7f9"
+  lang="en"
+  siteName={laceSite.name}
+>
+  <LaceOfferingShell {...content}>
+    <LaceBuildDemo />
+  </LaceOfferingShell>
+</BaseLayout>

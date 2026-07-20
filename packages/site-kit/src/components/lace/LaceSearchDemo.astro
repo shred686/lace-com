@@ -1,0 +1,357 @@
+---
+/**
+ * Live enterprise-search demo panel: types queries, streams permission-aware
+ * results. Used in the home hero and on the enterprise-search platform page.
+ * Styles are global (lp-search-*) because rows are re-created by JS.
+ */
+---
+
+<div class="lp-panel lp-search-panel">
+  <div class="lp-search-bar">
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="10.5" cy="10.5" r="6.5" stroke="currentColor" stroke-width="1.6"></circle>
+      <path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="1.6"></path>
+    </svg>
+    <span class="lp-search-query">renewal terms for the Meridian contract</span>
+    <span class="lp-search-caret"></span>
+    <span class="lp-search-scope" aria-hidden="true">All sources</span>
+  </div>
+  <div class="lp-search-results">
+    <div class="lp-search-row is-in">
+      <span class="lp-search-badge">PDF</span>
+      <div>
+        <strong>MSA-2024 — Master Service Agreement</strong>
+        <em>§4.2 Renewal · SharePoint / Legal</em>
+      </div>
+      <span class="lp-search-score" style="--score: 96%"></span>
+    </div>
+    <div class="lp-search-row is-in">
+      <span class="lp-search-badge">SLACK</span>
+      <div>
+        <strong>#meridian-risk — “flagging the auto-renewal date…”</strong>
+        <em>Risk thread · 12 messages</em>
+      </div>
+      <span class="lp-search-score" style="--score: 84%"></span>
+    </div>
+    <div class="lp-search-row lp-search-locked is-in">
+      <span class="lp-search-badge">XLS</span>
+      <div>
+        <strong>Pricing model (restricted)</strong>
+        <em>Hidden — this user doesn't have access</em>
+      </div>
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <rect x="5" y="10" width="14" height="10" stroke="currentColor" stroke-width="1.5"></rect>
+        <path d="M8 10V7a4 4 0 018 0v3" stroke="currentColor" stroke-width="1.5"></path>
+      </svg>
+    </div>
+  </div>
+  <div class="lp-panel-caption">One query · permissions enforced at the moment of use</div>
+</div>
+
+<style is:global>
+  /* Global (not Astro-scoped): the demo script re-creates result rows with
+     document.createElement, which never receive the scoping attribute. */
+  .lp-search-panel {
+    position: relative;
+    padding: clamp(1.1rem, 2.2vw, 1.7rem);
+    background: #ffffff;
+    border: 1px solid var(--lp-line);
+    border-radius: var(--lp-radius-lg);
+    box-shadow: var(--lp-shadow-lg);
+    text-align: left;
+  }
+
+  .lp-search-panel .lp-panel-caption {
+    margin-top: 1rem;
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(var(--lp-green-rgb), 0.9);
+  }
+
+  .lp-search-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.85rem 1rem;
+    border: 1px solid rgba(var(--lp-green-rgb), 0.35);
+    border-radius: var(--lp-radius);
+    background: #fbfcfc;
+    color: var(--lp-green-deep);
+  }
+
+  .lp-search-bar svg {
+    flex: none;
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .lp-search-query {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.8rem;
+    color: var(--lp-ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .lp-search-caret {
+    flex: none;
+    width: 1.5px;
+    height: 1rem;
+    background: var(--lp-green);
+    animation: lp-caret 1.05s steps(1) infinite;
+  }
+
+  .lp-search-scope {
+    flex: none;
+    margin-left: auto;
+    padding: 0.26rem 0.6rem;
+    border: 1px solid var(--lp-line-soft);
+    border-radius: var(--lp-radius);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.56rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--lp-faint);
+  }
+
+  @keyframes lp-caret {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  .lp-search-results {
+    display: grid;
+    gap: 0.55rem;
+    margin-top: 0.9rem;
+  }
+
+  .lp-search-row {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.72rem 0.85rem;
+    border: 1px solid var(--lp-line-soft);
+    border-radius: var(--lp-radius);
+    background: #fdfefe;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 360ms ease, transform 360ms ease;
+  }
+
+  .lp-search-row.is-in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .lp-search-results.is-clearing .lp-search-row {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  .lp-search-badge {
+    flex: none;
+    padding: 0.24rem 0.45rem;
+    border: 1px solid rgba(var(--lp-green-rgb), 0.35);
+    border-radius: var(--lp-radius);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.52rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--lp-green-deep);
+  }
+
+  .lp-search-row > div {
+    min-width: 0;
+    display: grid;
+    gap: 0.08rem;
+  }
+
+  .lp-search-row strong {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--lp-ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .lp-search-row em {
+    font-style: normal;
+    font-size: 0.68rem;
+    color: var(--lp-faint);
+  }
+
+  .lp-search-score {
+    flex: none;
+    margin-left: auto;
+    width: 3rem;
+    height: 3px;
+    border-radius: 2px;
+    background: rgba(13, 27, 22, 0.08);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .lp-search-score::after {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: var(--score, 60%);
+    background: var(--lp-grad);
+  }
+
+  .lp-search-locked {
+    opacity: 0.65;
+  }
+
+  .lp-search-locked svg {
+    flex: none;
+    margin-left: auto;
+    width: 1rem;
+    height: 1rem;
+    color: var(--lp-faint);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lp-search-caret {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  // Cycle typed queries with streaming results
+  (() => {
+    const panel = document.querySelector(".lp-search-panel");
+    if (!panel) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const queryEl = panel.querySelector<HTMLElement>(".lp-search-query");
+    const resultsEl = panel.querySelector<HTMLElement>(".lp-search-results");
+    if (!queryEl || !resultsEl) return;
+
+    const lockSvg =
+      '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="5" y="10" width="14" height="10" stroke="currentColor" stroke-width="1.5"/><path d="M8 10V7a4 4 0 018 0v3" stroke="currentColor" stroke-width="1.5"/></svg>';
+
+    type Row = {
+      badge: string;
+      title: string;
+      meta: string;
+      score?: number;
+      locked?: boolean;
+    };
+
+    const scenarios: { query: string; results: Row[] }[] = [
+      {
+        query: "renewal terms for the Meridian contract",
+        results: [
+          { badge: "PDF", title: "MSA-2024 — Master Service Agreement", meta: "§4.2 Renewal · SharePoint / Legal", score: 96 },
+          { badge: "SLACK", title: "#meridian-risk — “flagging the auto-renewal date…”", meta: "Risk thread · 12 messages", score: 84 },
+          { badge: "XLS", title: "Pricing model (restricted)", meta: "Hidden — this user doesn't have access", locked: true },
+        ],
+      },
+      {
+        query: "which vendors touch customer data?",
+        results: [
+          { badge: "KG", title: "Knowledge Graph — 7 vendors · data-processing clause", meta: "Relations: processes → customer_data", score: 97 },
+          { badge: "PDF", title: "DPA-Northwind-2025 — Data Processing Addendum", meta: "Exhibit B · Google Drive / Vendors", score: 89 },
+          { badge: "DB", title: "vendor_register — 214 rows matched", meta: "PostgreSQL · procurement schema", score: 78 },
+        ],
+      },
+      {
+        query: "what did we commit to in the pilot SOW?",
+        results: [
+          { badge: "PDF", title: "SOW-Pilot-Phase2 — Statement of Work", meta: "§3 Deliverables · OneDrive / Programs", score: 95 },
+          { badge: "MAIL", title: "RE: pilot scope confirmation — “agreed to 6 weeks…”", meta: "j.alvarez → programs · Email", score: 87 },
+          { badge: "WIKI", title: "Pilot program — commitments tracker", meta: "Updated 2 weeks ago · Program wiki", score: 74 },
+        ],
+      },
+    ];
+
+    const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+    const buildRow = (row: Row) => {
+      const el = document.createElement("div");
+      el.className = "lp-search-row" + (row.locked ? " lp-search-locked" : "");
+      const badge = document.createElement("span");
+      badge.className = "lp-search-badge";
+      badge.textContent = row.badge;
+      const body = document.createElement("div");
+      const title = document.createElement("strong");
+      title.textContent = row.title;
+      const meta = document.createElement("em");
+      meta.textContent = row.meta;
+      body.append(title, meta);
+      el.append(badge, body);
+      if (row.locked) {
+        el.insertAdjacentHTML("beforeend", lockSvg);
+      } else {
+        const score = document.createElement("span");
+        score.className = "lp-search-score";
+        score.style.setProperty("--score", `${row.score}%`);
+        el.appendChild(score);
+      }
+      return el;
+    };
+
+    let running = false;
+    const run = async () => {
+      if (running) return;
+      running = true;
+
+      // Freeze the results area at its rendered height. The clear → retype →
+      // stream cycle would otherwise shrink the document every few seconds,
+      // making the page scroll-jump for anyone reading below the demo.
+      resultsEl.style.minHeight = `${resultsEl.offsetHeight}px`;
+
+      let index = 1; // static markup shows scenario 0
+
+      while (true) {
+        await sleep(3600);
+
+        resultsEl.classList.add("is-clearing");
+        await sleep(360);
+        resultsEl.innerHTML = "";
+        resultsEl.classList.remove("is-clearing");
+
+        while ((queryEl.textContent ?? "").length > 0) {
+          queryEl.textContent = (queryEl.textContent ?? "").slice(0, -1);
+          await sleep(11);
+        }
+        await sleep(300);
+
+        const scenario = scenarios[index];
+        for (const ch of scenario.query) {
+          queryEl.textContent += ch;
+          await sleep(28 + Math.random() * 38);
+        }
+        await sleep(420);
+
+        for (const row of scenario.results) {
+          const el = buildRow(row);
+          resultsEl.appendChild(el);
+          requestAnimationFrame(() =>
+            requestAnimationFrame(() => el.classList.add("is-in")),
+          );
+          await sleep(260);
+        }
+
+        index = (index + 1) % scenarios.length;
+      }
+    };
+
+    const obs = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          obs.disconnect();
+          run();
+        }
+      },
+      { threshold: 0.3 },
+    );
+    obs.observe(panel);
+  })();
+</script>

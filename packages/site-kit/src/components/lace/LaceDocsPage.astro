@@ -1,0 +1,1383 @@
+---
+/**
+ * laceplatform.com/docs — documentation shell (Mintlify-style).
+ * Own header (search, GitHub, status), left sidebar nav with live filter
+ * and scrollspy, prose content column, right "On this page" rail.
+ * Namespace: lpd-* (docs shell) on top of the lp-* tokens.
+ */
+import "../../styles/lace-site.css";
+
+const sidebar = [
+  {
+    group: "Get Started",
+    items: [
+      { id: "introduction", label: "Introduction" },
+      { id: "organization", label: "How LACE is organized" },
+      { id: "deployment", label: "Deployment options" },
+    ],
+  },
+  {
+    group: "lace-app-sdk",
+    items: [
+      { id: "install", label: "Install" },
+      { id: "quickstart", label: "Quickstart" },
+      { id: "manifest", label: "Manifest" },
+      { id: "data", label: "Data collections" },
+      { id: "tools", label: "Tools" },
+      { id: "agents", label: "Agents & skills" },
+      { id: "modules", label: "Module reference" },
+    ],
+  },
+  {
+    group: "Platform Guide",
+    items: [
+      { id: "datasets", label: "Datasets & connectors" },
+      { id: "search-rag", label: "Search & RAG" },
+      { id: "knowledge-graph", label: "Knowledge graph" },
+      { id: "agents-channels", label: "Agents & channels" },
+      { id: "workflows", label: "Workflows & pipelines" },
+      { id: "app-builder", label: "App Builder" },
+      { id: "governance", label: "Governance & security" },
+    ],
+  },
+];
+
+const modules = [
+  ["manifest", "LaceAppManifest — the canonical app declaration: routes, tools, pipelines, agents, data, UI, schedules, migrations."],
+  ["data", "App-owned collections, records, and queries plus blob storage — served through the governed AppDataService."],
+  ["tools", "Custom tool providers with metadata, registration, and trust-tiered execution contexts."],
+  ["agents", "Agent definitions, capabilities, loop-guard config, in-loop skills, approval gates, hooks, and guardrails."],
+  ["skills", "Reusable agent skills (AgentSkill) declared inside agent definitions."],
+  ["pipelines", "Pipeline providers that contribute typed steps to the workflow graph."],
+  ["routes", "HTTP route providers served by the sidecar app runtime."],
+  ["connectors", "Dataset connector contracts: capability manifest and runtime protocol."],
+  ["memory", "Identity-scoped memory: custom axes, formation hooks, and governed retrieval."],
+  ["policy", "App policy providers for access and action rules."],
+  ["migrations", "App-owned schema evolution, applied through the platform lifecycle."],
+  ["ui", "Runtime-UI declarations loaded by the frontend plugin host."],
+  ["testing", "Harnesses for validating app builds before they're sealed and published."],
+];
+
+/* Hand-highlighted code samples (mirror the real lace_app_sdk contracts). */
+const codeInstall = `<span class="tk-c"># Python 3.11+</span>
+<span class="tk-f">pip</span> <span class="tk-n">install</span> lace-app-sdk`;
+
+const codeManifest = `<span class="tk-c"># app.py — one file declares the whole app. LACE discovers the rest.</span>
+<span class="tk-k">from</span> lace_app_sdk.manifest <span class="tk-k">import</span> <span class="tk-n">LaceAppManifest</span>
+<span class="tk-k">from</span> app.data <span class="tk-k">import</span> <span class="tk-n">TICKETS</span>
+
+<span class="tk-n">MANIFEST</span> = <span class="tk-f">LaceAppManifest</span>(
+    app_id=<span class="tk-s">"acme.field_intake"</span>,
+    display_name=<span class="tk-s">"Field Intake"</span>,
+    version=<span class="tk-s">"0.1.0"</span>,
+    data_collections=[<span class="tk-n">TICKETS</span>],
+    tool_providers=[<span class="tk-s">"app.tools:ToolProvider"</span>],
+    agent_providers=[<span class="tk-s">"app.agents:AgentProvider"</span>],
+    route_providers=[<span class="tk-s">"app.routes:RouteProvider"</span>],
+)`;
+
+const codeData = `<span class="tk-c"># app/data.py — typed, tenant-scoped collections with an admin panel for free.</span>
+<span class="tk-k">from</span> lace_app_sdk.data <span class="tk-k">import</span> <span class="tk-n">AppDataCollectionSchema</span>
+
+<span class="tk-n">TICKETS</span> = <span class="tk-f">AppDataCollectionSchema</span>(
+    app_id=<span class="tk-s">"acme.field_intake"</span>,
+    collection_id=<span class="tk-s">"tickets"</span>,
+    display_name=<span class="tk-s">"Intake Tickets"</span>,
+    storage_backend=<span class="tk-s">"generic_app_data"</span>,
+    json_schema={
+        <span class="tk-s">"type"</span>: <span class="tk-s">"object"</span>,
+        <span class="tk-s">"properties"</span>: {
+            <span class="tk-s">"subject"</span>:  {<span class="tk-s">"type"</span>: <span class="tk-s">"string"</span>},
+            <span class="tk-s">"priority"</span>: {<span class="tk-s">"enum"</span>: [<span class="tk-s">"low"</span>, <span class="tk-s">"normal"</span>, <span class="tk-s">"urgent"</span>]},
+            <span class="tk-s">"evidence_blob"</span>: {<span class="tk-s">"type"</span>: <span class="tk-s">"string"</span>},
+        },
+    },
+)`;
+
+const codeTools = `<span class="tk-c"># app/tools.py — custom tools run in constrained runtimes; trust tier checked on dispatch.</span>
+<span class="tk-k">from</span> lace_app_sdk.tools <span class="tk-k">import</span> <span class="tk-n">AppToolMetadata</span>, <span class="tk-n">AppToolContext</span>
+
+<span class="tk-k">class</span> <span class="tk-n">ToolProvider</span>:
+    app_id = <span class="tk-s">"acme.field_intake"</span>
+
+    <span class="tk-k">def</span> <span class="tk-f">tool_metadata</span>(<span class="tk-k">self</span>) -&gt; <span class="tk-n">AppToolMetadata</span>:
+        <span class="tk-k">return</span> <span class="tk-f">AppToolMetadata</span>(
+            app_id=<span class="tk-k">self</span>.app_id,
+            bundle_id=<span class="tk-s">"field_intake.tools"</span>,
+            tool_ids=[<span class="tk-s">"lookup_ticket"</span>, <span class="tk-s">"escalate"</span>],
+            exposure_scope=<span class="tk-s">"agent_only"</span>,
+        )
+
+    <span class="tk-k">def</span> <span class="tk-f">register_tools</span>(<span class="tk-k">self</span>, registry, context: <span class="tk-n">AppToolContext</span> | <span class="tk-k">None</span> = <span class="tk-k">None</span>):
+        registry.<span class="tk-f">register</span>(<span class="tk-s">"lookup_ticket"</span>, handler=lookup_ticket)
+        registry.<span class="tk-f">register</span>(<span class="tk-s">"escalate"</span>, handler=escalate)`;
+
+const codeAgents = `<span class="tk-c"># app/agents.py — a real agentic loop, with an approval gate on the risky tool.</span>
+<span class="tk-k">from</span> lace_app_sdk.agents <span class="tk-k">import</span> <span class="tk-n">AgentDefinition</span>, <span class="tk-n">ToolCapability</span>
+<span class="tk-k">from</span> lace_app_sdk.skills <span class="tk-k">import</span> <span class="tk-n">AgentSkill</span>
+
+<span class="tk-k">class</span> <span class="tk-n">AgentProvider</span>:
+    app_id = <span class="tk-s">"acme.field_intake"</span>
+
+    <span class="tk-k">def</span> <span class="tk-f">agent_definitions</span>(<span class="tk-k">self</span>):
+        <span class="tk-k">return</span> [
+            <span class="tk-f">AgentDefinition</span>(
+                agent_id=<span class="tk-s">"intake-triage"</span>,
+                slug=<span class="tk-s">"intake-triage"</span>,
+                name=<span class="tk-s">"Intake Triage"</span>,
+                description=<span class="tk-s">"Classifies tickets, drafts replies with citations."</span>,
+                capabilities=[
+                    <span class="tk-f">ToolCapability</span>(tool_id=<span class="tk-s">"lookup_ticket"</span>),
+                    <span class="tk-f">ToolCapability</span>(tool_id=<span class="tk-s">"escalate"</span>, approval_required=<span class="tk-k">True</span>),
+                ],
+            )
+        ]`;
+
+const toc = [
+  { id: "introduction", label: "Introduction" },
+  { id: "organization", label: "How LACE is organized" },
+  { id: "deployment", label: "Deployment options" },
+  { id: "install", label: "Install the SDK" },
+  { id: "quickstart", label: "Quickstart" },
+  { id: "modules", label: "Module reference" },
+  { id: "datasets", label: "Platform guide" },
+  { id: "governance", label: "Governance & security" },
+];
+---
+
+<div class="lpd">
+  <!-- ── Docs header ──────────────────────────────────────────────── -->
+  <header class="lpd-header">
+    <div class="lpd-header-row">
+      <a href="/" class="lpd-brand" aria-label="LACE home">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+          <circle cx="9" cy="9" r="3" fill="#00A882"></circle>
+          <circle cx="9" cy="9" r="6.5" stroke="#00A882" stroke-width="0.7" opacity="0.5"></circle>
+        </svg>
+        <span>LACE</span>
+      </a>
+
+      <div class="lpd-select" data-select>
+        <button type="button" aria-haspopup="listbox" aria-expanded="false">
+          <span data-select-label>v0.1</span>
+          <svg width="9" height="9" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+            <path d="M2 3.5 5 6.5 8 3.5" stroke="currentColor" stroke-width="1.4"></path>
+          </svg>
+        </button>
+        <ul role="listbox" aria-label="SDK version">
+          <li role="option" aria-selected="true" data-value="v0.1">v0.1 <i>Current</i></li>
+        </ul>
+      </div>
+
+      <div class="lpd-select" data-select>
+        <button type="button" aria-haspopup="listbox" aria-expanded="false">
+          <span data-select-label>Python</span>
+          <svg width="9" height="9" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+            <path d="M2 3.5 5 6.5 8 3.5" stroke="currentColor" stroke-width="1.4"></path>
+          </svg>
+        </button>
+        <ul role="listbox" aria-label="SDK language">
+          <li role="option" aria-selected="true" data-value="Python">Python</li>
+          <li role="option" aria-disabled="true">TypeScript <i>Soon</i></li>
+        </ul>
+      </div>
+
+      <label class="lpd-search">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <circle cx="10.5" cy="10.5" r="6.5" stroke="currentColor" stroke-width="1.6"></circle>
+          <path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="1.6"></path>
+        </svg>
+        <input type="search" placeholder="Search docs…" data-docs-search autocomplete="off" />
+        <kbd>Ctrl K</kbd>
+      </label>
+
+      <div class="lpd-header-actions">
+        <a
+          href="https://github.com/Determinant-Systems"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="lpd-gh"
+          aria-label="GitHub"
+        >
+          <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+            <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+          </svg>
+          <span>GitHub</span>
+        </a>
+        <a href="/contact" class="lpd-cta">Book a demo</a>
+      </div>
+    </div>
+
+    <nav class="lpd-tabs" aria-label="Docs sections">
+      <a href="#introduction" data-tab-link data-top="introduction" class="is-active">Documentation</a>
+      <a href="#install" data-tab-link data-top="install">SDK Reference</a>
+      <a href="#datasets" data-tab-link data-top="datasets">Platform Guide</a>
+      <a href="/blog">Blog</a>
+      <a href="/">laceplatform.com ↗</a>
+    </nav>
+  </header>
+
+  <!-- ── Body: sidebar / content / toc ────────────────────────────── -->
+  <div class="lpd-body">
+    <aside class="lpd-side" aria-label="Docs navigation">
+      <div class="lpd-side-quick">
+        <a href="/platform/enterprise-search">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" stroke="currentColor" stroke-width="1.6"/><path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="1.6"/></svg>
+          Platform site
+        </a>
+        <a href="/blog">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 3.5h14v17H5z" stroke="currentColor" stroke-width="1.5"/><path d="M8.5 8h7M8.5 11.5h7M8.5 15h4.5" stroke="currentColor" stroke-width="1.5"/></svg>
+          Blog
+        </a>
+        <a href="/contact">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7.5A1.5 1.5 0 0 1 5.5 6h13A1.5 1.5 0 0 1 20 7.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 16.5v-9Z" stroke="currentColor" stroke-width="1.5"/><path d="m5 8 7 5 7-5" stroke="currentColor" stroke-width="1.5"/></svg>
+          Support
+        </a>
+      </div>
+
+      {
+        sidebar.map((section) => (
+          <div class="lpd-side-group" data-side-group>
+            <p>{section.group}</p>
+            {section.items.map((item) => (
+              <a href={`#${item.id}`} data-side-link data-target={item.id}>
+                {item.label}
+              </a>
+            ))}
+          </div>
+        ))
+      }
+      <p class="lpd-side-empty" data-side-empty hidden>No matches.</p>
+    </aside>
+
+    <main class="lpd-main">
+      <!-- Get started -->
+      <section id="introduction" class="lpd-sec" data-sec>
+        <p class="lpd-crumb">Get Started</p>
+        <h1>Introduction</h1>
+        <p class="lpd-sub">
+          LACE is the AI platform for the governed enterprise — search, knowledge
+          graph, agents, and an app builder on one accountability substrate.
+          This hub covers the public developer surface.
+        </p>
+
+        <div class="lpd-callout">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M12 8v.5M12 11v5" stroke="currentColor" stroke-width="1.6"/>
+          </svg>
+          <p>
+            Full platform documentation is delivered <strong>in-product</strong> and
+            versioned with the release you run. The
+            <code class="lp-inline-code">lace-app-sdk</code> below is the public,
+            stable surface for developers.
+          </p>
+        </div>
+
+        <div class="lpd-cards">
+          <a href="/platform/enterprise-search" class="lpd-card">
+            <strong>Enterprise Search</strong>
+            <span>Cited, permissions-aware answers across every source.</span>
+          </a>
+          <a href="/platform/knowledge-graph" class="lpd-card">
+            <strong>Knowledge Graph</strong>
+            <span>Bitemporal facts with receipts and conflict detection.</span>
+          </a>
+          <a href="/platform/agents" class="lpd-card">
+            <strong>Agentic Platform</strong>
+            <span>Governed agents on chat, email, SMS, and voice.</span>
+          </a>
+          <a href="/platform/app-builder" class="lpd-card">
+            <strong>App Builder</strong>
+            <span>Prompt → sandboxed build → live, versioned application.</span>
+          </a>
+        </div>
+      </section>
+
+      <section id="organization" class="lpd-sec" data-sec>
+        <h2>How LACE is organized</h2>
+        <p>
+          Five peer product surfaces share one control plane: <strong>Pipelines</strong>
+          (versioned, typed workflow graphs), <strong>Agents</strong> (tool-using
+          definitions with deployments and channels), <strong>Apps</strong>
+          (manifest-defined packages), <strong>Knowledge</strong> (datasets,
+          retrieval, search, and the knowledge graph), and the
+          <strong>Assistant</strong> (a tenant-scoped copilot over the same APIs).
+        </p>
+        <ul>
+          <li>Every resource and execution is tenant-scoped; roles resolve to named permission scopes.</li>
+          <li>Model output proposes; deterministic services enforce permissions, validation, budgets, and approvals.</li>
+          <li>Evidence is first-class: retrieval and graph assertions point back to document spans.</li>
+          <li>Durable work uses persisted attempts, checkpoints, idempotency, and dead-letter handling.</li>
+        </ul>
+      </section>
+
+      <section id="deployment" class="lpd-sec" data-sec>
+        <h2>Deployment options</h2>
+        <p>The governance substrate is identical in every footprint.</p>
+        <div class="lpd-table-wrap">
+          <table>
+            <thead>
+              <tr><th>Footprint</th><th>Where it runs</th><th>Notes</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Managed cloud</strong></td><td>Our cloud</td><td>Fastest start; usage-based AI budgets with hard caps.</td></tr>
+              <tr><td><strong>Private cloud</strong></td><td>Your VPC</td><td>SSO/OIDC, custom connectors, BYO models.</td></tr>
+              <tr><td><strong>On-premises</strong></td><td>Your data center</td><td>Full platform, your hardware and boundary.</td></tr>
+              <tr><td><strong>Air-gapped</strong></td><td>Disconnected enclave</td><td>No external AI calls; accreditation evidence exportable.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- SDK -->
+      <section id="install" class="lpd-sec" data-sec>
+        <p class="lpd-crumb">lace-app-sdk</p>
+        <h1>Install</h1>
+        <p class="lpd-sub">
+          The public, versioned contract surface for building apps on LACE. A
+          facade over the live platform contracts — never a fork of them.
+        </p>
+        <div class="lp-code">
+          <div class="lp-code-head"><span>terminal</span><em>bash</em></div>
+          <pre><code set:html={codeInstall} /></pre>
+        </div>
+        <ul>
+          <li><strong>Facade, not fork</strong> — every symbol re-exports live core contracts; the builder and the sidecar resolve to the same code.</li>
+          <li><strong>Stability boundary</strong> — apps import only <code class="lp-inline-code">lace_app_sdk</code>; breaking a published symbol is a major version bump with a deprecation window.</li>
+          <li><strong>Governed by construction</strong> — data, tools, routes, and agents flow through platform services with tenancy, policy, and audit applied.</li>
+        </ul>
+      </section>
+
+      <section id="quickstart" class="lpd-sec" data-sec>
+        <h2>Quickstart</h2>
+        <p>
+          An app is a manifest plus providers. Four small files make a governed
+          application: the manifest, a data collection, a tool provider, and an
+          agent definition.
+        </p>
+      </section>
+
+      <section id="manifest" class="lpd-sec" data-sec>
+        <h2>Manifest</h2>
+        <p>
+          <code class="lp-inline-code">LaceAppManifest</code> declares everything
+          your app provides. LACE discovers manifests and wires providers at
+          bootstrap — no registration calls, no glue code.
+        </p>
+        <div class="lp-code">
+          <div class="lp-code-head"><span>app.py</span><em>python</em></div>
+          <pre><code set:html={codeManifest} /></pre>
+        </div>
+      </section>
+
+      <section id="data" class="lpd-sec" data-sec>
+        <h2>Data collections</h2>
+        <p>
+          Collections are typed with JSON Schema and served through the governed
+          <code class="lp-inline-code">AppDataService</code> — tenant-scoped,
+          audited, with an automatic admin panel. Binary payloads go through
+          <code class="lp-inline-code">put_blob</code> /
+          <code class="lp-inline-code">get_blob</code>. No raw tables, no policy
+          bypass.
+        </p>
+        <div class="lp-code">
+          <div class="lp-code-head"><span>app/data.py</span><em>python</em></div>
+          <pre><code set:html={codeData} /></pre>
+        </div>
+      </section>
+
+      <section id="tools" class="lpd-sec" data-sec>
+        <h2>Tools</h2>
+        <p>
+          Implement <code class="lp-inline-code">AppToolProvider</code> to expose
+          custom tools. Tools run in constrained runtimes, and trust tier plus
+          permissions are checked before every dispatch.
+        </p>
+        <div class="lp-code">
+          <div class="lp-code-head"><span>app/tools.py</span><em>python</em></div>
+          <pre><code set:html={codeTools} /></pre>
+        </div>
+      </section>
+
+      <section id="agents" class="lpd-sec" data-sec>
+        <h2>Agents &amp; skills</h2>
+        <p>
+          Declare an <code class="lp-inline-code">AgentDefinition</code> and it
+          runs a real agentic loop in your sidecar — the model chooses tools;
+          the platform enforces capabilities, loop guards, and approval gates.
+          Set <code class="lp-inline-code">approval_required=True</code> on a
+          capability and every invocation pauses for human sign-off.
+        </p>
+        <div class="lp-code">
+          <div class="lp-code-head"><span>app/agents.py</span><em>python</em></div>
+          <pre><code set:html={codeAgents} /></pre>
+        </div>
+      </section>
+
+      <section id="modules" class="lpd-sec" data-sec>
+        <h2>Module reference</h2>
+        <div class="lpd-table-wrap">
+          <table>
+            <thead>
+              <tr><th>Module</th><th>What it gives you</th></tr>
+            </thead>
+            <tbody>
+              {
+                modules.map(([name, description]) => (
+                  <tr>
+                    <td><code class="lp-inline-code">{name}</code></td>
+                    <td>{description}</td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
+        <p class="lpd-note">
+          Every app — generated or hand-written — publishes through the same
+          audited lifecycle: intent → architect → scaffold → validate → proof
+          lanes → seal → publish.
+        </p>
+      </section>
+
+      <!-- Platform guide -->
+      <section id="datasets" class="lpd-sec" data-sec>
+        <p class="lpd-crumb">Platform Guide</p>
+        <h1>Datasets &amp; connectors</h1>
+        <p>
+          Datasets are tenant-scoped containers over uploads and live
+          connectors — SharePoint, Google Drive, OneDrive, Dropbox, Notion,
+          Slack, email, S3, databases, and websites — with scheduled sync,
+          change reconciliation, and permission snapshots that flow forward to
+          every query.
+        </p>
+      </section>
+
+      <section id="search-rag" class="lpd-sec" data-sec>
+        <h2>Search &amp; RAG</h2>
+        <p>
+          Hybrid retrieval fuses lexical and vector legs with reciprocal-rank
+          fusion, filters by source ACLs, and optionally reranks on GPU.
+          Evidence carries stable document, block, and span identity — answers
+          open the original passage, and tables stay tables.
+        </p>
+      </section>
+
+      <section id="knowledge-graph" class="lpd-sec" data-sec>
+        <h2>Knowledge graph</h2>
+        <p>
+          Schema packs are versioned, executable ontology contracts. Extraction
+          is candidate-first and evidence-gated; identity resolution merges
+          duplicates reversibly; assertions are bitemporal, so corrections
+          supersede history instead of erasing it.
+        </p>
+      </section>
+
+      <section id="agents-channels" class="lpd-sec" data-sec>
+        <h2>Agents &amp; channels</h2>
+        <p>
+          One control plane drives every agent: sessions, tasks, streaming,
+          steering, and cancellation. Channels normalize email, SMS, WhatsApp,
+          Slack, Teams, webhooks, and realtime voice — with consent, delivery
+          retries, human handoff, and cost attribution built in.
+        </p>
+      </section>
+
+      <section id="workflows" class="lpd-sec" data-sec>
+        <h2>Workflows &amp; pipelines</h2>
+        <p>
+          Pipelines are versioned graphs of typed steps with checkpoints,
+          retries, idempotency, and dead-letter handling. Workflow Studio
+          compiles the same contract the API executes: drafts, versions,
+          triggers, aliases, and a full run timeline.
+        </p>
+      </section>
+
+      <section id="app-builder" class="lpd-sec" data-sec>
+        <h2>App Builder</h2>
+        <p>
+          Describe an application and the builder plans it, constructs it in a
+          sandbox, validates it through proof lanes, and publishes it as an
+          isolated sidecar with versioned releases and one-click rollback.
+          Generated code targets the public SDK — never core internals.
+        </p>
+      </section>
+
+      <section id="governance" class="lpd-sec" data-sec>
+        <h2>Governance &amp; security</h2>
+        <p>
+          Role-based permission scopes on every route; resource ACLs beneath
+          them. Budgets, usage limits, and approval gates wrap every AI
+          operation. Structured logs, OpenTelemetry traces, and per-call model
+          attribution — tenant, initiator, purpose, tokens, cost — make every
+          answer explainable after the fact.
+        </p>
+        <div class="lpd-callout">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 2.8 20 6v6.2c0 4.6-3.4 7.8-8 9-4.6-1.2-8-4.4-8-9V6z" stroke="currentColor" stroke-width="1.5"/>
+            <path d="m8.6 12 2.3 2.3 4.5-4.6" stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+          <p>
+            Deploys to managed cloud, private cloud (VPC), on-premises, or fully
+            air-gapped environments with no external AI calls.
+          </p>
+        </div>
+      </section>
+
+      <footer class="lpd-foot">
+        <p>© {new Date().getFullYear()} LACE · A Determinant Systems product</p>
+        <a href="/">← Back to laceplatform.com</a>
+      </footer>
+    </main>
+
+    <aside class="lpd-toc" aria-label="On this page">
+      <p>
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 6.5h10M4 12h16M4 17.5h13" stroke="currentColor" stroke-width="1.6"/></svg>
+        On this page
+      </p>
+      {toc.map((item) => <a href={`#${item.id}`} data-toc-link data-target={item.id}>{item.label}</a>)}
+
+      <div class="lpd-promo">
+        <strong>Ready to build?</strong>
+        <span>Get SDK access and a working example on your tenant.</span>
+        <a href="/contact" class="lpd-cta lpd-promo-cta">Book a demo</a>
+        <a href="/pricing" class="lpd-promo-link">See pricing →</a>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<style is:global>
+  /* Docs shell — global styles under the .lpd namespace (single page). */
+  .lpd {
+    --lpd-header-h: 6.4rem;
+    min-height: 100vh;
+    background: #fdfdfe;
+    color: var(--lp-ink);
+  }
+
+  /* ── Header ───────────────────────────────────────────────────── */
+  .lpd-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 60;
+    background: rgba(253, 253, 254, 0.94);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--lp-line-soft);
+  }
+
+  .lpd-header-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: min(1460px, calc(100% - 3rem));
+    margin-inline: auto;
+    padding: 0.8rem 0;
+  }
+
+  .lpd-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    text-decoration: none;
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: 0.92rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    color: var(--lp-ink);
+  }
+
+  /* Shared dropdown selector (version + language) */
+  .lpd-select {
+    position: relative;
+  }
+
+  .lpd-select > button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.38rem 0.65rem;
+    border: 1px solid var(--lp-line);
+    border-radius: var(--lp-radius);
+    background: #ffffff;
+    cursor: pointer;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.62rem;
+    color: var(--lp-ink-soft);
+    transition: border-color 150ms ease, color 150ms ease;
+  }
+
+  .lpd-select > button:hover,
+  .lpd-select.is-open > button {
+    border-color: rgba(var(--lp-green-rgb), 0.5);
+    color: var(--lp-green-deep);
+  }
+
+  .lpd-select > button svg {
+    transition: transform 200ms ease;
+    color: var(--lp-faint);
+  }
+
+  .lpd-select.is-open > button svg {
+    transform: rotate(180deg);
+  }
+
+  .lpd-select > ul {
+    position: absolute;
+    top: calc(100% + 0.35rem);
+    left: 0;
+    z-index: 70;
+    min-width: 100%;
+    margin: 0;
+    padding: 0.3rem;
+    list-style: none;
+    background: #ffffff;
+    border: 1px solid var(--lp-line);
+    border-radius: var(--lp-radius-lg);
+    box-shadow: var(--lp-shadow-md);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-6px);
+    transition: opacity 180ms ease, transform 180ms ease, visibility 0s linear 180ms;
+  }
+
+  .lpd-select.is-open > ul {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    transition-delay: 0s;
+  }
+
+  .lpd-select li {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.42rem 0.6rem;
+    border-radius: var(--lp-radius);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.64rem;
+    color: var(--lp-ink-soft);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .lpd-select li:hover {
+    background: rgba(var(--lp-green-rgb), 0.07);
+  }
+
+  .lpd-select li[aria-selected="true"] {
+    color: var(--lp-green-deep);
+    font-weight: 700;
+  }
+
+  .lpd-select li[aria-disabled="true"] {
+    color: var(--lp-faint);
+    cursor: not-allowed;
+  }
+
+  .lpd-select li i {
+    margin-left: auto;
+    font-style: normal;
+    padding: 0.1rem 0.4rem;
+    border-radius: var(--lp-radius);
+    background: rgba(var(--lp-green-rgb), 0.1);
+    font-size: 0.52rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--lp-green-deep);
+  }
+
+  .lpd-select li[aria-disabled="true"] i {
+    background: rgba(13, 27, 22, 0.05);
+    color: var(--lp-faint);
+  }
+
+  .lpd-search {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    max-width: 30rem;
+    margin-inline: auto;
+    padding: 0.5rem 0.8rem;
+    border: 1px solid var(--lp-line);
+    border-radius: var(--lp-radius-lg);
+    background: #f5f6f8;
+    color: var(--lp-faint);
+    cursor: text;
+    transition: border-color 160ms ease, box-shadow 160ms ease;
+  }
+
+  .lpd-search:focus-within {
+    border-color: rgba(var(--lp-green-rgb), 0.55);
+    box-shadow: 0 0 0 3px rgba(var(--lp-green-rgb), 0.12);
+  }
+
+  .lpd-search svg {
+    flex: none;
+    width: 0.95rem;
+    height: 0.95rem;
+  }
+
+  .lpd-search input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    font-size: 0.84rem;
+    color: var(--lp-ink);
+    outline: none;
+  }
+
+  .lpd-search kbd {
+    flex: none;
+    padding: 0.16rem 0.45rem;
+    border: 1px solid var(--lp-line);
+    border-radius: var(--lp-radius);
+    background: #ffffff;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.58rem;
+    color: var(--lp-faint);
+  }
+
+  .lpd-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+  }
+
+  .lpd-gh {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--lp-ink-soft);
+  }
+
+  .lpd-gh:hover {
+    color: var(--lp-green-deep);
+  }
+
+  .lpd-gh svg {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .lpd-cta {
+    padding: 0.5rem 1rem;
+    border-radius: var(--lp-radius);
+    background: linear-gradient(135deg, #00b88d, #00d9ae);
+    color: var(--lp-green-ink);
+    text-decoration: none;
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transition: background 160ms ease, color 160ms ease;
+  }
+
+  .lpd-cta:hover {
+    background: var(--lp-ink);
+    color: #fff;
+  }
+
+  .lpd-tabs {
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
+    width: min(1460px, calc(100% - 3rem));
+    margin-inline: auto;
+    padding: 0.1rem 0 0;
+    overflow-x: auto;
+  }
+
+  .lpd-tabs a {
+    padding: 0.55rem 0 0.7rem;
+    border-bottom: 2px solid transparent;
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--lp-muted);
+    white-space: nowrap;
+    transition: color 160ms ease, border-color 160ms ease;
+  }
+
+  .lpd-tabs a:hover {
+    color: var(--lp-ink);
+  }
+
+  .lpd-tabs a.is-active {
+    color: var(--lp-ink);
+    border-bottom-color: var(--lp-green);
+  }
+
+  /* ── Body grid ────────────────────────────────────────────────── */
+  .lpd-body {
+    display: grid;
+    grid-template-columns: 250px minmax(0, 1fr) 240px;
+    gap: clamp(1.5rem, 3vw, 3.5rem);
+    width: min(1460px, calc(100% - 3rem));
+    margin-inline: auto;
+    padding-top: var(--lpd-header-h);
+  }
+
+  /* ── Sidebar ──────────────────────────────────────────────────── */
+  .lpd-side {
+    position: sticky;
+    top: var(--lpd-header-h);
+    height: calc(100vh - var(--lpd-header-h));
+    overflow-y: auto;
+    padding: 1.6rem 0.8rem 2.5rem 0;
+    border-right: 1px solid var(--lp-line-soft);
+  }
+
+  .lpd-side-quick {
+    display: grid;
+    gap: 0.15rem;
+    margin-bottom: 1.4rem;
+  }
+
+  .lpd-side-quick a {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.42rem 0.6rem;
+    border-radius: var(--lp-radius);
+    text-decoration: none;
+    font-size: 0.82rem;
+    color: var(--lp-ink-soft);
+  }
+
+  .lpd-side-quick a:hover {
+    background: rgba(var(--lp-green-rgb), 0.06);
+    color: var(--lp-green-deep);
+  }
+
+  .lpd-side-quick svg {
+    width: 0.95rem;
+    height: 0.95rem;
+    color: var(--lp-faint);
+  }
+
+  .lpd-side-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .lpd-side-group > p {
+    margin: 0 0 0.4rem;
+    padding: 0 0.6rem;
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--lp-ink);
+  }
+
+  .lpd-side-group a {
+    display: block;
+    padding: 0.38rem 0.6rem;
+    border-radius: var(--lp-radius);
+    text-decoration: none;
+    font-size: 0.82rem;
+    color: var(--lp-muted);
+    transition: background 140ms ease, color 140ms ease;
+  }
+
+  .lpd-side-group a:hover {
+    color: var(--lp-ink);
+    background: rgba(13, 27, 22, 0.04);
+  }
+
+  .lpd-side-group a.is-active {
+    background: rgba(var(--lp-green-rgb), 0.1);
+    color: var(--lp-green-deep);
+    font-weight: 600;
+  }
+
+  .lpd-side-empty {
+    padding: 0 0.6rem;
+    font-size: 0.8rem;
+    color: var(--lp-faint);
+  }
+
+  /* ── Main content ─────────────────────────────────────────────── */
+  .lpd-main {
+    max-width: 760px;
+    padding: 2rem 0 4rem;
+    min-width: 0;
+  }
+
+  .lpd-sec {
+    padding: 1.4rem 0;
+    scroll-margin-top: calc(var(--lpd-header-h) + 0.8rem);
+  }
+
+  .lpd-crumb {
+    margin: 0 0 0.5rem;
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--lp-green-deep);
+  }
+
+  .lpd-main h1 {
+    margin: 0 0 0.8rem;
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: clamp(1.7rem, 2.8vw, 2.3rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    color: var(--lp-ink);
+    text-transform: none;
+  }
+
+  .lpd-main h2 {
+    margin: 0 0 0.7rem;
+    padding-top: 0.4rem;
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: 1.25rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+    color: var(--lp-ink);
+    text-transform: none;
+  }
+
+  .lpd-sub {
+    margin: 0 0 1.2rem;
+    font-size: 1.02rem;
+    line-height: 1.7;
+    color: var(--lp-muted);
+  }
+
+  .lpd-main p {
+    margin: 0 0 1rem;
+    font-size: 0.92rem;
+    line-height: 1.75;
+    color: var(--lp-ink-soft);
+  }
+
+  .lpd-main ul {
+    margin: 0 0 1rem;
+    padding-left: 1.2rem;
+    color: var(--lp-ink-soft);
+  }
+
+  .lpd-main li {
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    line-height: 1.7;
+  }
+
+  .lpd-main li strong,
+  .lpd-main p strong {
+    color: var(--lp-ink);
+    font-weight: 600;
+  }
+
+  .lpd-main .lp-code {
+    margin: 1.1rem 0 1.4rem;
+  }
+
+  .lpd-callout {
+    display: flex;
+    gap: 0.8rem;
+    margin: 1.2rem 0;
+    padding: 0.95rem 1.1rem;
+    border: 1px solid rgba(var(--lp-green-rgb), 0.3);
+    border-radius: var(--lp-radius-lg);
+    background: rgba(var(--lp-green-rgb), 0.05);
+  }
+
+  .lpd-callout svg {
+    flex: none;
+    width: 1.1rem;
+    height: 1.1rem;
+    margin-top: 0.15rem;
+    color: var(--lp-green-deep);
+  }
+
+  .lpd-callout p {
+    margin: 0;
+    font-size: 0.87rem;
+  }
+
+  .lpd-cards {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.8rem;
+    margin-top: 1.4rem;
+  }
+
+  .lpd-card {
+    display: grid;
+    gap: 0.25rem;
+    padding: 1rem 1.1rem;
+    border: 1px solid var(--lp-line);
+    border-radius: var(--lp-radius-lg);
+    background: #ffffff;
+    text-decoration: none;
+    transition: border-color 160ms ease, box-shadow 160ms ease;
+  }
+
+  .lpd-card:hover {
+    border-color: rgba(var(--lp-green-rgb), 0.45);
+    box-shadow: var(--lp-shadow-sm);
+  }
+
+  .lpd-card strong {
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: 0.84rem;
+    font-weight: 700;
+    color: var(--lp-ink);
+  }
+
+  .lpd-card span {
+    font-size: 0.78rem;
+    line-height: 1.55;
+    color: var(--lp-muted);
+  }
+
+  .lpd-table-wrap {
+    margin: 1.1rem 0 1.3rem;
+    overflow-x: auto;
+    border: 1px solid var(--lp-line);
+    border-radius: var(--lp-radius-lg);
+  }
+
+  .lpd-table-wrap table {
+    width: 100%;
+    min-width: 540px;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+  }
+
+  .lpd-table-wrap th {
+    padding: 0.7rem 1rem;
+    text-align: left;
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--lp-faint);
+    background: rgba(13, 27, 22, 0.025);
+    border-bottom: 1px solid var(--lp-line);
+  }
+
+  .lpd-table-wrap td {
+    padding: 0.7rem 1rem;
+    vertical-align: top;
+    border-bottom: 1px solid var(--lp-line-soft);
+    color: var(--lp-ink-soft);
+    line-height: 1.6;
+  }
+
+  .lpd-table-wrap tr:last-child td {
+    border-bottom: 0;
+  }
+
+  .lpd-note {
+    font-size: 0.84rem;
+    color: var(--lp-muted);
+  }
+
+  .lpd-foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8rem;
+    margin-top: 2rem;
+    padding-top: 1.4rem;
+    border-top: 1px solid var(--lp-line-soft);
+  }
+
+  .lpd-foot p {
+    margin: 0;
+    font-size: 0.78rem;
+    color: var(--lp-faint);
+  }
+
+  .lpd-foot a {
+    font-size: 0.82rem;
+    color: var(--lp-green-deep);
+    text-decoration: none;
+  }
+
+  /* ── Right TOC ────────────────────────────────────────────────── */
+  .lpd-toc {
+    position: sticky;
+    top: var(--lpd-header-h);
+    height: calc(100vh - var(--lpd-header-h));
+    overflow-y: auto;
+    padding: 1.8rem 0 2.5rem;
+  }
+
+  .lpd-toc > p {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0 0 0.7rem;
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--lp-ink);
+  }
+
+  .lpd-toc > p svg {
+    width: 0.85rem;
+    height: 0.85rem;
+    color: var(--lp-faint);
+  }
+
+  .lpd-toc > a {
+    display: block;
+    padding: 0.3rem 0 0.3rem 0.75rem;
+    border-left: 2px solid var(--lp-line-soft);
+    text-decoration: none;
+    font-size: 0.8rem;
+    color: var(--lp-muted);
+    transition: color 140ms ease, border-color 140ms ease;
+  }
+
+  .lpd-toc > a:hover {
+    color: var(--lp-ink);
+  }
+
+  .lpd-toc > a.is-active {
+    border-left-color: var(--lp-green);
+    color: var(--lp-green-deep);
+    font-weight: 600;
+  }
+
+  .lpd-promo {
+    display: grid;
+    gap: 0.5rem;
+    margin-top: 1.6rem;
+    padding: 1.1rem 1.15rem 1.2rem;
+    border: 1px solid rgba(var(--lp-green-rgb), 0.3);
+    border-radius: var(--lp-radius-lg);
+    background:
+      radial-gradient(16rem 8rem at 100% 0%, rgba(var(--lp-green-rgb), 0.1), transparent 65%),
+      #ffffff;
+  }
+
+  .lpd-promo strong {
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: 0.9rem;
+    color: var(--lp-ink);
+  }
+
+  .lpd-promo span {
+    font-size: 0.76rem;
+    line-height: 1.55;
+    color: var(--lp-muted);
+  }
+
+  .lpd-promo-cta {
+    margin-top: 0.4rem;
+    text-align: center;
+  }
+
+  .lpd-promo-link {
+    text-align: center;
+    font-size: 0.76rem;
+    color: var(--lp-green-deep);
+    text-decoration: none;
+  }
+
+  /* ── Responsive ───────────────────────────────────────────────── */
+  @media (max-width: 1180px) {
+    .lpd-body {
+      grid-template-columns: 240px minmax(0, 1fr);
+    }
+
+    .lpd-toc {
+      display: none;
+    }
+  }
+
+  @media (max-width: 880px) {
+    .lpd {
+      --lpd-header-h: 8.6rem;
+    }
+
+    .lpd-header-row {
+      flex-wrap: wrap;
+      gap: 0.6rem;
+    }
+
+    .lpd-search {
+      order: 10;
+      flex-basis: 100%;
+      max-width: none;
+    }
+
+    .lpd-select,
+    .lpd-gh span {
+      display: none;
+    }
+
+    .lpd-body {
+      grid-template-columns: 1fr;
+      padding-top: calc(var(--lpd-header-h) + 0.5rem);
+    }
+
+    .lpd-side {
+      position: static;
+      height: auto;
+      border-right: 0;
+      border-bottom: 1px solid var(--lp-line-soft);
+      padding-right: 0;
+    }
+  }
+</style>
+
+<script>
+  // ── Header dropdown selectors (version / language) ──────────────
+  (() => {
+    const selects = Array.from(document.querySelectorAll<HTMLElement>("[data-select]"));
+    if (!selects.length) return;
+
+    const closeAll = (except?: HTMLElement) => {
+      selects.forEach((select) => {
+        if (select !== except) {
+          select.classList.remove("is-open");
+          select.querySelector("button")?.setAttribute("aria-expanded", "false");
+        }
+      });
+    };
+
+    selects.forEach((select) => {
+      const button = select.querySelector<HTMLButtonElement>("button");
+      const label = select.querySelector<HTMLElement>("[data-select-label]");
+      if (!button || !label) return;
+
+      button.addEventListener("click", (event) => {
+        event.stopPropagation();
+        const open = !select.classList.contains("is-open");
+        closeAll(select);
+        select.classList.toggle("is-open", open);
+        button.setAttribute("aria-expanded", open ? "true" : "false");
+      });
+
+      select.querySelectorAll<HTMLElement>("li[role='option']").forEach((option) => {
+        option.addEventListener("click", (event) => {
+          event.stopPropagation();
+          if (option.getAttribute("aria-disabled") === "true") return;
+          select
+            .querySelectorAll("li[role='option']")
+            .forEach((li) => li.setAttribute("aria-selected", li === option ? "true" : "false"));
+          label.textContent = option.getAttribute("data-value") ?? option.textContent;
+          closeAll();
+        });
+      });
+    });
+
+    document.addEventListener("click", () => closeAll());
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeAll();
+    });
+  })();
+
+  // ── Sidebar filter (search box) ─────────────────────────────────
+  (() => {
+    const input = document.querySelector<HTMLInputElement>("[data-docs-search]");
+    const groups = Array.from(document.querySelectorAll<HTMLElement>("[data-side-group]"));
+    const empty = document.querySelector<HTMLElement>("[data-side-empty]");
+    if (!input || !groups.length) return;
+
+    const apply = () => {
+      const q = input.value.trim().toLowerCase();
+      let any = false;
+      groups.forEach((group) => {
+        let visible = 0;
+        group.querySelectorAll<HTMLAnchorElement>("[data-side-link]").forEach((link) => {
+          const hit = !q || (link.textContent ?? "").toLowerCase().includes(q);
+          link.style.display = hit ? "" : "none";
+          if (hit) visible += 1;
+        });
+        group.style.display = visible ? "" : "none";
+        if (visible) any = true;
+      });
+      if (empty) empty.hidden = any;
+    };
+
+    input.addEventListener("input", apply);
+    input.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        input.value = "";
+        apply();
+        input.blur();
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
+        event.preventDefault();
+        input.focus();
+      }
+    });
+  })();
+
+  // ── Scrollspy: sidebar + tabs + right TOC ───────────────────────
+  (() => {
+    const sections = Array.from(document.querySelectorAll<HTMLElement>("[data-sec]"));
+    const sideLinks = Array.from(document.querySelectorAll<HTMLElement>("[data-side-link]"));
+    const tocLinks = Array.from(document.querySelectorAll<HTMLElement>("[data-toc-link]"));
+    const tabLinks = Array.from(document.querySelectorAll<HTMLElement>("[data-tab-link]"));
+    if (!sections.length) return;
+
+    // Tab ranges: a tab is active from its data-top section until the next tab's.
+    const tabTops = tabLinks.map((tab) => tab.getAttribute("data-top") ?? "");
+    const sectionIds = sections.map((section) => section.id);
+
+    const setActive = (id: string) => {
+      sideLinks.forEach((link) =>
+        link.classList.toggle("is-active", link.getAttribute("data-target") === id),
+      );
+      tocLinks.forEach((link) =>
+        link.classList.toggle("is-active", link.getAttribute("data-target") === id),
+      );
+
+      const index = sectionIds.indexOf(id);
+      let activeTab = tabTops[0];
+      tabTops.forEach((top) => {
+        const topIndex = sectionIds.indexOf(top);
+        if (topIndex !== -1 && topIndex <= index) activeTab = top;
+      });
+      tabLinks.forEach((tab) =>
+        tab.classList.toggle("is-active", tab.getAttribute("data-top") === activeTab),
+      );
+    };
+
+    let current = sections[0].id;
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            current = entry.target.id;
+            setActive(current);
+          }
+        });
+      },
+      { rootMargin: "-25% 0px -65% 0px", threshold: 0 },
+    );
+    sections.forEach((section) => obs.observe(section));
+    setActive(current);
+  })();
+</script>

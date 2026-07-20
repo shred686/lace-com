@@ -1,0 +1,382 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "@determinant/site-kit/layouts/BaseLayout.astro";
+import LaceNav from "@determinant/site-kit/components/lace/LaceNav.astro";
+import LaceFooter from "@determinant/site-kit/components/lace/LaceFooter.astro";
+import "@determinant/site-kit/styles/lace-site.css";
+import { laceSite } from "../../site.config";
+
+const posts = (await getCollection("blog")).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+
+const featured = posts.find((post) => post.data.featured) ?? posts[0];
+const rest = posts.filter((post) => post.id !== featured.id);
+
+const categories = [...new Set(posts.map((post) => post.data.category))];
+
+const fmt = (date: Date) =>
+  date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+
+const readTime = (body: string | undefined) =>
+  Math.max(2, Math.round((body ?? "").split(/\s+/).length / 220));
+---
+
+<BaseLayout
+  title={`Blog | ${laceSite.name}`}
+  description="Engineering and product writing from the LACE team: evidence-first retrieval, bitemporal knowledge graphs, governed agents, and air-gapped AI."
+  theme="lace"
+  themeColor="#f6f7f9"
+  lang="en"
+  siteName={laceSite.name}
+>
+  <main class="lp-site lp-blog">
+    <LaceNav active="blog" />
+
+    <section class="lp-blog-hero">
+      <div class="lp-wrap">
+        <p class="lp-kicker" data-r>Blog</p>
+        <h1 class="lp-h1 lp-blog-title" data-r data-reveal-delay="70">
+          Notes from the<br />
+          <span class="lp-accent">governed side of AI.</span>
+        </h1>
+
+        <div class="lp-blog-filter" data-r data-reveal-delay="140" role="group" aria-label="Filter posts">
+          <button type="button" class="lp-blog-pill is-active" data-cat="all">All posts</button>
+          {
+            categories.map((category) => (
+              <button type="button" class="lp-blog-pill" data-cat={category}>
+                {category}
+              </button>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <section class="lp-section-tight">
+      <div class="lp-wrap lp-blog-list">
+        <!-- Featured -->
+        <a
+          href={`/blog/${featured.id}`}
+          class="lp-card lp-card-hover lp-blog-featured"
+          data-post
+          data-category={featured.data.category}
+          data-r
+        >
+          <div class="lp-blog-thumb lp-blog-thumb-lg" aria-hidden="true">
+            <svg width="30" height="30" viewBox="0 0 18 18" fill="none">
+              <circle cx="9" cy="9" r="3" fill="#00A882"></circle>
+              <circle cx="9" cy="9" r="6.5" stroke="#00A882" stroke-width="0.7" opacity="0.5"></circle>
+              <circle cx="9" cy="9" r="8.6" stroke="#00A882" stroke-width="0.5" opacity="0.22"></circle>
+            </svg>
+          </div>
+          <div class="lp-blog-featured-copy">
+            <div class="lp-blog-meta-top">
+              <span class="lp-blog-cat">{featured.data.category}</span>
+              <span class="lp-blog-flag">Featured</span>
+            </div>
+            <h2>{featured.data.title}</h2>
+            <p>{featured.data.description}</p>
+            <div class="lp-blog-meta">
+              <span>{featured.data.author}</span>
+              <i>·</i>
+              <span>{fmt(featured.data.date)}</span>
+              <i>·</i>
+              <span>{readTime(featured.body)} min read</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Stacked list -->
+        {
+          rest.map((post, index) => (
+            <a
+              href={`/blog/${post.id}`}
+              class="lp-card lp-card-hover lp-blog-row"
+              data-post
+              data-category={post.data.category}
+              data-r
+              data-reveal-delay={80 + index * 60}
+            >
+              <div class="lp-blog-thumb" aria-hidden="true">
+                <span>{post.data.category.slice(0, 2)}</span>
+              </div>
+              <div class="lp-blog-row-copy">
+                <span class="lp-blog-cat">{post.data.category}</span>
+                <h2>{post.data.title}</h2>
+                <p>{post.data.description}</p>
+                <div class="lp-blog-meta">
+                  <span>{post.data.author}</span>
+                  <i>·</i>
+                  <span>{fmt(post.data.date)}</span>
+                  <i>·</i>
+                  <span>{readTime(post.body)} min read</span>
+                </div>
+              </div>
+              <span class="lp-blog-arrow" aria-hidden="true">→</span>
+            </a>
+          ))
+        }
+
+        <p class="lp-blog-empty" data-blog-empty hidden>No posts in this category yet.</p>
+      </div>
+    </section>
+
+    <LaceFooter />
+  </main>
+</BaseLayout>
+
+<style>
+  .lp-blog-hero {
+    padding: clamp(8.5rem, 15vh, 11rem) 0 clamp(1.5rem, 3vw, 2.5rem);
+  }
+
+  .lp-blog-title {
+    font-size: clamp(2.2rem, 5vw, 4rem);
+  }
+
+  .lp-blog-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 2rem;
+  }
+
+  .lp-blog-pill {
+    padding: 0.5rem 1.05rem;
+    border: 1px solid var(--lp-line);
+    border-radius: 100px;
+    background: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--lp-muted);
+    transition: color 160ms ease, border-color 160ms ease, background 160ms ease;
+  }
+
+  .lp-blog-pill:hover {
+    color: var(--lp-green-deep);
+    border-color: rgba(var(--lp-green-rgb), 0.4);
+  }
+
+  .lp-blog-pill.is-active {
+    color: #fff;
+    border-color: transparent;
+    background: var(--lp-grad);
+  }
+
+  .lp-blog-list {
+    display: grid;
+    gap: 1rem;
+    max-width: 880px;
+  }
+
+  /* Featured card */
+  .lp-blog-featured {
+    display: grid;
+    grid-template-columns: 200px minmax(0, 1fr);
+    gap: 1.6rem;
+    padding: 1.6rem;
+    text-decoration: none;
+  }
+
+  .lp-blog-featured-copy {
+    display: grid;
+    gap: 0.6rem;
+    align-content: center;
+  }
+
+  .lp-blog-meta-top {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .lp-blog-flag {
+    padding: 0.2rem 0.55rem;
+    border-radius: 100px;
+    background: var(--lp-grad);
+    color: #fff;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.52rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .lp-blog-featured h2 {
+    margin: 0;
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: clamp(1.2rem, 2.2vw, 1.6rem);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    line-height: 1.3;
+    color: var(--lp-ink);
+    text-transform: none;
+  }
+
+  .lp-blog-featured p {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.65;
+    color: var(--lp-muted);
+  }
+
+  /* Thumbs */
+  .lp-blog-thumb {
+    display: grid;
+    place-items: center;
+    width: 4.4rem;
+    height: 4.4rem;
+    flex: none;
+    border: 1px solid rgba(var(--lp-green-rgb), 0.25);
+    border-radius: var(--lp-radius-lg);
+    background:
+      radial-gradient(6rem 4rem at 80% 10%, rgba(var(--lp-green-rgb), 0.16), transparent 70%),
+      #f4faf8;
+  }
+
+  .lp-blog-thumb span {
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: var(--lp-grad);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .lp-blog-thumb-lg {
+    width: 100%;
+    height: 100%;
+    min-height: 160px;
+  }
+
+  /* Row cards */
+  .lp-blog-row {
+    display: flex;
+    align-items: center;
+    gap: 1.4rem;
+    padding: 1.3rem 1.5rem;
+    text-decoration: none;
+  }
+
+  .lp-blog-row-copy {
+    display: grid;
+    gap: 0.35rem;
+    min-width: 0;
+  }
+
+  .lp-blog-cat {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--lp-green-deep);
+  }
+
+  .lp-blog-row h2 {
+    margin: 0;
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: 1.08rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.35;
+    color: var(--lp-ink);
+    text-transform: none;
+  }
+
+  .lp-blog-row p {
+    margin: 0;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: var(--lp-muted);
+  }
+
+  .lp-blog-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.74rem;
+    color: var(--lp-faint);
+  }
+
+  .lp-blog-meta i {
+    font-style: normal;
+    color: var(--lp-line);
+  }
+
+  .lp-blog-arrow {
+    margin-left: auto;
+    flex: none;
+    color: var(--lp-green-deep);
+    font-size: 1.1rem;
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: opacity 200ms ease, transform 200ms ease;
+  }
+
+  .lp-blog-row:hover .lp-blog-arrow {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .lp-blog-empty {
+    padding: 2rem 0;
+    text-align: center;
+    color: var(--lp-faint);
+  }
+
+  [data-post].is-hidden {
+    display: none;
+  }
+
+  @media (max-width: 720px) {
+    .lp-blog-featured {
+      grid-template-columns: 1fr;
+    }
+
+    .lp-blog-thumb-lg {
+      min-height: 110px;
+    }
+
+    .lp-blog-row {
+      align-items: flex-start;
+    }
+
+    .lp-blog-row .lp-blog-thumb {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  // Category filter
+  (() => {
+    const pills = Array.from(document.querySelectorAll<HTMLButtonElement>(".lp-blog-pill"));
+    const posts = Array.from(document.querySelectorAll<HTMLElement>("[data-post]"));
+    const empty = document.querySelector<HTMLElement>("[data-blog-empty]");
+    if (!pills.length || !posts.length) return;
+
+    pills.forEach((pill) => {
+      pill.addEventListener("click", () => {
+        const cat = pill.dataset.cat ?? "all";
+        pills.forEach((p) => p.classList.toggle("is-active", p === pill));
+        let visible = 0;
+        posts.forEach((post) => {
+          const show = cat === "all" || post.dataset.category === cat;
+          post.classList.toggle("is-hidden", !show);
+          if (show) visible += 1;
+        });
+        if (empty) empty.hidden = visible > 0;
+      });
+    });
+  })();
+</script>

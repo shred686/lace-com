@@ -1,0 +1,86 @@
+---
+import BaseLayout from "@determinant/site-kit/layouts/BaseLayout.astro";
+import LaceOfferingShell from "@determinant/site-kit/components/lace/LaceOfferingShell.astro";
+import LaceAgentDemo from "@determinant/site-kit/components/lace/LaceAgentDemo.astro";
+import { laceSite } from "../../site.config";
+
+const content = {
+  kicker: "Platform · Agentic Platform",
+  title: "AI teammates that follow company policy.",
+  accent: "follow company policy.",
+  lead: "Agents don't just answer questions — they take action: researching, drafting, processing requests, operating tools. LACE lets your teams design agents with AI assistance, prove them against test scenarios, and deploy them across every medium your organization works in.",
+  points: [
+    {
+      title: "Build with AI assistance",
+      detail:
+        "Guided studios for agents, tools, and skills: describe the role in plain language and iterate on a live, working preview.",
+    },
+    {
+      title: "Deploy across every channel",
+      detail:
+        "One agent, many surfaces: web chat, Slack, Microsoft Teams, email, SMS, WhatsApp, and live voice — with clean handoff to human staff.",
+    },
+    {
+      title: "Grounded in your knowledge",
+      detail:
+        "Agents draw on Enterprise Search and the Knowledge Graph, so answers come from verified organizational data — with citations.",
+    },
+    {
+      title: "Governed, not just capable",
+      detail:
+        "Budget caps, usage limits, allowed-action lists, and approval gates wrap every operation. Sensitive actions route to human sign-off.",
+    },
+    {
+      title: "Watch them think",
+      detail:
+        "Step-by-step execution traces show exactly what an agent did, which tools it used, what it retrieved, and why.",
+    },
+    {
+      title: "Prove them before you promote them",
+      detail:
+        "Built-in evaluation suites score agents against test scenarios before deployment; monitoring watches cost, quality, and behavior in production.",
+    },
+  ],
+  practice:
+    "A contracts intake agent receives a vendor question by email, checks the governing agreement through Enterprise Search, drafts a response citing the exact clause, and routes it to counsel for one-click approval — the entire chain of evidence preserved in the audit trail.",
+  deepTitle: "Built so you can trust it with real work.",
+  deepAccent: "real work.",
+  deep: [
+    {
+      title: "Runs that finish",
+      detail:
+        "Every run is recorded step by step as it happens. If a run is interrupted — a crash, a timeout, a restart — it picks up from the last completed step instead of starting over or silently disappearing.",
+    },
+    {
+      title: "Permissions you can read",
+      detail:
+        "Each agent carries an explicit list of what it may use: which tools, which data, what budget. Change the agent and the list is re-reviewed — so you always know what a deployed agent can actually do.",
+    },
+    {
+      title: "Ready for real channels",
+      detail:
+        "Putting an agent on email, SMS, or voice means consent rules, delivery failures, escalation to a person, and knowing what each conversation cost. LACE handles all of that per channel — you don't build messaging infrastructure to go live.",
+    },
+  ],
+  related: [
+    { href: "/platform/enterprise-search", title: "Enterprise Search", line: "Cited answers, one bar." },
+    { href: "/platform/knowledge-graph", title: "Knowledge Graph", line: "Every fact receipted." },
+    { href: "/platform/app-builder", title: "App Builder", line: "One prompt. A live app." },
+  ],
+  ctaTitle: "Put your first agent to work.",
+  ctaAccent: "to work.",
+};
+---
+
+<BaseLayout
+  title={`Agentic Platform | ${laceSite.name}`}
+  description="Design, evaluate, and deploy policy-governed AI agents across web chat, Slack, Teams, email, SMS, and voice — grounded in your data, with budgets, approval gates, and full execution traces."
+  theme="lace"
+  themeColor="#f6f7f9"
+  lang="en"
+  siteName={laceSite.name}
+>
+  <LaceOfferingShell {...content}>
+    <LaceAgentDemo />
+  </LaceOfferingShell>
+</BaseLayout>

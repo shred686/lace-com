@@ -1,75 +1,80 @@
 ---
 import BaseLayout from "@determinant/site-kit/layouts/BaseLayout.astro";
+import LaceNav from "@determinant/site-kit/components/lace/LaceNav.astro";
+import LaceFooter from "@determinant/site-kit/components/lace/LaceFooter.astro";
+import "@determinant/site-kit/styles/lace-site.css";
 import { laceSite } from "../site.config";
 ---
 
 <BaseLayout
   title={`Contact | ${laceSite.name}`}
-  description={`Talk with the ${laceSite.name} team about governed AI workflows and enterprise deployment.`}
-  theme="midnight"
+  description={`Talk with the ${laceSite.name} team about a demo, a technical evaluation, or an enterprise deployment.`}
+  theme="lace"
+  themeColor="#f6f7f9"
   lang="en"
+  siteName={laceSite.name}
 >
-  <main class="contact-page">
-    <div class="noise-layer"></div>
+  <main class="lp-site lp-contact">
+    <LaceNav />
 
-    <section class="contact-shell ds-site">
-      <header class="contact-nav" data-reveal>
-        <a href="/" class="brand-wordmark">
-          <span class="brand-dot"></span>
-          <span>{laceSite.name}</span>
-        </a>
-        <a href="/" class="contact-nav-link">Back home</a>
-      </header>
+    <section class="lp-contact-shell">
+      <div class="lp-wrap lp-contact-grid">
+        <div class="lp-contact-copy" data-r>
+          <p class="lp-kicker">Contact</p>
+          <h1 class="lp-h1 lp-contact-title">
+            See it on<br />
+            <span class="lp-accent">your documents.</span>
+          </h1>
+          <p class="lp-lead">
+            Tell us about the corpus, the workflow, and where it needs to run.
+            We'll map the first LACE path with you — and if we're not the right
+            fit, we'll tell you that too.
+          </p>
 
-      <section class="contact-hero" data-reveal data-reveal-delay="60">
-        <div class="contact-copy">
-          <p class="eyebrow">Contact</p>
-          <h1>Tell us which workflow needs structure.</h1>
-          <div class="contact-direct">
-            <a href={laceSite.contactPhoneHref} class="contact-direct-item">
-              <span class="contact-direct-icon" aria-hidden="true">
+          <div class="lp-contact-direct">
+            <a href={laceSite.contactPhoneHref} class="lp-contact-item">
+              <span class="lp-contact-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none">
                   <path
                     d="M7.2 4.5h3.1l1.2 4.1-1.9 1.9a15.4 15.4 0 0 0 3.9 3.9l1.9-1.9 4.1 1.2v3.1a1.2 1.2 0 0 1-1.2 1.2A13.8 13.8 0 0 1 4.5 5.7 1.2 1.2 0 0 1 5.7 4.5h1.5Z"
                     stroke="currentColor"
                     stroke-width="1.5"
                     stroke-linecap="round"
-                    stroke-linejoin="round"
-                  ></path>
+                    stroke-linejoin="round"></path>
                 </svg>
               </span>
               <span>{laceSite.contactPhone}</span>
             </a>
 
-            <a href={`mailto:${laceSite.contactEmail}`} class="contact-direct-item">
-              <span class="contact-direct-icon" aria-hidden="true">
+            <a href={`mailto:${laceSite.contactEmail}`} class="lp-contact-item">
+              <span class="lp-contact-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none">
                   <path
                     d="M4 7.5A1.5 1.5 0 0 1 5.5 6h13A1.5 1.5 0 0 1 20 7.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 16.5v-9Z"
                     stroke="currentColor"
-                    stroke-width="1.5"
-                  ></path>
+                    stroke-width="1.5"></path>
                   <path
                     d="m5 8 7 5 7-5"
                     stroke="currentColor"
                     stroke-width="1.5"
                     stroke-linecap="round"
-                    stroke-linejoin="round"
-                  ></path>
+                    stroke-linejoin="round"></path>
                 </svg>
               </span>
               <span>{laceSite.contactEmail}</span>
             </a>
           </div>
-          <p class="lede">
-            Send over the workflow, source documents, and constraints you are trying to
-            govern. We will map the first LACE path with you.
-          </p>
+
+          <ul class="lp-contact-notes">
+            <li>Enterprise briefings and technical evaluations under NDA</li>
+            <li>Cloud, private cloud, on-premises, and air-gapped deployment</li>
+            <li>Evaluations run in weeks, not quarters</li>
+          </ul>
         </div>
 
-        <div class="contact-panel" data-reveal data-reveal-delay="140">
+        <div class="lp-card lp-contact-panel" data-r data-reveal-delay="120">
           <form
-            class="contact-form"
+            class="lp-form"
             action="https://formsubmit.co/sales@laceplatform.com"
             method="POST"
           >
@@ -78,35 +83,34 @@ import { laceSite } from "../site.config";
             <input type="hidden" name="_template" value="table" />
             <input type="hidden" name="_replyto" value="email" />
 
-            <div class="field-row">
-              <label class="field">
+            <div class="lp-form-row">
+              <label class="lp-field">
                 <span>Name</span>
                 <input type="text" name="name" placeholder="Jane Smith" required />
               </label>
 
-              <label class="field">
-                <span>Email</span>
+              <label class="lp-field">
+                <span>Work email</span>
                 <input type="email" name="email" placeholder="jane@company.com" required />
               </label>
             </div>
 
-            <label class="field">
+            <label class="lp-field">
               <span>Company</span>
-              <input type="text" name="company" placeholder="Company or team name" />
+              <input type="text" name="company" placeholder="Company or program name" />
             </label>
 
-            <label class="field">
-              <span>Workflow to govern</span>
+            <label class="lp-field">
+              <span>What should LACE run?</span>
               <textarea
                 name="message"
                 rows="6"
-                placeholder="We need a governed AI workflow for proposal drafting, compliance review, and source-grounded approvals..."
-                required
-              ></textarea>
+                placeholder="The corpus (contracts, filings, tickets…), the workflow (search, intake, review…), and any constraints (on-prem, air-gapped, standards)…"
+                required></textarea>
             </label>
 
-            <div class="field-row">
-              <label class="field">
+            <div class="lp-form-row">
+              <label class="lp-field">
                 <span>Timeline</span>
                 <select name="timeline">
                   <option>Exploring options</option>
@@ -115,170 +119,174 @@ import { laceSite } from "../site.config";
                 </select>
               </label>
 
-              <label class="field">
+              <label class="lp-field">
                 <span>Deployment preference</span>
                 <select name="deployment">
                   <option>Not sure yet</option>
-                  <option>Cloud hosted</option>
-                  <option>Private environment</option>
+                  <option>Managed cloud</option>
+                  <option>Private cloud (VPC)</option>
+                  <option>On-premises / air-gapped</option>
                 </select>
               </label>
             </div>
 
-            <button type="submit" class="submit-button">Send inquiry</button>
+            <button type="submit" class="lp-btn lp-btn-primary lp-form-submit">
+              Send inquiry
+            </button>
           </form>
         </div>
-      </section>
+      </div>
     </section>
+
+    <LaceFooter />
   </main>
 </BaseLayout>
 
 <style>
-  .contact-page {
-    position: relative;
-    min-height: 100vh;
-    overflow: clip;
+  .lp-contact-shell {
+    padding: clamp(8.5rem, 15vh, 11rem) 0 clamp(3rem, 6vw, 5rem);
   }
 
-  .contact-shell {
-    position: relative;
-    z-index: 1;
-    padding-top: 1.25rem;
-  }
-
-  .contact-nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    margin-bottom: clamp(2.5rem, 5vw, 4rem);
-    padding: 0.95rem 1rem;
-    border: 1px solid var(--line);
-    background: rgba(7, 9, 12, 0.72);
-    box-shadow: var(--shadow-md);
-    backdrop-filter: blur(14px);
-  }
-
-  .contact-nav-link {
-    color: var(--muted);
-    text-decoration: none;
-  }
-
-  .contact-hero {
+  .lp-contact-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
-    gap: clamp(1.5rem, 4vw, 3rem);
+    grid-template-columns: minmax(0, 1.02fr) minmax(320px, 0.98fr);
+    gap: clamp(2rem, 5vw, 4.5rem);
     align-items: start;
   }
 
-  .contact-copy,
-  .contact-panel {
-    border: 1px solid var(--line);
-    background:
-      linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.015)),
-      rgba(6, 8, 11, 0.78);
-    box-shadow: var(--shadow-lg);
-    backdrop-filter: blur(16px);
+  .lp-contact-title {
+    font-size: clamp(2.1rem, 4.4vw, 3.5rem);
+    margin-bottom: 1.4rem;
   }
 
-  .contact-copy,
-  .contact-panel {
-    padding: clamp(1.5rem, 4vw, 2.5rem);
-  }
-
-  .eyebrow {
-    margin-bottom: 0.85rem;
-    color: #8ee5d2;
-    font-family: "JetBrains Mono", monospace;
-    font-size: 0.8rem;
-    font-weight: 700;
-    text-transform: uppercase;
-  }
-
-  .lede {
-    max-width: 38rem;
-    margin-top: 1.25rem;
-    color: var(--muted);
-    font-size: 1.02rem;
-  }
-
-  .contact-direct {
+  .lp-contact-direct {
     display: grid;
-    gap: 0.75rem;
-    margin-top: 1.35rem;
+    gap: 0.7rem;
+    margin-top: 1.7rem;
   }
 
-  .contact-direct-item {
+  .lp-contact-item {
     display: inline-flex;
     align-items: center;
     gap: 0.75rem;
     width: fit-content;
-    color: var(--text);
+    color: var(--lp-ink);
+    font-size: 0.95rem;
     text-decoration: none;
   }
 
-  .contact-direct-icon {
+  .lp-contact-item:hover {
+    color: var(--lp-green-deep);
+  }
+
+  .lp-contact-icon {
     display: inline-flex;
     flex: 0 0 2.2rem;
     align-items: center;
     justify-content: center;
     width: 2.2rem;
     height: 2.2rem;
-    border: 1px solid rgba(255, 255, 255, 0.13);
-    color: #8ee5d2;
-    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(var(--lp-green-rgb), 0.35);
+    border-radius: var(--lp-radius);
+    color: var(--lp-green-deep);
+    background: rgba(var(--lp-green-rgb), 0.06);
   }
 
-  .contact-direct-icon svg {
+  .lp-contact-icon svg {
     width: 1.1rem;
     height: 1.1rem;
   }
 
-  .contact-form {
+  .lp-contact-notes {
+    margin: 2rem 0 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  .lp-contact-notes li {
+    position: relative;
+    margin: 0;
+    padding-left: 1.3rem;
+    font-size: 0.86rem;
+    color: var(--lp-muted);
+  }
+
+  .lp-contact-notes li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.6em;
+    width: 0.8rem;
+    height: 2px;
+    background: var(--lp-green);
+  }
+
+  .lp-contact-panel {
+    padding: clamp(1.5rem, 3.5vw, 2.4rem);
+  }
+
+  .lp-form {
     display: grid;
     gap: 1rem;
   }
 
-  .field-row {
+  .lp-form-row {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1rem;
   }
 
-  .field {
+  .lp-field {
     display: grid;
     gap: 0.45rem;
-    color: var(--muted);
-    font-size: 0.9rem;
+    color: var(--lp-muted);
+    font-size: 0.88rem;
   }
 
-  .field input,
-  .field textarea,
-  .field select {
+  .lp-field span {
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--lp-ink-soft);
+  }
+
+  .lp-field input,
+  .lp-field textarea,
+  .lp-field select {
     width: 100%;
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    color: var(--text);
-    background: rgba(0, 0, 0, 0.24);
     padding: 0.85rem 0.9rem;
+    border: 1px solid var(--lp-line);
+    border-radius: var(--lp-radius);
+    color: var(--lp-ink);
+    background: #fdfefe;
     font: inherit;
+    transition: border-color 160ms ease, box-shadow 160ms ease;
   }
 
-  .field textarea {
+  .lp-field input:focus,
+  .lp-field textarea:focus,
+  .lp-field select:focus {
+    outline: none;
+    border-color: rgba(var(--lp-green-rgb), 0.6);
+    box-shadow: 0 0 0 3px rgba(var(--lp-green-rgb), 0.14);
+  }
+
+  .lp-field textarea {
     resize: vertical;
   }
 
-  .submit-button {
-    min-height: 3rem;
-    border: 1px solid rgba(142, 229, 210, 0.45);
-    color: #06100d;
-    background: linear-gradient(135deg, #8ee5d2, #d9e6ff);
-    font-weight: 700;
-    cursor: pointer;
+  .lp-form-submit {
+    min-height: 3.1rem;
+    border: 0;
   }
 
-  @media (max-width: 760px) {
-    .contact-hero,
-    .field-row {
+  @media (max-width: 860px) {
+    .lp-contact-grid,
+    .lp-form-row {
       grid-template-columns: 1fr;
     }
   }

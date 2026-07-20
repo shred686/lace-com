@@ -1,28 +1,32 @@
 ---
 import BaseLayout from "@determinant/site-kit/layouts/BaseLayout.astro";
+import "@determinant/site-kit/styles/lace-site.css";
 import { laceSite } from "../../site.config";
 ---
 
 <BaseLayout
   title={`Message Sent | ${laceSite.name}`}
   description={`Your message has been sent to ${laceSite.name}.`}
-  theme="midnight"
+  theme="lace"
+  themeColor="#f6f7f9"
   lang="en"
+  siteName={laceSite.name}
   noindex={true}
 >
-  <main class="contact-success-page">
-    <div class="noise-layer"></div>
-
-    <section class="contact-success-shell ds-site">
-      <div class="success-card" data-reveal>
-        <p class="success-eyebrow">Contact</p>
-        <h1>Message sent.</h1>
-        <p class="success-copy">
-          Thanks for reaching out. We will review your note and follow up by email.
+  <main class="lp-site lp-success">
+    <section class="lp-success-shell">
+      <div class="lp-card lp-success-card" data-r>
+        <p class="lp-kicker">Contact</p>
+        <h1 class="lp-h2 lp-success-title">
+          Message <span class="lp-accent">sent.</span>
+        </h1>
+        <p class="lp-success-copy">
+          Thanks for reaching out. We'll review your note and follow up by
+          email — usually within one business day.
         </p>
-        <div class="success-actions">
-          <a href="/" class="success-link">Back home</a>
-          <a href="/contact" class="success-link success-link-secondary">Send another message</a>
+        <div class="lp-success-actions">
+          <a href="/" class="lp-btn lp-btn-primary">Back home</a>
+          <a href="/contact" class="lp-btn lp-btn-ghost">Send another message</a>
         </div>
       </div>
     </section>
@@ -30,64 +34,39 @@ import { laceSite } from "../../site.config";
 </BaseLayout>
 
 <style>
-  .contact-success-page {
-    min-height: 100vh;
-    position: relative;
-  }
-
-  .contact-success-shell {
+  .lp-success-shell {
     display: grid;
     place-items: center;
     min-height: 100vh;
+    padding: 2rem 1.5rem;
   }
 
-  .success-card {
-    width: min(42rem, 100%);
-    padding: clamp(1.8rem, 5vw, 3rem);
-    border: 1px solid var(--line);
-    background:
-      linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.015)),
-      rgba(6, 8, 11, 0.78);
-    box-shadow: var(--shadow-lg);
-    backdrop-filter: blur(16px);
+  .lp-success-card {
+    width: min(40rem, 100%);
+    padding: clamp(2rem, 5vw, 3.2rem);
   }
 
-  .success-eyebrow {
-    margin-bottom: 0.9rem;
-    color: #8ee5d2;
-    font-family: "JetBrains Mono", monospace;
-    font-size: 0.8rem;
-    font-weight: 700;
-    text-transform: uppercase;
+  .lp-success-title {
+    margin-bottom: 1rem;
   }
 
-  .success-copy {
-    margin-top: 1rem;
+  .lp-success-copy {
+    margin: 0;
     max-width: 34rem;
-    color: var(--muted);
-    font-size: 1.02rem;
+    color: var(--lp-muted);
+    font-size: 1rem;
+    line-height: 1.7;
   }
 
-  .success-actions {
+  .lp-success-actions {
     display: flex;
     flex-wrap: wrap;
     gap: 0.9rem;
-    margin-top: 1.8rem;
-  }
-
-  .success-link {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 2.9rem;
-    padding: 0.8rem 1.2rem;
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    color: var(--text);
-    text-decoration: none;
-    background: linear-gradient(135deg, rgba(94, 143, 255, 0.25), rgba(77, 220, 190, 0.15));
-  }
-
-  .success-link-secondary {
-    background: rgba(255, 255, 255, 0.03);
+    margin-top: 2rem;
   }
 </style>
+
+<script>
+  // No nav on this page — reveal immediately.
+  document.querySelectorAll("[data-r]").forEach((el) => el.classList.add("vis"));
+</script>

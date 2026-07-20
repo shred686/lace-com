@@ -1,0 +1,86 @@
+---
+import BaseLayout from "@determinant/site-kit/layouts/BaseLayout.astro";
+import LaceOfferingShell from "@determinant/site-kit/components/lace/LaceOfferingShell.astro";
+import LaceKgDemo from "@determinant/site-kit/components/lace/LaceKgDemo.astro";
+import { laceSite } from "../../site.config";
+
+const content = {
+  kicker: "Platform · Knowledge Graph",
+  title: "Your documents, turned into a network of facts.",
+  accent: "a network of facts.",
+  lead: "Search finds documents. The Knowledge Graph understands what's inside them: the people, organizations, contracts, obligations — and how they connect. It is built to a standard most graph products never attempt: every fact on the map carries a receipt.",
+  points: [
+    {
+      title: "Every fact has a receipt",
+      detail:
+        "Click any entity, relationship, or value and see the highlighted sentence in the original document, who approved it, and when.",
+    },
+    {
+      title: "Automatic extraction, human control",
+      detail:
+        "AI proposes what it finds; your reviewers approve what enters the graph. Extraction that doesn't meet the quality bar is refused, not published.",
+    },
+    {
+      title: "One entity, complete",
+      detail:
+        "Duplicates are recognized and merged — “Acme Corp,” “ACME Inc.,” and “Acme Corporation” become one 360° view, reversibly and auditably.",
+    },
+    {
+      title: "Travel through time",
+      detail:
+        "The graph is bitemporal: it remembers what was true and when you learned it. Scrub back to any date and see the world as you believed it to be.",
+    },
+    {
+      title: "Contradictions surface themselves",
+      detail:
+        "When two sources disagree on an amount, a date, an obligation — LACE flags the conflict and shows both pieces of evidence side by side.",
+    },
+    {
+      title: "Built for federal standards",
+      detail:
+        "Extraction grounded in the BFO/CCO ontology standards adopted as the DoD and Intelligence Community baseline — exportable as a compliance artifact.",
+    },
+  ],
+  practice:
+    "Drop two versions of a policy into LACE and get an instant conflict map: every changed obligation, amount, and date — each with both source passages side by side. Then scrub the timeline back and watch your enterprise evolve.",
+  deepTitle: "A graph with an evidence ledger underneath.",
+  deepAccent: "evidence ledger",
+  deep: [
+    {
+      title: "Bitemporal assertions",
+      detail:
+        "Facts record when they held in the world and when LACE believed them. Corrections close and supersede assertions — history is never rewritten.",
+    },
+    {
+      title: "Schema packs",
+      detail:
+        "Versioned, executable ontology contracts: classes, relations, identity rules, and validation — drafts are editable, publishing is governed and immutable.",
+    },
+    {
+      title: "Governed materialization",
+      detail:
+        "Candidates flow through validation, grounding, and review before they become graph. Low-confidence or conflicting work queues for humans — never silently committed.",
+    },
+  ],
+  related: [
+    { href: "/platform/enterprise-search", title: "Enterprise Search", line: "Cited answers, one bar." },
+    { href: "/platform/agents", title: "Agentic Platform", line: "Agents inside your rules." },
+    { href: "/platform/app-builder", title: "App Builder", line: "One prompt. A live app." },
+  ],
+  ctaTitle: "See your documents become a graph.",
+  ctaAccent: "become a graph.",
+};
+---
+
+<BaseLayout
+  title={`Knowledge Graph | ${laceSite.name}`}
+  description="An evidence-locked, bitemporal knowledge graph: automatic extraction with human review, receipts on every fact, time-travel queries, conflict detection, and BFO/CCO conformance."
+  theme="lace"
+  themeColor="#f6f7f9"
+  lang="en"
+  siteName={laceSite.name}
+>
+  <LaceOfferingShell {...content}>
+    <LaceKgDemo />
+  </LaceOfferingShell>
+</BaseLayout>

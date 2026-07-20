@@ -1,0 +1,86 @@
+---
+import BaseLayout from "@determinant/site-kit/layouts/BaseLayout.astro";
+import LaceOfferingShell from "@determinant/site-kit/components/lace/LaceOfferingShell.astro";
+import LaceSearchDemo from "@determinant/site-kit/components/lace/LaceSearchDemo.astro";
+import { laceSite } from "../../site.config";
+
+const content = {
+  kicker: "Platform · Enterprise Search",
+  title: "One search bar for everything your organization knows.",
+  accent: "everything",
+  lead: "LACE connects to the systems where your knowledge already lives and unifies them into one continuously synchronized view of the enterprise. Ask in plain language; get an answer grounded in your actual documents, with citations that click through to the exact passage.",
+  points: [
+    {
+      title: "Connect everything",
+      detail:
+        "Out-of-the-box connectors for SharePoint, Google Drive, OneDrive, Dropbox, Notion, Slack, email, S3, databases, websites, and existing indexes.",
+    },
+    {
+      title: "Answers, not links",
+      detail:
+        "LACE retrieves the most relevant passages and composes a direct answer — every claim cited back to its source.",
+    },
+    {
+      title: "Permissions-aware by design",
+      detail:
+        "Access rules are enforced at the moment of every search. No one sees a result they couldn't open in the source system.",
+    },
+    {
+      title: "Search without moving data",
+      detail:
+        "Federated discovery lets divisions, enclaves, or partners find what exists elsewhere without copying sensitive data across boundaries.",
+    },
+    {
+      title: "Meaning and keywords",
+      detail:
+        "Hybrid retrieval understands what you're asking even when your words don't match the document — and still nails exact identifiers when they do.",
+    },
+    {
+      title: "Always current",
+      detail:
+        "Scheduled sync and change reconciliation keep the index tracking the source systems — including permission changes.",
+    },
+  ],
+  practice:
+    "A program manager asks: “What did we commit to in the Meridian contract, and has anyone flagged risks against it?” LACE pulls the signed contract from SharePoint, the risk thread from Slack, and the status memo from the shared drive — one answer, all three sources cited. Seconds, not an afternoon.",
+  deepTitle: "Search built like a federation service.",
+  deepAccent: "federation service.",
+  deep: [
+    {
+      title: "Two searches in one",
+      detail:
+        "Every query runs both ways at once — exact matching for names, numbers, and IDs, meaning-based matching for everything else — and the best results from each are merged into one ranked list.",
+    },
+    {
+      title: "Permissions checked on every search",
+      detail:
+        "LACE tracks who can open what in each source system and applies those rules to every result, every time. If you can't open a document at the source, you won't see it here.",
+    },
+    {
+      title: "Citations that open the page",
+      detail:
+        "Every answer links to the exact passage it came from. Click a citation and the source document opens with the supporting sentence highlighted — no re-searching, no guessing.",
+    },
+  ],
+  related: [
+    { href: "/platform/knowledge-graph", title: "Knowledge Graph", line: "Every fact receipted." },
+    { href: "/platform/agents", title: "Agentic Platform", line: "Agents inside your rules." },
+    { href: "/platform/app-builder", title: "App Builder", line: "One prompt. A live app." },
+  ],
+  ctaTitle: "Ask your own documents.",
+  ctaAccent: "your own",
+};
+---
+
+<BaseLayout
+  title={`Enterprise Search | ${laceSite.name}`}
+  description="Permissions-aware enterprise search across SharePoint, Drive, Slack, email, databases, and more — plain-language questions, cited answers, federation without data movement."
+  theme="lace"
+  themeColor="#f6f7f9"
+  lang="en"
+  siteName={laceSite.name}
+>
+  <LaceOfferingShell {...content}>
+    <LaceSearchDemo />
+  </LaceOfferingShell>
+</BaseLayout>

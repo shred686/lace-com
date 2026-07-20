@@ -1,0 +1,266 @@
+---
+/**
+ * App-builder demo: prompt types itself, build steps light up,
+ * a live URL appears. Loops while visible.
+ */
+---
+
+<div class="lp-panel lp-build-panel" data-build aria-hidden="true">
+  <div class="lp-build-prompt">
+    <em>PROMPT</em>
+    <p><span data-build-text>An inventory tracker for our field teams, with sign-in and low-stock alerts</span><span class="lp-build-caret"></span></p>
+  </div>
+  <ol class="lp-build-steps">
+    <li data-build-step><i></i><span>Plan — routes, data model, roles</span></li>
+    <li data-build-step><i></i><span>Build — sandboxed scaffold + tools</span></li>
+    <li data-build-step><i></i><span>Verify — checks, seeds, live preview</span></li>
+    <li data-build-step><i></i><span>Publish — versioned release, rollback ready</span></li>
+  </ol>
+  <div class="lp-build-live" data-build-live>
+    <span class="lp-build-pulse"></span>
+    <span class="lp-build-url">https://inventory.acme-field.app</span>
+    <span class="lp-build-badge">LIVE</span>
+  </div>
+  <div class="lp-panel-caption">Prompt → plan → sandbox → live URL · minutes, not quarters</div>
+</div>
+
+<style>
+  .lp-build-panel {
+    position: relative;
+    padding: clamp(1.2rem, 2.4vw, 1.9rem);
+    background: #ffffff;
+    border: 1px solid var(--lp-line);
+    border-radius: var(--lp-radius-lg);
+    box-shadow: var(--lp-shadow-md);
+  }
+
+  .lp-panel-caption {
+    margin-top: 1.1rem;
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(var(--lp-green-rgb), 0.9);
+  }
+
+  .lp-build-prompt {
+    padding: 0.85rem 1rem;
+    border: 1px solid rgba(var(--lp-green-rgb), 0.35);
+    border-radius: var(--lp-radius);
+    background: #fbfcfc;
+  }
+
+  .lp-build-prompt em {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-style: normal;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.54rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    color: var(--lp-green-deep);
+  }
+
+  .lp-build-prompt p {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    margin: 0;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.78rem;
+    color: var(--lp-ink);
+    min-height: 2.6em;
+  }
+
+  .lp-build-caret {
+    flex: none;
+    width: 1.5px;
+    height: 1rem;
+    background: var(--lp-green);
+    animation: lp-build-caret 1.05s steps(1) infinite;
+  }
+
+  @keyframes lp-build-caret {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  .lp-build-steps {
+    margin: 0.9rem 0 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.45rem;
+  }
+
+  .lp-build-steps li {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.55rem 0.75rem;
+    border: 1px solid var(--lp-line-soft);
+    border-radius: var(--lp-radius);
+    background: #fdfefe;
+    font-size: 0.78rem;
+    color: var(--lp-faint);
+    transition: color 300ms ease, border-color 300ms ease, background 300ms ease;
+  }
+
+  .lp-build-steps li i {
+    flex: none;
+    width: 0.85rem;
+    height: 0.85rem;
+    border-radius: 50%;
+    border: 1.5px solid rgba(13, 27, 22, 0.18);
+    transition: border-color 300ms ease, background 300ms ease;
+  }
+
+  .lp-build-steps li.is-active {
+    color: var(--lp-ink);
+    border-color: rgba(var(--lp-green-rgb), 0.5);
+    background: rgba(var(--lp-green-rgb), 0.05);
+  }
+
+  .lp-build-steps li.is-active i {
+    border-color: var(--lp-green);
+    background: rgba(var(--lp-green-rgb), 0.25);
+    animation: lp-build-glow 1.4s ease-in-out infinite;
+  }
+
+  @keyframes lp-build-glow {
+    50% {
+      box-shadow: 0 0 12px rgba(var(--lp-green-rgb), 0.65);
+    }
+  }
+
+  .lp-build-steps li.is-done {
+    color: var(--lp-ink-soft);
+  }
+
+  .lp-build-steps li.is-done i {
+    border-color: var(--lp-green);
+    background: var(--lp-green);
+  }
+
+  .lp-build-live {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 0.9rem;
+    padding: 0.75rem 0.9rem;
+    border: 1px solid rgba(var(--lp-green-rgb), 0.5);
+    border-radius: var(--lp-radius);
+    background: linear-gradient(90deg, rgba(var(--lp-green-rgb), 0.08), transparent 80%);
+    opacity: 0.35;
+    transition: opacity 400ms ease;
+  }
+
+  .lp-build-live.is-live {
+    opacity: 1;
+  }
+
+  .lp-build-pulse {
+    flex: none;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--lp-green);
+  }
+
+  .lp-build-live.is-live .lp-build-pulse {
+    animation: lp-build-glow 1.8s ease-in-out infinite;
+  }
+
+  .lp-build-url {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.74rem;
+    color: var(--lp-ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .lp-build-badge {
+    flex: none;
+    margin-left: auto;
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--lp-radius);
+    background: var(--lp-green);
+    color: #fff;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.52rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lp-build-caret,
+    .lp-build-pulse,
+    .lp-build-steps li i {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  // Prompt → steps → live URL loop
+  (() => {
+    const panel = document.querySelector<HTMLElement>("[data-build]");
+    if (!panel) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const textEl = panel.querySelector<HTMLElement>("[data-build-text]");
+    const steps = Array.from(panel.querySelectorAll<HTMLElement>("[data-build-step]"));
+    const live = panel.querySelector<HTMLElement>("[data-build-live]");
+    if (!textEl || !steps.length || !live) return;
+
+    const prompt = textEl.textContent ?? "";
+    const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+    let running = false;
+    const run = async () => {
+      if (running) return;
+      running = true;
+
+      // Freeze the prompt line's height so retyping never reflows the page.
+      const promptBox = textEl.closest("p");
+      if (promptBox instanceof HTMLElement) {
+        promptBox.style.minHeight = `${promptBox.offsetHeight}px`;
+      }
+
+      while (true) {
+        steps.forEach((step) => step.classList.remove("is-active", "is-done"));
+        live.classList.remove("is-live");
+        textEl.textContent = "";
+        await sleep(500);
+
+        for (const ch of prompt) {
+          textEl.textContent += ch;
+          await sleep(18 + Math.random() * 22);
+        }
+        await sleep(500);
+
+        for (const step of steps) {
+          step.classList.add("is-active");
+          await sleep(1050);
+          step.classList.remove("is-active");
+          step.classList.add("is-done");
+        }
+
+        live.classList.add("is-live");
+        await sleep(4200);
+      }
+    };
+
+    const obs = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          obs.disconnect();
+          run();
+        }
+      },
+      { threshold: 0.35 },
+    );
+    obs.observe(panel);
+  })();
+</script>

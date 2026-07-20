@@ -5,9 +5,9 @@ export const laceSite = {
   contactEmail: "info@laceplatform.com",
   contactPhone: "+1 (727) 282-4564",
   contactPhoneHref: "tel:+17272824564",
-  title: "LACE | Governed AI workflow infrastructure",
+  title: "LACE | The AI Platform for the Governed Enterprise",
   description:
-    "LACE turns business workflows into governed, repeatable AI systems with policy controls, evidence grounding, and auditable output."
+    "LACE unifies enterprise search, a provable knowledge graph, governed AI agents, and an app builder on one platform — with provenance, policy enforcement, and a complete audit trail."
 } as const;
 
 // LACE is a product of Determinant Systems, not its own organization. Model it
@@ -36,7 +36,7 @@ export const laceJsonLd = {
       name: laceSite.name,
       url: `${laceSite.url}/`,
       description:
-        "LACE is governed AI workflow infrastructure that turns business workflows into repeatable, auditable AI systems with policy controls and evidence grounding.",
+        "LACE is the AI platform for the governed enterprise: permissions-aware enterprise search, an evidence-locked knowledge graph, policy-governed AI agents across every channel, and an app builder that turns one prompt into deployed software.",
       applicationCategory: "BusinessApplication",
       operatingSystem: "Web",
       image: `${laceSite.url}/og-image.png`,

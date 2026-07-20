@@ -1,0 +1,196 @@
+---
+/**
+ * Agent demo: channels converge into one deployed agent with a live
+ * execution trace and an approval gate.
+ */
+const channels = ["Web chat", "Slack", "Teams", "Email", "SMS", "WhatsApp", "Voice"];
+---
+
+<div class="lp-panel lp-agent-panel" aria-hidden="true">
+  <div class="lp-agent-channels">
+    {channels.map((channel) => <span>{channel}</span>)}
+  </div>
+  <svg class="lp-agent-converge" viewBox="0 0 100 24" preserveAspectRatio="none" fill="none">
+    <path d="M 8 0 C 8 13 50 11 50 24" stroke="rgba(0,168,130,0.4)" stroke-width="0.6"></path>
+    <path d="M 29 0 C 29 13 50 11 50 24" stroke="rgba(0,168,130,0.4)" stroke-width="0.6"></path>
+    <path d="M 50 0 V 24" stroke="rgba(0,168,130,0.4)" stroke-width="0.6"></path>
+    <path d="M 71 0 C 71 13 50 11 50 24" stroke="rgba(0,168,130,0.4)" stroke-width="0.6"></path>
+    <path d="M 92 0 C 92 13 50 11 50 24" stroke="rgba(0,168,130,0.4)" stroke-width="0.6"></path>
+  </svg>
+  <div class="lp-agent-core">
+    <svg width="20" height="20" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+      <circle cx="9" cy="9" r="3" fill="#00A882"></circle>
+      <circle cx="9" cy="9" r="6.5" stroke="#00A882" stroke-width="0.8" opacity="0.5"></circle>
+      <circle cx="9" cy="9" r="8.5" stroke="#00A882" stroke-width="0.5" opacity="0.22"></circle>
+    </svg>
+    <div>
+      <strong>Contracts intake agent</strong>
+      <em>Deployment v12 · budget $40/day · 2 approval gates</em>
+    </div>
+    <span class="lp-agent-live">LIVE</span>
+  </div>
+  <div class="lp-agent-trace">
+    <div class="lp-trace-row"><i>1</i><span>Retrieved MSA-2024 §4.2 <b>· enterprise search</b></span></div>
+    <div class="lp-trace-row"><i>2</i><span>Drafted reply · 2 citations attached</span></div>
+    <div class="lp-trace-row lp-trace-gate"><i>3</i><span>Routed to counsel <b>· approval required</b></span></div>
+    <div class="lp-trace-row"><i>4</i><span>Approved · sent · run logged</span></div>
+  </div>
+  <div class="lp-panel-caption">Every channel · one agent · every action traced</div>
+</div>
+
+<style>
+  .lp-agent-panel {
+    position: relative;
+    padding: clamp(1.2rem, 2.4vw, 1.9rem);
+    background: #ffffff;
+    border: 1px solid var(--lp-line);
+    border-radius: var(--lp-radius-lg);
+    box-shadow: var(--lp-shadow-md);
+  }
+
+  .lp-panel-caption {
+    margin-top: 1.1rem;
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(var(--lp-green-rgb), 0.9);
+  }
+
+  .lp-agent-channels {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.4rem;
+  }
+
+  .lp-agent-channels span {
+    padding: 0.32rem 0.65rem;
+    border: 1px solid var(--lp-line);
+    border-radius: var(--lp-radius);
+    background: #fbfcfc;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.56rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--lp-muted);
+  }
+
+  .lp-agent-converge {
+    display: block;
+    width: 88%;
+    height: 26px;
+    margin: 0.15rem auto;
+  }
+
+  .lp-agent-core {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.85rem 1rem;
+    border: 1px solid rgba(var(--lp-green-rgb), 0.45);
+    border-radius: var(--lp-radius-lg);
+    background: linear-gradient(180deg, rgba(var(--lp-green-rgb), 0.06), transparent);
+  }
+
+  .lp-agent-core svg {
+    flex: none;
+  }
+
+  .lp-agent-core div {
+    display: grid;
+    gap: 0.1rem;
+    min-width: 0;
+  }
+
+  .lp-agent-core strong {
+    font-size: 0.86rem;
+    font-weight: 700;
+    color: var(--lp-ink);
+  }
+
+  .lp-agent-core em {
+    font-style: normal;
+    font-size: 0.66rem;
+    color: var(--lp-faint);
+    font-family: "JetBrains Mono", monospace;
+  }
+
+  .lp-agent-live {
+    flex: none;
+    margin-left: auto;
+    padding: 0.22rem 0.5rem;
+    border-radius: var(--lp-radius);
+    background: var(--lp-green);
+    color: #fff;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.52rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    animation: lp-live 2.4s ease-in-out infinite;
+  }
+
+  @keyframes lp-live {
+    50% {
+      box-shadow: 0 0 12px rgba(var(--lp-green-rgb), 0.65);
+    }
+  }
+
+  .lp-agent-trace {
+    display: grid;
+    gap: 0.4rem;
+    margin-top: 0.8rem;
+  }
+
+  .lp-trace-row {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.5rem 0.7rem;
+    border: 1px solid var(--lp-line-soft);
+    border-radius: var(--lp-radius);
+    background: #fdfefe;
+    font-size: 0.76rem;
+    color: var(--lp-ink-soft);
+  }
+
+  .lp-trace-row i {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 1.15rem;
+    height: 1.15rem;
+    border-radius: 50%;
+    border: 1px solid rgba(var(--lp-green-rgb), 0.45);
+    font-style: normal;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.55rem;
+    color: var(--lp-green-deep);
+  }
+
+  .lp-trace-row b {
+    font-weight: 500;
+    color: var(--lp-faint);
+  }
+
+  .lp-trace-gate {
+    border-color: rgba(196, 132, 12, 0.35);
+    background: rgba(255, 216, 111, 0.08);
+  }
+
+  @media (max-width: 620px) {
+    .lp-agent-converge {
+      display: none;
+    }
+
+    .lp-agent-channels {
+      margin-bottom: 0.8rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lp-agent-live {
+      animation: none;
+    }
+  }
+</style>

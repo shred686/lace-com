@@ -1,0 +1,83 @@
+---
+/**
+ * Site footer for laceplatform.com (light theme).
+ * Contact details intentionally mirror apps/lace/src/site.config.ts.
+ */
+import whitepaper from "../../assets/docs/LACE_Enterprise_Overview_v3.pdf";
+
+const year = new Date().getFullYear();
+---
+
+<footer class="lp-footer">
+  <div class="lp-wrap">
+    <div class="lp-footer-grid">
+      <div>
+        <a href="/" class="lp-footer-brand" aria-label="LACE home">
+          <svg width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+            <circle cx="9" cy="9" r="3" fill="#00A882"></circle>
+            <circle cx="9" cy="9" r="6.5" stroke="#00A882" stroke-width="0.7" opacity="0.5"></circle>
+          </svg>
+          <span>LACE</span>
+        </a>
+        <p class="lp-footer-tagline">
+          The AI platform for the governed enterprise. Search everything,
+          map it, put agents to work, ship real software — on one audit trail.
+        </p>
+      </div>
+
+      <div>
+        <h4>Platform</h4>
+        <ul>
+          <li><a href="/platform/enterprise-search">Enterprise Search</a></li>
+          <li><a href="/platform/knowledge-graph">Knowledge Graph</a></li>
+          <li><a href="/platform/agents">Agentic Platform</a></li>
+          <li><a href="/platform/app-builder">App Builder</a></li>
+          <li><a href="/pricing">Pricing</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>Product</h4>
+        <ul>
+          <li><a href="/applications">Applications</a></li>
+          <li><a href="/customers">Customer stories</a></li>
+          <li><a href="/blog">Blog</a></li>
+          <li>
+            <a href={whitepaper} target="_blank" rel="noopener noreferrer">
+              Platform overview (PDF)
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>Developers</h4>
+        <ul>
+          <li><a href="/docs">Documentation</a></li>
+          <li><a href="/docs#install">lace-app-sdk</a></li>
+          <li><a href="/docs#quickstart">Quickstart</a></li>
+          <li><a href="/docs#modules">Module reference</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="/contact">Contact</a></li>
+          <li>
+            <a href="https://determinantsystems.com" target="_blank" rel="noopener noreferrer">
+              Determinant Systems
+            </a>
+          </li>
+          <li><a href="mailto:info@laceplatform.com">info@laceplatform.com</a></li>
+          <li><a href="tel:+17272824564">+1 (727) 282-4564</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="lp-footer-bottom">
+      <p>© {year} LACE · A Determinant Systems product</p>
+      <p class="lp-mono">Governed · Traceable · Deployable anywhere</p>
+    </div>
+  </div>
+</footer>

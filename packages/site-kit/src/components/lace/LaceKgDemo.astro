@@ -1,0 +1,273 @@
+---
+/**
+ * Knowledge-graph demo: an entity card whose facts carry receipts,
+ * with a bitemporal time-travel scrub between two known states.
+ */
+---
+
+<div class="lp-panel lp-kg-panel" aria-hidden="true">
+  <div class="lp-kg-head">
+    <strong>Acme Corporation</strong>
+    <span class="lp-kg-merge">3 records merged · 1 entity</span>
+  </div>
+  <div class="lp-kg-facts">
+    <div class="lp-kg-fact">
+      <span class="lp-kg-key">Renewal date</span>
+      <span class="lp-kg-val" data-kg-swap data-then="Jan 15, 2026" data-now="Jan 15, 2027">Jan 15, 2027</span>
+      <span class="lp-kg-cite">MSA §4.2</span>
+    </div>
+    <div class="lp-kg-fact">
+      <span class="lp-kg-key">Annual fee</span>
+      <span class="lp-kg-val" data-kg-swap data-then="$1.1M" data-now="$1.2M">$1.2M</span>
+      <span class="lp-kg-cite">Table 3</span>
+    </div>
+    <div class="lp-kg-fact lp-kg-conflict">
+      <span class="lp-kg-key">Notice period</span>
+      <span class="lp-kg-val">90 days <i>vs</i> 60 days</span>
+      <span class="lp-kg-cite lp-kg-cite-warn">2 sources disagree</span>
+    </div>
+  </div>
+  <div class="lp-kg-evidence">
+    <em>Evidence · MSA-2024.pdf · p.12</em>
+    <p>
+      “<mark>This Agreement renews automatically on January 15,
+      2027</mark>, unless either party provides written notice…”
+    </p>
+  </div>
+  <div class="lp-kg-time">
+    <span class="lp-kg-time-label" data-kg-date>As of · Jul 2026</span>
+    <div class="lp-kg-track"><span class="lp-kg-knob" data-kg-knob></span></div>
+    <div class="lp-kg-ticks"><span>2024</span><span>2025</span><span>2026</span></div>
+  </div>
+  <div class="lp-panel-caption">Every fact carries a receipt · scrub time to see what you knew</div>
+</div>
+
+<style>
+  .lp-kg-panel {
+    position: relative;
+    padding: clamp(1.2rem, 2.4vw, 1.9rem);
+    background: #ffffff;
+    border: 1px solid var(--lp-line);
+    border-radius: var(--lp-radius-lg);
+    box-shadow: var(--lp-shadow-md);
+  }
+
+  .lp-panel-caption {
+    margin-top: 1.1rem;
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(var(--lp-green-rgb), 0.9);
+  }
+
+  .lp-kg-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid var(--lp-line-soft);
+  }
+
+  .lp-kg-head strong {
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--lp-ink);
+  }
+
+  .lp-kg-merge {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--lp-green-deep);
+  }
+
+  .lp-kg-facts {
+    display: grid;
+    gap: 0.5rem;
+    margin-top: 0.9rem;
+  }
+
+  .lp-kg-fact {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.62rem 0.8rem;
+    border: 1px solid var(--lp-line-soft);
+    border-radius: var(--lp-radius);
+    background: #fdfefe;
+  }
+
+  .lp-kg-key {
+    flex: none;
+    width: 7.2rem;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--lp-faint);
+  }
+
+  .lp-kg-val {
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: var(--lp-ink);
+    transition: color 300ms ease;
+  }
+
+  .lp-kg-val.is-swap {
+    color: var(--lp-green-deep);
+  }
+
+  .lp-kg-val i {
+    font-style: normal;
+    color: var(--lp-faint);
+    font-weight: 400;
+    padding: 0 0.2rem;
+  }
+
+  .lp-kg-cite {
+    margin-left: auto;
+    flex: none;
+    padding: 0.2rem 0.5rem;
+    border: 1px solid rgba(var(--lp-green-rgb), 0.35);
+    border-radius: var(--lp-radius);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.55rem;
+    color: var(--lp-green-deep);
+  }
+
+  .lp-kg-cite-warn {
+    border-color: rgba(196, 132, 12, 0.4);
+    color: #a06a00;
+  }
+
+  .lp-kg-conflict {
+    border-color: rgba(196, 132, 12, 0.35);
+    background: rgba(255, 216, 111, 0.07);
+  }
+
+  .lp-kg-evidence {
+    margin-top: 0.9rem;
+    padding: 0.85rem 1rem;
+    border: 1px dashed rgba(var(--lp-green-rgb), 0.4);
+    border-radius: var(--lp-radius);
+    background: rgba(var(--lp-green-rgb), 0.04);
+  }
+
+  .lp-kg-evidence em {
+    display: block;
+    margin-bottom: 0.35rem;
+    font-style: normal;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.56rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--lp-green-deep);
+  }
+
+  .lp-kg-evidence p {
+    margin: 0;
+    font-size: 0.8rem;
+    line-height: 1.65;
+    color: var(--lp-ink-soft);
+  }
+
+  .lp-kg-evidence mark {
+    background: rgba(var(--lp-green-rgb), 0.18);
+    color: inherit;
+    padding: 0.05em 0.15em;
+  }
+
+  .lp-kg-time {
+    margin-top: 1rem;
+  }
+
+  .lp-kg-time-label {
+    display: inline-block;
+    margin-bottom: 0.5rem;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--lp-ink-soft);
+  }
+
+  .lp-kg-track {
+    position: relative;
+    height: 3px;
+    border-radius: 2px;
+    background: rgba(13, 27, 22, 0.09);
+  }
+
+  .lp-kg-knob {
+    position: absolute;
+    top: 50%;
+    left: 88%;
+    width: 0.85rem;
+    height: 0.85rem;
+    border-radius: 50%;
+    border: 2px solid #ffffff;
+    background: var(--lp-green);
+    box-shadow: 0 1px 6px rgba(15, 30, 26, 0.3);
+    transform: translate(-50%, -50%);
+    transition: left 900ms cubic-bezier(0.6, 0, 0.3, 1);
+  }
+
+  .lp-kg-ticks {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.4rem;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.55rem;
+    color: var(--lp-faint);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lp-kg-knob {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  // Time-travel scrub between two known states
+  (() => {
+    const panel = document.querySelector(".lp-kg-panel");
+    if (!panel) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const knob = panel.querySelector<HTMLElement>("[data-kg-knob]");
+    const dateEl = panel.querySelector<HTMLElement>("[data-kg-date]");
+    const swaps = Array.from(panel.querySelectorAll<HTMLElement>("[data-kg-swap]"));
+    if (!knob || !dateEl) return;
+
+    let now = true;
+    const apply = () => {
+      now = !now;
+      knob.style.left = now ? "88%" : "42%";
+      dateEl.textContent = now ? "As of · Jul 2026" : "As of · Mar 2025";
+      swaps.forEach((el) => {
+        el.textContent = el.getAttribute(now ? "data-now" : "data-then");
+        el.classList.add("is-swap");
+        setTimeout(() => el.classList.remove("is-swap"), 700);
+      });
+    };
+
+    let timer = 0;
+    const obs = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          if (!timer) timer = window.setInterval(apply, 3200);
+        } else {
+          window.clearInterval(timer);
+          timer = 0;
+        }
+      },
+      { threshold: 0.35 },
+    );
+    obs.observe(panel);
+  })();
+</script>

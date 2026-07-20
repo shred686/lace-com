@@ -1,0 +1,16 @@
+---
+import BaseLayout from "@determinant/site-kit/layouts/BaseLayout.astro";
+import LaceDocsPage from "@determinant/site-kit/components/lace/LaceDocsPage.astro";
+import { laceSite } from "../site.config";
+---
+
+<BaseLayout
+  title={`Documentation | ${laceSite.name} — Platform docs & lace-app-sdk`}
+  description="LACE platform documentation and the public lace-app-sdk: the versioned contract surface for building governed apps, tools, and agents on the platform."
+  theme="lace"
+  themeColor="#f6f7f9"
+  lang="en"
+  siteName={laceSite.name}
+>
+  <LaceDocsPage />
+</BaseLayout>

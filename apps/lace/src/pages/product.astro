@@ -1,0 +1,22 @@
+---
+// The old monolithic /product page split into /platform/* pages.
+// Keep the route alive as a redirect so external links don't 404.
+import BaseLayout from "@determinant/site-kit/layouts/BaseLayout.astro";
+import { laceSite } from "../site.config";
+---
+
+<BaseLayout
+  title={`Product | ${laceSite.name}`}
+  description="The LACE platform: Enterprise Search, Knowledge Graph, Agentic Platform, and App Builder."
+  theme="lace"
+  themeColor="#f6f7f9"
+  lang="en"
+  siteName={laceSite.name}
+  noindex={true}
+>
+  <meta http-equiv="refresh" content="0; url=/platform/enterprise-search" />
+  <p style="padding: 6rem 2rem; text-align: center;">
+    The product overview has moved.
+    <a href="/platform/enterprise-search">Explore the platform →</a>
+  </p>
+</BaseLayout>

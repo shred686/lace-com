@@ -1,0 +1,346 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "@determinant/site-kit/layouts/BaseLayout.astro";
+import LaceNav from "@determinant/site-kit/components/lace/LaceNav.astro";
+import LaceFooter from "@determinant/site-kit/components/lace/LaceFooter.astro";
+import LaceCtaBand from "@determinant/site-kit/components/lace/LaceCtaBand.astro";
+import "@determinant/site-kit/styles/lace-site.css";
+import { laceSite } from "../../site.config";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const fmt = post.data.date.toLocaleDateString("en-US", {
+  month: "long",
+  day: "numeric",
+  year: "numeric",
+});
+const readTime = Math.max(2, Math.round((post.body ?? "").split(/\s+/).length / 220));
+
+const others = (await getCollection("blog"))
+  .filter((entry) => entry.id !== post.id)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 2);
+---
+
+<BaseLayout
+  title={`${post.data.title} | ${laceSite.name} Blog`}
+  description={post.data.description}
+  theme="lace"
+  themeColor="#f6f7f9"
+  lang="en"
+  siteName={laceSite.name}
+>
+  <main class="lp-site lp-post">
+    <LaceNav active="blog" />
+
+    <article class="lp-post-shell">
+      <header class="lp-post-head">
+        <div class="lp-wrap lp-post-wrap">
+          <a href="/blog" class="lp-post-back" data-r>← All posts</a>
+          <span class="lp-post-cat" data-r data-reveal-delay="40">{post.data.category}</span>
+          <h1 data-r data-reveal-delay="80">{post.data.title}</h1>
+          <p class="lp-post-dek" data-r data-reveal-delay="140">{post.data.description}</p>
+          <div class="lp-post-meta" data-r data-reveal-delay="200">
+            <span class="lp-post-avatar" aria-hidden="true">
+              <svg width="13" height="13" viewBox="0 0 18 18" fill="none">
+                <circle cx="9" cy="9" r="3" fill="#00A882"></circle>
+                <circle cx="9" cy="9" r="6.5" stroke="#00A882" stroke-width="0.8" opacity="0.5"></circle>
+              </svg>
+            </span>
+            <span>{post.data.author}</span>
+            <i>·</i>
+            <span>{fmt}</span>
+            <i>·</i>
+            <span>{readTime} min read</span>
+          </div>
+        </div>
+      </header>
+
+      <div class="lp-wrap lp-post-wrap">
+        <div class="lp-post-prose">
+          <Content />
+        </div>
+
+        <footer class="lp-post-foot">
+          <div class="lp-post-author">
+            <span class="lp-post-avatar lp-post-avatar-lg" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                <circle cx="9" cy="9" r="3" fill="#00A882"></circle>
+                <circle cx="9" cy="9" r="6.5" stroke="#00A882" stroke-width="0.8" opacity="0.5"></circle>
+              </svg>
+            </span>
+            <div>
+              <strong>{post.data.author}</strong>
+              <span>Building the AI platform for the governed enterprise.</span>
+            </div>
+          </div>
+
+          {
+            others.length > 0 && (
+              <div class="lp-post-related">
+                <p>Keep reading</p>
+                {others.map((entry) => (
+                  <a href={`/blog/${entry.id}`}>
+                    <em>{entry.data.category}</em>
+                    <strong>{entry.data.title}</strong>
+                  </a>
+                ))}
+              </div>
+            )
+          }
+        </footer>
+      </div>
+    </article>
+
+    <LaceCtaBand
+      title="See LACE in action."
+      accent="in action."
+      line="Bring a real corpus and a real workflow — we'll show you the receipts."
+    />
+
+    <LaceFooter />
+  </main>
+</BaseLayout>
+
+<style>
+  .lp-post-shell {
+    padding-top: clamp(7.5rem, 13vh, 10rem);
+  }
+
+  .lp-post-wrap {
+    max-width: 760px;
+  }
+
+  .lp-post-back {
+    display: inline-block;
+    margin-bottom: 1.6rem;
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--lp-muted);
+  }
+
+  .lp-post-back:hover {
+    color: var(--lp-green-deep);
+  }
+
+  .lp-post-cat {
+    display: block;
+    margin-bottom: 0.9rem;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--lp-green-deep);
+  }
+
+  .lp-post-head h1 {
+    margin: 0;
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: clamp(1.7rem, 3.6vw, 2.7rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.16;
+    color: var(--lp-ink);
+    text-wrap: balance;
+  }
+
+  .lp-post-dek {
+    margin: 1.1rem 0 0;
+    font-size: clamp(1rem, 1.5vw, 1.15rem);
+    line-height: 1.65;
+    color: var(--lp-muted);
+  }
+
+  .lp-post-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin-top: 1.4rem;
+    padding-bottom: 1.8rem;
+    border-bottom: 1px solid var(--lp-line-soft);
+    font-size: 0.82rem;
+    color: var(--lp-ink-soft);
+  }
+
+  .lp-post-meta i {
+    font-style: normal;
+    color: var(--lp-line);
+  }
+
+  .lp-post-avatar {
+    display: grid;
+    place-items: center;
+    width: 1.7rem;
+    height: 1.7rem;
+    border: 1px solid rgba(var(--lp-green-rgb), 0.3);
+    border-radius: 50%;
+    background: #ffffff;
+  }
+
+  .lp-post-avatar-lg {
+    width: 2.6rem;
+    height: 2.6rem;
+  }
+
+  /* ── Prose ────────────────────────────────────────────────────── */
+  .lp-post-prose {
+    padding: 2.2rem 0 1rem;
+  }
+
+  .lp-post-prose :global(p) {
+    margin: 0 0 1.25rem;
+    font-size: 1rem;
+    line-height: 1.8;
+    color: var(--lp-ink-soft);
+  }
+
+  .lp-post-prose :global(h2) {
+    margin: 2.4rem 0 1rem;
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: 1.35rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+    color: var(--lp-ink);
+    text-transform: none;
+  }
+
+  .lp-post-prose :global(strong) {
+    font-weight: 650;
+    color: var(--lp-ink);
+  }
+
+  .lp-post-prose :global(ul) {
+    margin: 0 0 1.25rem;
+    padding-left: 1.3rem;
+    color: var(--lp-ink-soft);
+  }
+
+  .lp-post-prose :global(li) {
+    margin-bottom: 0.55rem;
+    font-size: 0.98rem;
+    line-height: 1.75;
+  }
+
+  .lp-post-prose :global(em) {
+    color: inherit;
+  }
+
+  .lp-post-prose :global(code) {
+    padding: 0.12em 0.42em;
+    border: 1px solid var(--lp-line);
+    border-radius: var(--lp-radius);
+    background: rgba(13, 27, 22, 0.045);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.85em;
+    color: var(--lp-ink-soft);
+  }
+
+  .lp-post-prose :global(pre) {
+    margin: 0 0 1.4rem;
+    padding: 1.1rem 1.2rem;
+    border-radius: var(--lp-radius-lg);
+    border: 1px solid rgba(9, 20, 17, 0.85);
+    overflow-x: auto;
+    font-size: 0.8rem;
+    line-height: 1.7;
+  }
+
+  .lp-post-prose :global(pre code) {
+    padding: 0;
+    border: 0;
+    background: none;
+  }
+
+  .lp-post-prose :global(blockquote) {
+    margin: 0 0 1.25rem;
+    padding: 0.2rem 0 0.2rem 1.2rem;
+    border-left: 2px solid var(--lp-green);
+    color: var(--lp-muted);
+  }
+
+  /* ── Footer ───────────────────────────────────────────────────── */
+  .lp-post-foot {
+    display: grid;
+    gap: 1.6rem;
+    margin-top: 1.5rem;
+    padding: 1.8rem 0 2.5rem;
+    border-top: 1px solid var(--lp-line-soft);
+  }
+
+  .lp-post-author {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+  }
+
+  .lp-post-author div {
+    display: grid;
+    gap: 0.1rem;
+  }
+
+  .lp-post-author strong {
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: 0.92rem;
+    color: var(--lp-ink);
+  }
+
+  .lp-post-author span {
+    font-size: 0.8rem;
+    color: var(--lp-muted);
+  }
+
+  .lp-post-related > p {
+    margin: 0 0 0.7rem;
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--lp-faint);
+  }
+
+  .lp-post-related a {
+    display: grid;
+    gap: 0.15rem;
+    padding: 0.85rem 1rem;
+    margin-bottom: 0.5rem;
+    border: 1px solid var(--lp-line);
+    border-radius: var(--lp-radius-lg);
+    background: #ffffff;
+    text-decoration: none;
+    transition: border-color 160ms ease;
+  }
+
+  .lp-post-related a:hover {
+    border-color: rgba(var(--lp-green-rgb), 0.45);
+  }
+
+  .lp-post-related em {
+    font-style: normal;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.56rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--lp-green-deep);
+  }
+
+  .lp-post-related strong {
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--lp-ink);
+  }
+</style>

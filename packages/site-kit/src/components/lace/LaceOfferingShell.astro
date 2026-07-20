@@ -1,0 +1,347 @@
+---
+/**
+ * Shared shell for the four /platform offering pages.
+ * Content-heavy by design (the home page stays headline-light).
+ * Pass the demo panel through the default slot.
+ */
+import LaceNav from "./LaceNav.astro";
+import LaceFooter from "./LaceFooter.astro";
+import LaceCtaBand from "./LaceCtaBand.astro";
+import "../../styles/lace-site.css";
+
+interface Point {
+  title: string;
+  detail: string;
+  link?: { href: string; label: string };
+}
+
+interface Related {
+  href: string;
+  title: string;
+  line: string;
+}
+
+interface Props {
+  kicker: string;
+  title: string;
+  accent: string;
+  lead: string;
+  points: Point[];
+  practice: string;
+  deepTitle: string;
+  deepAccent?: string;
+  deep: Point[];
+  related: Related[];
+  ctaTitle: string;
+  ctaAccent?: string;
+}
+
+const {
+  kicker,
+  title,
+  accent,
+  lead,
+  points,
+  practice,
+  deepTitle,
+  deepAccent,
+  deep,
+  related,
+  ctaTitle,
+  ctaAccent,
+} = Astro.props;
+
+const accentize = (text: string, word?: string) =>
+  word ? text.replace(word, `<span class="lp-accent">${word}</span>`) : text;
+---
+
+<main class="lp-site lp-offpage">
+  <LaceNav active="product" />
+
+  <!-- ── Hero ─────────────────────────────────────────────────────── -->
+  <section class="lp-off-hero">
+    <div class="lp-wrap lp-off-hero-inner">
+      <p class="lp-kicker" data-r>{kicker}</p>
+      <h1 class="lp-h1 lp-off-title" data-r data-reveal-delay="70" set:html={accentize(title, accent)} />
+      <p class="lp-lead lp-off-lead" data-r data-reveal-delay="140">{lead}</p>
+      <div class="lp-off-actions" data-r data-reveal-delay="210">
+        <a href="/contact" class="lp-btn lp-btn-primary">Book a demo</a>
+        <a href="/docs" class="lp-btn lp-btn-ghost">Read the docs</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Demo ─────────────────────────────────────────────────────── -->
+  <section class="lp-section-tight">
+    <div class="lp-wrap">
+      <div class="lp-off-demo" data-r data-reveal-delay="120">
+        <slot />
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Capability points ────────────────────────────────────────── -->
+  <section class="lp-section-tight">
+    <div class="lp-wrap">
+      <div class="lp-off-points">
+        {
+          points.map((point, index) => (
+            <article class="lp-card lp-off-point" data-r data-reveal-delay={60 + (index % 3) * 70}>
+              <h3 class="lp-h3">{point.title}</h3>
+              <p>
+                {point.detail}
+                {point.link && (
+                  <>
+                    {" "}
+                    <a class="lp-off-link" href={point.link.href}>
+                      {point.link.label}
+                    </a>
+                  </>
+                )}
+              </p>
+            </article>
+          ))
+        }
+      </div>
+
+      <div class="lp-practice" data-r>
+        <em>In practice</em>
+        <p>{practice}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Deep dive ────────────────────────────────────────────────── -->
+  <section class="lp-section lp-off-deep">
+    <div class="lp-wrap">
+      <div class="lp-head" data-r>
+        <p class="lp-kicker">Under the hood</p>
+        <h2 class="lp-h2" set:html={accentize(deepTitle, deepAccent)} />
+      </div>
+      <div class="lp-off-deepgrid">
+        {
+          deep.map((item, index) => (
+            <article class="lp-off-deepcard" data-r data-reveal-delay={80 + index * 70}>
+              <span class="lp-off-deepindex">{String(index + 1).padStart(2, "0")}</span>
+              <h3 class="lp-h3">{item.title}</h3>
+              <p>{item.detail}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Related offerings ────────────────────────────────────────── -->
+  <section class="lp-section-tight">
+    <div class="lp-wrap">
+      <p class="lp-off-related-label" data-r>More of the platform</p>
+      <div class="lp-off-related" data-r data-reveal-delay="80">
+        {
+          related.map((item) => (
+            <a href={item.href} class="lp-card lp-card-hover lp-off-relcard">
+              <strong>{item.title}</strong>
+              <span>{item.line}</span>
+              <em aria-hidden="true">→</em>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <LaceCtaBand title={ctaTitle} accent={ctaAccent} />
+
+  <LaceFooter />
+</main>
+
+<style>
+  .lp-off-hero {
+    padding: clamp(8.5rem, 15vh, 11rem) 0 clamp(1rem, 2vw, 1.5rem);
+  }
+
+  .lp-off-hero-inner {
+    text-align: center;
+  }
+
+  .lp-off-title {
+    font-size: clamp(2rem, 4.6vw, 3.7rem);
+    max-width: 20ch;
+    margin-inline: auto;
+  }
+
+  .lp-off-lead {
+    max-width: 640px;
+    margin: 1.5rem auto 0;
+  }
+
+  .lp-off-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.9rem;
+    margin-top: 2.2rem;
+  }
+
+  .lp-off-demo {
+    width: min(780px, 100%);
+    margin-inline: auto;
+  }
+
+  .lp-off-points {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .lp-off-point {
+    padding: 1.5rem 1.45rem;
+    display: grid;
+    gap: 0.55rem;
+    align-content: start;
+  }
+
+  .lp-off-point p {
+    margin: 0;
+    font-size: 0.85rem;
+    line-height: 1.65;
+    color: var(--lp-muted);
+  }
+
+  .lp-off-link {
+    color: var(--lp-green-deep);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .lp-off-link:hover {
+    text-decoration: underline;
+  }
+
+  .lp-practice {
+    margin-top: clamp(2rem, 4vw, 3rem);
+    padding: 1.4rem 1.6rem;
+    border-left: 2px solid rgba(var(--lp-green-rgb), 0.55);
+    background: linear-gradient(90deg, rgba(var(--lp-green-rgb), 0.05), transparent 75%);
+  }
+
+  .lp-practice em {
+    display: block;
+    margin-bottom: 0.45rem;
+    font-style: normal;
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--lp-green-deep);
+  }
+
+  .lp-practice p {
+    margin: 0;
+    max-width: 78ch;
+    font-size: 0.92rem;
+    line-height: 1.7;
+    color: var(--lp-ink-soft);
+  }
+
+  .lp-off-deep {
+    background:
+      radial-gradient(52rem 28rem at 85% 15%, rgba(var(--lp-green-rgb), 0.06), transparent 62%);
+  }
+
+  .lp-off-deepgrid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: clamp(2rem, 4vw, 3rem);
+  }
+
+  .lp-off-deepcard {
+    padding: 1.4rem 1.4rem 1.3rem;
+    border-top: 2px solid rgba(var(--lp-green-rgb), 0.5);
+    background: rgba(255, 255, 255, 0.7);
+    display: grid;
+    gap: 0.5rem;
+    align-content: start;
+  }
+
+  .lp-off-deepindex {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    color: var(--lp-green);
+  }
+
+  .lp-off-deepcard p {
+    margin: 0;
+    font-size: 0.84rem;
+    line-height: 1.65;
+    color: var(--lp-muted);
+  }
+
+  .lp-off-related-label {
+    margin: 0 0 1rem;
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--lp-faint);
+  }
+
+  .lp-off-related {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .lp-off-relcard {
+    display: grid;
+    gap: 0.3rem;
+    padding: 1.2rem 1.3rem;
+    text-decoration: none;
+  }
+
+  .lp-off-relcard strong {
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--lp-ink);
+  }
+
+  .lp-off-relcard span {
+    font-size: 0.8rem;
+    color: var(--lp-muted);
+  }
+
+  .lp-off-relcard em {
+    font-style: normal;
+    color: var(--lp-green-deep);
+  }
+
+  @media (max-width: 980px) {
+    .lp-off-points,
+    .lp-off-deepgrid,
+    .lp-off-related {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 620px) {
+    .lp-off-points,
+    .lp-off-deepgrid,
+    .lp-off-related {
+      grid-template-columns: 1fr;
+    }
+
+    .lp-off-actions {
+      flex-direction: column;
+      align-items: stretch;
+      max-width: 20rem;
+      margin-inline: auto;
+    }
+  }
+</style>

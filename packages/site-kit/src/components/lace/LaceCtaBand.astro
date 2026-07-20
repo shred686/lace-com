@@ -1,0 +1,61 @@
+---
+/** Shared final CTA band. */
+import whitepaper from "../../assets/docs/LACE_Enterprise_Overview_v3.pdf";
+
+interface Props {
+  kicker?: string;
+  title: string;
+  accent?: string;
+  line?: string;
+  primaryLabel?: string;
+  primaryHref?: string;
+  secondaryLabel?: string;
+  secondaryHref?: string;
+}
+
+const {
+  kicker = "Next step",
+  title,
+  accent,
+  line = "We set up a pilot on your documents and one workflow your team actually runs. You judge the working output — in weeks, not a quarter-long project.",
+  primaryLabel = "Book a demo",
+  primaryHref = "/contact",
+  secondaryLabel = "Download the overview →",
+  secondaryHref = whitepaper,
+} = Astro.props;
+
+const html = accent
+  ? title.replace(accent, `<span class="lp-accent">${accent}</span>`)
+  : title;
+const external = secondaryHref === whitepaper;
+---
+
+<section class="lp-section-tight">
+  <div class="lp-wrap">
+    <div class="lp-cta-band" data-r>
+      <p class="lp-kicker">{kicker}</p>
+      <h2 class="lp-h2" set:html={html} />
+      {line && <p class="lp-cta-line">{line}</p>}
+      <div class="lp-cta-actions">
+        <a href={primaryHref} class="lp-btn lp-btn-primary lp-btn-lg">{primaryLabel}</a>
+        <a
+          href={secondaryHref}
+          class="lp-btn lp-btn-ghost lp-btn-lg"
+          target={external ? "_blank" : undefined}
+          rel={external ? "noopener noreferrer" : undefined}
+        >
+          {secondaryLabel}
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .lp-cta-line {
+    margin: 0;
+    font-size: clamp(1rem, 1.4vw, 1.14rem);
+    line-height: 1.6;
+    color: var(--lp-muted);
+  }
+</style>

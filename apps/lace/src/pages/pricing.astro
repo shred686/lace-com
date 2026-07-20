@@ -1,0 +1,16 @@
+---
+import BaseLayout from "@determinant/site-kit/layouts/BaseLayout.astro";
+import LacePricingPage from "@determinant/site-kit/components/lace/LacePricingPage.astro";
+import { laceSite } from "../site.config";
+---
+
+<BaseLayout
+  title={`Pricing | ${laceSite.name}`}
+  description="One platform subscription covers enterprise search, knowledge graph, agents, and app building — priced by deployment scope and usage, from managed cloud to air-gapped."
+  theme="lace"
+  themeColor="#f6f7f9"
+  lang="en"
+  siteName={laceSite.name}
+>
+  <LacePricingPage />
+</BaseLayout>

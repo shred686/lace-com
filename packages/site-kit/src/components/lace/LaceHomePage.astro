@@ -41,101 +41,58 @@ const connectors = [
   { id: "salesforce", name: "Salesforce" },
   { id: "postgres", name: "PostgreSQL" },
 ];
+
+/* Industry editions built and operated on the platform. */
+const editions = [
+  {
+    name: "LACE-GOV",
+    market: "Federal · Defense · Intelligence",
+    line: "Standards-conformant knowledge for the mission boundary.",
+    href: "/applications#lace-gov",
+  },
+  {
+    name: "LACE Legal",
+    market: "Legal · Compliance",
+    line: "Contract intelligence with the receipts attached.",
+    href: "/applications#lace-legal",
+  },
+  {
+    name: "LACE Finance",
+    market: "Financial Services",
+    line: "Research where every figure traces to source.",
+    href: "/applications#lace-finance",
+  },
+];
 ---
 
 <main class="lp-site lp2">
   <LaceNav active="home" />
 
+  <!-- ── Hero: Introducing LACE (full-bleed; screenshot slides up on scroll) ── -->
+  <section class="lp2-hero-intro" data-hero-intro>
+    <div class="lp2-hero-pin">
+      <div class="lp2-intro-copy">
+        <p class="lp2-eyebrow">The AI platform for the governed enterprise</p>
+        <h1 class="lp2-intro-h1" data-intro-h1>Introducing <span class="lp2-intro-lace">LACE.</span></h1>
+        <p class="lp2-intro-sub" data-intro-sub>LACE weaves your actual knowledge, rules, and operations into secure, production-ready AI.</p>
+      </div>
+
+      <!-- Product screenshot that rises into view as you scroll -->
+      <div class="lp2-introshot" data-hero-shot aria-hidden="true">
+        <figure class="lp2-introshot-card">
+          <Image
+            src={laceScreen2}
+            alt="LACE workspace showing a governed workflow run"
+            class="lp2-introshot-img"
+            widths={[760, 980, 1260, 1500]}
+            sizes="94vw"
+          />
+        </figure>
+      </div>
+    </div>
+  </section>
+
   <div class="lp2-frame">
-    <!-- ── Hero ───────────────────────────────────────────────────── -->
-    <section class="lp2-hero">
-      <p class="lp2-eyebrow" data-r>The AI platform for the governed enterprise</p>
-      <h1 class="lp2-h1" data-r data-reveal-delay="80">
-        Most platforms run a model.<br />
-        <span class="lp-accent">LACE runs the enterprise.</span>
-      </h1>
-      <p class="lp2-sub" data-r data-reveal-delay="160">
-        Everything your organization knows — searched, mapped, staffed with
-        agents, shipped as software. With receipts.
-      </p>
-      <div class="lp2-actions" data-r data-reveal-delay="230">
-        <a href="/contact" class="lp-btn lp-btn-primary">Book a demo</a>
-        <a
-          href={whitepaper}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="lp-btn lp-btn-ghost"
-        >
-          Download the overview
-        </a>
-      </div>
-
-      <!-- Evidence-flow composition -->
-      <div class="lp2-flowpanel" data-r data-reveal-delay="300" aria-hidden="true">
-        <div class="lp2-flowgrid">
-          <div class="lp2-sources">
-            <div class="lp2-source">
-              <span class="lp2-source-logo" set:html={brandLogos.sharepoint} />
-              <span><strong>MSA-2024.pdf</strong><em>SharePoint · Legal</em></span>
-            </div>
-            <div class="lp2-source">
-              <span class="lp2-source-logo" set:html={brandLogos.slack} />
-              <span><strong>#meridian-risk</strong><em>Slack · 12 messages</em></span>
-            </div>
-            <div class="lp2-source">
-              <span class="lp2-source-logo" set:html={brandLogos.postgres} />
-              <span><strong>vendor_register</strong><em>PostgreSQL · 214 rows</em></span>
-            </div>
-          </div>
-
-          <svg class="lp2-wire lp2-wire-l" viewBox="0 0 100 200" preserveAspectRatio="none" fill="none">
-            <path class="lp2-wirepath" d="M0 30 C 55 30 45 100 100 100" />
-            <path class="lp2-wirepath" d="M0 100 H 100" />
-            <path class="lp2-wirepath" d="M0 170 C 55 170 45 100 100 100" />
-          </svg>
-
-          <div class="lp2-core">
-            <svg width="30" height="30" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-              <circle cx="9" cy="9" r="3" fill="#00A882"></circle>
-              <circle cx="9" cy="9" r="6.5" stroke="#00A882" stroke-width="0.7" opacity="0.5" class="lp2-ring"></circle>
-              <circle cx="9" cy="9" r="8.6" stroke="#00A882" stroke-width="0.45" opacity="0.22" class="lp2-ring lp2-ring-2"></circle>
-            </svg>
-            <strong>LACE</strong>
-            <span>Permissions checked</span>
-            <span>Policy enforced</span>
-            <span>Evidence linked</span>
-          </div>
-
-          <svg class="lp2-wire lp2-wire-r" viewBox="0 0 100 200" preserveAspectRatio="none" fill="none">
-            <path class="lp2-wirepath" d="M0 100 C 55 100 45 32 100 32" />
-            <path class="lp2-wirepath" d="M0 100 C 55 100 45 112 100 112" />
-            <path class="lp2-wirepath" d="M0 100 C 55 100 45 172 100 172" />
-          </svg>
-
-          <div class="lp2-outputs">
-            <div class="lp2-answer">
-              <em>Answer</em>
-              <p>Renews <strong>Jan 15, 2027</strong> at <strong>$1.2M/yr</strong></p>
-              <span><i>§4.2</i><i>Table 3</i></span>
-            </div>
-            <div class="lp2-outrow">
-              <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.7"/><path d="m8.5 12.2 2.4 2.4 4.8-5" stroke="currentColor" stroke-width="1.7"/></svg>
-              Approved · Counsel
-            </div>
-            <div class="lp2-outrow lp2-outrow-dim">
-              <svg viewBox="0 0 24 24" fill="none"><path d="M6 3.5h9l3.5 3.5v13.5H6z" stroke="currentColor" stroke-width="1.7"/><path d="M9 10h6M9 13.5h6" stroke="currentColor" stroke-width="1.7"/></svg>
-              Run logged · trace #4821
-            </div>
-          </div>
-        </div>
-        <div class="lp2-flowfoot">
-          <span>Every source permission-checked</span>
-          <span>Every claim cited</span>
-          <span>Every run on the record</span>
-        </div>
-      </div>
-    </section>
-
     <!-- ── Connector strip ────────────────────────────────────────── -->
     <div class="lp2-logos" aria-hidden="true">
       <div class="lp-marquee lp2-marquee">
@@ -159,9 +116,10 @@ const connectors = [
     <!-- ── Editorial ──────────────────────────────────────────────── -->
     <section class="lp2-editorial">
       <p data-r>
-        <strong>Your organization already knows the answer.</strong>
-        LACE finds it, proves it, and puts it to work — one platform,
-        one audit trail.
+        <strong>One platform. Four products.</strong>
+        Enterprise search, a knowledge graph, an agentic runtime, and an
+        app builder — built on your knowledge, bound by your rules,
+        recorded in one audit trail.
       </p>
     </section>
 
@@ -170,8 +128,9 @@ const connectors = [
       <!-- Full-width: live search -->
       <div class="lp2-cell lp2-cell-full">
         <div class="lp2-cell-copy" data-r>
-          <h2>Ask anything. Open the exact passage.</h2>
-          <p>Permissions-aware answers across every system you run.</p>
+          <p class="lp2-kicker"><b>01</b> Enterprise Search</p>
+          <h2>One question. Every system. The exact source.</h2>
+          <p>Permissions-aware search across documents, messages, and databases — every answer opens the passage, cell, or row it came from.</p>
         </div>
         <div class="lp2-cell-demo" data-r data-reveal-delay="120">
           <LaceSearchDemo />
@@ -183,27 +142,39 @@ const connectors = [
         <!-- Bitemporal -->
         <div class="lp2-cell">
           <div class="lp2-cell-copy" data-r>
-            <h2>Ask what you knew in March.</h2>
-            <p>The graph remembers what was true — and when you learned it.</p>
+            <p class="lp2-kicker"><b>02</b> Knowledge Graph</p>
+            <h2>Every fact, versioned in time.</h2>
+            <p>The graph records what's true and when you learned it. Query today's state — or any date before it.</p>
           </div>
-          <div class="lp2-fragment lp2-time" data-r data-reveal-delay="100" aria-hidden="true">
-            <div class="lp2-time-fact">
-              <span>Annual fee</span>
-              <span class="lp2-time-vals">
-                <strong class="lp2-val-then">$1.1M</strong>
-                <strong class="lp2-val-now">$1.2M</strong>
-              </span>
-              <i>Table 3</i>
-            </div>
-            <div class="lp2-time-scrub">
-              <span class="lp2-time-labels">
-                <em class="lp2-asof-then">as of · Mar 2025</em>
-                <em class="lp2-asof-now">as of · Jul 2026</em>
-              </span>
-              <div class="lp2-time-track">
-                <i class="lp2-time-knob"></i>
+          <div class="lp2-fragment lp2-win" data-r data-reveal-delay="100" aria-hidden="true">
+            <div class="lp2-win-bar"><i></i><i></i><i></i><span>graph.lace — Meridian Corp</span></div>
+            <div class="lp2-win-body">
+              <div class="lp2-time-fact">
+                <span>Annual fee</span>
+                <span class="lp2-time-vals">
+                  <strong class="lp2-val-then">$1.1M</strong>
+                  <strong class="lp2-val-now">$1.2M</strong>
+                </span>
+                <i>Table 3</i>
               </div>
-              <div class="lp2-time-ticks"><span>2024</span><span>2025</span><span>2026</span></div>
+              <div class="lp2-time-fact">
+                <span>Renewal date</span>
+                <span class="lp2-time-vals">
+                  <strong class="lp2-val-then">Jan 15, 2026</strong>
+                  <strong class="lp2-val-now">Jan 15, 2027</strong>
+                </span>
+                <i>MSA §4.2</i>
+              </div>
+              <div class="lp2-time-scrub">
+                <span class="lp2-time-labels">
+                  <em class="lp2-asof-then">as of · Mar 2025</em>
+                  <em class="lp2-asof-now">as of · Jul 2026</em>
+                </span>
+                <div class="lp2-time-track">
+                  <i class="lp2-time-knob"></i>
+                </div>
+                <div class="lp2-time-ticks"><span>2024</span><span>2025</span><span>2026</span></div>
+              </div>
             </div>
           </div>
           <a class="lp2-cell-link" href="/platform/knowledge-graph">Knowledge Graph →</a>
@@ -212,23 +183,27 @@ const connectors = [
         <!-- Conflicts -->
         <div class="lp2-cell">
           <div class="lp2-cell-copy" data-r>
-            <h2>When sources disagree, you see both.</h2>
-            <p>Conflicts are flagged with evidence — never silently resolved.</p>
+            <p class="lp2-kicker"><b>02</b> Knowledge Graph</p>
+            <h2>Conflicts surface. Nothing gets papered over.</h2>
+            <p>When sources disagree, both versions sit side by side with their evidence — routed to a person for a ruling.</p>
           </div>
-          <div class="lp2-fragment lp2-conflict" data-r data-reveal-delay="100" aria-hidden="true">
-            <div class="lp2-conflict-pair">
-              <div class="lp2-evidence">
-                <em>Agreement · §7.1</em>
-                <p>“…written notice of <mark>ninety (90) days</mark>…”</p>
+          <div class="lp2-fragment lp2-win" data-r data-reveal-delay="100" aria-hidden="true">
+            <div class="lp2-win-bar"><i></i><i></i><i></i><span>graph.lace — conflict review</span></div>
+            <div class="lp2-win-body">
+              <div class="lp2-conflict-pair">
+                <div class="lp2-evidence">
+                  <em>MSA-2024 · §7.1</em>
+                  <p>“…written notice of <mark>ninety (90) days</mark>…”</p>
+                </div>
+                <span class="lp2-vs">vs</span>
+                <div class="lp2-evidence">
+                  <em>Summary deck · p.4</em>
+                  <p>“…terminable on <mark class="is-warn">60 days'</mark> notice…”</p>
+                </div>
               </div>
-              <span class="lp2-vs">vs</span>
-              <div class="lp2-evidence">
-                <em>Summary deck · p.4</em>
-                <p>“…terminable on <mark class="is-warn">60 days'</mark> notice…”</p>
+              <div class="lp2-conflict-flag">
+                <i></i> 1 conflict open · routed to counsel@ for ruling
               </div>
-            </div>
-            <div class="lp2-conflict-flag">
-              <i></i> Conflict flagged · queued for review
             </div>
           </div>
           <a class="lp2-cell-link" href="/platform/knowledge-graph">Conflict detection →</a>
@@ -239,22 +214,24 @@ const connectors = [
         <!-- Approval gates -->
         <div class="lp2-cell">
           <div class="lp2-cell-copy" data-r>
-            <h2>Agents that ask before they act.</h2>
-            <p>The risky step pauses for a human. One click, on the record.</p>
+            <p class="lp2-kicker"><b>03</b> Agentic Platform</p>
+            <h2>Agents that do real work, under real controls.</h2>
+            <p>Deployed with budgets, permissions, and approval gates. The risky step waits for a human — and every step is recorded.</p>
           </div>
-          <div class="lp2-fragment lp2-gatecard" data-r data-reveal-delay="100" aria-hidden="true">
-            <div class="lp2-draft">
-              <svg width="13" height="13" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="3" fill="#00A882"/><circle cx="9" cy="9" r="6.5" stroke="#00A882" stroke-width="0.9" opacity="0.5"/></svg>
-              <span>Reply drafted · cites <i>§4.2</i> and <i>Table 3</i></span>
-            </div>
-            <div class="lp2-gate">
-              <div>
-                <em>Approval required</em>
-                <strong>Send reply to vendor</strong>
+          <div class="lp2-fragment lp2-win" data-r data-reveal-delay="100" aria-hidden="true">
+            <div class="lp2-win-bar"><i></i><i></i><i></i><span>agents.lace — contracts-intake · v12</span></div>
+            <div class="lp2-win-body">
+              <div class="lp2-trace-row"><i></i><span>Email in — Meridian asks about renewal</span></div>
+              <div class="lp2-trace-row"><i></i><span>Reply drafted · cites <b>MSA §4.2</b> and <b>Table 3</b></span></div>
+              <div class="lp2-gate">
+                <div>
+                  <em>Approval required</em>
+                  <strong>Send reply to vendor</strong>
+                </div>
+                <span class="lp2-approve">Approve</span>
               </div>
-              <span class="lp2-approve">Approve</span>
+              <p class="lp2-gate-meta">$2.40 of $40 daily budget · every step recorded</p>
             </div>
-            <p class="lp2-gate-meta">counsel@ · budget $40/day · every action traced</p>
           </div>
           <a class="lp2-cell-link" href="/platform/agents">Agentic Platform →</a>
         </div>
@@ -262,19 +239,23 @@ const connectors = [
         <!-- App builder -->
         <div class="lp2-cell">
           <div class="lp2-cell-copy" data-r>
-            <h2>Prompt at 9:00. Live URL by lunch.</h2>
-            <p>Sign-in, database, hosting, billing — rollback included.</p>
+            <p class="lp2-kicker"><b>04</b> App Builder</p>
+            <h2>From prompt to production software.</h2>
+            <p>LACE plans, builds, verifies, and hosts the app — sign-in, database, releases, and rollback included.</p>
           </div>
-          <div class="lp2-fragment lp2-build" data-r data-reveal-delay="100" aria-hidden="true">
-            <div class="lp2-prompt"><b>&gt;</b> an inventory tracker for our field teams…</div>
-            <div class="lp2-buildsteps">
-              <span style="--d: 0s">Plan</span>
-              <span style="--d: 1.5s">Build</span>
-              <span style="--d: 3s">Verify</span>
-              <span style="--d: 4.5s">Publish</span>
-            </div>
-            <div class="lp2-liveurl">
-              <i></i> inventory.acme-field.app <b>LIVE</b>
+          <div class="lp2-fragment lp2-win" data-r data-reveal-delay="100" aria-hidden="true">
+            <div class="lp2-win-bar"><i></i><i></i><i></i><span>builder.lace — field-inventory</span></div>
+            <div class="lp2-win-body">
+              <div class="lp2-prompt"><b>&gt;</b> an inventory tracker for our field teams…</div>
+              <div class="lp2-buildsteps">
+                <span style="--d: 0s">Plan</span>
+                <span style="--d: 1.5s">Build</span>
+                <span style="--d: 3s">Verify</span>
+                <span style="--d: 4.5s">Publish</span>
+              </div>
+              <div class="lp2-liveurl">
+                <i></i> inventory.acme-field.app <b>LIVE</b>
+              </div>
             </div>
           </div>
           <a class="lp2-cell-link" href="/platform/app-builder">App Builder →</a>
@@ -286,9 +267,9 @@ const connectors = [
     <section class="lp2-gov">
       <div class="lp2-gov-copy" data-r>
         <p>
-          <strong>The model proposes.<br />The platform enforces.</strong>
-          Budgets, permissions, approvals, and audit are system services — not
-          prompt suggestions.
+          <strong>Probabilistic AI.<br />Deterministic control.</strong>
+          Model output is a proposal — validation, policy, and approvals
+          decide what's applied. The audit trail records all of it.
         </p>
         <div class="lp2-gov-tags">
           <span>Provenance</span><span>Permissions</span><span>Budgets</span><span>Approvals</span><span>Audit</span>
@@ -299,19 +280,19 @@ const connectors = [
         <div class="lp2-run">
           <div class="lp2-runrow" style="--rd2: 0s">
             <i class="lp2-runmark"></i>
-            <span><em>Email in</em><strong>Vendor asks about renewal terms</strong></span>
+            <span><em>Propose</em><strong>The model drafts an output</strong></span>
           </div>
           <div class="lp2-runrow" style="--rd2: 1.2s">
             <i class="lp2-runmark"></i>
-            <span><em>Agent</em><strong>Drafts reply, citing §4.2</strong></span>
+            <span><em>Validate</em><strong>Citations verified · schema passes</strong></span>
           </div>
           <div class="lp2-runrow" style="--rd2: 2.4s">
             <i class="lp2-runmark"></i>
-            <span><em>Gate</em><strong>Counsel approves in one click</strong></span>
+            <span><em>Approve</em><strong>A human signs off — on the record</strong></span>
           </div>
           <div class="lp2-runrow" style="--rd2: 3.6s">
             <i class="lp2-runmark"></i>
-            <span><em>Record</em><strong>Sent · evidence chain preserved</strong></span>
+            <span><em>Apply</em><strong>One controlled write · fully attributed</strong></span>
           </div>
         </div>
       </div>
@@ -319,27 +300,28 @@ const connectors = [
 
     <!-- ── Stats ──────────────────────────────────────────────────── -->
     <section class="lp2-stats" data-r>
-      <div><strong>∞</strong><span>Workflows</span></div>
-      <div><strong class="lp-accent">100%</strong><span>Traceable</span></div>
-      <div><strong>0</strong><span>Black boxes</span></div>
+      <div><strong>4</strong><span>Products, one substrate</span></div>
+      <div><strong class="lp-accent">1</strong><span>Audit trail across everything</span></div>
+      <div><strong>0</strong><span>External AI calls required</span></div>
     </section>
 
-    <!-- ── Screenshot ─────────────────────────────────────────────── -->
-    <section class="lp2-shot">
-      <div class="lp2-shot-head" data-r>
-        <h2>One workspace. <span class="lp-accent">Every answer accountable.</span></h2>
+    <!-- ── Built on LACE ──────────────────────────────────────────── -->
+    <section class="lp2-editions">
+      <div class="lp2-editions-head" data-r>
+        <h2>Built <span class="lp-accent">on LACE.</span></h2>
+        <p>Industry editions built and operated on the platform.</p>
       </div>
-      <div class="lp2-window" data-r data-reveal-delay="120">
-        <div class="lp2-window-bar">
-          <i></i><i></i><i></i>
-          <span>lace · governed workspace</span>
-        </div>
-        <Image
-          src={laceScreen2}
-          alt="LACE workspace showing a governed workflow run"
-          widths={[760, 1080, 1480]}
-          sizes="(max-width: 980px) 94vw, 1080px"
-        />
+      <div class="lp2-editions-grid">
+        {
+          editions.map((edition, i) => (
+            <a href={edition.href} data-r data-reveal-delay={String(i * 90)}>
+              <em>{edition.market}</em>
+              <strong>{edition.name}</strong>
+              <span>{edition.line}</span>
+              <b>Explore →</b>
+            </a>
+          ))
+        }
       </div>
     </section>
 
@@ -349,11 +331,23 @@ const connectors = [
         <h2>Runs where <span class="lp-accent">you run.</span></h2>
         <p>Fully air-gapped if needed. No external AI calls.</p>
       </div>
-      <div class="lp2-deploy-chips" data-r data-reveal-delay="100">
-        <span>Cloud</span>
-        <span>Private Cloud (VPC)</span>
-        <span>On-Premises</span>
-        <span>Air-Gapped</span>
+      <div class="lp2-deploy-tiles" data-r data-reveal-delay="100" aria-hidden="true">
+        <div class="lp2-deploy-tile">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M7 18a4.5 4.5 0 1 1 .66-8.95A6 6 0 0 1 19.35 10.6 3.75 3.75 0 0 1 18.25 18z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+          <span><strong>Cloud</strong><em>Fastest start</em></span>
+        </div>
+        <div class="lp2-deploy-tile">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 3.5l7 2.8v5.2c0 4.1-2.9 7-7 8.9-4.1-1.9-7-4.8-7-8.9V6.3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M9.2 11.8l2 2 3.6-3.8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span><strong>Private Cloud</strong><em>Your VPC</em></span>
+        </div>
+        <div class="lp2-deploy-tile">
+          <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4.5" width="16" height="6" rx="1.2" stroke="currentColor" stroke-width="1.5"/><rect x="4" y="13.5" width="16" height="6" rx="1.2" stroke="currentColor" stroke-width="1.5"/><circle cx="8" cy="7.5" r="1" fill="currentColor"/><circle cx="8" cy="16.5" r="1" fill="currentColor"/></svg>
+          <span><strong>On-Premises</strong><em>Your hardware</em></span>
+        </div>
+        <div class="lp2-deploy-tile lp2-deploy-air">
+          <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.2" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2.6 3"/><circle cx="12" cy="12" r="2.6" fill="currentColor"/></svg>
+          <span><strong>Air-Gapped</strong><em>Zero external calls</em></span>
+        </div>
       </div>
     </section>
 
@@ -395,7 +389,9 @@ const connectors = [
     position: relative;
     width: min(1180px, calc(100% - 3rem));
     margin-inline: auto;
-    padding-top: clamp(7.5rem, 13vh, 10rem);
+    /* The full-bleed hero above already clears the fixed nav, so the
+       frame only needs a little breathing room before the marquee. */
+    padding-top: clamp(1.5rem, 4vw, 3rem);
   }
 
   @media (min-width: 1080px) {
@@ -503,234 +499,200 @@ const connectors = [
     text-align: center;
   }
 
-  /* Evidence-flow panel */
-  .lp2-flowpanel {
-    margin-top: clamp(3rem, 6vw, 4.5rem);
-    border: 1px solid var(--hair);
+  /* ── Hero: Introducing LACE + scroll-driven screenshot ─────────── */
+  /* Restored from the original homepage's "Introducing LACE" moment:
+     the headline is pinned to the top of the viewport and the dark,
+     neon-framed screenshot rises up from below into full view as you
+     scroll. Full-bleed (breaks out of the 1180px frame). */
+  .lp2-hero-intro {
+    position: relative;
+    width: 100%;
+    min-height: 200svh;
+    padding: 0;
+    margin: 0;
+  }
+
+  .lp2-hero-pin {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    overflow: hidden;
+  }
+
+  /* Headline: vertically centred in the viewport (like the original), and
+     it fades out as the screenshot rises up over it. */
+  .lp2-intro-copy {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    z-index: 5;
+    text-align: center;
+    padding-inline: 1.5rem;
+    opacity: var(--copy-opacity, 1);
+    transform: translateY(calc(-50% + var(--copy-y, 0svh)));
+    will-change: opacity, transform;
+  }
+
+  .lp2-intro-h1 {
+    margin: 0.6rem 0 0;
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: clamp(2.6rem, 7.4vw, 5.6rem);
+    font-weight: 400;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    line-height: 0.97;
+    color: var(--lp-ink);
+  }
+
+  .lp2-intro-lace {
+    color: var(--lp-green);
+  }
+
+  .lp2-intro-sub {
+    max-width: min(660px, 92vw);
+    margin: 1.5rem auto 0;
+    font-size: clamp(1rem, 1.5vw, 1.22rem);
+    line-height: 1.6;
+    color: var(--lp-muted);
+    text-wrap: balance;
+  }
+
+  /* Load entrance: eyebrow, headline and subhead fade/rise in, staggered. */
+  .lp2-eyebrow,
+  .lp2-intro-h1,
+  .lp2-intro-sub {
+    animation: lp2-hero-in 820ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  }
+
+  .lp2-eyebrow { animation-delay: 60ms; }
+  .lp2-intro-h1 { animation-delay: 200ms; }
+  .lp2-intro-sub { animation-delay: 420ms; }
+
+  @keyframes lp2-hero-in {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lp2-eyebrow,
+    .lp2-intro-h1,
+    .lp2-intro-sub {
+      animation: none;
+    }
+  }
+
+  /* Screenshot stage: ~95vw (nearly full width, no height cap — like the
+     original), rising from below the fold up to nearly fill the screen. */
+  .lp2-introshot {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 4;
+    width: min(95vw, 1640px);
+    aspect-ratio: 1.575 / 1;
+    pointer-events: none;
+    opacity: var(--introshot-opacity, 0);
+    transform: translate3d(-50%, calc(-50% + var(--introshot-y, 112svh)), 0);
+    transform-origin: 50% 76%;
+    will-change: opacity, transform;
+  }
+
+  .lp2-introshot::before {
+    content: "";
+    position: absolute;
+    inset: 5% 2% -8%;
+    z-index: 0;
+    pointer-events: none;
+    border-radius: 18px;
     background:
-      radial-gradient(46rem 20rem at 50% -20%, rgba(var(--lp-green-rgb), 0.05), transparent 60%),
-      rgba(255, 255, 255, 0.55);
+      radial-gradient(ellipse at 50% 24%, rgba(0, 255, 194, 0.22), transparent 58%),
+      radial-gradient(ellipse at 50% 100%, rgba(0, 168, 130, 0.16), transparent 66%);
+    filter: blur(22px);
+    opacity: var(--introshot-halo, 0.35);
   }
 
-  .lp2-flowgrid {
-    display: grid;
-    grid-template-columns: minmax(0, 5fr) minmax(0, 2.4fr) minmax(0, 4fr) minmax(0, 2.4fr) minmax(0, 5.4fr);
-    align-items: center;
-    gap: 0;
-    padding: clamp(1.6rem, 3.5vw, 3rem) clamp(1.2rem, 3vw, 2.6rem);
+  .lp2-introshot-card {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    aspect-ratio: 1.575 / 1;
+    padding: 7px;
+    overflow: hidden;
+    border: 1px solid rgba(247, 250, 255, 0.2);
+    border-radius: 8px;
+    background:
+      linear-gradient(180deg, rgba(54, 60, 64, 0.96) 0%, rgba(22, 25, 27, 0.98) 48%, rgba(10, 11, 12, 0.98) 100%),
+      #101214;
+    box-shadow:
+      0 0 0 1px rgba(0, 255, 194, 0.48),
+      0 0 26px rgba(0, 255, 194, 0.3),
+      0 22px 48px rgba(2, 10, 14, 0.26),
+      0 0 0 1px rgba(0, 0, 0, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.22),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.72);
   }
 
-  .lp2-sources {
-    display: grid;
-    gap: 0.7rem;
+  .lp2-introshot-card::before {
+    content: "";
+    position: absolute;
+    inset: 7px;
+    z-index: 2;
+    pointer-events: none;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 4px;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.1),
+      inset 0 0 0 1px rgba(0, 0, 0, 0.22);
   }
 
-  .lp2-source {
-    display: flex;
-    align-items: center;
-    gap: 0.7rem;
-    padding: 0.65rem 0.8rem;
-    border: 1px solid var(--lp-line);
-    border-radius: var(--lp-radius-lg);
-    background: #ffffff;
-    box-shadow: var(--lp-shadow-sm);
-    text-align: left;
+  .lp2-introshot-card::after {
+    content: "";
+    position: absolute;
+    left: 1rem;
+    right: 1rem;
+    top: 0;
+    z-index: 3;
+    height: 1px;
+    pointer-events: none;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.34), transparent);
   }
 
-  .lp2-source-logo {
-    flex: none;
-    width: 1.15rem;
-    height: 1.15rem;
-  }
-
-  .lp2-source-logo :global(svg) {
+  .lp2-introshot-img {
+    position: relative;
+    z-index: 1;
+    display: block;
     width: 100%;
     height: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 4px;
+    object-fit: cover;
+    object-position: center top;
   }
 
-  .lp2-source > span:last-child {
-    display: grid;
-    gap: 0.05rem;
-    min-width: 0;
-  }
-
-  .lp2-source strong {
-    font-family: "JetBrains Mono", monospace;
-    font-size: 0.68rem;
-    font-weight: 600;
-    color: var(--lp-ink);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .lp2-source em {
-    font-style: normal;
-    font-size: 0.62rem;
-    color: var(--lp-faint);
-  }
-
-  .lp2-wire {
-    width: 100%;
-    height: 150px;
-  }
-
-  .lp2-wirepath {
-    stroke: rgba(var(--lp-green-rgb), 0.45);
-    stroke-width: 1.3;
-    stroke-dasharray: 3 5;
-    animation: lp2-flow 1.4s linear infinite;
-  }
-
-  @keyframes lp2-flow {
-    to {
-      stroke-dashoffset: -8;
+  @media (prefers-reduced-motion: reduce) {
+    .lp2-hero-intro { min-height: 0; }
+    .lp2-hero-pin { position: static; height: auto; padding: clamp(2rem, 5vw, 4rem) 0 clamp(3rem, 6vw, 5rem); }
+    .lp2-intro-copy { position: static; padding-inline: 1.5rem; opacity: 1 !important; transform: none !important; }
+    .lp2-introshot {
+      position: relative;
+      top: auto;
+      left: 50%;
+      margin: clamp(2.4rem, 5vw, 4rem) 0 0;
+      width: min(95vw, 1400px);
+      transform: translateX(-50%);
+      opacity: 1 !important;
     }
   }
 
-  .lp2-core {
-    display: grid;
-    justify-items: center;
-    gap: 0.22rem;
-    padding: 1.3rem 1rem 1.2rem;
-    border: 1px solid rgba(var(--lp-green-rgb), 0.45);
-    border-radius: var(--lp-radius-lg);
-    background: #ffffff;
-    box-shadow: 0 8px 30px -12px rgba(var(--lp-green-rgb), 0.45);
-  }
-
-  .lp2-ring {
-    transform-origin: center;
-    animation: lp2-spin 14s linear infinite;
-  }
-
-  .lp2-ring-2 {
-    animation-duration: 22s;
-    animation-direction: reverse;
-  }
-
-  @keyframes lp2-spin {
-    to {
-      transform: rotate(360deg);
-    }
-  }
-
-  .lp2-core strong {
-    margin-top: 0.3rem;
-    font-family: "Space Grotesk", sans-serif;
-    font-size: 0.85rem;
-    font-weight: 700;
-    letter-spacing: 0.22em;
-    color: var(--lp-ink);
-  }
-
-  .lp2-core span {
-    font-family: "JetBrains Mono", monospace;
-    font-size: 0.56rem;
-    letter-spacing: 0.04em;
-    color: var(--lp-green-deep);
-  }
-
-  .lp2-core span::before {
-    content: "✓ ";
-  }
-
-  .lp2-outputs {
-    display: grid;
-    gap: 0.6rem;
-  }
-
-  .lp2-answer {
-    padding: 0.8rem 0.95rem;
-    border: 1px solid rgba(var(--lp-green-rgb), 0.4);
-    border-radius: var(--lp-radius-lg);
-    background: #ffffff;
-    box-shadow: var(--lp-shadow-sm);
-    text-align: left;
-    display: grid;
-    gap: 0.3rem;
-  }
-
-  .lp2-answer em {
-    font-style: normal;
-    font-family: "JetBrains Mono", monospace;
-    font-size: 0.52rem;
-    font-weight: 700;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--lp-green-deep);
-  }
-
-  .lp2-answer p {
-    margin: 0;
-    font-size: 0.82rem;
-    line-height: 1.5;
-    color: var(--lp-ink-soft);
-  }
-
-  .lp2-answer p strong {
-    color: var(--lp-ink);
-  }
-
-  .lp2-answer > span {
-    display: flex;
-    gap: 0.35rem;
-  }
-
-  .lp2-answer i {
-    font-style: normal;
-    padding: 0.14rem 0.45rem;
-    border: 1px solid rgba(var(--lp-green-rgb), 0.4);
-    border-radius: var(--lp-radius);
-    font-family: "JetBrains Mono", monospace;
-    font-size: 0.55rem;
-    color: var(--lp-green-deep);
-  }
-
-  .lp2-outrow {
-    display: flex;
-    align-items: center;
-    gap: 0.55rem;
-    padding: 0.55rem 0.8rem;
-    border: 1px solid var(--lp-line);
-    border-radius: var(--lp-radius-lg);
-    background: #ffffff;
-    font-size: 0.74rem;
-    font-weight: 500;
-    color: var(--lp-ink-soft);
-    text-align: left;
-  }
-
-  .lp2-outrow svg {
-    flex: none;
-    width: 0.95rem;
-    height: 0.95rem;
-    color: var(--lp-green-deep);
-  }
-
-  .lp2-outrow-dim {
-    color: var(--lp-faint);
-  }
-
-  .lp2-outrow-dim svg {
-    color: var(--lp-faint);
-  }
-
-  .lp2-flowfoot {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.5rem 2.4rem;
-    padding: 0.85rem 1rem;
-    border-top: 1px solid var(--hair-soft);
-  }
-
-  .lp2-flowfoot span {
-    font-family: "JetBrains Mono", monospace;
-    font-size: 0.56rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--lp-faint);
+  @media (max-width: 680px) {
+    .lp2-intro-h1 { font-size: clamp(2.2rem, 9vw, 3.2rem); }
   }
 
   /* ═══ Logo strip ════════════════════════════════════════════════ */
@@ -807,6 +769,22 @@ const connectors = [
     color: var(--lp-muted);
   }
 
+  .lp2-cell-copy .lp2-kicker {
+    margin: 0 0 0.8rem;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--lp-faint);
+  }
+
+  .lp2-cell-copy .lp2-kicker b {
+    margin-right: 0.4rem;
+    font-weight: 600;
+    color: var(--lp-green-deep);
+  }
+
   .lp2-cell-demo {
     width: min(720px, 100%);
   }
@@ -832,12 +810,52 @@ const connectors = [
     opacity: 0.7;
   }
 
-  /* fragments: single focal element, generous air, flat */
+  /* fragments: one product window per cell */
   .lp2-fragment {
-    display: grid;
-    gap: 0.7rem;
-    width: min(430px, 100%);
+    width: min(460px, 100%);
     margin-block: auto;
+  }
+
+  .lp2-win {
+    overflow: hidden;
+    border: 1px solid var(--lp-line);
+    border-radius: 10px;
+    background: #ffffff;
+    box-shadow: 0 26px 60px -24px rgba(15, 30, 26, 0.3);
+    text-align: left;
+  }
+
+  .lp2-win-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.38rem;
+    padding: 0.55rem 0.9rem;
+    border-bottom: 1px solid var(--lp-line-soft);
+    background: #f6f7f8;
+  }
+
+  .lp2-win-bar i {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 50%;
+  }
+
+  .lp2-win-bar i:nth-child(1) { background: #f57d72; }
+  .lp2-win-bar i:nth-child(2) { background: #f5c94e; }
+  .lp2-win-bar i:nth-child(3) { background: #55ca77; }
+
+  .lp2-win-bar span {
+    margin-inline: auto;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.08em;
+    color: var(--lp-faint);
+  }
+
+  .lp2-win-body {
+    display: grid;
+    gap: 0.65rem;
+    padding: clamp(0.9rem, 2vw, 1.2rem);
   }
 
   /* — bitemporal — */
@@ -1038,32 +1056,39 @@ const connectors = [
     50% { opacity: 0.35; }
   }
 
-  /* — gate — */
-  .lp2-draft {
+  /* — agent trace + gate — */
+  .lp2-trace-row {
     display: flex;
     align-items: center;
-    gap: 0.55rem;
-    padding: 0.65rem 0.85rem;
-    border: 1px solid var(--lp-line);
-    border-radius: var(--lp-radius-lg);
-    background: #ffffff;
-    box-shadow: var(--lp-shadow-sm);
-    font-size: 0.78rem;
+    gap: 0.6rem;
+    padding: 0.58rem 0.75rem;
+    border: 1px solid var(--lp-line-soft);
+    border-radius: var(--lp-radius);
+    background: #fdfefe;
+    font-size: 0.76rem;
     color: var(--lp-ink-soft);
   }
 
-  .lp2-draft svg {
+  .lp2-trace-row i {
     flex: none;
+    display: grid;
+    place-items: center;
+    width: 1.05rem;
+    height: 1.05rem;
+    border-radius: 50%;
+    border: 1px solid rgba(var(--lp-green-rgb), 0.45);
+    font-style: normal;
+    font-size: 0.58rem;
+    color: var(--lp-green-deep);
   }
 
-  .lp2-draft i {
-    font-style: normal;
-    padding: 0.08rem 0.35rem;
-    border: 1px solid rgba(var(--lp-green-rgb), 0.4);
-    border-radius: var(--lp-radius);
-    font-family: "JetBrains Mono", monospace;
-    font-size: 0.6rem;
-    color: var(--lp-green-deep);
+  .lp2-trace-row i::before {
+    content: "✓";
+  }
+
+  .lp2-trace-row b {
+    font-weight: 600;
+    color: var(--lp-ink);
   }
 
   .lp2-gate {
@@ -1364,17 +1389,86 @@ const connectors = [
     color: var(--lp-faint);
   }
 
-  /* ═══ Screenshot ════════════════════════════════════════════════ */
-  .lp2-shot {
-    padding: clamp(3.5rem, 7vw, 5.5rem) clamp(1.2rem, 3.5vw, 3.2rem);
-    text-align: center;
+  /* ═══ Built on LACE ═════════════════════════════════════════════ */
+  .lp2-editions-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.8rem 2rem;
+    padding: clamp(2.6rem, 5vw, 4rem) clamp(1.2rem, 3.5vw, 3.2rem) clamp(1.6rem, 3vw, 2.4rem);
   }
 
-  .lp2-shot-head h2 {
-    margin: 0 0 clamp(2rem, 4vw, 3rem);
+  .lp2-editions-head h2 {
+    margin: 0;
     font-size: clamp(1.6rem, 3vw, 2.4rem);
   }
 
+  .lp2-editions-head p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--lp-muted);
+  }
+
+  .lp2-editions-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-top: 1px solid var(--hair);
+  }
+
+  .lp2-editions-grid a {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: clamp(1.8rem, 3.2vw, 2.6rem) clamp(1.2rem, 2.6vw, 2.2rem);
+    text-decoration: none;
+    transition: background 180ms ease;
+  }
+
+  .lp2-editions-grid a + a {
+    border-left: 1px solid var(--hair);
+  }
+
+  .lp2-editions-grid a:hover {
+    background: rgba(var(--lp-green-rgb), 0.045);
+  }
+
+  .lp2-editions-grid em {
+    font-style: normal;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.56rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--lp-faint);
+  }
+
+  .lp2-editions-grid strong {
+    font-family: "Space Grotesk", "Red Hat Display", sans-serif;
+    font-size: 1.15rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    color: var(--lp-ink);
+  }
+
+  .lp2-editions-grid span {
+    font-size: 0.85rem;
+    line-height: 1.55;
+    color: var(--lp-muted);
+  }
+
+  .lp2-editions-grid b {
+    margin-top: auto;
+    padding-top: 0.8rem;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--lp-green-deep);
+  }
+
+  /* ═══ Screenshot ════════════════════════════════════════════════ */
   .lp2-window {
     max-width: 1080px;
     margin-inline: auto;
@@ -1440,33 +1534,62 @@ const connectors = [
     color: var(--lp-muted);
   }
 
-  .lp2-deploy-chips {
+  .lp2-deploy-tiles {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.6rem;
+    width: min(460px, 100%);
+  }
+
+  .lp2-deploy-tile {
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-
-  .lp2-deploy-chips span {
-    display: inline-flex;
     align-items: center;
-    gap: 0.45rem;
-    padding: 0.5rem 0.95rem;
-    border: 1px solid rgba(var(--lp-green-rgb), 0.32);
-    border-radius: var(--lp-radius);
-    background: rgba(255, 255, 255, 0.7);
-    font-family: "JetBrains Mono", monospace;
-    font-size: 0.6rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--lp-ink-soft);
+    gap: 0.75rem;
+    padding: 0.85rem 0.95rem;
+    border: 1px solid var(--lp-line);
+    border-radius: var(--lp-radius-lg);
+    background: #ffffff;
+    box-shadow: var(--lp-shadow-sm);
+    transition: transform 180ms ease, box-shadow 180ms ease;
   }
 
-  .lp2-deploy-chips span::before {
-    content: "";
-    width: 0.32rem;
-    height: 0.32rem;
-    border-radius: 50%;
-    background: var(--lp-green);
+  .lp2-deploy-tile:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--lp-shadow-md);
+  }
+
+  .lp2-deploy-tile svg {
+    flex: none;
+    width: 1.45rem;
+    height: 1.45rem;
+    color: var(--lp-green-deep);
+  }
+
+  .lp2-deploy-tile > span {
+    display: grid;
+    gap: 0.14rem;
+    min-width: 0;
+  }
+
+  .lp2-deploy-tile strong {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--lp-ink);
+    white-space: nowrap;
+  }
+
+  .lp2-deploy-tile em {
+    font-style: normal;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.54rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--lp-faint);
+  }
+
+  .lp2-deploy-air {
+    border-style: dashed;
+    border-color: rgba(var(--lp-green-rgb), 0.5);
   }
 
   /* ═══ CTA ═══════════════════════════════════════════════════════ */
@@ -1494,25 +1617,6 @@ const connectors = [
 
   /* ═══ Responsive ════════════════════════════════════════════════ */
   @media (max-width: 980px) {
-    .lp2-flowgrid {
-      grid-template-columns: 1fr;
-      gap: 1rem;
-      justify-items: center;
-    }
-
-    .lp2-wire {
-      display: none;
-    }
-
-    .lp2-sources,
-    .lp2-outputs {
-      width: min(360px, 100%);
-    }
-
-    .lp2-core {
-      width: min(280px, 100%);
-    }
-
     .lp2-row {
       grid-template-columns: 1fr;
     }
@@ -1527,6 +1631,15 @@ const connectors = [
     }
 
     .lp2-gov-visual {
+      border-left: 0;
+      border-top: 1px solid var(--hair);
+    }
+
+    .lp2-editions-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .lp2-editions-grid a + a {
       border-left: 0;
       border-top: 1px solid var(--hair);
     }
@@ -1558,8 +1671,6 @@ const connectors = [
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .lp2-wirepath,
-    .lp2-ring,
     .lp2-time-knob,
     .lp2-val-then,
     .lp2-val-now,
@@ -1578,3 +1689,74 @@ const connectors = [
     }
   }
 </style>
+
+<script>
+  // Hero: sticky-pinned "Introducing LACE" stage. The headline holds while
+  // the dark, neon-framed screenshot rises from below into full view as the
+  // user scrolls through the stage — restored from the original homepage.
+  (() => {
+    const hero = document.querySelector<HTMLElement>("[data-hero-intro]");
+    if (!hero) return;
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      hero.style.setProperty("--introshot-y", "0svh");
+      hero.style.setProperty("--introshot-opacity", "1");
+      hero.style.setProperty("--introshot-halo", "0.7");
+      return;
+    }
+
+    const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v));
+    const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+
+    // Progress is a LINEAR function of scroll position (constant movement per
+    // pixel scrolled — no easing curve, so every scroll step advances the shot
+    // by the same distance). A light per-frame damping glides between discrete
+    // mouse-wheel steps so the motion reads smooth rather than stepped.
+    const scrollProgress = () => {
+      const rect = hero.getBoundingClientRect();
+      const travel = Math.max(1, rect.height - window.innerHeight);
+      return clamp(-rect.top / travel, 0, 1);
+    };
+
+    const apply = (p: number) => {
+      // Screenshot rises linearly: 112svh (below the fold) → 6svh (settled).
+      const rise = clamp((p - 0.08) / 0.74, 0, 1);
+      hero.style.setProperty("--introshot-y", `${lerp(112, 6, rise)}svh`);
+      hero.style.setProperty("--introshot-opacity", String(clamp((p - 0.08) * 6, 0, 1)));
+      hero.style.setProperty("--introshot-halo", String(lerp(0.35, 0.8, rise)));
+
+      // Headline fades/lifts out early — fully gone before the rising
+      // screenshot reaches the centre, so "LACE" never shows over the shot.
+      const copyFade = clamp((p - 0.2) / 0.16, 0, 1);
+      hero.style.setProperty("--copy-opacity", String(1 - copyFade));
+      hero.style.setProperty("--copy-y", `${lerp(0, -11, copyFade)}svh`);
+    };
+
+    let shown = scrollProgress();
+    let target = shown;
+    let raf = 0;
+    apply(shown);
+
+    const frame = () => {
+      const diff = target - shown;
+      if (Math.abs(diff) < 0.0004) {
+        shown = target;
+        apply(shown);
+        raf = 0;
+        return;
+      }
+      // Damping factor: higher = snappier, lower = more glide.
+      shown += diff * 0.18;
+      apply(shown);
+      raf = requestAnimationFrame(frame);
+    };
+
+    const onScroll = () => {
+      target = scrollProgress();
+      if (!raf) raf = requestAnimationFrame(frame);
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+  })();
+</script>

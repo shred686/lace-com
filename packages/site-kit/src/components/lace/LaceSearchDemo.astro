@@ -1,51 +1,91 @@
 ---
 /**
- * Live enterprise-search demo panel: types queries, streams permission-aware
- * results. Used in the home hero and on the enterprise-search platform page.
+ * Live enterprise-search demo: a product window that types queries, streams
+ * permission-aware results with real source marks and evidence snippets,
+ * then lands a grounded answer with its citation.
+ * Used on the home page and the enterprise-search platform page.
  * Styles are global (lp-search-*) because rows are re-created by JS.
  */
+
+/* Simplified official source marks. */
+const sourceLogos: Record<string, string> = {
+  sharepoint: `<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9.5" cy="9" r="7" fill="#036C70"/><circle cx="16.5" cy="12.5" r="5.4" fill="#1A9BA1"/><circle cx="11.5" cy="17.5" r="4.2" fill="#37C6D0"/></svg>`,
+  slack: `<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#E01E5A" d="M5.042 15.165a2.528 2.528 0 0 1-2.52 2.523A2.528 2.528 0 0 1 0 15.165a2.527 2.527 0 0 1 2.522-2.52h2.52v2.52zM6.313 15.165a2.527 2.527 0 0 1 2.521-2.52 2.527 2.527 0 0 1 2.521 2.52v6.313A2.528 2.528 0 0 1 8.834 24a2.528 2.528 0 0 1-2.521-2.522v-6.313z"/><path fill="#36C5F0" d="M8.834 5.042a2.528 2.528 0 0 1-2.521-2.52A2.528 2.528 0 0 1 8.834 0a2.528 2.528 0 0 1 2.521 2.522v2.52H8.834zM8.834 6.313a2.528 2.528 0 0 1 2.521 2.521 2.528 2.528 0 0 1-2.521 2.521H2.522A2.528 2.528 0 0 1 0 8.834a2.528 2.528 0 0 1 2.522-2.521h6.312z"/><path fill="#2EB67D" d="M18.956 8.834a2.528 2.528 0 0 1 2.522-2.521A2.528 2.528 0 0 1 24 8.834a2.528 2.528 0 0 1-2.522 2.521h-2.522V8.834zM17.688 8.834a2.528 2.528 0 0 1-2.523 2.521 2.527 2.527 0 0 1-2.52-2.521V2.522A2.527 2.527 0 0 1 15.165 0a2.528 2.528 0 0 1 2.523 2.522v6.312z"/><path fill="#ECB22E" d="M15.165 18.956a2.528 2.528 0 0 1 2.523 2.522A2.528 2.528 0 0 1 15.165 24a2.527 2.527 0 0 1-2.52-2.522v-2.522h2.52zM15.165 17.688a2.527 2.527 0 0 1-2.52-2.523 2.526 2.526 0 0 1 2.52-2.52h6.313A2.527 2.527 0 0 1 24 15.165a2.528 2.528 0 0 1-2.522 2.523h-6.313z"/></svg>`,
+  xls: `<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="2.5" width="18" height="19" rx="2" fill="#1D6F42"/><path fill="#fff" d="M8.3 7.5h2.4l1.5 2.7 1.5-2.7h2.4l-2.7 4.4 2.8 4.6h-2.4L12 13.6l-1.7 2.9H7.9l2.8-4.6z"/></svg>`,
+  kg: `<svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><circle cx="9" cy="9" r="3" fill="#00A882"/><circle cx="9" cy="9" r="6.5" stroke="#00A882" stroke-width="0.9" opacity="0.5"/><circle cx="9" cy="9" r="8.4" stroke="#00A882" stroke-width="0.5" opacity="0.22"/></svg>`,
+  gdrive: `<svg viewBox="0 0 24 22" aria-hidden="true"><path fill="#00AC47" d="M8.1 0 0 14.4l4.05 7.2 8.1-14.4z"/><path fill="#FFBA00" d="M8.1 0h7.8L24 14.4h-7.8z"/><path fill="#2684FC" d="M4.05 21.6h15.9L24 14.4H8.1z"/></svg>`,
+  onedrive: `<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#0364B8" d="M19.35 10.54A7.49 7.49 0 0 0 12 4.5a7.5 7.5 0 0 0-6.96 4.76A6 6 0 0 0 6 21.5h13a5 5 0 0 0 .35-9.96z"/></svg>`,
+  gmail: `<svg viewBox="0 0 24 18" aria-hidden="true"><path fill="#4285F4" d="M1.636 18H5.4V8.864L0 4.815v11.549C0 17.268.732 18 1.636 18z"/><path fill="#34A853" d="M18.6 18h3.764c.904 0 1.636-.732 1.636-1.636V4.815l-5.4 4.049z"/><path fill="#FBBC04" d="M18.6 1.636v7.228l5.4-4.049V2.454c0-2.023-2.309-3.178-3.927-1.964z"/><path fill="#EA4335" d="M5.4 8.864V1.636L12 6.586l6.6-4.95v7.228L12 13.814z"/><path fill="#C5221F" d="M0 2.454v2.361l5.4 4.049V1.636L3.927.49C2.309-.724 0 .431 0 2.454z"/></svg>`,
+  postgres: `<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#336791" d="M4 6.2v11.6C4 19.6 7.6 21 12 21s8-1.4 8-3.2V6.2z"/><ellipse cx="12" cy="6.2" rx="8" ry="3.2" fill="#4A80AA"/></svg>`,
+  notion: `<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.6" y="1.8" width="18.8" height="20.4" rx="2.2" fill="#fff" stroke="#37352F" stroke-width="1.1"/><path fill="#0b0b0b" d="M8.1 17.3V7.2l1.9-.15 4.4 7V7.5l2-.3v10l-2 .15-4.4-7v6.8z"/></svg>`,
+};
 ---
 
 <div class="lp-panel lp-search-panel">
-  <div class="lp-search-bar">
-    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <circle cx="10.5" cy="10.5" r="6.5" stroke="currentColor" stroke-width="1.6"></circle>
-      <path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="1.6"></path>
-    </svg>
-    <span class="lp-search-query">renewal terms for the Meridian contract</span>
-    <span class="lp-search-caret"></span>
-    <span class="lp-search-scope" aria-hidden="true">All sources</span>
+  <div class="lp-search-winbar" aria-hidden="true">
+    <i></i><i></i><i></i>
+    <span>search.lace — all sources</span>
   </div>
-  <div class="lp-search-results">
-    <div class="lp-search-row is-in">
-      <span class="lp-search-badge">PDF</span>
-      <div>
-        <strong>MSA-2024 — Master Service Agreement</strong>
-        <em>§4.2 Renewal · SharePoint / Legal</em>
-      </div>
-      <span class="lp-search-score" style="--score: 96%"></span>
-    </div>
-    <div class="lp-search-row is-in">
-      <span class="lp-search-badge">SLACK</span>
-      <div>
-        <strong>#meridian-risk — “flagging the auto-renewal date…”</strong>
-        <em>Risk thread · 12 messages</em>
-      </div>
-      <span class="lp-search-score" style="--score: 84%"></span>
-    </div>
-    <div class="lp-search-row lp-search-locked is-in">
-      <span class="lp-search-badge">XLS</span>
-      <div>
-        <strong>Pricing model (restricted)</strong>
-        <em>Hidden — this user doesn't have access</em>
-      </div>
+
+  <div class="lp-search-inner">
+    <div class="lp-search-bar">
       <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <rect x="5" y="10" width="14" height="10" stroke="currentColor" stroke-width="1.5"></rect>
-        <path d="M8 10V7a4 4 0 018 0v3" stroke="currentColor" stroke-width="1.5"></path>
+        <circle cx="10.5" cy="10.5" r="6.5" stroke="currentColor" stroke-width="1.6"></circle>
+        <path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="1.6"></path>
       </svg>
+      <span class="lp-search-query">renewal terms for the Meridian contract</span>
+      <span class="lp-search-caret"></span>
+      <span class="lp-search-scope" aria-hidden="true">All sources</span>
     </div>
+
+    <div class="lp-search-results">
+      <div class="lp-search-row is-in">
+        <span class="lp-search-logo" set:html={sourceLogos.sharepoint} />
+        <div>
+          <span class="lp-search-head">
+            <strong>MSA-2024 — Master Service Agreement</strong>
+            <em>SharePoint / Legal</em>
+          </span>
+          <p>“…renews automatically on <mark>January 15, 2027</mark>, unless either party provides written notice…”</p>
+        </div>
+      </div>
+      <div class="lp-search-row is-in">
+        <span class="lp-search-logo" set:html={sourceLogos.slack} />
+        <div>
+          <span class="lp-search-head">
+            <strong>#meridian-risk</strong>
+            <em>Slack · 12 messages</em>
+          </span>
+          <p>“heads up — the <mark>auto-renewal</mark> lands before Q3 close, legal should review”</p>
+        </div>
+      </div>
+      <div class="lp-search-row lp-search-locked is-in">
+        <span class="lp-search-logo" set:html={sourceLogos.xls} />
+        <div>
+          <span class="lp-search-head">
+            <strong>Pricing model (restricted)</strong>
+            <em>Excel / Finance</em>
+          </span>
+          <p>Hidden — you don't have access to this source.</p>
+        </div>
+        <svg class="lp-search-lock" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <rect x="5" y="10" width="14" height="10" stroke="currentColor" stroke-width="1.5"></rect>
+          <path d="M8 10V7a4 4 0 018 0v3" stroke="currentColor" stroke-width="1.5"></path>
+        </svg>
+      </div>
+    </div>
+
+    <div class="lp-search-answer is-in">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"></circle>
+        <path d="M8 12.2l2.6 2.6L16 9.6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+      <p class="lp-search-answer-text">Renews <b>Jan 15, 2027</b> · 90-day written notice</p>
+      <i class="lp-search-cite">MSA §4.2</i>
+    </div>
+
+    <div class="lp-panel-caption">One query · permissions enforced at the moment of use</div>
   </div>
-  <div class="lp-panel-caption">One query · permissions enforced at the moment of use</div>
 </div>
 
 <style is:global>
@@ -53,16 +93,48 @@
      document.createElement, which never receive the scoping attribute. */
   .lp-search-panel {
     position: relative;
-    padding: clamp(1.1rem, 2.2vw, 1.7rem);
+    padding: 0;
+    overflow: hidden;
     background: #ffffff;
     border: 1px solid var(--lp-line);
-    border-radius: var(--lp-radius-lg);
-    box-shadow: var(--lp-shadow-lg);
+    border-radius: 10px;
+    box-shadow: 0 26px 60px -24px rgba(15, 30, 26, 0.3);
     text-align: left;
   }
 
+  .lp-search-winbar {
+    display: flex;
+    align-items: center;
+    gap: 0.38rem;
+    padding: 0.55rem 0.9rem;
+    border-bottom: 1px solid var(--lp-line-soft);
+    background: #f6f7f8;
+  }
+
+  .lp-search-winbar i {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 50%;
+  }
+
+  .lp-search-winbar i:nth-child(1) { background: #f57d72; }
+  .lp-search-winbar i:nth-child(2) { background: #f5c94e; }
+  .lp-search-winbar i:nth-child(3) { background: #55ca77; }
+
+  .lp-search-winbar span {
+    margin-inline: auto;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.08em;
+    color: var(--lp-faint);
+  }
+
+  .lp-search-inner {
+    padding: clamp(1rem, 2.2vw, 1.5rem);
+  }
+
   .lp-search-panel .lp-panel-caption {
-    margin-top: 1rem;
+    margin-top: 0.95rem;
     font-family: "Space Grotesk", "JetBrains Mono", monospace;
     font-size: 0.6rem;
     letter-spacing: 0.1em;
@@ -131,8 +203,8 @@
 
   .lp-search-row {
     display: flex;
-    align-items: center;
-    gap: 0.8rem;
+    align-items: flex-start;
+    gap: 0.75rem;
     padding: 0.72rem 0.85rem;
     border: 1px solid var(--lp-line-soft);
     border-radius: var(--lp-radius);
@@ -152,25 +224,33 @@
     transform: translateY(-6px);
   }
 
-  .lp-search-badge {
+  .lp-search-logo {
     flex: none;
-    padding: 0.24rem 0.45rem;
-    border: 1px solid rgba(var(--lp-green-rgb), 0.35);
-    border-radius: var(--lp-radius);
-    font-family: "JetBrains Mono", monospace;
-    font-size: 0.52rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    color: var(--lp-green-deep);
+    width: 1.05rem;
+    height: 1.05rem;
+    margin-top: 0.1rem;
+  }
+
+  .lp-search-logo svg {
+    display: block;
+    width: 100%;
+    height: 100%;
   }
 
   .lp-search-row > div {
     min-width: 0;
     display: grid;
-    gap: 0.08rem;
+    gap: 0.22rem;
   }
 
-  .lp-search-row strong {
+  .lp-search-head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    min-width: 0;
+  }
+
+  .lp-search-head strong {
     font-size: 0.8rem;
     font-weight: 600;
     color: var(--lp-ink);
@@ -179,41 +259,104 @@
     text-overflow: ellipsis;
   }
 
-  .lp-search-row em {
-    font-style: normal;
-    font-size: 0.68rem;
-    color: var(--lp-faint);
-  }
-
-  .lp-search-score {
+  .lp-search-head em {
     flex: none;
-    margin-left: auto;
-    width: 3rem;
-    height: 3px;
-    border-radius: 2px;
-    background: rgba(13, 27, 22, 0.08);
-    position: relative;
-    overflow: hidden;
+    font-style: normal;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.56rem;
+    letter-spacing: 0.06em;
+    color: var(--lp-faint);
+    white-space: nowrap;
   }
 
-  .lp-search-score::after {
-    content: "";
-    position: absolute;
-    inset: 0 auto 0 0;
-    width: var(--score, 60%);
-    background: var(--lp-grad);
+  .lp-search-row p {
+    margin: 0;
+    font-size: 0.74rem;
+    line-height: 1.5;
+    color: var(--lp-muted);
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+  }
+
+  .lp-search-row mark {
+    padding: 0.04em 0.18em;
+    border-radius: 2px;
+    background: rgba(var(--lp-green-rgb), 0.16);
+    color: var(--lp-ink);
   }
 
   .lp-search-locked {
-    opacity: 0.65;
+    opacity: 0.62;
   }
 
-  .lp-search-locked svg {
+  .lp-search-lock {
     flex: none;
+    align-self: center;
     margin-left: auto;
     width: 1rem;
     height: 1rem;
     color: var(--lp-faint);
+  }
+
+  .lp-search-answer {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 0.55rem;
+    padding: 0.7rem 0.85rem;
+    border: 1px solid rgba(var(--lp-green-rgb), 0.45);
+    border-radius: var(--lp-radius);
+    background: linear-gradient(90deg, rgba(var(--lp-green-rgb), 0.07), transparent 75%);
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 360ms ease, transform 360ms ease;
+  }
+
+  .lp-search-answer.is-in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .lp-search-answer svg {
+    flex: none;
+    width: 1rem;
+    height: 1rem;
+    color: var(--lp-green-deep);
+  }
+
+  .lp-search-answer-text {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--lp-ink-soft);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .lp-search-answer-text b {
+    font-weight: 600;
+    color: var(--lp-ink);
+  }
+
+  .lp-search-cite {
+    flex: none;
+    margin-left: auto;
+    font-style: normal;
+    padding: 0.18rem 0.5rem;
+    border: 1px solid rgba(var(--lp-green-rgb), 0.4);
+    border-radius: var(--lp-radius);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.56rem;
+    color: var(--lp-green-deep);
+    white-space: nowrap;
+  }
+
+  @media (max-width: 560px) {
+    .lp-search-head em {
+      display: none;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -224,50 +367,85 @@
 </style>
 
 <script>
-  // Cycle typed queries with streaming results
+  // Cycle typed queries: stream permission-aware results, then land the
+  // grounded answer with its citation.
   (() => {
     const panel = document.querySelector(".lp-search-panel");
     if (!panel) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const queryEl = panel.querySelector<HTMLElement>(".lp-search-query");
+    const innerEl = panel.querySelector<HTMLElement>(".lp-search-inner");
     const resultsEl = panel.querySelector<HTMLElement>(".lp-search-results");
-    if (!queryEl || !resultsEl) return;
+    const answerEl = panel.querySelector<HTMLElement>(".lp-search-answer");
+    const answerText = panel.querySelector<HTMLElement>(".lp-search-answer-text");
+    const answerCite = panel.querySelector<HTMLElement>(".lp-search-cite");
+    if (!queryEl || !innerEl || !resultsEl || !answerEl || !answerText || !answerCite) return;
+
+    // Logos are cloned from the static rows so JS-built rows carry the same marks.
+    const logoTemplates = new Map<string, string>();
+    panel.querySelectorAll<HTMLElement>(".lp-search-logo").forEach((el, i) => {
+      logoTemplates.set(["sharepoint", "slack", "xls"][i] ?? String(i), el.innerHTML);
+    });
+
+    const extraLogos: Record<string, string> = {
+      kg: '<svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><circle cx="9" cy="9" r="3" fill="#00A882"/><circle cx="9" cy="9" r="6.5" stroke="#00A882" stroke-width="0.9" opacity="0.5"/><circle cx="9" cy="9" r="8.4" stroke="#00A882" stroke-width="0.5" opacity="0.22"/></svg>',
+      gdrive: '<svg viewBox="0 0 24 22" aria-hidden="true"><path fill="#00AC47" d="M8.1 0 0 14.4l4.05 7.2 8.1-14.4z"/><path fill="#FFBA00" d="M8.1 0h7.8L24 14.4h-7.8z"/><path fill="#2684FC" d="M4.05 21.6h15.9L24 14.4H8.1z"/></svg>',
+      onedrive: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#0364B8" d="M19.35 10.54A7.49 7.49 0 0 0 12 4.5a7.5 7.5 0 0 0-6.96 4.76A6 6 0 0 0 6 21.5h13a5 5 0 0 0 .35-9.96z"/></svg>',
+      gmail: '<svg viewBox="0 0 24 18" aria-hidden="true"><path fill="#4285F4" d="M1.636 18H5.4V8.864L0 4.815v11.549C0 17.268.732 18 1.636 18z"/><path fill="#34A853" d="M18.6 18h3.764c.904 0 1.636-.732 1.636-1.636V4.815l-5.4 4.049z"/><path fill="#FBBC04" d="M18.6 1.636v7.228l5.4-4.049V2.454c0-2.023-2.309-3.178-3.927-1.964z"/><path fill="#EA4335" d="M5.4 8.864V1.636L12 6.586l6.6-4.95v7.228L12 13.814z"/><path fill="#C5221F" d="M0 2.454v2.361l5.4 4.049V1.636L3.927.49C2.309-.724 0 .431 0 2.454z"/></svg>',
+      postgres: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#336791" d="M4 6.2v11.6C4 19.6 7.6 21 12 21s8-1.4 8-3.2V6.2z"/><ellipse cx="12" cy="6.2" rx="8" ry="3.2" fill="#4A80AA"/></svg>',
+      notion: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.6" y="1.8" width="18.8" height="20.4" rx="2.2" fill="#fff" stroke="#37352F" stroke-width="1.1"/><path fill="#0b0b0b" d="M8.1 17.3V7.2l1.9-.15 4.4 7V7.5l2-.3v10l-2 .15-4.4-7v6.8z"/></svg>',
+    };
+
+    const logoFor = (key: string) => logoTemplates.get(key) ?? extraLogos[key] ?? "";
 
     const lockSvg =
-      '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="5" y="10" width="14" height="10" stroke="currentColor" stroke-width="1.5"/><path d="M8 10V7a4 4 0 018 0v3" stroke="currentColor" stroke-width="1.5"/></svg>';
+      '<svg class="lp-search-lock" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="5" y="10" width="14" height="10" stroke="currentColor" stroke-width="1.5"/><path d="M8 10V7a4 4 0 018 0v3" stroke="currentColor" stroke-width="1.5"/></svg>';
 
     type Row = {
-      badge: string;
+      logo: string;
       title: string;
-      meta: string;
-      score?: number;
+      source: string;
+      snippet: string; // may contain <mark>
       locked?: boolean;
     };
 
-    const scenarios: { query: string; results: Row[] }[] = [
+    type Scenario = {
+      query: string;
+      results: Row[];
+      answer: string; // may contain <b>
+      cite: string;
+    };
+
+    const scenarios: Scenario[] = [
       {
         query: "renewal terms for the Meridian contract",
         results: [
-          { badge: "PDF", title: "MSA-2024 — Master Service Agreement", meta: "§4.2 Renewal · SharePoint / Legal", score: 96 },
-          { badge: "SLACK", title: "#meridian-risk — “flagging the auto-renewal date…”", meta: "Risk thread · 12 messages", score: 84 },
-          { badge: "XLS", title: "Pricing model (restricted)", meta: "Hidden — this user doesn't have access", locked: true },
+          { logo: "sharepoint", title: "MSA-2024 — Master Service Agreement", source: "SharePoint / Legal", snippet: "“…renews automatically on <mark>January 15, 2027</mark>, unless either party provides written notice…”" },
+          { logo: "slack", title: "#meridian-risk", source: "Slack · 12 messages", snippet: "“heads up — the <mark>auto-renewal</mark> lands before Q3 close, legal should review”" },
+          { logo: "xls", title: "Pricing model (restricted)", source: "Excel / Finance", snippet: "Hidden — you don't have access to this source.", locked: true },
         ],
+        answer: "Renews <b>Jan 15, 2027</b> · 90-day written notice",
+        cite: "MSA §4.2",
       },
       {
-        query: "which vendors touch customer data?",
+        query: "which vendors process customer data?",
         results: [
-          { badge: "KG", title: "Knowledge Graph — 7 vendors · data-processing clause", meta: "Relations: processes → customer_data", score: 97 },
-          { badge: "PDF", title: "DPA-Northwind-2025 — Data Processing Addendum", meta: "Exhibit B · Google Drive / Vendors", score: 89 },
-          { badge: "DB", title: "vendor_register — 214 rows matched", meta: "PostgreSQL · procurement schema", score: 78 },
+          { logo: "kg", title: "Knowledge graph — 7 vendors match", source: "processes → customer_data", snippet: "Northwind, Altus, Ferro + 4 more — each grounded in a signed DPA" },
+          { logo: "gdrive", title: "DPA-Northwind-2025 — Data Processing Addendum", source: "Drive / Vendors", snippet: "“…Processor shall process <mark>Customer Personal Data</mark> solely as set out in Exhibit B…”" },
+          { logo: "postgres", title: "vendor_register", source: "PostgreSQL · procurement", snippet: "214 rows · 7 flagged <mark>data_processor = true</mark>" },
         ],
+        answer: "<b>7 vendors</b> · each grounded in a signed DPA",
+        cite: "KG + 3 sources",
       },
       {
         query: "what did we commit to in the pilot SOW?",
         results: [
-          { badge: "PDF", title: "SOW-Pilot-Phase2 — Statement of Work", meta: "§3 Deliverables · OneDrive / Programs", score: 95 },
-          { badge: "MAIL", title: "RE: pilot scope confirmation — “agreed to 6 weeks…”", meta: "j.alvarez → programs · Email", score: 87 },
-          { badge: "WIKI", title: "Pilot program — commitments tracker", meta: "Updated 2 weeks ago · Program wiki", score: 74 },
+          { logo: "onedrive", title: "SOW-Pilot-Phase2 — Statement of Work", source: "OneDrive / Programs", snippet: "“…deliverables due within <mark>six (6) weeks</mark> of kickoff, with two review checkpoints…”" },
+          { logo: "gmail", title: "RE: pilot scope confirmation", source: "j.alvarez → programs", snippet: "“confirming we <mark>agreed to 6 weeks</mark> and the two checkpoints on the call”" },
+          { logo: "notion", title: "Pilot program — commitments tracker", source: "Notion · updated 2w ago", snippet: "Owner, due date, and status for each committed deliverable" },
         ],
+        answer: "<b>6-week delivery</b> · two review checkpoints",
+        cite: "SOW §3",
       },
     ];
 
@@ -276,24 +454,25 @@
     const buildRow = (row: Row) => {
       const el = document.createElement("div");
       el.className = "lp-search-row" + (row.locked ? " lp-search-locked" : "");
-      const badge = document.createElement("span");
-      badge.className = "lp-search-badge";
-      badge.textContent = row.badge;
+
+      const logo = document.createElement("span");
+      logo.className = "lp-search-logo";
+      logo.innerHTML = logoFor(row.logo);
+
       const body = document.createElement("div");
+      const head = document.createElement("span");
+      head.className = "lp-search-head";
       const title = document.createElement("strong");
       title.textContent = row.title;
-      const meta = document.createElement("em");
-      meta.textContent = row.meta;
-      body.append(title, meta);
-      el.append(badge, body);
-      if (row.locked) {
-        el.insertAdjacentHTML("beforeend", lockSvg);
-      } else {
-        const score = document.createElement("span");
-        score.className = "lp-search-score";
-        score.style.setProperty("--score", `${row.score}%`);
-        el.appendChild(score);
-      }
+      const source = document.createElement("em");
+      source.textContent = row.source;
+      head.append(title, source);
+      const snippet = document.createElement("p");
+      snippet.innerHTML = row.snippet;
+      body.append(head, snippet);
+
+      el.append(logo, body);
+      if (row.locked) el.insertAdjacentHTML("beforeend", lockSvg);
       return el;
     };
 
@@ -302,16 +481,17 @@
       if (running) return;
       running = true;
 
-      // Freeze the results area at its rendered height. The clear → retype →
-      // stream cycle would otherwise shrink the document every few seconds,
-      // making the page scroll-jump for anyone reading below the demo.
-      resultsEl.style.minHeight = `${resultsEl.offsetHeight}px`;
+      // Freeze the demo at its rendered height. The clear → retype → stream
+      // cycle would otherwise shrink the document every few seconds, making
+      // the page scroll-jump for anyone reading below the demo.
+      innerEl.style.minHeight = `${innerEl.offsetHeight}px`;
 
       let index = 1; // static markup shows scenario 0
 
       while (true) {
-        await sleep(3600);
+        await sleep(4200);
 
+        answerEl.classList.remove("is-in");
         resultsEl.classList.add("is-clearing");
         await sleep(360);
         resultsEl.innerHTML = "";
@@ -338,6 +518,11 @@
           );
           await sleep(260);
         }
+
+        await sleep(350);
+        answerText.innerHTML = scenario.answer;
+        answerCite.textContent = scenario.cite;
+        answerEl.classList.add("is-in");
 
         index = (index + 1) % scenarios.length;
       }

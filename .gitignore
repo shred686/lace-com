@@ -2,6 +2,7 @@ node_modules/
 dist/
 .astro/
 .DS_Store
+venv/
 *.log
 npm-debug.log*
 yarn-debug.log*

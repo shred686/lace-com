@@ -109,7 +109,9 @@ const applications = [
             <a href="/applications#built-on-lace">Built on LACE</a>
             {applications.map((item) => <a href={item.href}>{item.title}</a>)}
             <em>Customers</em>
-            <a href="/customers">Customer stories</a>
+            {/* Customer stories temporarily disabled — route off until real stories are cleared. */}
+            {/* <a href="/customers">Customer stories</a> */}
+            <span class="lp-nav-acc-soon">Customer stories — coming soon</span>
           </div>
         </details>
 
@@ -227,6 +229,10 @@ const applications = [
 
       <div class="lp-mega-col lp-mega-col-story">
         <p class="lp-mega-label">Customer Stories</p>
+        {/* Customer stories temporarily disabled — the /customers route is off
+            (src/pages/_customers.astro) until we have real, cleared stories.
+            Restore the two anchors below and re-enable the route to bring back. */}
+        {/*
         <a href="/customers#federal" class="lp-mega-story">
           <span class="lp-mega-story-top">
             <span class="lp-mega-story-pill">Customer story</span>
@@ -248,6 +254,11 @@ const applications = [
             <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.4"></path>
           </svg>
         </a>
+        */}
+        <div class="lp-mega-soon">
+          <span class="lp-mega-story-pill">Coming soon</span>
+          <span class="lp-mega-soon-copy">Customer stories are on the way.</span>
+        </div>
       </div>
     </div>
   </div>

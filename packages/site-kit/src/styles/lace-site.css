@@ -744,6 +744,30 @@
   margin-top: 0.55rem;
 }
 
+/* Coming-soon placeholder (customer stories temporarily disabled) */
+.lp-mega-soon {
+  display: block;
+  padding: 1.1rem 1.2rem 1.2rem;
+  border: 1px dashed rgba(var(--lp-green-rgb), 0.35);
+  border-radius: var(--lp-radius-lg);
+  background: rgba(var(--lp-green-rgb), 0.04);
+}
+
+.lp-mega-soon-copy {
+  display: block;
+  margin-top: 0.8rem;
+  font-family: "Space Grotesk", "JetBrains Mono", monospace;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--lp-faint);
+}
+
+.lp-nav-acc-soon,
+.lp-footer-soon {
+  color: var(--lp-faint);
+}
+
 .lp-mega-veil {
   position: fixed;
   inset: 0;

@@ -93,33 +93,12 @@ const editions = [
   </section>
 
   <div class="lp2-frame">
-    <!-- ── Connector strip ────────────────────────────────────────── -->
-    <div class="lp2-logos" aria-hidden="true">
-      <div class="lp-marquee lp2-marquee">
-        <div class="lp-mq-track">
-          {
-            [0, 1].map(() => (
-              <>
-                {connectors.map((connector) => (
-                  <span class="lp-mq-item">
-                    <span class="lp-mq-logo" set:html={brandLogos[connector.id]} />
-                    {connector.name}
-                  </span>
-                ))}
-              </>
-            ))
-          }
-        </div>
-      </div>
-    </div>
-
     <!-- ── Editorial ──────────────────────────────────────────────── -->
     <section class="lp2-editorial">
       <p data-r>
-        <strong>One platform. Four products.</strong>
-        Enterprise search, a knowledge graph, an agentic runtime, and an
-        app builder — built on your knowledge, bound by your rules,
-        recorded in one audit trail.
+        <strong>Put everything your company knows to work.</strong>
+        Find any answer. Trust every fact. Automate real work. Ship real
+        software — on one platform your security team will approve.
       </p>
     </section>
 
@@ -143,8 +122,8 @@ const editions = [
         <div class="lp2-cell">
           <div class="lp2-cell-copy" data-r>
             <p class="lp2-kicker"><b>02</b> Knowledge Graph</p>
-            <h2>Every fact, versioned in time.</h2>
-            <p>The graph records what's true and when you learned it. Query today's state — or any date before it.</p>
+            <h2>Your entire business, one living map.</h2>
+            <p>LACE reads your documents and maps what your company actually knows — every customer, contract, and commitment. Ask what you owe, what expires, what changed — and get the answer with the source attached.</p>
           </div>
           <div class="lp2-fragment lp2-win" data-r data-reveal-delay="100" aria-hidden="true">
             <div class="lp2-win-bar"><i></i><i></i><i></i><span>graph.lace — Meridian Corp</span></div>
@@ -184,8 +163,8 @@ const editions = [
         <div class="lp2-cell">
           <div class="lp2-cell-copy" data-r>
             <p class="lp2-kicker"><b>02</b> Knowledge Graph</p>
-            <h2>Conflicts surface. Nothing gets papered over.</h2>
-            <p>When sources disagree, both versions sit side by side with their evidence — routed to a person for a ruling.</p>
+            <h2>It catches what everyone missed.</h2>
+            <p>When two documents disagree on a fee, a date, an obligation — LACE surfaces it with the evidence, before it becomes a dispute. Your experts make the call; the graph remembers it.</p>
           </div>
           <div class="lp2-fragment lp2-win" data-r data-reveal-delay="100" aria-hidden="true">
             <div class="lp2-win-bar"><i></i><i></i><i></i><span>graph.lace — conflict review</span></div>
@@ -215,8 +194,8 @@ const editions = [
         <div class="lp2-cell">
           <div class="lp2-cell-copy" data-r>
             <p class="lp2-kicker"><b>03</b> Agentic Platform</p>
-            <h2>Agents that do real work, under real controls.</h2>
-            <p>Deployed with budgets, permissions, and approval gates. The risky step waits for a human — and every step is recorded.</p>
+            <h2>Job description in. AI teammate out.</h2>
+            <p>Describe the role in the Agent Studio — renewals watchdog, intake clerk, research analyst. LACE builds it with you, proves it against test scenarios, and puts it to work: on a budget, inside your permissions, with the risky step held for a human.</p>
           </div>
           <div class="lp2-fragment lp2-win" data-r data-reveal-delay="100" aria-hidden="true">
             <div class="lp2-win-bar"><i></i><i></i><i></i><span>agents.lace — contracts-intake · v12</span></div>
@@ -236,29 +215,112 @@ const editions = [
           <a class="lp2-cell-link" href="/platform/agents">Agentic Platform →</a>
         </div>
 
-        <!-- App builder -->
+        <!-- Channels -->
         <div class="lp2-cell">
           <div class="lp2-cell-copy" data-r>
-            <p class="lp2-kicker"><b>04</b> App Builder</p>
-            <h2>From prompt to production software.</h2>
-            <p>LACE plans, builds, verifies, and hosts the app — sign-in, database, releases, and rollback included.</p>
+            <p class="lp2-kicker"><b>03</b> Agentic Platform</p>
+            <h2>Everywhere your customers already are.</h2>
+            <p>One agent, every channel — web chat, Slack, Teams, email, SMS, WhatsApp, live voice. It answers from your verified knowledge, and hands off to a human the moment it should.</p>
           </div>
           <div class="lp2-fragment lp2-win" data-r data-reveal-delay="100" aria-hidden="true">
-            <div class="lp2-win-bar"><i></i><i></i><i></i><span>builder.lace — field-inventory</span></div>
+            <div class="lp2-win-bar"><i></i><i></i><i></i><span>agents.lace — support-desk · channels</span></div>
             <div class="lp2-win-body">
-              <div class="lp2-prompt"><b>&gt;</b> an inventory tracker for our field teams…</div>
-              <div class="lp2-buildsteps">
-                <span style="--d: 0s">Plan</span>
-                <span style="--d: 1.5s">Build</span>
-                <span style="--d: 3s">Verify</span>
-                <span style="--d: 4.5s">Publish</span>
+              <div class="lp2-chan-grid">
+                <span class="lp2-chan"><i class="lp2-chan-ic"><svg viewBox="0 0 24 24" fill="none"><path d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v7a2.5 2.5 0 0 1-2.5 2.5H9.4l-4 3.3c-.5.4-1.4 0-1.4-.7z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></i>Web chat</span>
+                <span class="lp2-chan"><i class="lp2-chan-ic" set:html={brandLogos.slack} />Slack</span>
+                <span class="lp2-chan"><i class="lp2-chan-ic" set:html={brandLogos.teams} />Teams</span>
+                <span class="lp2-chan"><i class="lp2-chan-ic" set:html={brandLogos.gmail} />Email</span>
+                <span class="lp2-chan"><i class="lp2-chan-ic"><svg viewBox="0 0 24 24" fill="none"><rect x="7" y="3" width="10" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="17.4" r="0.9" fill="currentColor"/></svg></i>SMS</span>
+                <span class="lp2-chan"><i class="lp2-chan-ic"><svg viewBox="0 0 24 24"><path fill="#25D366" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2z"/><path fill="#fff" d="M8.6 7.8c.2-.5.4-.5.6-.5h.5c.2 0 .4 0 .6.4l.8 2c.1.2.1.4-.1.6l-.5.6c-.1.2-.2.4 0 .6a7 7 0 0 0 2.9 2.9c.3.1.4.1.6-.1l.5-.5c.2-.2.4-.2.6-.1l2 .8c.4.2.4.4.4.6v.5c0 .2 0 .5-.5.6-.4.2-1 .3-1.7.2a8.4 8.4 0 0 1-6.9-6.8c-.1-.7 0-1.4.2-1.8z"/></svg></i>WhatsApp</span>
+                <span class="lp2-chan"><i class="lp2-chan-ic"><svg viewBox="0 0 24 24" fill="none"><path d="M4 10v4M8 7v10M12 4v16M16 7v10M20 10v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></i>Voice</span>
+                <span class="lp2-chan"><i class="lp2-chan-ic"><svg viewBox="0 0 24 24" fill="none"><path d="M9 4.5 4 12l5 7.5M15 4.5 20 12l-5 7.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></i>API</span>
               </div>
-              <div class="lp2-liveurl">
-                <i></i> inventory.acme-field.app <b>LIVE</b>
+              <div class="lp2-handoff">
+                <i></i> Escalated to Sarah M. — transcript and sources attached
               </div>
             </div>
           </div>
-          <a class="lp2-cell-link" href="/platform/app-builder">App Builder →</a>
+          <a class="lp2-cell-link" href="/platform/agents">Deployment channels →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Connector strip ────────────────────────────────────────── -->
+    <div class="lp2-logos" aria-hidden="true">
+      <div class="lp-marquee lp2-marquee">
+        <div class="lp-mq-track">
+          {
+            [0, 1].map(() => (
+              <>
+                {connectors.map((connector) => (
+                  <span class="lp-mq-item">
+                    <span class="lp-mq-logo" set:html={brandLogos[connector.id]} />
+                    {connector.name}
+                  </span>
+                ))}
+              </>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 04 App Builder: prompt → production ────────────────────── -->
+    <section class="lp2-appbuild">
+      <div class="lp2-appbuild-copy" data-r>
+        <p class="lp2-kicker"><b>04</b> App Builder</p>
+        <h2>Describe it. <span class="lp-accent">It's software.</span></h2>
+        <p class="lp2-appbuild-lead">The tool your team keeps wishing for — described in a sentence, live at a real URL in minutes. Pages, portals, and full applications, with sign-in, database, releases, and rollback handled for you.</p>
+      </div>
+      <div class="lp2-appbuild-demo lp2-fragment lp2-win" data-r data-reveal-delay="120" aria-hidden="true">
+        <div class="lp2-win-bar"><i></i><i></i><i></i><span>builder.lace — field-inventory</span></div>
+        <div class="lp2-win-body">
+          <div class="lp2-prompt"><b>&gt;</b> an inventory tracker for our field teams…</div>
+          <div class="lp2-buildsteps">
+            <span style="--d: 0s">Plan</span>
+            <span style="--d: 1.5s">Build</span>
+            <span style="--d: 3s">Verify</span>
+            <span style="--d: 4.5s">Publish</span>
+          </div>
+          <div class="lp2-liveurl">
+            <i></i> inventory.acme-field.app <b>LIVE</b>
+          </div>
+        </div>
+      </div>
+      <a class="lp2-cell-link" href="/platform/app-builder">App Builder →</a>
+    </section>
+
+    <!-- ── 04b App Builder: launch a business ─────────────────────── -->
+    <section class="lp2-saas">
+      <div class="lp2-saas-copy" data-r>
+        <p class="lp2-kicker"><b>04</b> App Builder · Launch</p>
+        <h2>Your SaaS idea. <span class="lp-accent">Live. Selling.</span></h2>
+        <p>Build the product — and the business around it. Subscriptions and billing are built in, hosting scales as you grow, and LACE handles the launch checklist down to the domain and the entity. From idea to real revenue, on one platform.</p>
+        <ul class="lp2-saas-list">
+          <li>Subscriptions &amp; billing built in</li>
+          <li>Cloud hosting that scales automatically</li>
+          <li>Your domain, registered</li>
+          <li>Your company, formed</li>
+        </ul>
+        <a class="lp2-cell-link" href="/platform/app-builder">Launch on LACE →</a>
+      </div>
+      <div class="lp2-saas-visual" data-r data-reveal-delay="140" aria-hidden="true">
+        <div class="lp2-win lp2-saas-win">
+          <div class="lp2-win-bar"><i></i><i></i><i></i><span>billing.lace — flowlane.app</span></div>
+          <div class="lp2-win-body">
+            <div class="lp2-mrr">
+              <em>Monthly recurring revenue</em>
+              <span><strong>$4,280</strong><b>↑ 18% this month</b></span>
+            </div>
+            <div class="lp2-spark">
+              <i style="--h: 18%; --sd: 0ms"></i><i style="--h: 24%; --sd: 60ms"></i><i style="--h: 21%; --sd: 120ms"></i><i style="--h: 30%; --sd: 180ms"></i><i style="--h: 36%; --sd: 240ms"></i><i style="--h: 33%; --sd: 300ms"></i><i style="--h: 44%; --sd: 360ms"></i><i style="--h: 52%; --sd: 420ms"></i><i style="--h: 49%; --sd: 480ms"></i><i style="--h: 62%; --sd: 540ms"></i><i style="--h: 74%; --sd: 600ms"></i><i style="--h: 88%; --sd: 660ms"></i>
+            </div>
+            <div class="lp2-plan-row"><span>Starter · $19/mo</span><b>84 subscribers</b></div>
+            <div class="lp2-plan-row"><span>Pro · $49/mo</span><b>45 subscribers</b></div>
+            <div class="lp2-liveurl">
+              <i></i> Payout · $3,905 → business checking <b>FRI</b>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -267,9 +329,9 @@ const editions = [
     <section class="lp2-gov">
       <div class="lp2-gov-copy" data-r>
         <p>
-          <strong>Probabilistic AI.<br />Deterministic control.</strong>
-          Model output is a proposal — validation, policy, and approvals
-          decide what's applied. The audit trail records all of it.
+          <strong>AI your risk team<br />will sign off on.</strong>
+          Every answer cites its source. Every action passes policy. The
+          risky step waits for a person — and the record proves all of it.
         </p>
         <div class="lp2-gov-tags">
           <span>Provenance</span><span>Permissions</span><span>Budgets</span><span>Approvals</span><span>Audit</span>
@@ -280,41 +342,34 @@ const editions = [
         <div class="lp2-run">
           <div class="lp2-runrow" style="--rd2: 0s">
             <i class="lp2-runmark"></i>
-            <span><em>Propose</em><strong>The model drafts an output</strong></span>
+            <span><em>Propose</em><strong>AI drafts the work</strong></span>
           </div>
           <div class="lp2-runrow" style="--rd2: 1.2s">
             <i class="lp2-runmark"></i>
-            <span><em>Validate</em><strong>Citations verified · schema passes</strong></span>
+            <span><em>Validate</em><strong>Sources verified · policy applied</strong></span>
           </div>
           <div class="lp2-runrow" style="--rd2: 2.4s">
             <i class="lp2-runmark"></i>
-            <span><em>Approve</em><strong>A human signs off — on the record</strong></span>
+            <span><em>Approve</em><strong>A person signs off — on the record</strong></span>
           </div>
           <div class="lp2-runrow" style="--rd2: 3.6s">
             <i class="lp2-runmark"></i>
-            <span><em>Apply</em><strong>One controlled write · fully attributed</strong></span>
+            <span><em>Apply</em><strong>It ships · fully attributed</strong></span>
           </div>
         </div>
       </div>
-    </section>
-
-    <!-- ── Stats ──────────────────────────────────────────────────── -->
-    <section class="lp2-stats" data-r>
-      <div><strong>4</strong><span>Products, one substrate</span></div>
-      <div><strong class="lp-accent">1</strong><span>Audit trail across everything</span></div>
-      <div><strong>0</strong><span>External AI calls required</span></div>
     </section>
 
     <!-- ── Built on LACE ──────────────────────────────────────────── -->
     <section class="lp2-editions">
       <div class="lp2-editions-head" data-r>
         <h2>Built <span class="lp-accent">on LACE.</span></h2>
-        <p>Industry editions built and operated on the platform.</p>
+        <p>Complete industry products, built and operated on the platform. Start from the one made for your world.</p>
       </div>
       <div class="lp2-editions-grid">
         {
           editions.map((edition, i) => (
-            <a href={edition.href} data-r data-reveal-delay={String(i * 90)}>
+            <a href={edition.href} data-idx={`0${i + 1}`} data-r data-reveal-delay={String(i * 90)}>
               <em>{edition.market}</em>
               <strong>{edition.name}</strong>
               <span>{edition.line}</span>
@@ -327,26 +382,34 @@ const editions = [
 
     <!-- ── Deploy ─────────────────────────────────────────────────── -->
     <section class="lp2-deploy">
-      <div data-r>
+      <div class="lp2-deploy-head" data-r>
         <h2>Runs where <span class="lp-accent">you run.</span></h2>
-        <p>Fully air-gapped if needed. No external AI calls.</p>
+        <p>Cloud, your VPC, your own racks — or fully air-gapped with zero external AI calls. Your data never has to leave home.</p>
       </div>
-      <div class="lp2-deploy-tiles" data-r data-reveal-delay="100" aria-hidden="true">
-        <div class="lp2-deploy-tile">
+      <div class="lp2-rings" data-r data-reveal-delay="120" aria-hidden="true">
+        <i class="lp2-ring lp2-ring-1"></i>
+        <i class="lp2-ring lp2-ring-2"></i>
+        <i class="lp2-ring lp2-ring-3"></i>
+        <i class="lp2-ring lp2-ring-4"></i>
+        <div class="lp2-ring-chip lp2-chip-cloud">
           <svg viewBox="0 0 24 24" fill="none"><path d="M7 18a4.5 4.5 0 1 1 .66-8.95A6 6 0 0 1 19.35 10.6 3.75 3.75 0 0 1 18.25 18z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
-          <span><strong>Cloud</strong><em>Fastest start</em></span>
+          <strong>Cloud</strong><em>Fastest start</em>
         </div>
-        <div class="lp2-deploy-tile">
+        <div class="lp2-ring-chip lp2-chip-vpc">
           <svg viewBox="0 0 24 24" fill="none"><path d="M12 3.5l7 2.8v5.2c0 4.1-2.9 7-7 8.9-4.1-1.9-7-4.8-7-8.9V6.3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M9.2 11.8l2 2 3.6-3.8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <span><strong>Private Cloud</strong><em>Your VPC</em></span>
+          <strong>Private Cloud</strong><em>Your VPC</em>
         </div>
-        <div class="lp2-deploy-tile">
+        <div class="lp2-ring-chip lp2-chip-onprem">
           <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4.5" width="16" height="6" rx="1.2" stroke="currentColor" stroke-width="1.5"/><rect x="4" y="13.5" width="16" height="6" rx="1.2" stroke="currentColor" stroke-width="1.5"/><circle cx="8" cy="7.5" r="1" fill="currentColor"/><circle cx="8" cy="16.5" r="1" fill="currentColor"/></svg>
-          <span><strong>On-Premises</strong><em>Your hardware</em></span>
+          <strong>On-Premises</strong><em>Your hardware</em>
         </div>
-        <div class="lp2-deploy-tile lp2-deploy-air">
+        <div class="lp2-ring-chip lp2-chip-air">
           <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.2" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2.6 3"/><circle cx="12" cy="12" r="2.6" fill="currentColor"/></svg>
-          <span><strong>Air-Gapped</strong><em>Zero external calls</em></span>
+          <strong>Air-Gapped</strong><em>Zero external calls</em>
+        </div>
+        <div class="lp2-ring-core">
+          <i class="lp2-ring-dot"></i>
+          <em>Your data</em>
         </div>
       </div>
     </section>
@@ -769,7 +832,9 @@ const editions = [
     color: var(--lp-muted);
   }
 
-  .lp2-cell-copy .lp2-kicker {
+  .lp2-cell-copy .lp2-kicker,
+  .lp2-appbuild-copy .lp2-kicker,
+  .lp2-saas-copy .lp2-kicker {
     margin: 0 0 0.8rem;
     font-family: "JetBrains Mono", monospace;
     font-size: 0.6rem;
@@ -779,10 +844,22 @@ const editions = [
     color: var(--lp-faint);
   }
 
-  .lp2-cell-copy .lp2-kicker b {
+  .lp2-cell-copy .lp2-kicker b,
+  .lp2-appbuild-copy .lp2-kicker b,
+  .lp2-saas-copy .lp2-kicker b {
     margin-right: 0.4rem;
     font-weight: 600;
     color: var(--lp-green-deep);
+  }
+
+  .lp2-appbuild-copy .lp2-kicker {
+    margin-bottom: 1.1rem;
+    font-size: 0.64rem;
+  }
+
+  .lp2-saas-copy .lp2-kicker {
+    margin-bottom: 1.1rem;
+    font-size: 0.64rem;
   }
 
   .lp2-cell-demo {
@@ -1353,61 +1430,319 @@ const editions = [
     color: var(--lp-ink-soft);
   }
 
-  /* ═══ Stats ═════════════════════════════════════════════════════ */
-  .lp2-stats {
+  /* ═══ Channels fragment ═════════════════════════════════════════ */
+  .lp2-chan-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.45rem;
   }
 
-  .lp2-stats > div {
-    padding: clamp(2.2rem, 4.5vw, 3.4rem) 1rem;
+  .lp2-chan {
+    display: grid;
+    justify-items: center;
+    gap: 0.34rem;
+    padding: 0.62rem 0.3rem 0.55rem;
+    border: 1px solid var(--lp-line-soft);
+    border-radius: var(--lp-radius);
+    background: #fdfefe;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.54rem;
+    letter-spacing: 0.04em;
+    color: var(--lp-ink-soft);
+  }
+
+  .lp2-chan-ic {
+    display: grid;
+    place-items: center;
+    width: 1.05rem;
+    height: 1.05rem;
+    font-style: normal;
+    color: var(--lp-green-deep);
+  }
+
+  .lp2-chan-ic :global(svg) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .lp2-handoff {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.6rem 0.85rem;
+    border: 1px solid rgba(var(--lp-green-rgb), 0.45);
+    border-radius: var(--lp-radius-lg);
+    background: rgba(var(--lp-green-rgb), 0.06);
+    font-size: 0.74rem;
+    font-weight: 500;
+    color: var(--lp-ink-soft);
+  }
+
+  .lp2-handoff i {
+    flex: none;
+    width: 0.42rem;
+    height: 0.42rem;
+    border-radius: 50%;
+    background: var(--lp-green);
+    animation: lp2-blink 2s ease-in-out infinite;
+  }
+
+  /* ═══ App Builder: prompt → production ══════════════════════════ */
+  .lp2-appbuild {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(2.2rem, 4vw, 3.2rem);
+    min-height: min(94svh, 900px);
+    padding: clamp(4rem, 8vw, 6.5rem) clamp(1.2rem, 3.5vw, 3.2rem);
     text-align: center;
+    background:
+      radial-gradient(46rem 20rem at 50% 8%, rgba(var(--lp-green-rgb), 0.05), transparent 62%);
   }
 
-  .lp2-stats > div + div {
+  .lp2-appbuild-copy h2 {
+    margin: 0 0 1.1rem;
+    font-size: clamp(2.1rem, 4.6vw, 3.6rem);
+  }
+
+  .lp2-appbuild-lead {
+    max-width: 56ch;
+    margin: 0 auto;
+    font-size: clamp(1rem, 1.4vw, 1.15rem);
+    line-height: 1.65;
+    color: var(--lp-muted);
+    text-wrap: balance;
+  }
+
+  .lp2-appbuild .lp2-fragment {
+    width: min(760px, 100%);
+    margin-block: 0;
+  }
+
+  .lp2-appbuild .lp2-win-body {
+    gap: 0.85rem;
+    padding: clamp(1.1rem, 2.4vw, 1.5rem);
+  }
+
+  .lp2-appbuild .lp2-prompt {
+    padding: 0.9rem 1.05rem;
+    font-size: 0.85rem;
+  }
+
+  .lp2-appbuild .lp2-buildsteps span {
+    padding: 0.6rem 0.5rem 0.6rem 1.5rem;
+    font-size: 0.64rem;
+  }
+
+  .lp2-appbuild .lp2-buildsteps span::before {
+    left: 0.6rem;
+  }
+
+  .lp2-appbuild .lp2-liveurl {
+    padding: 0.8rem 1.05rem;
+    font-size: 0.85rem;
+  }
+
+  .lp2-appbuild > .lp2-cell-link {
+    align-self: center;
+    margin-top: 0;
+  }
+
+  /* ═══ App Builder: launch a business ════════════════════════════ */
+  .lp2-saas {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    min-height: min(90svh, 860px);
+  }
+
+  .lp2-saas-copy {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: clamp(3rem, 6vw, 5rem) clamp(1.2rem, 3.5vw, 3.2rem);
+  }
+
+  .lp2-saas-copy h2 {
+    margin: 0 0 1rem;
+    font-size: clamp(1.9rem, 3.6vw, 3rem);
+  }
+
+  .lp2-saas-copy > p {
+    max-width: 46ch;
+    margin: 0;
+    font-size: clamp(0.98rem, 1.3vw, 1.08rem);
+    line-height: 1.65;
+    color: var(--lp-muted);
+  }
+
+  .lp2-saas-list {
+    display: grid;
+    gap: 0.7rem;
+    margin: 1.9rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .lp2-saas-list li {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    font-size: 0.94rem;
+    font-weight: 500;
+    color: var(--lp-ink-soft);
+  }
+
+  .lp2-saas-list li::before {
+    content: "✓";
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 1.2rem;
+    height: 1.2rem;
+    border: 1px solid rgba(var(--lp-green-rgb), 0.5);
+    border-radius: 50%;
+    font-size: 0.6rem;
+    color: var(--lp-green-deep);
+  }
+
+  .lp2-saas-copy .lp2-cell-link {
+    margin-top: 2.2rem;
+  }
+
+  .lp2-saas-visual {
+    display: grid;
+    place-items: center;
+    padding: clamp(3rem, 6vw, 5rem) clamp(1.2rem, 3.5vw, 3.2rem);
     border-left: 1px solid var(--hair);
   }
 
-  .lp2-stats strong {
-    display: block;
+  .lp2-saas-win {
+    width: min(460px, 100%);
+  }
+
+  .lp2-mrr {
+    display: grid;
+    gap: 0.3rem;
+    padding: 0.85rem 0.95rem 0.7rem;
+    border: 1px solid var(--lp-line);
+    border-radius: var(--lp-radius-lg);
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom: 0;
+    background: #ffffff;
+  }
+
+  .lp2-mrr em {
+    font-style: normal;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.54rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--lp-faint);
+  }
+
+  .lp2-mrr span {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+  }
+
+  .lp2-mrr strong {
     font-family: "Space Grotesk", sans-serif;
-    font-size: clamp(2.4rem, 5.5vw, 4rem);
+    font-size: 1.85rem;
     font-weight: 500;
-    line-height: 1;
     letter-spacing: -0.02em;
+    line-height: 1;
     color: var(--lp-ink);
   }
 
-  .lp2-stats span {
-    display: block;
-    margin-top: 0.65rem;
+  .lp2-mrr b {
     font-family: "JetBrains Mono", monospace;
-    font-size: 0.58rem;
-    font-weight: 500;
-    letter-spacing: 0.24em;
+    font-size: 0.62rem;
+    font-weight: 600;
+    color: var(--lp-green-deep);
+  }
+
+  .lp2-spark {
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+    height: 58px;
+    margin-top: -0.65rem;
+    padding: 0 0.95rem 0.85rem;
+    border: 1px solid var(--lp-line);
+    border-top: 0;
+    border-radius: 0 0 var(--lp-radius-lg) var(--lp-radius-lg);
+    background: #ffffff;
+  }
+
+  .lp2-spark i {
+    flex: 1;
+    height: var(--h, 30%);
+    border-radius: 2px 2px 0 0;
+    background: linear-gradient(180deg, #00d9ae, #00a882);
+    opacity: 0.9;
+    transform-origin: bottom;
+  }
+
+  .lp2-saas-visual.vis .lp2-spark i {
+    animation: lp2-grow 900ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+    animation-delay: var(--sd, 0ms);
+  }
+
+  @keyframes lp2-grow {
+    from {
+      transform: scaleY(0.08);
+      opacity: 0.25;
+    }
+  }
+
+  .lp2-plan-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8rem;
+    padding: 0.58rem 0.85rem;
+    border: 1px solid var(--lp-line-soft);
+    border-radius: var(--lp-radius);
+    background: #fdfefe;
+    font-size: 0.76rem;
+    color: var(--lp-ink-soft);
+  }
+
+  .lp2-plan-row b {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: var(--lp-faint);
+    color: var(--lp-green-deep);
   }
 
   /* ═══ Built on LACE ═════════════════════════════════════════════ */
   .lp2-editions-head {
     display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 0.8rem 2rem;
-    padding: clamp(2.6rem, 5vw, 4rem) clamp(1.2rem, 3.5vw, 3.2rem) clamp(1.6rem, 3vw, 2.4rem);
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: clamp(4rem, 8vw, 6.5rem) 1.5rem clamp(2.4rem, 4.5vw, 3.6rem);
+    text-align: center;
   }
 
   .lp2-editions-head h2 {
     margin: 0;
-    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    font-size: clamp(2rem, 4vw, 3.2rem);
   }
 
   .lp2-editions-head p {
+    max-width: 52ch;
     margin: 0;
-    font-size: 0.95rem;
+    font-size: clamp(0.98rem, 1.3vw, 1.08rem);
+    line-height: 1.6;
     color: var(--lp-muted);
+    text-wrap: balance;
   }
 
   .lp2-editions-grid {
@@ -1417,12 +1752,31 @@ const editions = [
   }
 
   .lp2-editions-grid a {
+    position: relative;
     display: flex;
     flex-direction: column;
-    gap: 0.6rem;
-    padding: clamp(1.8rem, 3.2vw, 2.6rem) clamp(1.2rem, 2.6vw, 2.2rem);
+    gap: 0.8rem;
+    min-height: clamp(340px, 52vh, 540px);
+    padding: clamp(2.4rem, 4vw, 3.4rem) clamp(1.4rem, 2.8vw, 2.6rem);
+    overflow: hidden;
     text-decoration: none;
     transition: background 180ms ease;
+  }
+
+  .lp2-editions-grid a::before {
+    content: attr(data-idx);
+    position: absolute;
+    right: -0.6rem;
+    bottom: -2.4rem;
+    z-index: 0;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: clamp(7rem, 13vw, 11rem);
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: rgba(13, 27, 22, 0.05);
+    pointer-events: none;
+    transition: color 180ms ease;
   }
 
   .lp2-editions-grid a + a {
@@ -1433,39 +1787,60 @@ const editions = [
     background: rgba(var(--lp-green-rgb), 0.045);
   }
 
+  .lp2-editions-grid a:hover::before {
+    color: rgba(var(--lp-green-rgb), 0.12);
+  }
+
   .lp2-editions-grid em {
+    position: relative;
+    z-index: 1;
     font-style: normal;
     font-family: "JetBrains Mono", monospace;
-    font-size: 0.56rem;
-    letter-spacing: 0.16em;
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--lp-faint);
   }
 
   .lp2-editions-grid strong {
+    position: relative;
+    z-index: 1;
+    margin-top: 0.3rem;
     font-family: "Space Grotesk", "Red Hat Display", sans-serif;
-    font-size: 1.15rem;
+    font-size: clamp(1.6rem, 2.6vw, 2.3rem);
     font-weight: 500;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.015em;
     text-transform: uppercase;
+    line-height: 1.05;
     color: var(--lp-ink);
   }
 
   .lp2-editions-grid span {
-    font-size: 0.85rem;
-    line-height: 1.55;
+    position: relative;
+    z-index: 1;
+    max-width: 30ch;
+    font-size: clamp(0.92rem, 1.25vw, 1.02rem);
+    line-height: 1.6;
     color: var(--lp-muted);
   }
 
   .lp2-editions-grid b {
+    position: relative;
+    z-index: 1;
+    display: inline-block;
     margin-top: auto;
-    padding-top: 0.8rem;
+    padding-top: 1.2rem;
     font-family: "JetBrains Mono", monospace;
-    font-size: 0.62rem;
+    font-size: 0.66rem;
     font-weight: 600;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--lp-green-deep);
+    transition: transform 180ms ease;
+  }
+
+  .lp2-editions-grid a:hover b {
+    transform: translateX(4px);
   }
 
   /* ═══ Screenshot ════════════════════════════════════════════════ */
@@ -1516,80 +1891,175 @@ const editions = [
   /* ═══ Deploy ════════════════════════════════════════════════════ */
   .lp2-deploy {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     align-items: center;
-    justify-content: space-between;
-    gap: 1.6rem;
-    padding: clamp(2.6rem, 5vw, 4rem) clamp(1.2rem, 3.5vw, 3.2rem);
+    justify-content: center;
+    gap: clamp(2.6rem, 5vw, 4.5rem);
+    min-height: min(94svh, 920px);
+    padding: clamp(4rem, 8vw, 6.5rem) 1.5rem clamp(5rem, 9vw, 7.5rem);
+    overflow: hidden;
+    text-align: center;
   }
 
   .lp2-deploy h2 {
-    margin: 0 0 0.5rem;
-    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    margin: 0 0 0.9rem;
+    font-size: clamp(2rem, 4vw, 3.2rem);
   }
 
   .lp2-deploy p {
-    margin: 0;
-    font-size: 0.95rem;
+    max-width: 46ch;
+    margin: 0 auto;
+    font-size: clamp(0.98rem, 1.3vw, 1.08rem);
+    line-height: 1.6;
     color: var(--lp-muted);
+    text-wrap: balance;
   }
 
-  .lp2-deploy-tiles {
+  /* concentric perimeter rings: cloud → private cloud → on-prem → air-gap */
+  .lp2-rings {
+    position: relative;
+    width: min(560px, 86vw);
+    aspect-ratio: 1;
+  }
+
+  .lp2-rings::before,
+  .lp2-rings::after {
+    content: "";
+    position: absolute;
+    background: var(--hair);
+  }
+
+  .lp2-rings::before {
+    top: 50%;
+    left: -16%;
+    right: -16%;
+    height: 1px;
+  }
+
+  .lp2-rings::after {
+    left: 50%;
+    top: -9%;
+    bottom: -9%;
+    width: 1px;
+  }
+
+  .lp2-ring {
+    position: absolute;
+    z-index: 1;
+    border: 1px solid rgba(13, 27, 22, 0.14);
+    border-radius: 50%;
+  }
+
+  .lp2-ring-1 { inset: 0; }
+  .lp2-ring-2 { inset: 13%; }
+  .lp2-ring-3 { inset: 26%; }
+
+  .lp2-ring-4 {
+    inset: 36%;
+    border: 1.5px dashed rgba(var(--lp-green-rgb), 0.55);
+  }
+
+  .lp2-ring-chip {
+    position: absolute;
+    z-index: 2;
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.6rem;
-    width: min(460px, 100%);
-  }
-
-  .lp2-deploy-tile {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.85rem 0.95rem;
+    justify-items: center;
+    gap: 0.18rem;
+    padding: 0.6rem 0.95rem 0.55rem;
     border: 1px solid var(--lp-line);
     border-radius: var(--lp-radius-lg);
     background: #ffffff;
     box-shadow: var(--lp-shadow-sm);
-    transition: transform 180ms ease, box-shadow 180ms ease;
   }
 
-  .lp2-deploy-tile:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--lp-shadow-md);
-  }
-
-  .lp2-deploy-tile svg {
-    flex: none;
-    width: 1.45rem;
-    height: 1.45rem;
+  .lp2-ring-chip svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-bottom: 0.14rem;
     color: var(--lp-green-deep);
   }
 
-  .lp2-deploy-tile > span {
-    display: grid;
-    gap: 0.14rem;
-    min-width: 0;
-  }
-
-  .lp2-deploy-tile strong {
-    font-size: 0.8rem;
+  .lp2-ring-chip strong {
+    font-size: 0.78rem;
     font-weight: 600;
+    line-height: 1.1;
     color: var(--lp-ink);
     white-space: nowrap;
   }
 
-  .lp2-deploy-tile em {
+  .lp2-ring-chip em {
     font-style: normal;
     font-family: "JetBrains Mono", monospace;
-    font-size: 0.54rem;
+    font-size: 0.52rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--lp-faint);
+    white-space: nowrap;
   }
 
-  .lp2-deploy-air {
+  .lp2-chip-cloud {
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .lp2-chip-vpc {
+    top: 50%;
+    right: 13%;
+    transform: translate(50%, -50%);
+  }
+
+  .lp2-chip-onprem {
+    bottom: 26%;
+    left: 50%;
+    transform: translate(-50%, 50%);
+  }
+
+  .lp2-chip-air {
+    top: 36%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     border-style: dashed;
     border-color: rgba(var(--lp-green-rgb), 0.5);
+  }
+
+  .lp2-ring-core {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.3rem 0.55rem;
+    border-radius: 100px;
+    background: rgba(246, 247, 249, 0.9);
+    transform: translate(-50%, -50%);
+  }
+
+  .lp2-ring-dot {
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 50%;
+    background: var(--lp-green);
+    box-shadow: 0 0 0 0 rgba(var(--lp-green-rgb), 0.45);
+    animation: lp2-pulse 2.6s ease-out infinite;
+  }
+
+  @keyframes lp2-pulse {
+    0% { box-shadow: 0 0 0 0 rgba(var(--lp-green-rgb), 0.45); }
+    70% { box-shadow: 0 0 0 14px rgba(var(--lp-green-rgb), 0); }
+    100% { box-shadow: 0 0 0 0 rgba(var(--lp-green-rgb), 0); }
+  }
+
+  .lp2-ring-core em {
+    font-style: normal;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.54rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--lp-green-deep);
   }
 
   /* ═══ CTA ═══════════════════════════════════════════════════════ */
@@ -1639,7 +2109,20 @@ const editions = [
       grid-template-columns: 1fr;
     }
 
+    .lp2-editions-grid a {
+      min-height: 0;
+    }
+
     .lp2-editions-grid a + a {
+      border-left: 0;
+      border-top: 1px solid var(--hair);
+    }
+
+    .lp2-saas {
+      grid-template-columns: 1fr;
+    }
+
+    .lp2-saas-visual {
       border-left: 0;
       border-top: 1px solid var(--hair);
     }
@@ -1657,12 +2140,29 @@ const editions = [
       margin-inline: auto;
     }
 
-    .lp2-stats strong {
-      font-size: 1.9rem;
-    }
-
     .lp2-conflict-pair {
       grid-template-columns: 1fr;
+    }
+
+    .lp2-chan-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .lp2-ring-chip {
+      padding: 0.42rem 0.6rem 0.4rem;
+    }
+
+    .lp2-ring-chip svg {
+      width: 1rem;
+      height: 1rem;
+    }
+
+    .lp2-ring-chip strong {
+      font-size: 0.66rem;
+    }
+
+    .lp2-ring-chip em {
+      font-size: 0.46rem;
     }
 
     .lp2-vs {
@@ -1679,7 +2179,10 @@ const editions = [
     .lp2-buildsteps span::before,
     .lp2-runmark,
     .lp2-conflict-flag i,
-    .lp2-liveurl i {
+    .lp2-liveurl i,
+    .lp2-handoff i,
+    .lp2-ring-dot,
+    .lp2-saas-visual.vis .lp2-spark i {
       animation: none;
     }
 

@@ -17,9 +17,6 @@ const categories = [...new Set(posts.map((post) => post.data.category))];
 
 const fmt = (date: Date) =>
   date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-
-const readTime = (body: string | undefined) =>
-  Math.max(2, Math.round((body ?? "").split(/\s+/).length / 220));
 ---
 
 <BaseLayout
@@ -82,8 +79,6 @@ const readTime = (body: string | undefined) =>
               <span>{featured.data.author}</span>
               <i>·</i>
               <span>{fmt(featured.data.date)}</span>
-              <i>·</i>
-              <span>{readTime(featured.body)} min read</span>
             </div>
           </div>
         </a>
@@ -110,8 +105,6 @@ const readTime = (body: string | undefined) =>
                   <span>{post.data.author}</span>
                   <i>·</i>
                   <span>{fmt(post.data.date)}</span>
-                  <i>·</i>
-                  <span>{readTime(post.body)} min read</span>
                 </div>
               </div>
               <span class="lp-blog-arrow" aria-hidden="true">→</span>

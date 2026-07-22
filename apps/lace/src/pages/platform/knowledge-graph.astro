@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "@determinant/site-kit/layouts/BaseLayout.astro";
 import LaceOfferingShell from "@determinant/site-kit/components/lace/LaceOfferingShell.astro";
-import LaceKgDemo from "@determinant/site-kit/components/lace/LaceKgDemo.astro";
+import LaceKgVideo from "@determinant/site-kit/components/lace/LaceKgVideo.astro";
 import { laceSite } from "../../site.config";
 
 const content = {
@@ -81,6 +81,13 @@ const content = {
   siteName={laceSite.name}
 >
   <LaceOfferingShell {...content}>
-    <LaceKgDemo />
+    <LaceKgVideo />
   </LaceOfferingShell>
 </BaseLayout>
+
+<!-- Widen the demo slot to the full content width for the KG assistant video. -->
+<style is:global>
+  .lp-off-demo:has(.lp-kg-video) {
+    width: 100%;
+  }
+</style>

@@ -10,7 +10,8 @@ import LaceNav from "./LaceNav.astro";
 import LaceFooter from "./LaceFooter.astro";
 import LaceSearchDemo from "./LaceSearchDemo.astro";
 import whitepaper from "../../assets/docs/LACE_Enterprise_Overview_v3.pdf";
-import laceScreen2 from "../../assets/images/lace-screen2.png";
+import laceScreen2 from "../../assets/images/lace-workflow-dark.png";
+import laceKgDark from "../../assets/images/lace-kg-dark.jpg";
 import "../../styles/lace-site.css";
 
 /* Brand marks (simplified official logos). */
@@ -84,7 +85,7 @@ const editions = [
             src={laceScreen2}
             alt="LACE workspace showing a governed workflow run"
             class="lp2-introshot-img"
-            widths={[760, 980, 1260, 1500]}
+            widths={[760, 980, 1260, 1500, 1640]}
             sizes="94vw"
           />
         </figure>
@@ -96,9 +97,9 @@ const editions = [
     <!-- ── Editorial ──────────────────────────────────────────────── -->
     <section class="lp2-editorial">
       <p data-r>
-        <strong>Put everything your company knows to work.</strong>
-        Find any answer. Trust every fact. Automate real work. Ship real
-        software — on one platform your security team will approve.
+        <strong>Put everything you know to work.</strong>
+        Find any answer. Build real agentic employees. <span class="lp2-ed-green">Automate real work</span>. Build real software. Explore your enterprise's knowledge graph.<br />
+        All on one platform. Run in your cloud.
       </p>
     </section>
 
@@ -125,36 +126,14 @@ const editions = [
             <h2>Your entire business, one living map.</h2>
             <p>LACE reads your documents and maps what your company actually knows — every customer, contract, and commitment. Ask what you owe, what expires, what changed — and get the answer with the source attached.</p>
           </div>
-          <div class="lp2-fragment lp2-win" data-r data-reveal-delay="100" aria-hidden="true">
-            <div class="lp2-win-bar"><i></i><i></i><i></i><span>graph.lace — Meridian Corp</span></div>
-            <div class="lp2-win-body">
-              <div class="lp2-time-fact">
-                <span>Annual fee</span>
-                <span class="lp2-time-vals">
-                  <strong class="lp2-val-then">$1.1M</strong>
-                  <strong class="lp2-val-now">$1.2M</strong>
-                </span>
-                <i>Table 3</i>
-              </div>
-              <div class="lp2-time-fact">
-                <span>Renewal date</span>
-                <span class="lp2-time-vals">
-                  <strong class="lp2-val-then">Jan 15, 2026</strong>
-                  <strong class="lp2-val-now">Jan 15, 2027</strong>
-                </span>
-                <i>MSA §4.2</i>
-              </div>
-              <div class="lp2-time-scrub">
-                <span class="lp2-time-labels">
-                  <em class="lp2-asof-then">as of · Mar 2025</em>
-                  <em class="lp2-asof-now">as of · Jul 2026</em>
-                </span>
-                <div class="lp2-time-track">
-                  <i class="lp2-time-knob"></i>
-                </div>
-                <div class="lp2-time-ticks"><span>2024</span><span>2025</span><span>2026</span></div>
-              </div>
-            </div>
+          <div class="lp2-fragment lp2-kg-shot" data-r data-reveal-delay="100" aria-hidden="true">
+            <Image
+              src={laceKgDark}
+              alt="LACE knowledge graph — a living map of the business"
+              class="lp2-kg-img"
+              widths={[460, 720, 940]}
+              sizes="(max-width: 900px) 90vw, 460px"
+            />
           </div>
           <a class="lp2-cell-link" href="/platform/knowledge-graph">Knowledge Graph →</a>
         </div>
@@ -272,21 +251,69 @@ const editions = [
         <h2>Describe it. <span class="lp-accent">It's software.</span></h2>
         <p class="lp2-appbuild-lead">The tool your team keeps wishing for — described in a sentence, live at a real URL in minutes. Pages, portals, and full applications, with sign-in, database, releases, and rollback handled for you.</p>
       </div>
-      <div class="lp2-appbuild-demo lp2-fragment lp2-win" data-r data-reveal-delay="120" aria-hidden="true">
-        <div class="lp2-win-bar"><i></i><i></i><i></i><span>builder.lace — field-inventory</span></div>
-        <div class="lp2-win-body">
-          <div class="lp2-prompt"><b>&gt;</b> an inventory tracker for our field teams…</div>
-          <div class="lp2-buildsteps">
-            <span style="--d: 0s">Plan</span>
-            <span style="--d: 1.5s">Build</span>
-            <span style="--d: 3s">Verify</span>
-            <span style="--d: 4.5s">Publish</span>
+      <figure class="lp2-appbuild-demo lp2-fragment lp-flow" data-r data-reveal-delay="120" aria-label="Diagram: an agent generates code in an isolated sandbox, which commits to Git, which builds into a container in the cloud — all reaching real resources only through the platform SDK.">
+        <div class="lp-flow-row">
+          <div class="lp-flow-node">
+            <div class="lp-flow-box">
+              <span class="lp-flow-badge">Isolated sandbox</span>
+              <span class="lp-flow-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="3"></rect>
+                  <path d="M7.5 9.5 10 12l-2.5 2.5"></path>
+                  <path d="M13 14.5h4"></path>
+                </svg>
+              </span>
+              <span class="lp-flow-title">Agent</span>
+            </div>
+            <span class="lp-flow-cap">Generates app code in isolation — no database, no network, no credentials, no host.</span>
           </div>
-          <div class="lp2-liveurl">
-            <i></i> inventory.acme-field.app <b>LIVE</b>
+
+          <div class="lp-flow-arrow"><span class="lp-flow-arrow-label">commit</span></div>
+
+          <div class="lp-flow-node">
+            <div class="lp-flow-box">
+              <span class="lp-flow-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="6" cy="6" r="2.4"></circle>
+                  <circle cx="6" cy="18" r="2.4"></circle>
+                  <circle cx="18" cy="9" r="2.4"></circle>
+                  <path d="M6 8.4v7.2"></path>
+                  <path d="M18 11.4v.6a3 3 0 0 1-3 3H6"></path>
+                </svg>
+              </span>
+              <span class="lp-flow-title">Git</span>
+            </div>
+            <span class="lp-flow-cap">Generated source is versioned — every change is a reviewable, revertable artifact.</span>
+          </div>
+
+          <div class="lp-flow-arrow"><span class="lp-flow-arrow-label">build</span></div>
+
+          <div class="lp-flow-node">
+            <div class="lp-flow-box">
+              <span class="lp-flow-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M7 17.5a4 4 0 1 1 1-7.87A5 5 0 0 1 18 10.5a3.5 3.5 0 0 1-.5 7Z"></path>
+                  <rect x="9.5" y="11.5" width="5" height="5" rx="1"></rect>
+                  <path d="M12 11.5v5M9.5 14h5"></path>
+                </svg>
+              </span>
+              <span class="lp-flow-title">Cloud container</span>
+            </div>
+            <span class="lp-flow-cap">Built and run behind the platform SDK — the only surface that reaches anything real.</span>
           </div>
         </div>
-      </div>
+
+        <div class="lp-flow-base" aria-label="platform SDK: the governed capability surface underneath every stage">
+          <span class="lp-flow-base-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Z"></path>
+              <path d="m4 7.5 8 4.5 8-4.5"></path>
+              <path d="M12 12v9"></path>
+            </svg>
+          </span>
+          <span class="lp-flow-base-text"><strong>@platform/sdk</strong> — the governed capability surface. Imported in the sandbox, enforced in the container: the only path to identity, data, policy, limits, and audit.</span>
+        </div>
+      </figure>
       <a class="lp2-cell-link" href="/platform/app-builder">App Builder →</a>
     </section>
 
@@ -369,12 +396,13 @@ const editions = [
       <div class="lp2-editions-grid">
         {
           editions.map((edition, i) => (
-            <a href={edition.href} data-idx={`0${i + 1}`} data-r data-reveal-delay={String(i * 90)}>
+            <div class="lp2-edition-card" data-idx={`0${i + 1}`} data-r data-reveal-delay={String(i * 90)}>
               <em>{edition.market}</em>
               <strong>{edition.name}</strong>
               <span>{edition.line}</span>
-              <b>Explore →</b>
-            </a>
+              {/* <a href={edition.href}><b>Explore →</b></a> */}
+              <span class="lp-mega-story-pill lp2-edition-soon">Coming soon</span>
+            </div>
           ))
         }
       </div>
@@ -667,23 +695,10 @@ const editions = [
     will-change: opacity, transform;
   }
 
-  .lp2-introshot::before {
-    content: "";
-    position: absolute;
-    inset: 5% 2% -8%;
-    z-index: 0;
-    pointer-events: none;
-    border-radius: 18px;
-    background:
-      radial-gradient(ellipse at 50% 24%, rgba(0, 255, 194, 0.22), transparent 58%),
-      radial-gradient(ellipse at 50% 100%, rgba(0, 168, 130, 0.16), transparent 66%);
-    filter: blur(22px);
-    opacity: var(--introshot-halo, 0.35);
-  }
-
   .lp2-introshot-card {
     position: absolute;
     inset: 0;
+    z-index: 1;
     margin: 0;
     aspect-ratio: 1.575 / 1;
     padding: 7px;
@@ -694,9 +709,8 @@ const editions = [
       linear-gradient(180deg, rgba(54, 60, 64, 0.96) 0%, rgba(22, 25, 27, 0.98) 48%, rgba(10, 11, 12, 0.98) 100%),
       #101214;
     box-shadow:
-      0 0 0 1px rgba(0, 255, 194, 0.48),
-      0 0 26px rgba(0, 255, 194, 0.3),
-      0 22px 48px rgba(2, 10, 14, 0.26),
+      0 22px 60px rgba(2, 10, 14, 0.22),
+      0 8px 24px rgba(2, 10, 14, 0.14),
       0 0 0 1px rgba(0, 0, 0, 0.5),
       inset 0 1px 0 rgba(255, 255, 255, 0.22),
       inset 0 -1px 0 rgba(0, 0, 0, 0.72);
@@ -775,10 +789,10 @@ const editions = [
   }
 
   .lp2-editorial p {
-    max-width: 32ch;
+    max-width: 46ch;
     margin: 0;
     font-family: "Space Grotesk", "Red Hat Display", sans-serif;
-    font-size: clamp(1.5rem, 3vw, 2.35rem);
+    font-size: clamp(1.7rem, 3.4vw, 2.65rem);
     font-weight: 400;
     letter-spacing: -0.015em;
     text-transform: uppercase;
@@ -789,7 +803,12 @@ const editions = [
   .lp2-editorial strong {
     display: block;
     font-weight: 500;
-    color: var(--lp-ink);
+    color: var(--lp-muted);
+  }
+
+  .lp2-editorial .lp2-ed-green {
+    color: var(--lp-green-deep);
+    font-weight: 500;
   }
 
   /* ═══ Feature cells ═════════════════════════════════════════════ */
@@ -891,6 +910,21 @@ const editions = [
   .lp2-fragment {
     width: min(460px, 100%);
     margin-block: auto;
+  }
+
+  /* Knowledge-graph image, framed like the mock windows it replaced. */
+  .lp2-kg-shot {
+    overflow: hidden;
+    border: 1px solid var(--lp-line);
+    border-radius: 10px;
+    background: #0b0e0d;
+    box-shadow: 0 26px 60px -24px rgba(15, 30, 26, 0.3);
+  }
+
+  .lp2-kg-img {
+    display: block;
+    width: 100%;
+    height: auto;
   }
 
   .lp2-win {
@@ -1549,6 +1583,192 @@ const editions = [
     margin-top: 0;
   }
 
+  /* ── App Builder flow diagram: Agent → Git → Container on the SDK ── */
+  .lp2-appbuild .lp-flow {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    text-align: left;
+  }
+
+  .lp-flow-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+  }
+
+  .lp-flow-node {
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .lp-flow-box {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    min-height: 7.5rem;
+    padding: 1.5rem 1rem 1.25rem;
+    border: 1px solid rgba(var(--lp-green-rgb), 0.3);
+    border-radius: var(--lp-radius-lg);
+    background:
+      radial-gradient(10rem 6rem at 50% 0%, rgba(var(--lp-green-rgb), 0.05), transparent 70%),
+      #ffffff;
+    box-shadow: var(--lp-shadow-sm);
+  }
+
+  .lp-flow-badge {
+    position: absolute;
+    top: -0.62rem;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    padding: 0.24rem 0.62rem;
+    border: 1px dashed rgba(var(--lp-green-rgb), 0.5);
+    border-radius: 100px;
+    background: #f4faf8;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.52rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--lp-green-deep);
+  }
+
+  .lp-flow-icon {
+    display: grid;
+    place-items: center;
+    width: 2.6rem;
+    height: 2.6rem;
+    border: 1px solid rgba(var(--lp-green-rgb), 0.28);
+    border-radius: var(--lp-radius-lg);
+    background: #f4faf8;
+    color: var(--lp-green-deep);
+  }
+
+  .lp-flow-icon svg {
+    width: 1.45rem;
+    height: 1.45rem;
+  }
+
+  .lp-flow-title {
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: 0.98rem;
+    font-weight: 650;
+    letter-spacing: -0.01em;
+    color: var(--lp-ink);
+    text-align: center;
+  }
+
+  .lp-flow-cap {
+    display: block;
+    font-size: 0.78rem;
+    line-height: 1.55;
+    color: var(--lp-muted);
+    text-align: center;
+  }
+
+  .lp-flow-arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+    flex: 0 0 auto;
+    min-height: 7.5rem;
+    color: rgba(var(--lp-green-rgb), 0.75);
+  }
+
+  .lp-flow-arrow-label {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.54rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--lp-faint);
+  }
+
+  .lp-flow-arrow::after {
+    content: "→";
+    font-size: 1.25rem;
+    line-height: 1;
+  }
+
+  .lp-flow-base {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    margin-top: 0.7rem;
+    padding: 0.85rem 1.1rem;
+    border: 1px solid rgba(var(--lp-green-rgb), 0.35);
+    border-radius: var(--lp-radius-lg);
+    background:
+      linear-gradient(0deg, rgba(var(--lp-green-rgb), 0.09), rgba(var(--lp-green-rgb), 0.045));
+  }
+
+  .lp-flow-base::before {
+    content: "";
+    position: absolute;
+    top: -0.72rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1px;
+    height: 0.72rem;
+    background: rgba(var(--lp-green-rgb), 0.45);
+  }
+
+  .lp-flow-base-icon {
+    display: grid;
+    place-items: center;
+    width: 2.2rem;
+    height: 2.2rem;
+    flex: none;
+    border: 1px solid rgba(var(--lp-green-rgb), 0.35);
+    border-radius: var(--lp-radius);
+    background: #ffffff;
+    color: var(--lp-green-deep);
+  }
+
+  .lp-flow-base-icon svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .lp-flow-base-text {
+    font-size: 0.82rem;
+    line-height: 1.55;
+    color: var(--lp-ink-soft);
+  }
+
+  .lp-flow-base-text strong {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--lp-green-deep);
+  }
+
+  @media (max-width: 640px) {
+    .lp-flow-row {
+      flex-direction: column;
+    }
+
+    .lp-flow-arrow {
+      flex-direction: row;
+      gap: 0.5rem;
+      min-height: 0;
+    }
+
+    .lp-flow-arrow::after {
+      content: "↓";
+    }
+  }
+
   /* ═══ App Builder: launch a business ════════════════════════════ */
   .lp2-saas {
     display: grid;
@@ -1751,7 +1971,7 @@ const editions = [
     border-top: 1px solid var(--hair);
   }
 
-  .lp2-editions-grid a {
+  .lp2-editions-grid .lp2-edition-card {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -1763,7 +1983,7 @@ const editions = [
     transition: background 180ms ease;
   }
 
-  .lp2-editions-grid a::before {
+  .lp2-editions-grid .lp2-edition-card::before {
     content: attr(data-idx);
     position: absolute;
     right: -0.6rem;
@@ -1779,16 +1999,8 @@ const editions = [
     transition: color 180ms ease;
   }
 
-  .lp2-editions-grid a + a {
+  .lp2-editions-grid .lp2-edition-card + .lp2-edition-card {
     border-left: 1px solid var(--hair);
-  }
-
-  .lp2-editions-grid a:hover {
-    background: rgba(var(--lp-green-rgb), 0.045);
-  }
-
-  .lp2-editions-grid a:hover::before {
-    color: rgba(var(--lp-green-rgb), 0.12);
   }
 
   .lp2-editions-grid em {
@@ -1815,7 +2027,7 @@ const editions = [
     color: var(--lp-ink);
   }
 
-  .lp2-editions-grid span {
+  .lp2-editions-grid span:not(.lp2-edition-soon) {
     position: relative;
     z-index: 1;
     max-width: 30ch;
@@ -1824,23 +2036,12 @@ const editions = [
     color: var(--lp-muted);
   }
 
-  .lp2-editions-grid b {
+  .lp2-edition-soon {
     position: relative;
     z-index: 1;
     display: inline-block;
+    width: fit-content;
     margin-top: auto;
-    padding-top: 1.2rem;
-    font-family: "JetBrains Mono", monospace;
-    font-size: 0.66rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--lp-green-deep);
-    transition: transform 180ms ease;
-  }
-
-  .lp2-editions-grid a:hover b {
-    transform: translateX(4px);
   }
 
   /* ═══ Screenshot ════════════════════════════════════════════════ */
@@ -2109,11 +2310,11 @@ const editions = [
       grid-template-columns: 1fr;
     }
 
-    .lp2-editions-grid a {
+    .lp2-editions-grid .lp2-edition-card {
       min-height: 0;
     }
 
-    .lp2-editions-grid a + a {
+    .lp2-editions-grid .lp2-edition-card + .lp2-edition-card {
       border-left: 0;
       border-top: 1px solid var(--hair);
     }
@@ -2228,9 +2429,11 @@ const editions = [
       hero.style.setProperty("--introshot-opacity", String(clamp((p - 0.08) * 6, 0, 1)));
       hero.style.setProperty("--introshot-halo", String(lerp(0.35, 0.8, rise)));
 
-      // Headline fades/lifts out early — fully gone before the rising
-      // screenshot reaches the centre, so "LACE" never shows over the shot.
-      const copyFade = clamp((p - 0.2) / 0.16, 0, 1);
+      // Headline holds while the screenshot rises up from below, then fades as
+      // the shot nears the vertical midpoint of the page — driven by `rise`
+      // (the shot's travel) rather than raw scroll, so it never clears out to
+      // an empty screen before the screenshot is actually approaching.
+      const copyFade = clamp((rise - 0.42) / 0.2, 0, 1);
       hero.style.setProperty("--copy-opacity", String(1 - copyFade));
       hero.style.setProperty("--copy-y", `${lerp(0, -11, copyFade)}svh`);
     };

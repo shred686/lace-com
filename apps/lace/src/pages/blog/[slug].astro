@@ -20,8 +20,6 @@ const fmt = post.data.date.toLocaleDateString("en-US", {
   day: "numeric",
   year: "numeric",
 });
-const readTime = Math.max(2, Math.round((post.body ?? "").split(/\s+/).length / 220));
-
 const others = (await getCollection("blog"))
   .filter((entry) => entry.id !== post.id)
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
@@ -56,8 +54,6 @@ const others = (await getCollection("blog"))
             <span>{post.data.author}</span>
             <i>·</i>
             <span>{fmt}</span>
-            <i>·</i>
-            <span>{readTime} min read</span>
           </div>
         </div>
       </header>
@@ -268,6 +264,297 @@ const others = (await getCollection("blog"))
     padding: 0.2rem 0 0.2rem 1.2rem;
     border-left: 2px solid var(--lp-green);
     color: var(--lp-muted);
+  }
+
+  /* ── Figures: shared frame ────────────────────────────────────── */
+  .lp-post-prose :global(.lp-fig) {
+    margin: 2.4rem 0;
+    padding: clamp(1.4rem, 3vw, 2.2rem);
+    border: 1px solid var(--lp-line);
+    border-radius: var(--lp-radius-lg);
+    background:
+      radial-gradient(38rem 20rem at 85% -10%, rgba(var(--lp-green-rgb), 0.06), transparent 70%),
+      var(--lp-surface);
+    box-shadow: var(--lp-shadow-sm);
+  }
+
+  /* ── Diagram 1: three-node directional flow ───────────────────── */
+  .lp-post-prose :global(.lp-flow) {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+  }
+
+  .lp-post-prose :global(.lp-flow-row) {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+  }
+
+  .lp-post-prose :global(.lp-flow-node) {
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  /* the box — clearly a node */
+  .lp-post-prose :global(.lp-flow-box) {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    min-height: 7.5rem;
+    padding: 1.5rem 1rem 1.25rem;
+    border: 1px solid rgba(var(--lp-green-rgb), 0.3);
+    border-radius: var(--lp-radius-lg);
+    background:
+      radial-gradient(10rem 6rem at 50% 0%, rgba(var(--lp-green-rgb), 0.05), transparent 70%),
+      #ffffff;
+    box-shadow: var(--lp-shadow-sm);
+  }
+
+  /* sandbox label as a tab straddling the box's top edge */
+  .lp-post-prose :global(.lp-flow-badge) {
+    position: absolute;
+    top: -0.62rem;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    padding: 0.24rem 0.62rem;
+    border: 1px dashed rgba(var(--lp-green-rgb), 0.5);
+    border-radius: 100px;
+    background: #f4faf8;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.52rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--lp-green-deep);
+  }
+
+  .lp-post-prose :global(.lp-flow-icon) {
+    display: grid;
+    place-items: center;
+    width: 2.6rem;
+    height: 2.6rem;
+    border: 1px solid rgba(var(--lp-green-rgb), 0.28);
+    border-radius: var(--lp-radius-lg);
+    background: #f4faf8;
+    color: var(--lp-green-deep);
+  }
+
+  .lp-post-prose :global(.lp-flow-icon svg) {
+    width: 1.45rem;
+    height: 1.45rem;
+  }
+
+  .lp-post-prose :global(.lp-flow-title) {
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: 0.98rem;
+    font-weight: 650;
+    letter-spacing: -0.01em;
+    color: var(--lp-ink);
+    text-align: center;
+  }
+
+  /* caption sits BELOW the box, labelling the node */
+  .lp-post-prose :global(.lp-flow-cap) {
+    display: block;
+    font-size: 0.78rem;
+    line-height: 1.55;
+    color: var(--lp-muted);
+    text-align: center;
+  }
+
+  .lp-post-prose :global(.lp-flow-arrow) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+    flex: 0 0 auto;
+    /* match box height so the arrow centres on the boxes, not the captions */
+    min-height: 7.5rem;
+    color: rgba(var(--lp-green-rgb), 0.75);
+  }
+
+  .lp-post-prose :global(.lp-flow-arrow-label) {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.54rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--lp-faint);
+  }
+
+  .lp-post-prose :global(.lp-flow-arrow)::after {
+    content: "→";
+    font-size: 1.25rem;
+    line-height: 1;
+  }
+
+  /* SDK: the governed surface every stage sits on */
+  .lp-post-prose :global(.lp-flow-base) {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    margin-top: 0.7rem;
+    padding: 0.85rem 1.1rem;
+    border: 1px solid rgba(var(--lp-green-rgb), 0.35);
+    border-radius: var(--lp-radius-lg);
+    background:
+      linear-gradient(0deg, rgba(var(--lp-green-rgb), 0.09), rgba(var(--lp-green-rgb), 0.045));
+  }
+
+  /* upward tick connecting the pipeline to the SDK layer */
+  .lp-post-prose :global(.lp-flow-base)::before {
+    content: "";
+    position: absolute;
+    top: -0.72rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1px;
+    height: 0.72rem;
+    background: rgba(var(--lp-green-rgb), 0.45);
+  }
+
+  .lp-post-prose :global(.lp-flow-base-icon) {
+    display: grid;
+    place-items: center;
+    width: 2.2rem;
+    height: 2.2rem;
+    flex: none;
+    border: 1px solid rgba(var(--lp-green-rgb), 0.35);
+    border-radius: var(--lp-radius);
+    background: #ffffff;
+    color: var(--lp-green-deep);
+  }
+
+  .lp-post-prose :global(.lp-flow-base-icon svg) {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .lp-post-prose :global(.lp-flow-base-text) {
+    font-size: 0.82rem;
+    line-height: 1.55;
+    color: var(--lp-ink-soft);
+  }
+
+  .lp-post-prose :global(.lp-flow-base-text strong) {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--lp-green-deep);
+  }
+
+  /* ── Diagram 2: SDK capability tree ───────────────────────────── */
+  .lp-post-prose :global(.lp-tree) {
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .lp-post-prose :global(.lp-tree-head) {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.7rem 1.1rem;
+    border-bottom: 1px solid var(--lp-line);
+    background: rgba(13, 27, 22, 0.025);
+  }
+
+  .lp-post-prose :global(.lp-tree-dot) {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--lp-line);
+  }
+
+  .lp-post-prose :global(.lp-tree-name) {
+    margin-left: 0.35rem;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--lp-ink-soft);
+  }
+
+  .lp-post-prose :global(.lp-tree-body) {
+    padding: 1rem 1.1rem 1.15rem;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.8rem;
+    line-height: 1.5;
+  }
+
+  .lp-post-prose :global(.lp-tree-row) {
+    display: flex;
+    align-items: baseline;
+    gap: 0.7rem;
+    padding: 0.28rem 0;
+  }
+
+  .lp-post-prose :global(.lp-tree-branch) {
+    flex: none;
+    color: var(--lp-faint);
+  }
+
+  .lp-post-prose :global(.lp-tree-dir) {
+    flex: none;
+    min-width: 8.5rem;
+    font-weight: 700;
+    color: var(--lp-green-deep);
+  }
+
+  .lp-post-prose :global(.lp-tree-note) {
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: 0.76rem;
+    color: var(--lp-muted);
+  }
+
+  .lp-post-prose :global(.lp-tree-gap) {
+    height: 0.55rem;
+    margin: 0.35rem 0;
+    border-bottom: 1px dashed var(--lp-line);
+  }
+
+  .lp-post-prose :global(.lp-tree-row.is-omitted .lp-tree-branch) {
+    color: #c2544a;
+    font-weight: 700;
+  }
+
+  .lp-post-prose :global(.lp-tree-row.is-omitted .lp-tree-dir) {
+    color: var(--lp-faint);
+    text-decoration: line-through;
+    text-decoration-color: rgba(194, 84, 74, 0.6);
+  }
+
+  @media (max-width: 640px) {
+    .lp-post-prose :global(.lp-flow-row) {
+      flex-direction: column;
+    }
+
+    .lp-post-prose :global(.lp-flow-arrow) {
+      flex-direction: row;
+      gap: 0.5rem;
+      min-height: 0;
+    }
+
+    .lp-post-prose :global(.lp-flow-arrow)::after {
+      content: "↓";
+    }
+
+    .lp-post-prose :global(.lp-tree-dir) {
+      min-width: 0;
+    }
+
+    .lp-post-prose :global(.lp-tree-row) {
+      flex-wrap: wrap;
+      gap: 0.3rem 0.6rem;
+    }
   }
 
   /* ── Footer ───────────────────────────────────────────────────── */

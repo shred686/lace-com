@@ -1,0 +1,78 @@
+---
+/**
+ * Knowledge-graph assistant demo video. A silent, looping promo clip framed
+ * like the offering panels. Autoplays muted on desktop; the poster + controls
+ * keep it usable (and light) on mobile where autoplay may be suppressed.
+ *
+ * Assets live in the consuming app's /public:
+ *   /kg-assistant.mp4, /kg-assistant-poster.jpg
+ */
+interface Props {
+  src?: string;
+  poster?: string;
+  caption?: string;
+}
+const {
+  src = "/kg-assistant.mp4",
+  poster = "/kg-assistant-poster.jpg",
+  caption = "The Knowledge Graph assistant, working over a live graph",
+} = Astro.props;
+---
+
+<figure class="lp-kg-video" aria-label={caption}>
+  <div class="lp-kg-video-frame">
+    <video
+      class="lp-kg-video-el"
+      src={src}
+      poster={poster}
+      autoplay
+      loop
+      muted
+      playsinline
+      preload="metadata"
+      controls
+    >
+    </video>
+  </div>
+  <figcaption class="lp-panel-caption">{caption}</figcaption>
+</figure>
+
+<style>
+  .lp-kg-video {
+    margin: 0;
+  }
+
+  .lp-kg-video-frame {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--lp-line);
+    border-radius: var(--lp-radius-lg);
+    background: #0b0e0d;
+    box-shadow: var(--lp-shadow-md);
+    /* Match the source clip (1920×1200) so the frame never letterboxes. */
+    aspect-ratio: 1920 / 1200;
+  }
+
+  .lp-kg-video-el {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .lp-panel-caption {
+    margin-top: 1.1rem;
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--lp-faint);
+    text-align: center;
+  }
+
+  @media (max-width: 640px) {
+    .lp-panel-caption {
+      font-size: 0.56rem;
+    }
+  }
+</style>

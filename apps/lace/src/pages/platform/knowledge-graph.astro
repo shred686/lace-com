@@ -85,9 +85,16 @@ const content = {
   </LaceOfferingShell>
 </BaseLayout>
 
-<!-- Widen the demo slot to the full content width for the KG assistant video. -->
+<!--
+  Widen the demo slot to the full content width for the KG assistant video.
+  The shell's `.lp-off-demo { width: min(780px,100%) }` is Astro-scoped to
+  `.lp-off-demo[data-astro-cid-…]` (specificity 0,2,0), which ties this
+  override — so source order would decide, and the production bundle happens to
+  emit the scoped rule last (slim). Raise specificity and force it so this wins
+  regardless of build order.
+-->
 <style is:global>
-  .lp-off-demo:has(.lp-kg-video) {
-    width: 100%;
+  .lp-off-demo.lp-off-demo:has(.lp-kg-video) {
+    width: 100% !important;
   }
 </style>

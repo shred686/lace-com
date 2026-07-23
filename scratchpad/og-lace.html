@@ -1,0 +1,122 @@
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1200px; height: 630px; }
+  .card {
+    position: relative;
+    width: 1200px;
+    height: 630px;
+    overflow: hidden;
+    background: #f6f7f9;
+    font-family: "Space Grotesk", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  /* signature green radial glows */
+  .glows {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(52rem 34rem at 3% -8%, rgba(0, 195, 155, 0.13), transparent 60%),
+      radial-gradient(46rem 30rem at 104% 8%, rgba(0, 168, 130, 0.11), transparent 58%),
+      radial-gradient(40rem 30rem at 60% 118%, rgba(0, 201, 160, 0.09), transparent 62%);
+  }
+  /* faint blueprint grid */
+  .grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(13, 27, 22, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(13, 27, 22, 0.035) 1px, transparent 1px);
+    background-size: 46px 46px;
+    -webkit-mask-image: radial-gradient(120% 120% at 30% 40%, #000 30%, transparent 78%);
+            mask-image: radial-gradient(120% 120% at 30% 40%, #000 30%, transparent 78%);
+  }
+  /* large geometric node-graph echo on the right */
+  .geo { position: absolute; right: -40px; top: -20px; width: 720px; height: 720px; opacity: 0.9; }
+
+  .content { position: absolute; inset: 0; padding: 74px 78px; display: flex; flex-direction: column; }
+
+  .mark {
+    width: 96px; height: 96px; border-radius: 22px;
+    background: #ffffff;
+    border: 1px solid rgba(13, 27, 22, 0.1);
+    box-shadow: 0 2px 6px rgba(15, 30, 26, 0.06), 0 14px 34px rgba(15, 30, 26, 0.10);
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .middle { margin-top: auto; margin-bottom: auto; }
+  .word {
+    font-size: 168px; font-weight: 700; line-height: 0.92; letter-spacing: -2px;
+    background: linear-gradient(100deg, #007a60 0%, #00a882 54%, #00c9a0 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .sub {
+    margin-top: 26px; font-size: 42px; font-weight: 500; letter-spacing: -0.5px;
+    color: #2d3748;
+  }
+
+  .foot { display: flex; align-items: center; gap: 18px; }
+  .rule { width: 46px; height: 4px; border-radius: 2px; background: linear-gradient(90deg, #007a60, #00c9a0); }
+  .domain { font-family: "JetBrains Mono", monospace; font-size: 25px; font-weight: 500; color: #4a5568; letter-spacing: 0.5px; }
+</style>
+
+<div class="card">
+  <div class="glows"></div>
+  <div class="grid"></div>
+
+  <svg class="geo" viewBox="0 0 720 720" fill="none">
+    <defs>
+      <linearGradient id="gg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#00c9a0"/>
+        <stop offset="1" stop-color="#007a60"/>
+      </linearGradient>
+    </defs>
+    <g stroke="url(#gg)" stroke-width="2" opacity="0.30">
+      <line x1="360" y1="360" x2="180" y2="150"/>
+      <line x1="360" y1="360" x2="590" y2="205"/>
+      <line x1="360" y1="360" x2="215" y2="560"/>
+      <line x1="360" y1="360" x2="560" y2="520"/>
+      <line x1="590" y1="205" x2="560" y2="520"/>
+      <line x1="180" y1="150" x2="215" y2="560"/>
+    </g>
+    <g fill="url(#gg)" opacity="0.34">
+      <circle cx="360" cy="360" r="15"/>
+      <circle cx="180" cy="150" r="10"/>
+      <circle cx="590" cy="205" r="10"/>
+      <circle cx="215" cy="560" r="10"/>
+      <circle cx="560" cy="520" r="10"/>
+    </g>
+  </svg>
+
+  <div class="content">
+    <div class="mark">
+      <svg width="58" height="58" viewBox="0 0 64 64" fill="none">
+        <defs>
+          <linearGradient id="mg" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#007a60"/>
+            <stop offset="1" stop-color="#00c9a0"/>
+          </linearGradient>
+        </defs>
+        <g stroke="url(#mg)" stroke-width="3.4">
+          <line x1="32" y1="32" x2="19" y2="19"/>
+          <line x1="32" y1="32" x2="47" y2="22"/>
+          <line x1="32" y1="32" x2="34" y2="48"/>
+        </g>
+        <g fill="url(#mg)">
+          <circle cx="32" cy="32" r="6.4"/>
+          <circle cx="19" cy="19" r="4.6"/>
+          <circle cx="47" cy="22" r="4.6"/>
+          <circle cx="34" cy="48" r="4.6"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="middle">
+      <div class="word">LACE</div>
+      <div class="sub">Governed AI workflow infrastructure</div>
+    </div>
+
+    <div class="foot">
+      <div class="rule"></div>
+      <div class="domain">laceplatform.com</div>
+    </div>
+  </div>
+</div>

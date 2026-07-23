@@ -1,0 +1,86 @@
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1200px; height: 630px; }
+  .card {
+    position: relative;
+    width: 1200px;
+    height: 630px;
+    overflow: hidden;
+    background: #040506;
+    font-family: "Space Grotesk", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  /* green -> black glows */
+  .glows {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(50rem 34rem at 104% 4%, rgba(0, 201, 160, 0.20), transparent 58%),
+      radial-gradient(44rem 30rem at 2% 116%, rgba(0, 168, 130, 0.12), transparent 60%),
+      linear-gradient(180deg, #070a09 0%, #040506 70%);
+  }
+  .grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(0, 201, 160, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 201, 160, 0.05) 1px, transparent 1px);
+    background-size: 46px 46px;
+    -webkit-mask-image: radial-gradient(120% 120% at 92% 6%, #000 20%, transparent 70%);
+            mask-image: radial-gradient(120% 120% at 92% 6%, #000 20%, transparent 70%);
+  }
+
+  .content { position: absolute; inset: 0; padding: 74px 78px; display: flex; flex-direction: column; }
+
+  .mark {
+    width: 96px; height: 96px; border-radius: 22px;
+    background: #0b0e13;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow: 0 20px 46px rgba(0, 0, 0, 0.5), 0 0 0 0.5px rgba(0, 201, 160, 0.12) inset;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .middle { margin-top: auto; margin-bottom: auto; }
+  .word {
+    font-size: 108px; font-weight: 700; line-height: 0.94; letter-spacing: -2.5px;
+    color: #f3f5f8;
+  }
+  .sub {
+    margin-top: 24px; font-size: 42px; font-weight: 500; letter-spacing: -0.5px;
+    color: #a7afb8;
+  }
+
+  .foot { display: flex; align-items: center; gap: 18px; }
+  .rule { width: 46px; height: 4px; border-radius: 2px; background: linear-gradient(90deg, #00c9a0, #00a882); }
+  .domain { font-family: "JetBrains Mono", monospace; font-size: 25px; font-weight: 500; color: #7f8b96; letter-spacing: 0.5px; }
+</style>
+
+<div class="card">
+  <div class="glows"></div>
+  <div class="grid"></div>
+
+  <div class="content">
+    <div class="mark">
+      <svg width="56" height="56" viewBox="0 0 64 64" fill="none">
+        <defs>
+          <linearGradient id="mg" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#00d9ae"/>
+            <stop offset="1" stop-color="#00a882"/>
+          </linearGradient>
+        </defs>
+        <rect x="15" y="16" width="6" height="32" rx="3" fill="url(#mg)"/>
+        <rect x="43" y="16" width="6" height="32" rx="3" fill="url(#mg)"/>
+        <line x1="27" y1="46" x2="37" y2="18" stroke="url(#mg)" stroke-width="5" stroke-linecap="round"/>
+      </svg>
+    </div>
+
+    <div class="middle">
+      <div class="word">Determinant Systems</div>
+      <div class="sub">Make AI work for your company.</div>
+    </div>
+
+    <div class="foot">
+      <div class="rule"></div>
+      <div class="domain">determinantsystems.com</div>
+    </div>
+  </div>
+</div>

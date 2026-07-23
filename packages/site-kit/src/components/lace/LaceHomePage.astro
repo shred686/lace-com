@@ -73,9 +73,9 @@ const editions = [
   <section class="lp2-hero-intro" data-hero-intro>
     <div class="lp2-hero-pin">
       <div class="lp2-intro-copy">
-        <p class="lp2-eyebrow">The AI platform for the governed enterprise</p>
+        <!-- <p class="lp2-eyebrow">The AI platform for the governed enterprise</p> -->
         <h1 class="lp2-intro-h1" data-intro-h1>Introducing <span class="lp2-intro-lace">LACE.</span></h1>
-        <p class="lp2-intro-sub" data-intro-sub>LACE weaves your actual knowledge, rules, and operations into secure, production-ready AI.</p>
+        <p class="lp2-intro-sub" data-intro-sub>LACE turns your company’s knowledge into trusted answers, governed agents, automated workflows, and production-ready applications.</p>
       </div>
 
       <!-- Product screenshot that rises into view as you scroll -->
@@ -638,6 +638,28 @@ const editions = [
 
   .lp2-intro-lace {
     color: var(--lp-green);
+    /* A single mint highlight sweeps across the word once, just after it
+       lands — both endpoints resolve to solid green so the rested state is
+       clean and reduced-motion is unaffected. */
+    background-image: linear-gradient(
+      100deg,
+      var(--lp-green) 0%,
+      var(--lp-green) 42%,
+      #7dffdb 50%,
+      var(--lp-green) 58%,
+      var(--lp-green) 100%
+    );
+    background-size: 250% 100%;
+    background-position: 120% 0;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: lp2-lace-sheen 1500ms cubic-bezier(0.4, 0, 0.2, 1) 980ms both;
+  }
+
+  @keyframes lp2-lace-sheen {
+    from { background-position: 120% 0; }
+    to { background-position: -40% 0; }
   }
 
   .lp2-intro-sub {
@@ -649,32 +671,36 @@ const editions = [
     text-wrap: balance;
   }
 
-  /* Load entrance: eyebrow, headline and subhead fade/rise in, staggered. */
+  /* Load entrance: eyebrow, headline and subhead rise up out of a soft
+     blur, staggered — a calm, premium reveal on first paint. */
   .lp2-eyebrow,
   .lp2-intro-h1,
   .lp2-intro-sub {
-    animation: lp2-hero-in 820ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+    animation: lp2-hero-in 980ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
   }
 
-  .lp2-eyebrow { animation-delay: 60ms; }
-  .lp2-intro-h1 { animation-delay: 200ms; }
-  .lp2-intro-sub { animation-delay: 420ms; }
+  .lp2-eyebrow { animation-delay: 140ms; }
+  .lp2-intro-h1 { animation-delay: 320ms; }
+  .lp2-intro-sub { animation-delay: 560ms; }
 
   @keyframes lp2-hero-in {
     from {
       opacity: 0;
-      transform: translateY(16px);
+      transform: translateY(22px);
+      filter: blur(12px);
     }
     to {
       opacity: 1;
       transform: none;
+      filter: blur(0);
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
     .lp2-eyebrow,
     .lp2-intro-h1,
-    .lp2-intro-sub {
+    .lp2-intro-sub,
+    .lp2-intro-lace {
       animation: none;
     }
   }
@@ -685,7 +711,7 @@ const editions = [
     position: absolute;
     top: 50%;
     left: 50%;
-    z-index: 4;
+    z-index: 6; /* above the headline copy (z-index 5) — it rises OVER the text */
     width: min(95vw, 1640px);
     aspect-ratio: 1.575 / 1;
     pointer-events: none;
@@ -693,6 +719,16 @@ const editions = [
     transform: translate3d(-50%, calc(-50% + var(--introshot-y, 112svh)), 0);
     transform-origin: 50% 76%;
     will-change: opacity, transform;
+  }
+
+  /* One-shot load glide: the screenshot slides up from off-screen to its
+     resting peek (top edge poking into view — a clear "scroll down" cue).
+     Added by JS for the intro only, then removed so scroll updates stay
+     instant and driven by the per-frame damping in the script below. */
+  .lp2-hero-intro.is-hero-anim .lp2-introshot {
+    transition:
+      transform 1400ms cubic-bezier(0.16, 0.84, 0.32, 1),
+      opacity 1000ms ease;
   }
 
   .lp2-introshot-card {
@@ -2422,18 +2458,40 @@ const editions = [
       return clamp(-rect.top / travel, 0, 1);
     };
 
+    // At the top of the page the shot RESTS at a peek — its top edge poking
+    // into the viewport — instead of hiding fully off-screen, so it reads as a
+    // clear "there's more below" cue. Scrolling lifts it the rest of the way.
+    //
+    // The shot is width:min(95vw,1640px) at aspect 1.575, so its rendered
+    // HEIGHT depends on the window. A fixed svh offset therefore showed wildly
+    // different amounts across viewports — and dropped it entirely off-screen
+    // on short/narrow ones. Instead we compute the offset so a CONSTANT
+    // fraction of the shot always peeks, whatever the window shape.
+    const SHOT_ASPECT = 1.575; // must match the CSS aspect-ratio
+    const PEEK_FRAC = 0.12; // ≈ top tenth of the shot stays in view at rest
+    const SETTLED = 6; // svh: fully risen, filling the stage
+
+    const restY = () => {
+      const w = Math.min(window.innerWidth * 0.95, 1640); // matches CSS width
+      const hSvh = ((w / SHOT_ASPECT) / window.innerHeight) * 100;
+      // Element is centred on the viewport middle (50svh) then pushed down by
+      // Y; solving for a `PEEK_FRAC` sliver visible at the bottom edge gives:
+      return 50 + hSvh * (0.5 - PEEK_FRAC);
+    };
+    let REST = restY();
+
     const apply = (p: number) => {
-      // Screenshot rises linearly: 112svh (below the fold) → 6svh (settled).
-      const rise = clamp((p - 0.08) / 0.74, 0, 1);
-      hero.style.setProperty("--introshot-y", `${lerp(112, 6, rise)}svh`);
-      hero.style.setProperty("--introshot-opacity", String(clamp((p - 0.08) * 6, 0, 1)));
-      hero.style.setProperty("--introshot-halo", String(lerp(0.35, 0.8, rise)));
+      // Screenshot rises linearly from its resting peek up to settled.
+      const rise = clamp(p / 0.82, 0, 1);
+      hero.style.setProperty("--introshot-y", `${lerp(REST, SETTLED, rise)}svh`);
+      hero.style.setProperty("--introshot-opacity", "1");
+      hero.style.setProperty("--introshot-halo", String(lerp(0.42, 0.8, rise)));
 
       // Headline holds while the screenshot rises up from below, then fades as
       // the shot nears the vertical midpoint of the page — driven by `rise`
       // (the shot's travel) rather than raw scroll, so it never clears out to
       // an empty screen before the screenshot is actually approaching.
-      const copyFade = clamp((rise - 0.42) / 0.2, 0, 1);
+      const copyFade = clamp((rise - 0.5) / 0.22, 0, 1);
       hero.style.setProperty("--copy-opacity", String(1 - copyFade));
       hero.style.setProperty("--copy-y", `${lerp(0, -11, copyFade)}svh`);
     };
@@ -2441,7 +2499,38 @@ const editions = [
     let shown = scrollProgress();
     let target = shown;
     let raf = 0;
-    apply(shown);
+
+    // Load-in: leave the shot in its CSS off-screen state (112svh, opacity 0)
+    // for a beat, then flip on a one-shot transition and glide it up to the
+    // resting peek — a smooth entrance that also advertises the scroll. Only
+    // auto-plays when the page actually loads at the top; if the user landed
+    // mid-page, jump straight to the scroll-driven position.
+    let intro = false;
+    const endIntro = () => {
+      if (!intro) return;
+      intro = false;
+      hero.classList.remove("is-hero-anim");
+    };
+
+    if (shown < 0.02) {
+      const shot = hero.querySelector<HTMLElement>(".lp2-introshot");
+      shot?.addEventListener("transitionend", endIntro, { once: true });
+      // Two frames guarantee the off-screen start state is painted first, so
+      // the transition has somewhere to animate from; a short beat lets the
+      // headline settle before the shot slides up behind it.
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() =>
+          window.setTimeout(() => {
+            intro = true;
+            hero.classList.add("is-hero-anim");
+            apply(shown);
+            window.setTimeout(endIntro, 1800); // fallback if transitionend is missed
+          }, 420),
+        ),
+      );
+    } else {
+      apply(shown);
+    }
 
     const frame = () => {
       const diff = target - shown;
@@ -2458,11 +2547,25 @@ const editions = [
     };
 
     const onScroll = () => {
+      // The moment the user scrolls, drop the one-shot intro transition so the
+      // scroll-driven damping takes over instantly instead of lagging behind it.
+      if (intro) {
+        endIntro();
+        shown = scrollProgress();
+      }
       target = scrollProgress();
       if (!raf) raf = requestAnimationFrame(frame);
     };
 
+    const onResize = () => {
+      // Recompute the resting peek for the new window shape, then re-apply.
+      REST = restY();
+      target = scrollProgress();
+      if (!intro) shown = target; // snap when not mid-intro so it can't drift off-screen
+      if (!raf) raf = requestAnimationFrame(frame);
+    };
+
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
+    window.addEventListener("resize", onResize);
   })();
 </script>

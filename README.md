@@ -25,10 +25,19 @@ Build and verify:
 
 ```sh
 npm run check:domains
+npm run check:seo
 npm run build:determinant
 npm run build:lace
 npm run build
 ```
+
+`npm run check` builds both sites and then validates production SEO invariants,
+including indexability, canonicals, sitemap parity, unique titles and
+descriptions, one `h1` per page, robots declarations, and JSON-LD syntax.
+
+The keyword map, implementation record, publishing roadmap, and external
+Search Console/Cloudflare launch checklist live in
+[`docs/SEO-STRATEGY.md`](docs/SEO-STRATEGY.md).
 
 ## Cloudflare Pages
 

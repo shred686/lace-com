@@ -25,6 +25,7 @@ Build and verify:
 
 ```sh
 npm run check:domains
+npm run check:seo
 npm run build:determinant
 npm run build:lace
 npm run build

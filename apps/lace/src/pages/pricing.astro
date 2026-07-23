@@ -1,16 +1,35 @@
 ---
 import BaseLayout from "@determinant/site-kit/layouts/BaseLayout.astro";
 import LacePricingPage from "@determinant/site-kit/components/lace/LacePricingPage.astro";
+import { breadcrumbSchema, faqSchema } from "@determinant/site-kit/seo/schema";
 import { laceSite } from "../site.config";
+
+const description = "Compare LACE enterprise AI deployment options for managed cloud, private cloud, on-premises, and air-gapped environments. All tiers include the full platform.";
+const pricingFaqs = [
+  { q: "How is LACE licensed?", a: "As a platform subscription: one contract covers Enterprise Search, Knowledge Graph, Agentic Platform, and App Builder. Pricing reflects deployment scope and usage, with AI budgets and hard caps set by the customer." },
+  { q: "Can LACE run fully offline?", a: "Yes. LACE can run in managed cloud, private cloud, on-premises, or a fully air-gapped environment with no external AI calls." },
+  { q: "Which AI models does LACE use?", a: "LACE resolves models by purpose through a model registry. Customers can use managed defaults, bring approved model endpoints, or restrict specific workloads to specific models." },
+  { q: "How does an evaluation work?", a: "A technical evaluation uses the customer's documents and one real workflow under NDA. The team judges cited answers and working output against agreed criteria." },
+  { q: "Does LACE replace existing systems?", a: "No. LACE connects to document stores, collaboration tools, email, databases, and existing indexes while carrying source-system permissions into retrieval." },
+  { q: "Is the lace-app-sdk included?", a: "Yes. The public, versioned lace-app-sdk and governed application release path are available on every LACE tier." },
+];
 ---
 
 <BaseLayout
-  title={`Pricing | ${laceSite.name}`}
-  description="One platform subscription covers enterprise search, knowledge graph, agents, and app building — priced by deployment scope and usage, from managed cloud to air-gapped."
+  title={`Enterprise AI Platform Pricing & Deployment | ${laceSite.name}`}
+  description={description}
   theme="lace"
   themeColor="#f6f7f9"
   lang="en"
   siteName={laceSite.name}
+  imageAlt="LACE enterprise AI platform pricing and deployment options"
+  jsonLd={[
+    breadcrumbSchema([
+      { name: "Home", url: `${laceSite.url}/` },
+      { name: "Pricing", url: `${laceSite.url}/pricing/` },
+    ]),
+    faqSchema(pricingFaqs),
+  ]}
 >
   <LacePricingPage />
 </BaseLayout>

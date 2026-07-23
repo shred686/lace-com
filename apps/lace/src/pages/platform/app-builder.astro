@@ -2,7 +2,7 @@
 import BaseLayout from "@determinant/site-kit/layouts/BaseLayout.astro";
 import LaceOfferingShell from "@determinant/site-kit/components/lace/LaceOfferingShell.astro";
 import LaceBuildDemo from "@determinant/site-kit/components/lace/LaceBuildDemo.astro";
-import { laceSite } from "../../site.config";
+import { createLaceOfferingJsonLd, laceSite } from "../../site.config";
 
 const content = {
   kicker: "Platform · App Builder",
@@ -70,16 +70,38 @@ const content = {
   ],
   ctaTitle: "Describe the tool. Open the URL.",
   ctaAccent: "Open the URL.",
+  faqs: [
+    {
+      q: "What does LACE App Builder create?",
+      a: "It creates real web applications with a user interface, structured data, sign-in, permissions, hosting, versioned releases, and rollback. Applications can also include governed agents and AI assistants.",
+    },
+    {
+      q: "How does LACE make AI-generated applications safer?",
+      a: "Generated code runs in an isolated sandbox and reaches identity, data, policy, limits, and audit only through governed SDK capabilities. It does not receive raw database credentials or unrestricted infrastructure access.",
+    },
+    {
+      q: "Can professional developers work on a LACE application?",
+      a: "Yes. Generated and hand-written applications target the same public lace-app-sdk contracts. Developers can work locally, use version control, review changes, and deploy through the same release pipeline.",
+    },
+    {
+      q: "Can applications run in a private or air-gapped environment?",
+      a: "Yes. LACE supports managed cloud, private cloud, on-premises, and fully air-gapped deployment. The application inherits the same identity, policy, data governance, and audit controls in each footprint.",
+    },
+  ],
 };
+
+const pageDescription = "Build governed enterprise AI applications from a prompt with sign-in, data, hosting, billing, versioned releases, rollback, and a public developer SDK.";
 ---
 
 <BaseLayout
-  title={`App Builder | ${laceSite.name}`}
-  description="Describe an application in one prompt and watch it go live — UI, database, sign-in, hosting, billing, versioned releases, and rollback. A professional developer lane via the public lace-app-sdk."
+  title={`Enterprise AI App Builder & Governed SDK | ${laceSite.name}`}
+  description={pageDescription}
   theme="lace"
   themeColor="#f6f7f9"
   lang="en"
   siteName={laceSite.name}
+  imageAlt="LACE enterprise AI app builder and governed SDK"
+  jsonLd={createLaceOfferingJsonLd({ path: "/platform/app-builder", name: "AI App Builder", description: pageDescription, faqs: content.faqs })}
 >
   <LaceOfferingShell {...content}>
     <LaceBuildDemo />

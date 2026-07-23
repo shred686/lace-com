@@ -5,6 +5,7 @@ import LaceNav from "@determinant/site-kit/components/lace/LaceNav.astro";
 import LaceFooter from "@determinant/site-kit/components/lace/LaceFooter.astro";
 import LaceCtaBand from "@determinant/site-kit/components/lace/LaceCtaBand.astro";
 import "@determinant/site-kit/styles/lace-site.css";
+import { breadcrumbSchema } from "@determinant/site-kit/seo/schema";
 import { laceSite } from "../../site.config";
 
 export async function getStaticPaths() {
@@ -24,15 +25,45 @@ const others = (await getCollection("blog"))
   .filter((entry) => entry.id !== post.id)
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .slice(0, 2);
+const pageUrl = `${laceSite.url}/blog/${post.id}/`;
+const seoTitle = post.data.seoTitle ?? `${post.data.title} | ${laceSite.name} Blog`;
+const seoDescription = post.data.seoDescription ?? post.data.description;
 ---
 
 <BaseLayout
-  title={`${post.data.title} | ${laceSite.name} Blog`}
-  description={post.data.description}
+  title={seoTitle}
+  description={seoDescription}
   theme="lace"
   themeColor="#f6f7f9"
   lang="en"
   siteName={laceSite.name}
+  imageAlt={`${post.data.title} — ${laceSite.name} Blog`}
+  ogType="article"
+  publishedTime={post.data.date}
+  modifiedTime={post.data.updated ?? post.data.date}
+  author={post.data.author}
+  section={post.data.category}
+  feed="/rss.xml"
+  jsonLd={[
+    breadcrumbSchema([
+      { name: "Home", url: `${laceSite.url}/` },
+      { name: "Blog", url: `${laceSite.url}/blog/` },
+      { name: post.data.title, url: pageUrl },
+    ]),
+    {
+      "@type": "BlogPosting",
+      "@id": `${pageUrl}#article`,
+      headline: post.data.title,
+      description: seoDescription,
+      mainEntityOfPage: { "@id": `${pageUrl}#webpage` },
+      datePublished: post.data.date.toISOString(),
+      dateModified: (post.data.updated ?? post.data.date).toISOString(),
+      author: { "@type": "Person", name: post.data.author },
+      publisher: { "@id": "https://determinantsystems.com/#organization" },
+      image: `${laceSite.url}/og-image.png`,
+      articleSection: post.data.category,
+    },
+  ]}
 >
   <main class="lp-site lp-post">
     <LaceNav active="blog" />

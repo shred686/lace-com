@@ -6,8 +6,11 @@ const blog = defineCollection({
   schema: z.object({
     title: z.string(),
     description: z.string(),
+    seoTitle: z.string().optional(),
+    seoDescription: z.string().optional(),
     category: z.enum(["Retrieval", "Knowledge Graph", "Agents", "App Builder", "Deployment", "Product"]),
     date: z.coerce.date(),
+    updated: z.coerce.date().optional(),
     author: z.string().default("LACE Engineering"),
     featured: z.boolean().default(false)
   })

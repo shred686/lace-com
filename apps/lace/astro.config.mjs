@@ -2,7 +2,7 @@ import { defineConfig } from "astro/config";
 import sitemap from "@astrojs/sitemap";
 
 // Draft / internal pages that must stay out of the sitemap and search index.
-const EXCLUDED = ["/contact/success"];
+const EXCLUDED = ["/contact/success", "/product"];
 
 export default defineConfig({
   site: "https://laceplatform.com",

@@ -16,6 +16,7 @@
     "preview:lace": "npm --workspace apps/lace run preview",
     "build": "npm run build:determinant && npm run build:lace",
     "check:domains": "node scripts/check-domain-leakage.mjs",
-    "check": "npm run check:domains && npm run build"
+    "check:seo": "node scripts/check-seo.mjs",
+    "check": "npm run check:domains && npm run build && npm run check:seo"
   }
 }

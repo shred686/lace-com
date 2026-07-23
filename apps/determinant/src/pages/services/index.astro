@@ -1,0 +1,65 @@
+---
+import BaseLayout from "@determinant/site-kit/layouts/BaseLayout.astro";
+import DeterminantInteriorPage from "@determinant/site-kit/components/DeterminantInteriorPage.astro";
+import { breadcrumbSchema } from "@determinant/site-kit/seo/schema";
+import { services } from "../../data/services";
+import { determinantSite } from "../../site.config";
+
+const title = "Enterprise AI Consulting Services | Determinant Systems";
+const description =
+  "Enterprise AI consulting and engineering for AI agents, RAG, search, knowledge graphs, workflow automation, and custom AI application development.";
+const links = services.map((service) => ({
+  href: `/services/${service.slug}`,
+  title: service.shortName,
+  description: service.description,
+}));
+const schema = breadcrumbSchema([
+  { name: "Home", url: `${determinantSite.url}/` },
+  { name: "Services", url: `${determinantSite.url}/services/` },
+]);
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  siteName={determinantSite.name}
+  imageAlt="Determinant Systems enterprise AI consulting and engineering"
+  jsonLd={schema}
+>
+  <DeterminantInteriorPage
+    eyebrow="Enterprise AI consulting services"
+    title="AI engineering for work that has to survive production."
+    lede="Determinant Systems turns business processes and company knowledge into governed AI systems. We build the retrieval, orchestration, policy, application, and deployment layers between powerful models and the work your organization is accountable for."
+    breadcrumbs={[{ href: "/", label: "Home" }, { label: "Services" }]}
+    sections={[
+      {
+        heading: "One engineering partner across the enterprise AI stack",
+        paragraphs: [
+          "Enterprise AI projects fail at the seams: the model cannot reach the right evidence, a prototype cannot honor permissions, a workflow has no failure path, or an application cannot be operated after the demo. We design the system as a whole so data, models, tools, policies, people, and deployment agree on how work gets done.",
+          "Engagements can begin with a focused retrieval or workflow problem and expand onto shared infrastructure. The goal is not a collection of disconnected AI experiments; it is reusable capability that makes the next production use case faster and safer to deliver.",
+        ],
+      },
+      {
+        heading: "Designed for evidence and control",
+        bullets: [
+          "Source-grounded outputs with citations reviewers can open",
+          "Permissions enforced before data reaches a model or user",
+          "Human approval gates for sensitive decisions and actions",
+          "Defined budgets, models, tools, and authority for each workflow",
+          "Execution records that connect inputs, steps, outputs, and interventions",
+        ],
+      },
+      {
+        heading: "Deployment follows your boundary",
+        paragraphs: [
+          "Systems can run in managed cloud, a private VPC, your data center, or a fully air-gapped environment with no external AI calls. Model providers and infrastructure can be selected around the security, latency, cost, and accreditation requirements of the workload.",
+        ],
+      },
+    ]}
+    links={links}
+    linksTitle="Choose the capability your problem needs"
+    ctaTitle="Start with one workflow, corpus, or application."
+    ctaBody="We’ll define the operating boundary, the evidence of success, and the shortest build that can prove the idea on real work."
+  />
+</BaseLayout>
+

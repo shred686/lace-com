@@ -1,0 +1,68 @@
+---
+import BaseLayout from "@determinant/site-kit/layouts/BaseLayout.astro";
+import DeterminantInteriorPage from "@determinant/site-kit/components/DeterminantInteriorPage.astro";
+import {
+  breadcrumbSchema,
+  faqSchema,
+  serviceSchema,
+} from "@determinant/site-kit/seo/schema";
+import { services, type ServicePage } from "../../data/services";
+import { determinantOrgId, determinantSite } from "../../site.config";
+
+export function getStaticPaths() {
+  return services.map((service) => ({
+    params: { slug: service.slug },
+    props: { service },
+  }));
+}
+
+const { service } = Astro.props as { service: ServicePage };
+const pageUrl = `${determinantSite.url}/services/${service.slug}/`;
+const related = services
+  .filter((entry) => entry.slug !== service.slug)
+  .slice(0, 3)
+  .map((entry) => ({
+    href: `/services/${entry.slug}`,
+    title: entry.shortName,
+    description: entry.description,
+  }));
+const schema = [
+  breadcrumbSchema([
+    { name: "Home", url: `${determinantSite.url}/` },
+    { name: "Services", url: `${determinantSite.url}/services/` },
+    { name: service.shortName, url: pageUrl },
+  ]),
+  serviceSchema({
+    id: `${pageUrl}#service`,
+    name: service.shortName,
+    description: service.description,
+    url: pageUrl,
+    providerId: determinantOrgId,
+    serviceType: service.serviceType,
+  }),
+  faqSchema(service.faqs),
+];
+---
+
+<BaseLayout
+  title={service.seoTitle}
+  description={service.description}
+  siteName={determinantSite.name}
+  imageAlt={`${service.shortName} by Determinant Systems`}
+  jsonLd={schema}
+>
+  <DeterminantInteriorPage
+    eyebrow={service.eyebrow}
+    title={service.title}
+    lede={service.lede}
+    breadcrumbs={[
+      { href: "/", label: "Home" },
+      { href: "/services", label: "Services" },
+      { label: service.shortName },
+    ]}
+    sections={service.sections}
+    links={related}
+    faqs={service.faqs}
+  />
+</BaseLayout>
+

@@ -91,7 +91,7 @@ const copy = {
 
 const serviceTiles = [
   {
-    href: "#agents",
+    href: "/services/ai-agent-development",
     accent: "#5be9ff",
     title: "AI Agents",
     blurb:
@@ -99,14 +99,14 @@ const serviceTiles = [
     icon: "chip",
   },
   {
-    href: "#app-factory",
+    href: "/services/custom-ai-application-development",
     accent: "#ff9d7a",
     title: "App Factory",
     blurb: "Describe the tool your team needs; get real, deployed software.",
     icon: "app",
   },
   {
-    href: "#workflows",
+    href: "/services/ai-workflow-automation",
     accent: "#00ffc2",
     title: "LLM-Powered Workflows",
     blurb:
@@ -114,21 +114,21 @@ const serviceTiles = [
     icon: "flow",
   },
   {
-    href: "#rag",
+    href: "/services/retrieval-augmented-generation",
     accent: "#ffd86f",
     title: "Retrieval-Augmented Generation",
     blurb: "Answers written from your documents, with citations you can open.",
     icon: "doc",
   },
   {
-    href: "#search",
+    href: "/services/enterprise-search",
     accent: "#7aa2ff",
     title: "Enterprise Search",
     blurb: "One search across every place your company keeps information.",
     icon: "search",
   },
   {
-    href: "#graphs",
+    href: "/services/knowledge-graphs",
     accent: "#c58dff",
     title: "Knowledge Graphs",
     blurb: "Your documents, distilled into a network of facts you can query.",
@@ -439,9 +439,10 @@ const year = new Date().getFullYear();
 
       <div class="official-topnav-panel" id="topNavPanel">
         <nav class="official-topnav-links" aria-label="Primary">
-          <a href="#services">{copy.navServices}</a>
+          <a href="/services">{copy.navServices}</a>
           <a href="#platform">{copy.navPlatform}</a>
           <a href="#how-we-work">{copy.navHow}</a>
+          <a href="/about">About</a>
         </nav>
 
         <div class="official-topnav-actions">
@@ -477,6 +478,7 @@ const year = new Date().getFullYear();
         </span>
       </h1>
 
+      <p class="hero-intro">Enterprise AI consulting &amp; engineering</p>
       <p class="hero-detail">{copy.heroDetail}</p>
 
       <div class="hero-actions">
@@ -1499,7 +1501,10 @@ const year = new Date().getFullYear();
         <p>© {year} Determinant Systems · {copy.footerTagline}</p>
       </div>
       <div class="footer-links">
-        
+        <a href="/services">Services</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+        <a href="https://laceplatform.com">LACE Platform</a>
       </div>
     </div>
   </footer>

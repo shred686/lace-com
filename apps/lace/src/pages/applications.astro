@@ -4,6 +4,7 @@ import LaceNav from "@determinant/site-kit/components/lace/LaceNav.astro";
 import LaceFooter from "@determinant/site-kit/components/lace/LaceFooter.astro";
 import LaceCtaBand from "@determinant/site-kit/components/lace/LaceCtaBand.astro";
 import "@determinant/site-kit/styles/lace-site.css";
+import { breadcrumbSchema } from "@determinant/site-kit/seo/schema";
 import { laceSite } from "../site.config";
 
 const editions = [
@@ -50,15 +51,34 @@ const portfolio = [
     line: "An answers-and-actions desk across email, chat, and voice — approval gates included.",
   },
 ];
+
+const description = "Explore LACE industry AI applications for government, defense, legal, compliance, and financial services, plus governed apps built and operated on LACE.";
 ---
 
 <BaseLayout
-  title={`Applications | ${laceSite.name}`}
-  description="LACE-built, LACE-managed applications offered as products — industry editions for government, legal, and finance, plus a portfolio of apps built and operated on the platform."
+  title={`Enterprise AI Applications for Regulated Industries | ${laceSite.name}`}
+  description={description}
   theme="lace"
   themeColor="#f6f7f9"
   lang="en"
   siteName={laceSite.name}
+  imageAlt="LACE enterprise AI applications for government, legal, and finance"
+  jsonLd={[
+    breadcrumbSchema([
+      { name: "Home", url: `${laceSite.url}/` },
+      { name: "Applications", url: `${laceSite.url}/applications/` },
+    ]),
+    {
+      "@type": "ItemList",
+      name: "LACE industry applications",
+      itemListElement: editions.map((edition, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        url: `${laceSite.url}/applications/#${edition.id}`,
+        name: edition.name,
+      })),
+    },
+  ]}
 >
   <main class="lp-site lp-apps">
     <LaceNav active="product" />

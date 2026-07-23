@@ -1,8 +1,11 @@
 ---
 title: "Enterprise Vibe Coding Is Coming. The Trick Is Deciding What the Vibes Are Allowed to Touch."
 description: "Vibe coding's productivity is real — and so is the risk. The 'fix' we are making isn't to review generated code harder. It's deciding which concerns generated code is allowed to have, and enforcing the boundary with an SDK."
+seoTitle: "Enterprise Vibe Coding: A Safer Architecture | LACE"
+seoDescription: "Enterprise vibe coding can be safe when identity, data, policy, limits, and audit are platform capabilities generated code cannot bypass."
 category: "App Builder"
 date: 2026-07-22
+updated: 2026-07-23
 author: "Michael Kerner"
 featured: true
 ---

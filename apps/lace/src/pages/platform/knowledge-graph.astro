@@ -2,7 +2,7 @@
 import BaseLayout from "@determinant/site-kit/layouts/BaseLayout.astro";
 import LaceOfferingShell from "@determinant/site-kit/components/lace/LaceOfferingShell.astro";
 import LaceKgVideo from "@determinant/site-kit/components/lace/LaceKgVideo.astro";
-import { laceSite } from "../../site.config";
+import { createLaceOfferingJsonLd, laceSite } from "../../site.config";
 
 const content = {
   kicker: "Platform · Knowledge Graph",
@@ -69,16 +69,38 @@ const content = {
   ],
   ctaTitle: "See your documents become a graph.",
   ctaAccent: "become a graph.",
+  faqs: [
+    {
+      q: "What makes the LACE knowledge graph evidence-locked?",
+      a: "Every materialized entity, relationship, and value retains a link to the source passage that supports it, along with review and timing information. Users can move from a fact back to its evidence.",
+    },
+    {
+      q: "What is a bitemporal knowledge graph?",
+      a: "A bitemporal graph records both when a fact was true in the world and when the system learned or recorded it. This supports point-in-time questions without erasing prior history when information changes.",
+    },
+    {
+      q: "How does LACE handle conflicting facts?",
+      a: "When sources disagree, LACE preserves both evidence paths and flags the conflict for review instead of silently selecting one version. Corrections supersede assertions without rewriting history.",
+    },
+    {
+      q: "Does LACE support BFO and Common Core Ontologies?",
+      a: "Yes. LACE supports versioned schema packs aligned to Basic Formal Ontology and Common Core Ontologies for programs that require standards-conformant knowledge modeling and reviewable conformance artifacts.",
+    },
+  ],
 };
+
+const pageDescription = "An evidence-locked, bitemporal enterprise knowledge graph with source-linked facts, human review, entity resolution, conflict detection, and BFO/CCO support.";
 ---
 
 <BaseLayout
-  title={`Knowledge Graph | ${laceSite.name}`}
-  description="An evidence-locked, bitemporal knowledge graph: automatic extraction with human review, receipts on every fact, time-travel queries, conflict detection, and BFO/CCO conformance."
+  title={`Enterprise Knowledge Graph Platform with Provenance | ${laceSite.name}`}
+  description={pageDescription}
   theme="lace"
   themeColor="#f6f7f9"
   lang="en"
   siteName={laceSite.name}
+  imageAlt="LACE evidence-locked enterprise knowledge graph with provenance"
+  jsonLd={createLaceOfferingJsonLd({ path: "/platform/knowledge-graph", name: "Knowledge Graph", description: pageDescription, faqs: content.faqs })}
 >
   <LaceOfferingShell {...content}>
     <LaceKgVideo />

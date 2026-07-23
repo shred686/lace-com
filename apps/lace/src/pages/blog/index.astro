@@ -4,6 +4,7 @@ import BaseLayout from "@determinant/site-kit/layouts/BaseLayout.astro";
 import LaceNav from "@determinant/site-kit/components/lace/LaceNav.astro";
 import LaceFooter from "@determinant/site-kit/components/lace/LaceFooter.astro";
 import "@determinant/site-kit/styles/lace-site.css";
+import { breadcrumbSchema } from "@determinant/site-kit/seo/schema";
 import { laceSite } from "../../site.config";
 
 const posts = (await getCollection("blog")).sort(
@@ -20,12 +21,18 @@ const fmt = (date: Date) =>
 ---
 
 <BaseLayout
-  title={`Blog | ${laceSite.name}`}
+  title={`Enterprise AI Engineering Blog | ${laceSite.name}`}
   description="Engineering and product writing from the LACE team: evidence-first retrieval, bitemporal knowledge graphs, governed agents, and air-gapped AI."
   theme="lace"
   themeColor="#f6f7f9"
   lang="en"
   siteName={laceSite.name}
+  imageAlt="LACE enterprise AI engineering blog"
+  feed="/rss.xml"
+  jsonLd={breadcrumbSchema([
+    { name: "Home", url: `${laceSite.url}/` },
+    { name: "Blog", url: `${laceSite.url}/blog/` },
+  ])}
 >
   <main class="lp-site lp-blog">
     <LaceNav active="blog" />

@@ -1,0 +1,81 @@
+---
+import BaseLayout from "@determinant/site-kit/layouts/BaseLayout.astro";
+import DeterminantInteriorPage from "@determinant/site-kit/components/DeterminantInteriorPage.astro";
+import { breadcrumbSchema } from "@determinant/site-kit/seo/schema";
+import { determinantSite } from "../site.config";
+
+const title = "About Determinant Systems | Enterprise AI Engineering";
+const description =
+  "Determinant Systems is an enterprise AI engineering firm building governed agents, RAG, search, knowledge graphs, workflows, and custom applications.";
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  siteName={determinantSite.name}
+  imageAlt="About Determinant Systems enterprise AI engineering"
+  jsonLd={breadcrumbSchema([
+    { name: "Home", url: `${determinantSite.url}/` },
+    { name: "About", url: `${determinantSite.url}/about/` },
+  ])}
+>
+  <DeterminantInteriorPage
+    eyebrow="About Determinant Systems"
+    title="We build the layer between AI models and your business."
+    lede="Determinant Systems is an enterprise AI engineering firm. We connect models to the documents, databases, tools, policies, and people that make a system useful—and accountable—in production."
+    breadcrumbs={[{ href: "/", label: "Home" }, { label: "About" }]}
+    sections={[
+      {
+        heading: "The model is only one part of the system",
+        paragraphs: [
+          "Powerful foundation models are widely available. The harder work is making them operate on the right company context, inside real authority boundaries, through reliable workflows, with evidence that lets a reviewer understand the result. That systems problem is our focus.",
+          "We design and build governed AI agents, retrieval-augmented generation, enterprise search, knowledge graphs, workflow automation, and custom AI applications. Projects can integrate with the systems an organization already runs or create new software around a process that has never had the right tool.",
+        ],
+      },
+      {
+        heading: "A platform behind the consulting work",
+        paragraphs: [
+          "Our delivery work runs on LACE, the enterprise AI platform developed by Determinant Systems. LACE provides connectors, retrieval, knowledge graphs, agents, workflow orchestration, application infrastructure, policy enforcement, provenance, and audit on one foundation.",
+          "That means an engagement does not begin by rebuilding identity, ingestion, deployment, and run history. The team can spend its time on the business process, evidence, controls, and user experience that make the implementation specific to your organization.",
+        ],
+      },
+      {
+        heading: "How we work",
+        bullets: [
+          "Scope one recurring, measurable process before expanding the mandate",
+          "Define successful and unacceptable outcomes before model selection",
+          "Use representative company data and real permissions in evaluation",
+          "Keep human judgment wherever risk or ambiguity requires it",
+          "Deploy in cloud, private cloud, on-premises, or air-gapped environments",
+          "Leave a working, inspectable system—not a slide deck or isolated demo",
+        ],
+      },
+      {
+        heading: "Trust comes from evidence and boundaries",
+        paragraphs: [
+          "We do not treat a confident model response as final truth. Outputs can be grounded in source material, checked against explicit acceptance rules, routed through human approval, and linked to a complete execution record. Tools, data, budgets, and model choices are bounded by the surrounding system.",
+          "The objective is practical: AI that can help complete real work while giving operators, security teams, and reviewers a clear answer to what happened, why it happened, and who authorized it.",
+        ],
+      },
+    ]}
+    links={[
+      {
+        href: "/services",
+        title: "Enterprise AI services",
+        description: "Explore the systems and engineering capabilities we deliver.",
+      },
+      {
+        href: "https://laceplatform.com",
+        title: "LACE platform",
+        description: "See the governed enterprise AI platform behind the work.",
+      },
+      {
+        href: "/contact",
+        title: "Talk to the team",
+        description: "Bring a process, corpus, or application you need to put into production.",
+      },
+    ]}
+    linksTitle="Learn more"
+  />
+</BaseLayout>
+

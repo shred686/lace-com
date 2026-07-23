@@ -9,6 +9,13 @@ import { determinantSite, determinantJsonLd } from "../site.config";
   description={determinantSite.description}
   theme="midnight"
   lang="en"
+  siteName={determinantSite.name}
+  imageAlt="Determinant Systems enterprise AI consulting and engineering"
+  alternates={[
+    { lang: "en", href: "/" },
+    { lang: "es", href: "/es/" },
+    { lang: "x-default", href: "/" },
+  ]}
   jsonLd={determinantJsonLd}
 >
   <HomeV2Page />

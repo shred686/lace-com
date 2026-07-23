@@ -254,7 +254,7 @@ const toc = [
       <!-- Get started -->
       <section id="introduction" class="lpd-sec" data-sec>
         <p class="lpd-crumb">Get Started</p>
-        <h1>Introduction</h1>
+        <h1>LACE Platform and App SDK Documentation</h1>
         <p class="lpd-sub">
           LACE is the AI platform for the governed enterprise — search, knowledge
           graph, agents, and an app builder on one accountability substrate.
@@ -333,7 +333,7 @@ const toc = [
       <!-- SDK -->
       <section id="install" class="lpd-sec" data-sec>
         <p class="lpd-crumb">lace-app-sdk</p>
-        <h1>Install</h1>
+        <h2>Install the lace-app-sdk</h2>
         <p class="lpd-sub">
           The public, versioned contract surface for building apps on LACE. A
           facade over the live platform contracts — never a fork of them.
@@ -350,7 +350,7 @@ const toc = [
       </section>
 
       <section id="quickstart" class="lpd-sec" data-sec>
-        <h2>Quickstart</h2>
+        <h3>Quickstart</h3>
         <p>
           An app is a manifest plus providers. Four small files make a governed
           application: the manifest, a data collection, a tool provider, and an
@@ -359,7 +359,7 @@ const toc = [
       </section>
 
       <section id="manifest" class="lpd-sec" data-sec>
-        <h2>Manifest</h2>
+        <h3>Manifest</h3>
         <p>
           <code class="lp-inline-code">LaceAppManifest</code> declares everything
           your app provides. LACE discovers manifests and wires providers at
@@ -372,7 +372,7 @@ const toc = [
       </section>
 
       <section id="data" class="lpd-sec" data-sec>
-        <h2>Data collections</h2>
+        <h3>Data collections</h3>
         <p>
           Collections are typed with JSON Schema and served through the governed
           <code class="lp-inline-code">AppDataService</code> — tenant-scoped,
@@ -388,7 +388,7 @@ const toc = [
       </section>
 
       <section id="tools" class="lpd-sec" data-sec>
-        <h2>Tools</h2>
+        <h3>Tools</h3>
         <p>
           Implement <code class="lp-inline-code">AppToolProvider</code> to expose
           custom tools. Tools run in constrained runtimes, and trust tier plus
@@ -401,7 +401,7 @@ const toc = [
       </section>
 
       <section id="agents" class="lpd-sec" data-sec>
-        <h2>Agents &amp; skills</h2>
+        <h3>Agents &amp; skills</h3>
         <p>
           Declare an <code class="lp-inline-code">AgentDefinition</code> and it
           runs a real agentic loop in your sidecar — the model chooses tools;
@@ -416,7 +416,7 @@ const toc = [
       </section>
 
       <section id="modules" class="lpd-sec" data-sec>
-        <h2>Module reference</h2>
+        <h3>Module reference</h3>
         <div class="lpd-table-wrap">
           <table>
             <thead>
@@ -444,7 +444,7 @@ const toc = [
       <!-- Platform guide -->
       <section id="datasets" class="lpd-sec" data-sec>
         <p class="lpd-crumb">Platform Guide</p>
-        <h1>Datasets &amp; connectors</h1>
+        <h2>Datasets &amp; connectors</h2>
         <p>
           Datasets are tenant-scoped containers over uploads and live
           connectors — SharePoint, Google Drive, OneDrive, Dropbox, Notion,
@@ -455,7 +455,7 @@ const toc = [
       </section>
 
       <section id="search-rag" class="lpd-sec" data-sec>
-        <h2>Search &amp; RAG</h2>
+        <h3>Search &amp; RAG</h3>
         <p>
           Hybrid retrieval fuses lexical and vector legs with reciprocal-rank
           fusion, filters by source ACLs, and optionally reranks on GPU.
@@ -465,7 +465,7 @@ const toc = [
       </section>
 
       <section id="knowledge-graph" class="lpd-sec" data-sec>
-        <h2>Knowledge graph</h2>
+        <h3>Knowledge graph</h3>
         <p>
           Schema packs are versioned, executable ontology contracts. Extraction
           is candidate-first and evidence-gated; identity resolution merges
@@ -475,7 +475,7 @@ const toc = [
       </section>
 
       <section id="agents-channels" class="lpd-sec" data-sec>
-        <h2>Agents &amp; channels</h2>
+        <h3>Agents &amp; channels</h3>
         <p>
           One control plane drives every agent: sessions, tasks, streaming,
           steering, and cancellation. Channels normalize email, SMS, WhatsApp,
@@ -485,7 +485,7 @@ const toc = [
       </section>
 
       <section id="workflows" class="lpd-sec" data-sec>
-        <h2>Workflows &amp; pipelines</h2>
+        <h3>Workflows &amp; pipelines</h3>
         <p>
           Pipelines are versioned graphs of typed steps with checkpoints,
           retries, idempotency, and dead-letter handling. Workflow Studio
@@ -495,7 +495,7 @@ const toc = [
       </section>
 
       <section id="app-builder" class="lpd-sec" data-sec>
-        <h2>App Builder</h2>
+        <h3>App Builder</h3>
         <p>
           Describe an application and the builder plans it, constructs it in a
           sandbox, validates it through proof lanes, and publishes it as an
@@ -505,7 +505,7 @@ const toc = [
       </section>
 
       <section id="governance" class="lpd-sec" data-sec>
-        <h2>Governance &amp; security</h2>
+        <h3>Governance &amp; security</h3>
         <p>
           Role-based permission scopes on every route; resource ACLs beneath
           them. Budgets, usage limits, and approval gates wrap every AI
@@ -950,6 +950,18 @@ const toc = [
     font-weight: 600;
     letter-spacing: -0.01em;
     line-height: 1.25;
+    color: var(--lp-ink);
+    text-transform: none;
+  }
+
+  .lpd-main h3 {
+    margin: 0 0 0.7rem;
+    padding-top: 0.4rem;
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: 1.08rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
     color: var(--lp-ink);
     text-transform: none;
   }

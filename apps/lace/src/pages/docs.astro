@@ -1,16 +1,22 @@
 ---
 import BaseLayout from "@determinant/site-kit/layouts/BaseLayout.astro";
 import LaceDocsPage from "@determinant/site-kit/components/lace/LaceDocsPage.astro";
+import { breadcrumbSchema } from "@determinant/site-kit/seo/schema";
 import { laceSite } from "../site.config";
 ---
 
 <BaseLayout
-  title={`Documentation | ${laceSite.name} — Platform docs & lace-app-sdk`}
-  description="LACE platform documentation and the public lace-app-sdk: the versioned contract surface for building governed apps, tools, and agents on the platform."
+  title={`LACE Platform & App SDK Documentation | ${laceSite.name}`}
+  description="LACE platform and lace-app-sdk documentation for building governed enterprise AI apps, tools, agents, workflows, connectors, policies, and data services."
   theme="lace"
   themeColor="#f6f7f9"
   lang="en"
   siteName={laceSite.name}
+  imageAlt="LACE platform and app SDK documentation"
+  jsonLd={breadcrumbSchema([
+    { name: "Home", url: `${laceSite.url}/` },
+    { name: "Documentation", url: `${laceSite.url}/docs/` },
+  ])}
 >
   <LaceDocsPage />
 </BaseLayout>

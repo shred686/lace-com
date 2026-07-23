@@ -5,8 +5,9 @@ const checks = [
   {
     root: "apps/determinant/src",
     forbidden: "laceplatform.com",
-    // Intentional exceptions: shared contact inbox lives on the LACE domain.
-    allowed: ["sales@laceplatform.com"]
+    // Intentional exceptions: shared contact inbox and the first-party product
+    // link that establishes the Determinant Systems → LACE entity relationship.
+    allowed: ["sales@laceplatform.com", "https://laceplatform.com"]
   },
   {
     root: "apps/lace/src",

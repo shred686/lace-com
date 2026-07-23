@@ -21,6 +21,11 @@ interface Related {
   line: string;
 }
 
+interface Faq {
+  q: string;
+  a: string;
+}
+
 interface Props {
   kicker: string;
   title: string;
@@ -34,6 +39,7 @@ interface Props {
   related: Related[];
   ctaTitle: string;
   ctaAccent?: string;
+  faqs?: Faq[];
 }
 
 const {
@@ -49,6 +55,7 @@ const {
   related,
   ctaTitle,
   ctaAccent,
+  faqs = [],
 } = Astro.props;
 
 const accentize = (text: string, word?: string) =>
@@ -131,6 +138,26 @@ const accentize = (text: string, word?: string) =>
       </div>
     </div>
   </section>
+
+  <!-- ── Frequently asked questions ─────────────────────────────── -->
+  {faqs.length > 0 && (
+    <section class="lp-section-tight lp-off-faq-section">
+      <div class="lp-wrap lp-off-faq-wrap">
+        <div class="lp-head" data-r>
+          <p class="lp-kicker">FAQ</p>
+          <h2 class="lp-h2">What enterprise teams ask.</h2>
+        </div>
+        <div class="lp-off-faq" data-r data-reveal-delay="80">
+          {faqs.map((faq) => (
+            <details>
+              <summary>{faq.q}<i aria-hidden="true">+</i></summary>
+              <p>{faq.a}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
 
   <!-- ── Related offerings ────────────────────────────────────────── -->
   <section class="lp-section-tight">
@@ -289,6 +316,37 @@ const accentize = (text: string, word?: string) =>
     text-transform: uppercase;
     color: var(--lp-faint);
   }
+
+  .lp-off-faq-wrap { max-width: 880px; }
+
+  .lp-off-faq {
+    display: grid;
+    gap: 0.7rem;
+    margin-top: 2rem;
+  }
+
+  .lp-off-faq details {
+    padding: 1.05rem 1.2rem;
+    border: 1px solid var(--lp-line);
+    background: rgba(255, 255, 255, 0.72);
+  }
+
+  .lp-off-faq summary {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    cursor: pointer;
+    list-style: none;
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: 0.92rem;
+    font-weight: 650;
+    color: var(--lp-ink);
+  }
+
+  .lp-off-faq summary::-webkit-details-marker { display: none; }
+  .lp-off-faq summary i { font-style: normal; color: var(--lp-green-deep); }
+  .lp-off-faq details[open] summary i { transform: rotate(45deg); }
+  .lp-off-faq details p { margin: 0.8rem 0 0; line-height: 1.7; color: var(--lp-muted); }
 
   .lp-off-related {
     display: grid;

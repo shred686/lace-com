@@ -2,7 +2,7 @@
 import BaseLayout from "@determinant/site-kit/layouts/BaseLayout.astro";
 import LaceOfferingShell from "@determinant/site-kit/components/lace/LaceOfferingShell.astro";
 import LaceSearchDemo from "@determinant/site-kit/components/lace/LaceSearchDemo.astro";
-import { laceSite } from "../../site.config";
+import { createLaceOfferingJsonLd, laceSite } from "../../site.config";
 
 const content = {
   kicker: "Platform · Enterprise Search",
@@ -69,16 +69,38 @@ const content = {
   ],
   ctaTitle: "Ask your own documents.",
   ctaAccent: "your own",
+  faqs: [
+    {
+      q: "What sources can LACE Enterprise Search connect to?",
+      a: "LACE connects to SharePoint, Google Drive, OneDrive, Dropbox, Notion, Slack, email, Amazon S3, databases, websites, and existing search indexes. Custom connectors can be added for internal systems.",
+    },
+    {
+      q: "Does LACE preserve source-system permissions?",
+      a: "Yes. LACE synchronizes source identities and access rules and checks them for every query. A user cannot see a result they are not permitted to open in the authoritative system.",
+    },
+    {
+      q: "What is federated enterprise search?",
+      a: "Federated search lets a query discover relevant information across separate divisions, partners, or security enclaves without requiring all underlying documents to be copied into one repository.",
+    },
+    {
+      q: "How are LACE answers different from a list of search results?",
+      a: "LACE can synthesize a direct answer from the highest-quality retrieved passages. Every material claim remains cited to the exact source so users can verify it or open the underlying document.",
+    },
+  ],
 };
+
+const pageDescription = "Permissions-aware enterprise search across SharePoint, Drive, Slack, email, and databases, with hybrid retrieval, cited AI answers, and federation.";
 ---
 
 <BaseLayout
-  title={`Enterprise Search | ${laceSite.name}`}
-  description="Permissions-aware enterprise search across SharePoint, Drive, Slack, email, databases, and more — plain-language questions, cited answers, federation without data movement."
+  title={`Enterprise Search Platform with Cited AI Answers | ${laceSite.name}`}
+  description={pageDescription}
   theme="lace"
   themeColor="#f6f7f9"
   lang="en"
   siteName={laceSite.name}
+  imageAlt="LACE permissions-aware enterprise search with cited AI answers"
+  jsonLd={createLaceOfferingJsonLd({ path: "/platform/enterprise-search", name: "Enterprise Search", description: pageDescription, faqs: content.faqs })}
 >
   <LaceOfferingShell {...content}>
     <LaceSearchDemo />

@@ -10,15 +10,25 @@ interface Props {
   image?: string;
   /** Human-readable site name for og:site_name / structured data. */
   siteName?: string;
+  /** Descriptive alternative text for the social share image. */
+  imageAlt?: string;
+  /** Open Graph type. Blog posts should use article. */
+  ogType?: "website" | "article";
+  /** Language alternatives for localized versions of this page. */
+  alternates?: Array<{ lang: string; href: string }>;
+  /** Optional RSS/Atom discovery URL. */
+  feed?: string;
+  /** Article metadata used by Open Graph and the page entity graph. */
+  publishedTime?: Date | string;
+  modifiedTime?: Date | string;
+  author?: string;
+  section?: string;
   /** Set true on draft, theme, and thank-you pages to keep them out of the index. */
   noindex?: boolean;
   /** Browser chrome color; light-theme sites should pass a light value. */
   themeColor?: string;
-  /**
-   * schema.org JSON-LD for the page. Pass only on the homepage so a single
-   * authoritative entity graph is declared for the site.
-   */
-  jsonLd?: object;
+  /** Page-specific schema.org nodes folded into the shared entity graph. */
+  jsonLd?: object | object[];
 }
 
 const {
@@ -28,6 +38,14 @@ const {
   lang = "en",
   image = "/og-image.png",
   siteName,
+  imageAlt,
+  ogType = "website",
+  alternates = [],
+  feed,
+  publishedTime,
+  modifiedTime,
+  author,
+  section,
   noindex = false,
   themeColor = "#040506",
   jsonLd
@@ -39,6 +57,59 @@ const canonicalURL = new URL(Astro.url.pathname, siteOrigin);
 const ogImageURL = new URL(image, siteOrigin);
 const resolvedSiteName = siteName ?? title.split("|")[0].trim();
 const ogLocale = lang === "es" ? "es_ES" : "en_US";
+const resolvedImageAlt = imageAlt ?? `${resolvedSiteName} — ${title}`;
+const robots = noindex
+  ? "noindex, nofollow"
+  : "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1";
+const isoDate = (value?: Date | string) =>
+  value ? (value instanceof Date ? value : new Date(value)).toISOString() : undefined;
+
+// Every indexable page declares its own WebPage entity. Page-specific entities
+// supplied by an app are folded into the same @graph to keep IDs connected.
+const customNodes = (() => {
+  if (!jsonLd) return [];
+  const values = Array.isArray(jsonLd) ? jsonLd : [jsonLd];
+  return values.flatMap((value: any) => {
+    if (Array.isArray(value?.["@graph"])) return value["@graph"];
+    if (value && typeof value === "object") {
+      const { "@context": _context, ...node } = value;
+      return [node];
+    }
+    return [];
+  });
+})();
+const pageJsonLd = !noindex
+  ? {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebPage",
+          "@id": `${canonicalURL.href}#webpage`,
+          url: canonicalURL.href,
+          name: title,
+          description,
+          inLanguage: lang,
+          isPartOf: { "@id": `${siteOrigin.href.replace(/\/$/, "")}/#website` },
+          primaryImageOfPage: { "@id": `${ogImageURL.href}#primaryimage` },
+          ...(ogType === "article" ? { mainEntity: { "@id": `${canonicalURL.href}#article` } } : {}),
+          ...(publishedTime ? { datePublished: isoDate(publishedTime) } : {}),
+          ...(modifiedTime ? { dateModified: isoDate(modifiedTime) } : {}),
+          ...(author ? { author: { "@type": "Person", name: author } } : {}),
+          ...(section ? { articleSection: section } : {}),
+        },
+        {
+          "@type": "ImageObject",
+          "@id": `${ogImageURL.href}#primaryimage`,
+          url: ogImageURL.href,
+          contentUrl: ogImageURL.href,
+          width: 1200,
+          height: 630,
+          caption: resolvedImageAlt,
+        },
+        ...customNodes,
+      ],
+    }
+  : undefined;
 
 ---
 
@@ -48,7 +119,11 @@ const ogLocale = lang === "es" ? "es_ES" : "en_US";
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="canonical" href={canonicalURL} />
-    <meta name="robots" content={noindex ? "noindex, nofollow" : "index, follow"} />
+    <meta name="robots" content={robots} />
+    {alternates.map((alternate) => (
+      <link rel="alternate" hreflang={alternate.lang} href={new URL(alternate.href, siteOrigin)} />
+    ))}
+    {feed && <link rel="alternate" type="application/rss+xml" title={`${resolvedSiteName} feed`} href={new URL(feed, siteOrigin)} />}
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
@@ -70,27 +145,34 @@ const ogLocale = lang === "es" ? "es_ES" : "en_US";
     />
     <title>{title}</title>
     <meta name="description" content={description} />
+    {author && <meta name="author" content={author} />}
 
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content={resolvedSiteName} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:image" content={ogImageURL} />
+    <meta property="og:image:alt" content={resolvedImageAlt} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:locale" content={ogLocale} />
+    {publishedTime && <meta property="article:published_time" content={isoDate(publishedTime)} />}
+    {modifiedTime && <meta property="article:modified_time" content={isoDate(modifiedTime)} />}
+    {author && <meta property="article:author" content={author} />}
+    {section && <meta property="article:section" content={section} />}
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageURL} />
+    <meta name="twitter:image:alt" content={resolvedImageAlt} />
 
     {
-      jsonLd && (
+      pageJsonLd && (
         <script
           type="application/ld+json"
-          set:html={JSON.stringify(jsonLd)}
+          set:html={JSON.stringify(pageJsonLd)}
         />
       )
     }

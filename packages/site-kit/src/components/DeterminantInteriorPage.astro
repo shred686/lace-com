@@ -1,0 +1,351 @@
+---
+interface Section {
+  heading: string;
+  paragraphs?: string[];
+  bullets?: string[];
+}
+
+interface LinkCard {
+  href: string;
+  title: string;
+  description: string;
+}
+
+interface Faq {
+  q: string;
+  a: string;
+}
+
+interface Breadcrumb {
+  href?: string;
+  label: string;
+}
+
+interface Props {
+  eyebrow: string;
+  title: string;
+  lede: string;
+  breadcrumbs?: Breadcrumb[];
+  sections?: Section[];
+  links?: LinkCard[];
+  linksTitle?: string;
+  faqs?: Faq[];
+  ctaTitle?: string;
+  ctaBody?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+}
+
+const {
+  eyebrow,
+  title,
+  lede,
+  breadcrumbs = [],
+  sections = [],
+  links = [],
+  linksTitle = "Related capabilities",
+  faqs = [],
+  ctaTitle = "Turn the use case into a working system.",
+  ctaBody = "Bring us one recurring process and the systems it touches. We’ll define what success means and show you the shortest path to production.",
+  ctaLabel = "Talk to an AI engineer",
+  ctaHref = "/contact",
+} = Astro.props;
+
+const year = new Date().getFullYear();
+---
+
+<a class="ds-skip" href="#main-content">Skip to content</a>
+
+<main class="ds-site ds-interior">
+  <header class="top-nav ds-interior-nav">
+    <a href="/" class="brand-wordmark" aria-label="Determinant Systems home">
+      <span class="brand-dot" aria-hidden="true"></span>
+      Determinant Systems
+    </a>
+
+    <button
+      type="button"
+      class="top-nav-toggle"
+      aria-expanded="false"
+      aria-controls="determinantInteriorNav"
+      aria-label="Toggle navigation"
+      data-interior-nav-toggle
+    >
+      <span class="top-nav-toggle-line"></span>
+      <span class="top-nav-toggle-line"></span>
+    </button>
+
+    <div class="top-nav-panel" id="determinantInteriorNav" data-interior-nav-panel>
+      <nav class="top-links" aria-label="Primary">
+        <a href="/services">Services</a>
+        <a href="/about">About</a>
+        <a href="https://laceplatform.com">LACE platform</a>
+      </nav>
+      <a href="/contact" class="nav-cta">Contact</a>
+    </div>
+  </header>
+
+  <div id="main-content">
+    {breadcrumbs.length > 0 && (
+      <nav class="ds-breadcrumbs" aria-label="Breadcrumb">
+        <ol>
+          {breadcrumbs.map((item, index) => (
+            <li>
+              {item.href && index < breadcrumbs.length - 1
+                ? <a href={item.href}>{item.label}</a>
+                : <span aria-current={index === breadcrumbs.length - 1 ? "page" : undefined}>{item.label}</span>}
+            </li>
+          ))}
+        </ol>
+      </nav>
+    )}
+
+    <section class="ds-interior-hero">
+      <p class="ds-eyebrow">{eyebrow}</p>
+      <h1>{title}</h1>
+      <p class="ds-lede">{lede}</p>
+      <div class="ds-hero-actions">
+        <a href={ctaHref} class="btn btn-primary">{ctaLabel}</a>
+        <a href="/services" class="btn btn-ghost">Explore all services</a>
+      </div>
+    </section>
+
+    {sections.length > 0 && (
+      <section class="ds-content-grid" aria-label={`${title} details`}>
+        {sections.map((section, index) => (
+          <article class:list={["surface-card", "ds-content-card", index === 0 && "ds-content-card-featured"]}>
+            <span class="ds-card-index" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+            <h2>{section.heading}</h2>
+            {section.paragraphs?.map((paragraph) => <p>{paragraph}</p>)}
+            {section.bullets && (
+              <ul>
+                {section.bullets.map((bullet) => <li>{bullet}</li>)}
+              </ul>
+            )}
+          </article>
+        ))}
+      </section>
+    )}
+
+    {links.length > 0 && (
+      <section class="ds-related" aria-labelledby="related-title">
+        <p class="ds-eyebrow">Explore</p>
+        <h2 id="related-title">{linksTitle}</h2>
+        <div class="ds-related-grid">
+          {links.map((link) => (
+            <a class="surface-card ds-related-card" href={link.href}>
+              <h3>{link.title}</h3>
+              <p>{link.description}</p>
+              <span>Learn more →</span>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+
+    {faqs.length > 0 && (
+      <section class="ds-faq" aria-labelledby="faq-title">
+        <p class="ds-eyebrow">FAQ</p>
+        <h2 id="faq-title">Questions teams ask before they build.</h2>
+        <div class="ds-faq-list">
+          {faqs.map((faq) => (
+            <details class="surface-card">
+              <summary>{faq.q}<span aria-hidden="true">+</span></summary>
+              <p>{faq.a}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <section class="surface-card ds-interior-cta">
+      <p class="ds-eyebrow">Next step</p>
+      <h2>{ctaTitle}</h2>
+      <p>{ctaBody}</p>
+      <a href={ctaHref} class="btn btn-primary">{ctaLabel}</a>
+    </section>
+  </div>
+
+  <footer class="ds-interior-footer">
+    <div>
+      <a href="/" class="brand-wordmark">
+        <span class="brand-dot" aria-hidden="true"></span>
+        Determinant Systems
+      </a>
+      <p>© {year} Determinant Systems · Enterprise AI engineering</p>
+    </div>
+    <nav aria-label="Footer">
+      <a href="/services">Services</a>
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+      <a href="https://laceplatform.com">LACE</a>
+    </nav>
+  </footer>
+</main>
+
+<script>
+  const interiorNav = document.querySelector<HTMLElement>(".ds-interior-nav");
+  const interiorToggle = document.querySelector<HTMLButtonElement>("[data-interior-nav-toggle]");
+  const interiorPanel = document.querySelector<HTMLElement>("[data-interior-nav-panel]");
+  const mobileNav = window.matchMedia("(max-width: 900px)");
+
+  const setInteriorNav = (open: boolean) => {
+    if (!interiorNav || !interiorToggle || !interiorPanel) return;
+    interiorNav.classList.toggle("is-open", open);
+    interiorToggle.setAttribute("aria-expanded", String(open));
+    if (mobileNav.matches) interiorPanel.toggleAttribute("hidden", !open);
+    else interiorPanel.removeAttribute("hidden");
+  };
+
+  interiorToggle?.addEventListener("click", () => {
+    setInteriorNav(!interiorNav?.classList.contains("is-open"));
+  });
+  interiorPanel?.querySelectorAll("a").forEach((link) => link.addEventListener("click", () => setInteriorNav(false)));
+  mobileNav.addEventListener("change", () => setInteriorNav(false));
+  setInteriorNav(false);
+</script>
+
+<style>
+  .ds-skip {
+    position: fixed;
+    top: 0.5rem;
+    left: 0.5rem;
+    z-index: 100;
+    padding: 0.65rem 0.9rem;
+    background: #fff;
+    color: #050505;
+    transform: translateY(-150%);
+  }
+
+  .ds-skip:focus { transform: translateY(0); }
+
+  .ds-interior { padding-bottom: 2rem; }
+
+  .ds-interior-nav {
+    position: sticky;
+    margin-bottom: 0;
+  }
+
+  .ds-breadcrumbs { padding: clamp(2rem, 5vw, 4rem) 0 0; }
+  .ds-breadcrumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+  .ds-breadcrumbs li { margin: 0; }
+  .ds-breadcrumbs li:not(:last-child)::after { content: "/"; margin-left: 0.55rem; opacity: 0.45; }
+  .ds-breadcrumbs a { text-decoration: none; }
+  .ds-breadcrumbs a:hover { color: var(--text); }
+
+  .ds-interior-hero {
+    max-width: 1000px;
+    padding: clamp(4.5rem, 10vw, 8.5rem) 0 clamp(4rem, 8vw, 7rem);
+  }
+
+  .ds-eyebrow,
+  .ds-card-index {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #62e6c6;
+  }
+
+  .ds-interior-hero h1 { max-width: 17ch; margin-top: 1rem; }
+  .ds-lede {
+    max-width: 760px;
+    margin-top: 1.5rem;
+    font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+    line-height: 1.75;
+  }
+
+  .ds-hero-actions { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 2rem; }
+
+  .ds-content-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .ds-content-card { padding: clamp(1.5rem, 3vw, 2.4rem); }
+  .ds-content-card-featured { grid-column: 1 / -1; }
+  .ds-content-card h2 { margin: 0.8rem 0 1.2rem; font-size: clamp(1.45rem, 2.4vw, 2.1rem); }
+  .ds-content-card p + p { margin-top: 1rem; }
+  .ds-content-card ul { margin-top: 1.2rem; }
+
+  .ds-related,
+  .ds-faq { padding: clamp(5rem, 9vw, 8rem) 0 0; }
+  .ds-related > h2,
+  .ds-faq > h2 { margin-top: 0.8rem; max-width: 18ch; }
+
+  .ds-related-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .ds-related-card {
+    display: block;
+    min-height: 100%;
+    padding: 1.5rem;
+    text-decoration: none;
+    transition: transform 160ms ease, border-color 160ms ease;
+  }
+  .ds-related-card:hover { transform: translateY(-3px); border-color: rgba(98, 230, 198, 0.45); }
+  .ds-related-card p { margin-top: 0.7rem; }
+  .ds-related-card span { display: block; margin-top: 1.2rem; color: #62e6c6; font-size: 0.82rem; }
+
+  .ds-faq-list { display: grid; gap: 0.7rem; max-width: 940px; margin-top: 2rem; }
+  .ds-faq-list details { padding: 1.1rem 1.25rem; }
+  .ds-faq-list summary {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    cursor: pointer;
+    color: var(--text);
+    font-weight: 500;
+  }
+  .ds-faq-list summary::-webkit-details-marker { display: none; }
+  .ds-faq-list details[open] summary span { transform: rotate(45deg); }
+  .ds-faq-list details p { max-width: 78ch; margin-top: 1rem; }
+
+  .ds-interior-cta {
+    margin-top: clamp(5rem, 10vw, 9rem);
+    padding: clamp(1.8rem, 5vw, 4rem);
+  }
+  .ds-interior-cta h2 { margin-top: 0.8rem; }
+  .ds-interior-cta > p:not(.ds-eyebrow) { max-width: 700px; margin-top: 1rem; }
+  .ds-interior-cta .btn { display: inline-flex; margin-top: 1.6rem; }
+
+  .ds-interior-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-top: 4rem;
+    padding: 2rem 0 0;
+    border-top: 1px solid var(--line);
+  }
+  .ds-interior-footer p { margin-top: 0.65rem; font-size: 0.75rem; }
+  .ds-interior-footer nav { display: flex; flex-wrap: wrap; align-items: center; gap: 1.2rem; }
+  .ds-interior-footer nav a { color: var(--muted); text-decoration: none; font-size: 0.82rem; }
+  .ds-interior-footer nav a:hover { color: var(--text); }
+
+  @media (max-width: 900px) {
+    .ds-related-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  @media (max-width: 680px) {
+    .ds-content-grid,
+    .ds-related-grid { grid-template-columns: 1fr; }
+    .ds-content-card-featured { grid-column: auto; }
+    .ds-hero-actions { flex-direction: column; align-items: stretch; }
+    .ds-interior-footer { flex-direction: column; }
+  }
+</style>

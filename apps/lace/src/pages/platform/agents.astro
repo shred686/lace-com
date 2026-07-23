@@ -2,7 +2,7 @@
 import BaseLayout from "@determinant/site-kit/layouts/BaseLayout.astro";
 import LaceOfferingShell from "@determinant/site-kit/components/lace/LaceOfferingShell.astro";
 import LaceAgentDemo from "@determinant/site-kit/components/lace/LaceAgentDemo.astro";
-import { laceSite } from "../../site.config";
+import { createLaceOfferingJsonLd, laceSite } from "../../site.config";
 
 const content = {
   kicker: "Platform · Agentic Platform",
@@ -69,16 +69,38 @@ const content = {
   ],
   ctaTitle: "Put your first agent to work.",
   ctaAccent: "to work.",
+  faqs: [
+    {
+      q: "What is a governed enterprise AI agent?",
+      a: "It is an AI agent whose data, tools, budgets, actions, and approval requirements are explicitly defined and enforced by the platform around the model. Every run produces an inspectable execution record.",
+    },
+    {
+      q: "Which channels can LACE agents use?",
+      a: "The same agent can be deployed through web chat, Slack, Microsoft Teams, email, SMS, WhatsApp, and live voice, with channel-specific consent, delivery, escalation, and cost handling.",
+    },
+    {
+      q: "Can an agent take actions in business systems?",
+      a: "Yes. Agents can use approved tools and APIs, but each capability is permissioned. Sensitive or irreversible actions can pause for one or more human approvals before execution.",
+    },
+    {
+      q: "How are LACE agents evaluated before deployment?",
+      a: "Evaluation suites run representative and adversarial scenarios against expected outcomes, policy boundaries, tool behavior, and failure paths. Production monitoring then tracks quality, behavior, latency, and cost.",
+    },
+  ],
 };
+
+const pageDescription = "Design, evaluate, and deploy governed enterprise AI agents across chat, Slack, Teams, email, SMS, WhatsApp, and voice with policy, approvals, and audit.";
 ---
 
 <BaseLayout
-  title={`Agentic Platform | ${laceSite.name}`}
-  description="Design, evaluate, and deploy policy-governed AI agents across web chat, Slack, Teams, email, SMS, and voice — grounded in your data, with budgets, approval gates, and full execution traces."
+  title={`Governed Enterprise AI Agent Platform | ${laceSite.name}`}
+  description={pageDescription}
   theme="lace"
   themeColor="#f6f7f9"
   lang="en"
   siteName={laceSite.name}
+  imageAlt="LACE governed enterprise AI agent platform"
+  jsonLd={createLaceOfferingJsonLd({ path: "/platform/agents", name: "AI Agent Platform", description: pageDescription, faqs: content.faqs })}
 >
   <LaceOfferingShell {...content}>
     <LaceAgentDemo />

@@ -33,7 +33,7 @@ const languageToggleLabel = isSpanish ? "English" : "Español";
 const brandHref = isSpanish ? "/es/" : "/";
 const whitepaperUrl = isSpanish ? whitepaperSpanish : whitepaperEnglish;
 const problemLeadStart = isSpanish
-  ? "La mayoría de las herramientas de AI son"
+  ? "La mayoría de las herramientas de IA son"
   : "Most AI tools are";
 const problemSlotWords = isSpanish
   ? ["rápidas.", "inteligentes.", "impresionantes."]
@@ -50,10 +50,10 @@ const copy = isSpanish
       navUseCases: "Casos de uso",
       navTrust: "Confianza",
       navContact: "Contáctanos",
-      heroTitle: "Haz que AI funcione para tu empresa.",
-      heroIntro: "Infraestructura para enterprise AI.",
+      heroTitle: "Haz que la IA funcione para tu empresa.",
+      heroIntro: "Infraestructura para IA empresarial.",
       heroDetail:
-        "Determinant Systems ayuda a las empresas a diseñar, construir y desplegar AI workflows controlados, confiables y útiles en producción.",
+        "Determinant Systems diseña, construye y despliega agentes, aplicaciones y flujos de trabajo de IA gobernados, confiables y útiles en producción.",
       heroCtaPrimary: "DESCARGAR WHITEPAPER",
       systemStatus: "Sistema activo // protocolo online",
       whoLabel: "Quiénes somos",
@@ -193,8 +193,8 @@ const copy = isSpanish
       runtime: "LACE_RUNTIME_PROTOCOL_V3",
       sourceGrounded: "Source-grounded",
       footerTagline: "Infraestructura de enterprise AI",
-      security: "Seguridad",
-      privacy: "Privacidad",
+      services: "Servicios",
+      about: "Nosotros",
       workflows: "Workflows",
       traceable: "Trazable",
       blackBoxes: "Black Boxes",
@@ -351,8 +351,8 @@ const copy = isSpanish
       runtime: "LACE_RUNTIME_PROTOCOL_V3",
       sourceGrounded: "Source-grounded",
       footerTagline: "Enterprise AI infrastructure",
-      security: "Security",
-      privacy: "Privacy",
+      services: "Services",
+      about: "About",
       workflows: "Workflows",
       traceable: "Traceable",
       blackBoxes: "Black Boxes",
@@ -364,7 +364,7 @@ const heroTitleWords = copy.heroTitle.split(" ");
 const heroDesktopTitleLead = heroTitleWords.slice(0, 4).join(" ");
 const heroDesktopTitleRest = heroTitleWords.slice(4).join(" ");
 const heroMobileTitleLines = isSpanish
-  ? ["Haz", "que AI", "funcione", "para", "tu empresa."]
+  ? ["Haz", "que la IA", "funcione", "para", "tu empresa."]
   : ["Make", "AI", "work", "for", "you."];
 const getBodyParagraphs = (body: string | string[]) =>
   Array.isArray(body) ? body : [body];
@@ -394,7 +394,7 @@ const year = new Date().getFullYear();
 
         <div class="official-topnav-panel" id="topNavPanel">
           <nav class="official-topnav-links" aria-label="Primary">
-          <a href="#lace">{copy.navCompany}</a>
+          <a href="/about">{copy.navCompany}</a>
           <a href="#platform">{copy.navPlatform}</a>
           <a href="#use-cases">{copy.navUseCases}</a>
           <!-- <a href="#trust">{copy.navTrust}</a> -->
@@ -707,8 +707,8 @@ const year = new Date().getFullYear();
         <p>© {year} Determinant Systems // {copy.footerTagline}</p>
       </div>
       <div class="footer-links">
-        <a href="#">{copy.security}</a>
-        <a href="#">{copy.privacy}</a>
+        <a href="/services">{copy.services}</a>
+        <a href="/about">{copy.about}</a>
         <a href={languageToggleHref}>{languageToggleLabel}</a>
       </div>
     </div>

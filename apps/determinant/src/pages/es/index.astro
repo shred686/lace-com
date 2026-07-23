@@ -1,13 +1,21 @@
 ---
 import HomeNewPage from "@determinant/site-kit/components/HomeNewPage.astro";
 import BaseLayout from "@determinant/site-kit/layouts/BaseLayout.astro";
+import { determinantSite } from "../../site.config";
 ---
 
 <BaseLayout
-  title="Determinant Systems | Haz que AI funcione para tu empresa"
-  description="Haz que AI funcione para tu empresa. LACE es infraestructura para enterprise AI, creada para modelar business workflows bajo policy constraints y convertirlos en AI products desplegables."
+  title="Consultoría e Ingeniería de IA Empresarial | Determinant Systems"
+  description="Consultoría e ingeniería de IA empresarial para agentes gobernados, RAG, búsqueda, grafos de conocimiento, automatización y aplicaciones de IA."
   theme="midnight"
   lang="es"
+  siteName={determinantSite.name}
+  imageAlt="Consultoría e ingeniería de IA empresarial de Determinant Systems"
+  alternates={[
+    { lang: "en", href: "/" },
+    { lang: "es", href: "/es/" },
+    { lang: "x-default", href: "/" },
+  ]}
 >
   <HomeNewPage locale="es" />
 </BaseLayout>

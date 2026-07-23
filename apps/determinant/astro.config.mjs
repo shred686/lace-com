@@ -23,7 +23,19 @@ export default defineConfig({
           es: "es"
         }
       },
-      filter: (page) => !EXCLUDED.some((path) => page.includes(path))
+      filter: (page) => !EXCLUDED.some((path) => page.includes(path)),
+      serialize: (item) => {
+        if (item.url === "https://determinantsystems.com/" || item.url === "https://determinantsystems.com/es/") {
+          return {
+            ...item,
+            links: [
+              ...(item.links ?? []),
+              { lang: "x-default", url: "https://determinantsystems.com/" }
+            ]
+          };
+        }
+        return item;
+      }
     })
   ]
 });

@@ -1,0 +1,25 @@
+---
+import BaseLayout from "@determinant/site-kit/layouts/BaseLayout.astro";
+import DeterminantInteriorPage from "@determinant/site-kit/components/DeterminantInteriorPage.astro";
+import { determinantSite } from "../site.config";
+---
+
+<BaseLayout
+  title={`Page Not Found | ${determinantSite.name}`}
+  description="The requested page could not be found. Explore Determinant Systems enterprise AI services or return to the homepage."
+  siteName={determinantSite.name}
+  noindex={true}
+>
+  <DeterminantInteriorPage
+    eyebrow="404 · Page not found"
+    title="That page is not part of the system."
+    lede="The URL may have changed or the page may no longer exist. Use one of the paths below to continue."
+    links={[
+      { href: "/", title: "Homepage", description: "See how Determinant Systems builds enterprise AI." },
+      { href: "/services", title: "Services", description: "Explore agents, RAG, search, graphs, workflows, and applications." },
+      { href: "/contact", title: "Contact", description: "Talk to the team about a production AI use case." },
+    ]}
+    linksTitle="Continue from here"
+  />
+</BaseLayout>
+

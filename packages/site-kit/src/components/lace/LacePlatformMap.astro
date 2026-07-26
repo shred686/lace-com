@@ -1,0 +1,539 @@
+---
+/**
+ * Platform map — the orienting overview of LACE, drawn rather than written.
+ *
+ * The whole product in one schematic: six kinds of company material converge
+ * into a single governed runtime (the green rule), and four surfaces fan back
+ * out of it. Six in, one line, four out. It sits between the editorial
+ * statement and cell 01 so a first-time visitor knows what LACE *is* before
+ * the page starts arguing offering by offering.
+ *
+ * Per DESIGN.md: no cards, no lift, hairlines only, green spent solely on the
+ * line that does the checking. The flow pulses are ambient state, not a second
+ * authored scroll moment — they stop entirely under reduced motion.
+ */
+
+const sources = ["Documents", "Messages", "Email", "Spreadsheets", "Databases", "Tickets"];
+
+/* Terminal nodes of the drawing. Indices match the cell kickers below, so the
+   map doubles as a legend for the rest of the page. */
+const surfaces = [
+  { idx: "01", name: "Enterprise Search", line: "Ask every system at once.", href: "/platform/enterprise-search" },
+  { idx: "02", name: "Knowledge Graph", line: "Every fact, linked and dated.", href: "/platform/knowledge-graph" },
+  { idx: "03", name: "Agentic Platform", line: "Agents at work in every channel.", href: "/platform/agents" },
+  { idx: "04", name: "App Builder", line: "A prompt becomes a live app.", href: "/platform/app-builder" },
+];
+
+/* Fan geometry, in the SVGs' 1000-unit width. Origins sit under the centre of
+   each source column (1000/6) and land on the centre of each surface column
+   (1000/4), so every line begins and ends on a label, not near one. */
+const inX = sources.map((_, i) => Math.round((1000 / sources.length) * (i + 0.5)));
+const outX = surfaces.map((_, i) => Math.round((1000 / surfaces.length) * (i + 0.5)));
+const GATE = 500;
+---
+
+<section class="lp2-map">
+  <div class="lp2-map-head" data-r>
+    <h2>Enterprise knowledge.<br /><span class="lp-accent">Activated.</span></h2>
+    <p>
+      Transform scattered documents into a verifiable engine for work. LACE
+      unifies permissions-aware search, living knowledge graphs, governed AI
+      agents, and instant application generation into a single platform —
+      deployable anywhere, with every action traced to the source.
+    </p>
+  </div>
+
+  <div class="lp2-map-fig" data-r data-reveal-delay="140">
+    <!-- IN: the material -->
+    <p class="lp2-map-layer">Your systems</p>
+    <ul class="lp2-map-sources">
+      {sources.map((source) => (
+        <li>{source}<i aria-hidden="true"></i></li>
+      ))}
+    </ul>
+
+    <!-- six converge to one -->
+    <svg class="lp2-map-flow" viewBox="0 0 1000 96" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+      {inX.map((x) => (
+        <>
+          <path class="lp2-map-wire" d={`M${x} 0 C${x} 52 ${GATE} 44 ${GATE} 96`} />
+          <path class="lp2-map-pulse" pathLength="100" d={`M${x} 0 C${x} 52 ${GATE} 44 ${GATE} 96`} />
+        </>
+      ))}
+    </svg>
+
+    <!-- THE LINE. The label plate straddles the rule the way a label straddles
+         a dimension line. The six wires land on the junction dot at its top
+         edge; the four leave from the exit tick below. Nothing routes around. -->
+    <div class="lp2-map-gate">
+      <div class="lp2-map-rule">
+        <i class="lp2-map-rule-bar"></i>
+        <span class="lp2-map-plate">
+          <span class="lp2-map-rule-label">The governed runtime</span>
+        </span>
+        <i class="lp2-map-rule-bar"></i>
+      </div>
+      <i class="lp2-map-exit" aria-hidden="true"></i>
+    </div>
+
+    <!-- one fans to four -->
+    <svg class="lp2-map-flow lp2-map-flow-out" viewBox="0 0 1000 96" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+      {outX.map((x) => (
+        <>
+          <path class="lp2-map-wire" d={`M${GATE} 0 C${GATE} 52 ${x} 44 ${x} 96`} />
+          <path class="lp2-map-pulse" pathLength="100" d={`M${GATE} 0 C${GATE} 52 ${x} 44 ${x} 96`} />
+        </>
+      ))}
+    </svg>
+
+    <!-- OUT: the surfaces. No layer label here on purpose — a heading between
+         the wires and their landing ticks would cut the drawing in half. -->
+    <div class="lp2-map-out">
+      {surfaces.map((surface) => (
+        <a class="lp2-map-surface" href={surface.href}>
+          <i class="lp2-map-tick" aria-hidden="true"></i>
+          <b>{surface.idx}</b>
+          <strong>{surface.name}</strong>
+          <span>{surface.line}</span>
+          <em aria-hidden="true">→</em>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Registered so the rule's alpha interpolates rather than stepping. */
+  @property --lp2-bar-a {
+    syntax: "<number>";
+    inherits: false;
+    initial-value: 0.55;
+  }
+
+  /* The section itself carries no horizontal padding: the drawing runs rail to
+     rail so its column rules meet the frame's own hairlines. */
+  .lp2-map {
+    padding: 0;
+  }
+
+  .lp2-map-head {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.1rem;
+    padding: clamp(3.2rem, 6vw, 5.2rem) clamp(1.2rem, 3.5vw, 3.2rem) clamp(2.2rem, 4vw, 3rem);
+    text-align: center;
+  }
+
+  /* Same step as .lp2-saas-copy h2 — the page's standard section headline. */
+  .lp2-map-head h2 {
+    margin: 0;
+    font-size: clamp(1.9rem, 3.6vw, 3rem);
+  }
+
+  .lp2-map-head p {
+    max-width: 54ch;
+    margin: 0;
+    font-size: clamp(0.98rem, 1.3vw, 1.08rem);
+    line-height: 1.6;
+    color: var(--lp-muted);
+    text-wrap: balance;
+  }
+
+  /* ── Layer labels ─────────────────────────────────────────────── */
+  .lp2-map-layer {
+    margin: 0 0 1rem;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.58rem;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    text-align: center;
+    color: var(--lp-faint);
+  }
+
+  /* ── In: the material ─────────────────────────────────────────── */
+  .lp2-map-sources {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .lp2-map-sources li {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding-inline: 0.25rem;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-align: center;
+    color: var(--lp-muted);
+  }
+
+  /* The tick marks where each wire leaves its label — a surveyed origin. */
+  .lp2-map-sources i {
+    width: 1px;
+    height: 7px;
+    background: rgba(var(--lp-green-rgb), 0.5);
+  }
+
+  /* ── The wires ────────────────────────────────────────────────── */
+  .lp2-map-flow {
+    display: block;
+    width: 100%;
+    height: clamp(66px, 7.5vw, 100px);
+    overflow: visible;
+  }
+
+  .lp2-map-wire {
+    fill: none;
+    stroke: var(--hair);
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+  }
+
+  /* Raw material goes in on neutral hairlines; what comes out has been
+     through the line, so it carries the verified green. */
+  .lp2-map-flow-out .lp2-map-wire {
+    stroke: rgba(var(--lp-green-rgb), 0.32);
+  }
+
+  /* One pass, once. Every wire is normalised to pathLength 100, so the six
+     inbound pulses travel different distances in the same time and arrive at
+     the runtime together — a single flow, not six independent ones. At rest
+     the dash sits off the start of its path, which is why no fill-mode is
+     needed: before the delay and after the run, there is nothing to see. */
+  .lp2-map-pulse {
+    fill: none;
+    stroke: rgba(var(--lp-green-rgb), 0.85);
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    vector-effect: non-scaling-stroke;
+    /* The gap must exceed pathLength, or the pattern repeats and parks a
+       round-capped stub on the path's end while the pulse is at rest. */
+    stroke-dasharray: 9 300;
+    stroke-dashoffset: 9;
+  }
+
+  /* 1 — the material runs down into the line, starting as the figure's own
+     reveal settles. */
+  .lp2-map-fig.vis .lp2-map-pulse {
+    animation: lp2-map-run 950ms cubic-bezier(0.4, 0, 0.35, 1) 700ms;
+  }
+
+  /* 3 — …and out to the four surfaces, a beat after the line has answered. */
+  .lp2-map-fig.vis .lp2-map-flow-out .lp2-map-pulse {
+    animation-delay: 2060ms;
+  }
+
+  @keyframes lp2-map-run {
+    to {
+      stroke-dashoffset: -109;
+    }
+  }
+
+  /* 2 — the line takes the delivery: the junction lights, the rule brightens.
+     Half a second, once, and it is over. */
+  .lp2-map-fig.vis .lp2-map-plate::before {
+    animation: lp2-map-strike 620ms cubic-bezier(0.2, 0.8, 0.3, 1) 1650ms;
+  }
+
+  .lp2-map-fig.vis .lp2-map-rule-bar {
+    animation: lp2-map-charge 760ms ease-out 1650ms;
+  }
+
+  @keyframes lp2-map-strike {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(var(--lp-green-rgb), 0.5); }
+    32% { transform: scale(1.9); box-shadow: 0 0 0 5px rgba(var(--lp-green-rgb), 0.12); }
+    100% { transform: scale(1); box-shadow: 0 0 0 9px rgba(var(--lp-green-rgb), 0); }
+  }
+
+  @keyframes lp2-map-charge {
+    0%, 100% { --lp2-bar-a: 0.55; }
+    26% { --lp2-bar-a: 1; }
+  }
+
+  /* ── The line ─────────────────────────────────────────────────── */
+  .lp2-map-gate {
+    padding-inline: clamp(1.2rem, 3.5vw, 3.2rem);
+  }
+
+  .lp2-map-rule {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.7rem, 1.6vw, 1.2rem);
+  }
+
+  /* The label plate straddles the rule; the six wires land on the junction
+     dot at its top edge. */
+  .lp2-map-plate {
+    position: relative;
+    display: block;
+  }
+
+  .lp2-map-plate::before {
+    content: "";
+    position: absolute;
+    top: -2px;
+    left: 50%;
+    width: 4px;
+    height: 4px;
+    margin-left: -2px;
+    border-radius: 50%;
+    background: var(--lp-green);
+  }
+
+  /* …and the four leave from this one. */
+  .lp2-map-exit {
+    display: block;
+    width: 1px;
+    height: 9px;
+    margin: 0.75rem auto 0;
+    background: rgba(var(--lp-green-rgb), 0.5);
+  }
+
+  .lp2-map-rule-bar {
+    flex: 1;
+    height: 1px;
+    /* Alpha lives in a registered custom property so the rule can be charged
+       for a moment when the flow reaches it (see lp2-map-charge). */
+    --lp2-bar-a: 0.55;
+    background: linear-gradient(90deg, rgba(var(--lp-green-rgb), 0) 0%, rgba(var(--lp-green-rgb), var(--lp2-bar-a)) 26%, rgba(var(--lp-green-rgb), var(--lp2-bar-a)) 100%);
+  }
+
+  .lp2-map-rule-bar:last-child {
+    background: linear-gradient(270deg, rgba(var(--lp-green-rgb), 0) 0%, rgba(var(--lp-green-rgb), var(--lp2-bar-a)) 26%, rgba(var(--lp-green-rgb), var(--lp2-bar-a)) 100%);
+  }
+
+  .lp2-map-rule-label {
+    font-family: "JetBrains Mono", monospace;
+    font-size: clamp(0.6rem, 1vw, 0.68rem);
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--lp-green-deep);
+  }
+
+  /* ── Out: the surfaces ────────────────────────────────────────── */
+  .lp2-map-out {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .lp2-map-surface {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0 clamp(0.8rem, 2vw, 1.5rem) clamp(2.6rem, 4.5vw, 3.6rem);
+    text-align: center;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .lp2-map-out > a + a {
+    border-left: 1px solid var(--hair);
+  }
+
+  /* Landing tick: where the wire meets the surface it feeds. */
+  .lp2-map-tick {
+    width: 1px;
+    height: 7px;
+    margin-bottom: 0.6rem;
+    background: rgba(var(--lp-green-rgb), 0.5);
+  }
+
+  .lp2-map-surface b {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    color: var(--lp-green-deep);
+  }
+
+  .lp2-map-surface strong {
+    font-family: "Space Grotesk", "Red Hat Display", sans-serif;
+    font-size: clamp(0.95rem, 1.5vw, 1.12rem);
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    text-transform: uppercase;
+    line-height: 1.1;
+    color: var(--lp-ink);
+    transition: color 180ms ease;
+  }
+
+  .lp2-map-surface span {
+    max-width: 22ch;
+    font-size: 0.86rem;
+    line-height: 1.5;
+    color: var(--lp-muted);
+  }
+
+  .lp2-map-surface em {
+    margin-top: 0.2rem;
+    font-style: normal;
+    font-size: 0.8rem;
+    line-height: 1;
+    color: var(--lp-green-deep);
+    opacity: 0;
+    transform: translateY(-3px);
+    transition: opacity 180ms ease, transform 180ms ease;
+  }
+
+  .lp2-map-surface:hover strong,
+  .lp2-map-surface:focus-visible strong {
+    color: var(--lp-green-deep);
+  }
+
+  .lp2-map-surface:hover em,
+  .lp2-map-surface:focus-visible em {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .lp2-map-surface:focus-visible {
+    outline: 2px solid var(--lp-green-deep);
+    outline-offset: -4px;
+  }
+
+  /* ── Narrow: the honest form is a stack ───────────────────────── */
+  @media (max-width: 780px) {
+    .lp2-map-sources {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.45rem 1rem;
+      padding-inline: 1.4rem;
+    }
+
+    .lp2-map-sources li {
+      flex-direction: row;
+      gap: 0.5rem;
+    }
+
+    .lp2-map-sources i {
+      width: 7px;
+      height: 1px;
+      order: -1;
+    }
+
+    /* The fans no longer describe the layout below this width, so they
+       collapse to a single short spine through the gate. */
+    .lp2-map-flow {
+      height: 34px;
+      background: linear-gradient(var(--hair), var(--hair)) center / 1px 100% no-repeat;
+    }
+
+    .lp2-map-wire,
+    .lp2-map-pulse {
+      display: none;
+    }
+
+    .lp2-map-out {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      border-top: 1px solid var(--hair);
+      margin-top: 1.6rem;
+    }
+
+    .lp2-map-out > a {
+      padding-block: clamp(1.8rem, 6vw, 2.4rem);
+    }
+
+    .lp2-map-out > a:nth-child(odd) {
+      border-right: 1px solid var(--hair);
+    }
+
+    .lp2-map-out > a + a {
+      border-left: 0;
+    }
+
+    .lp2-map-out > a:nth-child(n + 3) {
+      border-top: 1px solid var(--hair);
+    }
+
+    .lp2-map-tick {
+      display: none;
+    }
+
+    .lp2-map-surface em {
+      display: none;
+    }
+  }
+
+  /* One column of centred four-line blocks runs 250px per surface and reads
+     as four more sections. Set as a ledger row instead — index, name, then
+     the line underneath — the four terminals read as one legend again, and
+     the arrow that hover revealed on the pointer version becomes permanent
+     because there is no hover to reveal it. */
+  @media (max-width: 540px) {
+    .lp2-map-out {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .lp2-map-out > a:nth-child(odd) {
+      border-right: 0;
+    }
+
+    .lp2-map-out > a + a {
+      border-top: 1px solid var(--hair);
+    }
+
+    /* Same selector the two-column rule uses, or its padding-block wins the
+       cascade over this one's shorthand and the rows collapse to zero. */
+    .lp2-map-out > a {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      align-items: baseline;
+      column-gap: 0.7rem;
+      row-gap: 0.3rem;
+      padding: 1.25rem clamp(1rem, 4.5vw, 1.6rem);
+      text-align: left;
+    }
+
+    .lp2-map-surface b {
+      grid-column: 1;
+    }
+
+    .lp2-map-surface strong {
+      grid-column: 2;
+    }
+
+    .lp2-map-surface em {
+      display: block;
+      grid-column: 3;
+      grid-row: 1;
+      margin-top: 0;
+      opacity: 1;
+      transform: none;
+    }
+
+    .lp2-map-surface span {
+      grid-column: 2 / -1;
+      max-width: none;
+      font-size: 0.82rem;
+    }
+  }
+
+  /* Reduced motion: the run never fires, and the pulses rest off-path, so the
+     drawing simply arrives finished. Nothing is lost — the wires, the
+     junction, and the rule already carry the whole diagram. */
+  @media (prefers-reduced-motion: reduce) {
+    .lp2-map-fig.vis .lp2-map-pulse,
+    .lp2-map-fig.vis .lp2-map-plate::before,
+    .lp2-map-fig.vis .lp2-map-rule-bar {
+      animation: none;
+    }
+
+    .lp2-map-surface strong,
+    .lp2-map-surface em {
+      transition: none;
+    }
+  }
+</style>

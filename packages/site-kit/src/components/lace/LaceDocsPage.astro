@@ -222,6 +222,12 @@ const toc = [
   <!-- ── Body: sidebar / content / toc ────────────────────────────── -->
   <div class="lpd-body">
     <aside class="lpd-side" aria-label="Docs navigation">
+      {/* On one column the sidebar is ~900px of links standing between the
+          reader and the first heading, so below 880px it collapses behind
+          this summary. Open by default; the script closes it on narrow
+          viewports, which also keeps it open when JS never runs. */}
+      <details class="lpd-side-acc" data-side-acc open>
+        <summary>Documentation menu<i aria-hidden="true">+</i></summary>
       <div class="lpd-side-quick">
         <a href="/platform/enterprise-search">
           <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" stroke="currentColor" stroke-width="1.6"/><path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="1.6"/></svg>
@@ -250,6 +256,7 @@ const toc = [
         ))
       }
       <p class="lpd-side-empty" data-side-empty hidden>No matches.</p>
+      </details>
     </aside>
 
     <main id="lp-main" class="lpd-main">
@@ -1229,9 +1236,67 @@ const toc = [
     }
   }
 
+  /* Always open on the two-column layout; the summary only exists for the
+     stacked one. */
+  .lpd-side-acc > summary {
+    display: none;
+  }
+
   @media (max-width: 880px) {
     .lpd {
       --lpd-header-h: 8.6rem;
+    }
+
+    .lpd-side-acc > summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 44px;
+      padding: 0.2rem 0.6rem;
+      list-style: none;
+      cursor: pointer;
+      font-family: "Space Grotesk", "JetBrains Mono", monospace;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--lp-ink);
+    }
+
+    .lpd-side-acc > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .lpd-side-acc > summary i {
+      font-style: normal;
+      font-size: 1rem;
+      line-height: 1;
+      color: var(--lp-green-deep);
+      transition: transform 180ms ease;
+    }
+
+    .lpd-side-acc[open] > summary i {
+      transform: rotate(45deg);
+    }
+
+    .lpd-side-acc[open] {
+      padding-bottom: 0.8rem;
+    }
+
+    .lpd-side-quick {
+      margin-top: 0.9rem;
+    }
+
+    .lpd-side-quick a,
+    .lpd-side-group a {
+      display: flex;
+      align-items: center;
+      min-height: 40px;
+    }
+
+    /* iOS zooms the page on any field under 16px. */
+    .lpd-search input {
+      font-size: 16px;
     }
 
     .lpd-header-row {
@@ -1260,7 +1325,13 @@ const toc = [
       height: auto;
       border-right: 0;
       border-bottom: 1px solid var(--lp-line-soft);
-      padding-right: 0;
+      /* Collapsed, this is one 44px row — the desktop 1.6/2.5rem column
+         padding around it reads as a hole. */
+      padding: 0.5rem 0 0.9rem;
+    }
+
+    .lpd-main {
+      padding-top: 1.2rem;
     }
   }
 </style>
@@ -1310,6 +1381,37 @@ const toc = [
     document.addEventListener("keydown", (event) => {
       if (event.key === "Escape") closeAll();
     });
+  })();
+
+  // ── Sidebar: collapsed on the stacked layout ────────────────────
+  (() => {
+    const acc = document.querySelector<HTMLDetailsElement>("[data-side-acc]");
+    if (!acc) return;
+
+    const narrow = window.matchMedia("(max-width: 880px)");
+    // Ships open so the links are there without JS; closed here as soon as we
+    // know the layout is stacked, and re-opened if the viewport widens back.
+    const sync = () => {
+      acc.open = !narrow.matches;
+    };
+    sync();
+    narrow.addEventListener("change", sync);
+
+    // Jumping to a section on a phone should not leave the whole menu open
+    // over the heading you just asked for.
+    acc.querySelectorAll("a").forEach((link) =>
+      link.addEventListener("click", () => {
+        if (narrow.matches) acc.open = false;
+      }),
+    );
+
+    // Filtering a list you cannot see is filtering nothing — typing in the
+    // search box opens the menu it filters.
+    document
+      .querySelector<HTMLInputElement>("[data-docs-search]")
+      ?.addEventListener("input", (event) => {
+        if ((event.target as HTMLInputElement).value.trim()) acc.open = true;
+      });
   })();
 
   // ── Sidebar filter (search box) ─────────────────────────────────

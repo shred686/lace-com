@@ -10,7 +10,10 @@
 
   .lp2-frame {
     position: relative;
-    width: min(1180px, calc(100% - 3rem));
+    /* The 3rem gutter is the desktop rail inset. Below 620px the rails are
+       not drawn at all, so that gutter is 48px spent on nothing while the
+       body copy inside the cells runs to 34ch. */
+    width: min(1180px, calc(100% - clamp(2rem, 7vw, 3rem)));
     margin-inline: auto;
     /* The full-bleed hero above already clears the fixed nav, so the
        frame only needs a little breathing room before the marquee. */
@@ -338,8 +341,79 @@
     }
   }
 
-  @media (max-width: 680px) {
-    .lp2-intro-h1 { font-size: clamp(2.2rem, 9vw, 3.2rem); }
+  /* ── Hero on phones and small tablets ───────────────────────────────
+     The pinned stage is a landscape composition: 200svh of travel and a
+     screenshot at 95vw that lands 371×235 on a 390px phone, with the
+     headline fading out underneath it. None of that survives a portrait
+     viewport, so below 880px the hero collapses to what it actually is —
+     a statement and a lead — and the screenshot is dropped rather than
+     shrunk into an illegible smear. The product surfaces further down the
+     page are the evidence on this width. */
+  @media (max-width: 880px) {
+    .lp2-hero-intro {
+      min-height: 0;
+    }
+
+    .lp2-hero-pin {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: auto;
+      min-height: min(62svh, 33rem);
+      padding: calc(var(--lp-nav-h, 4.4rem) + clamp(2.2rem, 8vw, 3.6rem)) 0
+        clamp(3.4rem, 11vw, 4.6rem);
+      overflow: visible;
+    }
+
+    /* The scroll script drives opacity and offset on the pinned desktop
+       stage; here the copy must hold whatever it computed before the
+       breakpoint flipped. */
+    .lp2-intro-copy {
+      position: static;
+      padding-inline: clamp(1.2rem, 5vw, 2rem);
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
+    .lp2-intro-h1 {
+      font-size: clamp(2.05rem, 9.6vw, 3.4rem);
+    }
+
+    .lp2-intro-sub {
+      margin-top: 1.25rem;
+    }
+
+    .lp2-introshot {
+      display: none;
+    }
+
+    /* The line starts here. Same exit tick the platform map uses, anchored
+       to the foot of the hero so it points at the first rule of the ruled
+       frame rather than floating in the middle of the stage. */
+    .lp2-hero-pin::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 1px;
+      height: clamp(2.4rem, 8vw, 3.4rem);
+      background: linear-gradient(
+        rgba(var(--lp-green-rgb), 0),
+        rgba(var(--lp-green-rgb), 0.5) 60%
+      );
+    }
+  }
+
+  /* On a phone the lead sets four full-bleed lines under a two-line
+     headline; pulling it to 34ch keeps the block reading as one shape.
+     At tablet width the headline is a single line and the lead should
+     answer it at full measure. */
+  @media (max-width: 560px) {
+    .lp2-intro-sub {
+      max-width: 34ch;
+    }
   }
 
   /* ═══ Logo strip ════════════════════════════════════════════════ */
@@ -355,19 +429,29 @@
 
   /* ═══ Editorial ═════════════════════════════════════════════════ */
   .lp2-editorial {
-    padding: clamp(4rem, 8vw, 6.5rem) clamp(1.2rem, 4vw, 4rem);
+    padding: clamp(3rem, 8vw, 6.5rem) clamp(1.2rem, 4vw, 4rem);
   }
 
   .lp2-editorial p {
     max-width: 46ch;
     margin: 0;
     font-family: "Space Grotesk", "Red Hat Display", sans-serif;
-    font-size: clamp(1.7rem, 3.4vw, 2.65rem);
+    /* Two ramps, not one: the phone step has to come down faster than 3.4vw
+       does or the statement runs to ten uppercase lines and stops being a
+       held breath. */
+    font-size: clamp(1.28rem, 5.6vw, 1.7rem);
     font-weight: 400;
     letter-spacing: -0.015em;
     text-transform: uppercase;
-    line-height: 1.15;
+    line-height: 1.18;
     color: var(--lp-faint);
+  }
+
+  @media (min-width: 621px) {
+    .lp2-editorial p {
+      font-size: clamp(1.7rem, 3.4vw, 2.65rem);
+      line-height: 1.15;
+    }
   }
 
   .lp2-editorial strong {
@@ -438,13 +522,37 @@
     color: var(--lp-faint);
   }
 
-  .lp2-cell-copy .lp2-kicker b,
-  .lp2-appbuild-copy .lp2-kicker b,
-  .lp2-saas-copy .lp2-kicker b {
-    margin-right: 0.4rem;
-    font-weight: 600;
-    color: var(--lp-green-deep);
+  /* ═══ Offering index ════════════════════════════════════════════
+     The offering number, set large and faded — the same device the LACE-GOV /
+     Legal / Finance cards use. It sits in the corner of the label it belongs
+     to, tucked above and behind the kicker and H2, so the number and the name
+     read as one lockup. It replaces the mono index that used to lead the
+     kicker, which read as a stray label rather than as the tile's number.
+     z-index -1 keeps it under the copy without lifting every sibling. */
+  /* Mounted on the tile itself, never inside the copy block: those carry
+     [data-r], whose will-change:transform makes them the containing block, and
+     their width varies by layout (full-bleed in a cell, shrink-wrapped in the
+     SaaS tile, a centred column in App Builder) — which put the same rule in
+     three different places. Measured from the tile, all seven land together. */
+  .lp2-idx {
+    position: absolute;
+    /* The corner opposite the label's text: above the kicker and hard right,
+       where neither the kicker nor the H2 reaches, so nothing is ever set
+       over it. */
+    top: clamp(1.4rem, 2.6vw, 2.2rem);
+    right: clamp(1rem, 2.6vw, 2.4rem);
+    z-index: -1;
+    font-family: "Space Grotesk", "Red Hat Display", sans-serif;
+    font-size: clamp(3rem, 4.6vw, 5rem);
+    font-style: normal;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: rgba(13, 27, 22, 0.06);
+    pointer-events: none;
+    user-select: none;
   }
+
 
   .lp2-appbuild-copy .lp2-kicker {
     margin-bottom: 1.1rem;
@@ -467,17 +575,20 @@
        edge while the padding carries the target to the 24px AA minimum. */
     display: inline-flex;
     align-items: center;
-    min-height: 24px;
-    padding: 0.3rem 0.5rem;
-    margin-inline: -0.5rem;
+    min-height: 28px;
+    padding: 0.42rem 0.7rem;
+    margin-inline: -0.7rem;
+    border: 1px solid transparent;
+    border-radius: var(--lp-radius);
     font-family: "JetBrains Mono", monospace;
-    font-size: 0.66rem;
+    font-size: 0.74rem;
     font-weight: 600;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     text-decoration: none;
     color: var(--lp-green-deep);
-    transition: opacity 160ms ease;
+    transition: background 180ms ease, border-color 180ms ease,
+      box-shadow 180ms ease, transform 180ms ease;
   }
 
   .lp2-cell-link:focus-visible {
@@ -489,8 +600,31 @@
     align-self: center;
   }
 
-  .lp2-cell-link:hover {
-    opacity: 0.7;
+  /* Hovering anywhere in the tile arms its link: it comes up off the sheet as
+     a real control. Same treatment on direct hover and on keyboard focus. */
+  .lp2-cell:hover .lp2-cell-link,
+  .lp2-cell-link:hover,
+  .lp2-cell-link:focus-visible {
+    border-color: rgba(var(--lp-green-rgb), 0.38);
+    background: var(--lp-surface);
+    box-shadow: 0 1px 2px rgba(15, 30, 26, 0.05),
+      0 8px 18px -10px rgba(15, 30, 26, 0.22);
+    transform: translateY(-1px);
+  }
+
+  /* The tile itself lifts by becoming raised material — white against the
+     sheet — rather than by moving, which would break it off the ruled grid.
+     Deliberately shallow: this is a sheet, not a card deck. */
+  @media (hover: hover) {
+    .lp2-cell {
+      transition: background 220ms ease, box-shadow 220ms ease;
+    }
+
+    .lp2-cell:hover {
+      background: rgba(255, 255, 255, 0.7);
+      box-shadow: 0 1px 2px rgba(15, 30, 26, 0.04),
+        0 20px 44px -26px rgba(15, 30, 26, 0.3);
+    }
   }
 
   /* fragments: one product window per cell */
@@ -1140,6 +1274,9 @@
 
   /* ═══ App Builder: prompt → production ══════════════════════════ */
   .lp2-appbuild {
+    /* Positioned at every width so .lp2-idx anchors to the section, not the
+       page. Above 1080px the frame already sets this for the crosshairs. */
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -1370,13 +1507,69 @@
     color: var(--lp-green-deep);
   }
 
+  /* Stacked, a 7.5rem centred box holding one icon and one word is 120px of
+     nothing three times over. Each stage becomes a labelled part instead —
+     icon, name, badge on one line — with its caption underneath and the
+     connector centred between them. */
   @media (max-width: 640px) {
     .lp-flow-row {
       flex-direction: column;
+      align-items: stretch;
+      gap: 0.5rem;
+    }
+
+    .lp-flow-node {
+      gap: 0.5rem;
+    }
+
+    .lp-flow-box {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      grid-template-areas:
+        "icon title"
+        "icon badge";
+      align-content: center;
+      justify-content: start;
+      column-gap: 0.85rem;
+      row-gap: 0.25rem;
+      min-height: 0;
+      padding: 0.95rem 1.1rem;
+    }
+
+    .lp-flow-icon {
+      grid-area: icon;
+      align-self: center;
+      width: 2.3rem;
+      height: 2.3rem;
+    }
+
+    .lp-flow-icon svg {
+      width: 1.3rem;
+      height: 1.3rem;
+    }
+
+    .lp-flow-title {
+      grid-area: title;
+      align-self: end;
+      text-align: left;
+    }
+
+    .lp-flow-badge {
+      position: static;
+      grid-area: badge;
+      justify-self: start;
+      align-self: start;
+      transform: none;
+    }
+
+    .lp-flow-cap {
+      padding-inline: 0.15rem;
+      text-align: left;
     }
 
     .lp-flow-arrow {
       flex-direction: row;
+      justify-content: center;
       gap: 0.5rem;
       min-height: 0;
     }
@@ -1384,10 +1577,20 @@
     .lp-flow-arrow::after {
       content: "↓";
     }
+
+    /* Against five lines of copy, a vertically centred icon floats. */
+    .lp-flow-base {
+      align-items: flex-start;
+    }
+
+    .lp-flow-base-icon {
+      margin-top: 0.15rem;
+    }
   }
 
   /* ═══ App Builder: launch a business ════════════════════════════ */
   .lp2-saas {
+    position: relative;
     display: grid;
     grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
     min-height: min(90svh, 860px);
@@ -1914,13 +2117,36 @@
       border-top: 1px solid var(--hair);
     }
 
+    /* One column makes every cell a full-width cell, so the centred variant
+       stops reading as "wider than its neighbours" and starts reading as a
+       stray alignment. All seven cells run off the same left edge. */
+    .lp2-cell-full {
+      align-items: stretch;
+      text-align: left;
+    }
+
+    .lp2-cell-full .lp2-cell-link {
+      align-self: flex-start;
+    }
+
+    .lp2-cell-demo {
+      width: 100%;
+    }
+
+    /* A rule between two cells is the grid speaking. A rule between a claim
+       and the picture that proves it is the grid lying — on one column these
+       pairs are one cell, so the divider goes and the padding closes up. */
     .lp2-gov {
       grid-template-columns: 1fr;
     }
 
     .lp2-gov-visual {
       border-left: 0;
-      border-top: 1px solid var(--hair);
+      padding-top: 0;
+    }
+
+    .lp2-gov-copy {
+      padding-bottom: clamp(1.6rem, 4vw, 2.4rem);
     }
 
     .lp2-editions-grid {
@@ -1936,13 +2162,25 @@
       border-top: 1px solid var(--hair);
     }
 
+    /* Stacked, these sections no longer need a screenful of their own — the
+       min-height was there to hold a two-column composition together. */
+    .lp2-saas,
+    .lp2-appbuild,
+    .lp2-deploy {
+      min-height: 0;
+    }
+
     .lp2-saas {
       grid-template-columns: 1fr;
     }
 
     .lp2-saas-visual {
       border-left: 0;
-      border-top: 1px solid var(--hair);
+      padding-top: 0;
+    }
+
+    .lp2-saas-copy {
+      padding-bottom: clamp(1.6rem, 4vw, 2.4rem);
     }
   }
 
@@ -1962,8 +2200,62 @@
       grid-template-columns: 1fr;
     }
 
+    /* Eight channels in two columns is four rows of near-empty tiles. The
+       labels are 0.54rem mono and fit a 62px track, so the grid keeps its
+       four-up shape and the window stays a window. */
     .lp2-chan-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(58px, 1fr));
+      gap: 0.35rem;
+    }
+
+    .lp2-chan {
+      padding: 0.52rem 0.2rem 0.46rem;
+      font-size: 0.5rem;
+    }
+
+    /* ── Deployment: plan view ──────────────────────────────────────
+       Concentric circles need radial clearance a 342px column does not
+       have — at this width the chips collided with each other, with the
+       core, and with the right edge. Same drawing, drawn as a plan: four
+       nested perimeters, each labelled on its own rule by a plate that
+       straddles it, your data enclosed by all four. The containment story
+       survives intact; only the projection changes. */
+    .lp2-rings {
+      width: min(360px, 100%);
+      aspect-ratio: 1 / 1.08;
+    }
+
+    /* The centre-lines belong to the radial version. */
+    .lp2-rings::before,
+    .lp2-rings::after {
+      content: none;
+    }
+
+    .lp2-ring {
+      border-radius: 0;
+    }
+
+    .lp2-ring-1 { inset: 0; }
+    .lp2-ring-2 { inset: 18% 6% 6%; }
+    .lp2-ring-3 { inset: 36% 13% 13%; }
+    .lp2-ring-4 { inset: 54% 20% 20%; }
+
+    .lp2-chip-cloud,
+    .lp2-chip-vpc,
+    .lp2-chip-onprem,
+    .lp2-chip-air {
+      right: auto;
+      bottom: auto;
+      transform: translateY(-50%);
+    }
+
+    .lp2-chip-cloud { top: 0; left: 1.1rem; }
+    .lp2-chip-vpc { top: 18%; left: calc(6% + 1.1rem); }
+    .lp2-chip-onprem { top: 36%; left: calc(13% + 1.1rem); }
+    .lp2-chip-air { top: 54%; left: calc(20% + 1.1rem); }
+
+    .lp2-ring-core {
+      top: 67%;
     }
 
     /* The rings shrink with the viewport but their chips do not, which left

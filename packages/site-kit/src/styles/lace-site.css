@@ -324,6 +324,15 @@
   --lp-nav-h: 4.4rem;
 }
 
+/* The 44px toggle is taller than the desktop link row, so the bar itself
+   grows and every consumer of --lp-nav-h — anchor landing, the hero's top
+   clearance, the mobile panel's height cap — has to grow with it. */
+@media (max-width: 880px) {
+  :root[data-theme="lace"] {
+    --lp-nav-h: 4.7rem;
+  }
+}
+
 :root[data-theme="lace"] :target,
 :root[data-theme="lace"] [id]:target,
 #lp-main {
@@ -498,6 +507,9 @@
 @media (max-width: 880px) {
   .lp-nav-toggle {
     display: flex;
+    /* 44px: the AA touch minimum. 2.4rem left it at 38. */
+    width: 2.75rem;
+    height: 2.75rem;
   }
 
   .lp-nav-panel {
@@ -509,8 +521,14 @@
     flex-direction: column;
     align-items: stretch;
     gap: 1.4rem;
+    /* Fully opaque: at 0.98 the hero headline read straight through the
+       open menu. Capped and scrollable so the Product accordion can be
+       open on a short phone without burying "Book a demo" off-screen. */
+    max-height: calc(100svh - var(--lp-nav-h, 4.4rem));
+    overflow-y: auto;
+    overscroll-behavior: contain;
     padding: 1.4rem 1.5rem 1.8rem;
-    background: rgba(250, 251, 252, 0.98);
+    background: #fafbfc;
     border-bottom: 1px solid var(--lp-line);
     box-shadow: var(--lp-shadow-md);
   }
@@ -529,16 +547,21 @@
 
   .lp-nav-links {
     flex-direction: column;
-    align-items: flex-start;
-    gap: 1.1rem;
+    align-items: stretch;
+    gap: 0.2rem;
   }
 
+  /* Full-row targets at the 44px minimum — the gap between them used to do
+     the spacing, which made the tappable area 24px tall in the middle of a
+     35px hole. */
   .lp-nav-links a {
+    min-height: 44px;
     font-size: 0.8rem;
   }
 
   .lp-nav-cta {
     justify-content: center;
+    min-height: 48px;
   }
 }
 
@@ -883,6 +906,9 @@
   }
 
   .lp-nav-acc summary {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
     list-style: none;
     cursor: pointer;
     font-family: "Space Grotesk", "JetBrains Mono", monospace;
@@ -909,13 +935,17 @@
 
   .lp-nav-acc-body {
     display: grid;
-    gap: 0.65rem;
-    padding: 0.9rem 0 0.4rem 1rem;
-    border-left: 2px solid rgba(var(--lp-green-rgb), 0.3);
-    margin-top: 0.8rem;
+    gap: 0.15rem;
+    padding: 0.7rem 0 0.4rem 1rem;
+    /* A 1px hairline, not a 2px green rail: green marks what the system
+       verified, and the rules are what this system indents with. */
+    border-left: 1px solid var(--hair);
+    margin-top: 0.2rem;
   }
 
   .lp-nav-acc-body em {
+    display: block;
+    margin: 0.75rem 0 0.25rem;
     font-style: normal;
     font-family: "JetBrains Mono", monospace;
     font-size: 0.56rem;
@@ -925,13 +955,22 @@
     color: var(--lp-faint);
   }
 
-  .lp-nav-acc-body a {
+  .lp-nav-acc-body a,
+  .lp-nav-acc-soon {
+    display: flex;
+    align-items: center;
+    min-height: 42px;
     font-family: "Space Grotesk", "JetBrains Mono", monospace;
     font-size: 0.74rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     text-decoration: none;
     color: var(--lp-ink-soft);
+  }
+
+  .lp-nav-acc-soon {
+    font-size: 0.68rem;
+    color: var(--lp-faint);
   }
 }
 
@@ -1208,6 +1247,35 @@
   color: var(--lp-faint);
 }
 
+/* A 640px table in a 312px column shows the label column and nothing else,
+   so it reads as a plain list and the whole comparison is invisible. Tighter
+   padding and a smaller label column bring the first tier into view — the
+   truncated column is the affordance — and the fade tells you the rest is
+   there. Snap points stop a swipe halfway between two tiers. */
+@media (max-width: 620px) {
+  .lp-table-scroll {
+    scroll-snap-type: x proximity;
+    -webkit-mask-image: linear-gradient(90deg, #000 94%, transparent 100%);
+    mask-image: linear-gradient(90deg, #000 94%, transparent 100%);
+  }
+
+  .lp-table {
+    min-width: 520px;
+    font-size: 0.82rem;
+  }
+
+  .lp-table th,
+  .lp-table td {
+    padding: 0.7rem 0.75rem;
+    scroll-snap-align: start;
+  }
+
+  .lp-table th:first-child,
+  .lp-table td:first-child {
+    width: 45%;
+  }
+}
+
 /* ── Section head (kicker + h2 + lead, centered variant) ───────────── */
 
 .lp-head {
@@ -1326,6 +1394,18 @@
 @media (max-width: 880px) {
   .lp-footer-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* The 0.6rem list gap does the visual spacing on a pointer device; on a
+     thumb it just leaves 24px targets floating in 38px holes. The rows
+     absorb the gap and become the target. */
+  .lp-footer ul {
+    gap: 0;
+  }
+
+  .lp-footer-grid a {
+    display: flex;
+    min-height: 40px;
   }
 }
 

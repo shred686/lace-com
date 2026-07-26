@@ -9,6 +9,7 @@ import { Image } from "astro:assets";
 import LaceNav from "./LaceNav.astro";
 import LaceFooter from "./LaceFooter.astro";
 import LaceSearchDemo from "./LaceSearchDemo.astro";
+import LacePlatformMap from "./LacePlatformMap.astro";
 import whitepaper from "../../assets/docs/LACE_Enterprise_Overview_v3.pdf";
 import laceScreen2 from "../../assets/images/lace-workflow-dark.png";
 import laceKgDark from "../../assets/images/lace-kg-dark.jpg";
@@ -86,8 +87,8 @@ const editions = [
             src={laceScreen2}
             alt="LACE workspace showing a governed workflow run"
             class="lp2-introshot-img"
-            widths={[760, 980, 1260, 1500, 1640]}
-            sizes="94vw"
+            widths={[420, 760, 980, 1260, 1500, 1640]}
+            sizes="(max-width: 880px) 420px, 94vw"
             loading="eager"
             fetchpriority="high"
           />
@@ -106,12 +107,16 @@ const editions = [
       </p>
     </section>
 
+    <!-- ── Platform map: six in, one governed line, four out ──────── -->
+    <LacePlatformMap />
+
     <!-- ── Feature cells ──────────────────────────────────────────── -->
     <section class="lp2-cells">
       <!-- Full-width: live search -->
       <div class="lp2-cell lp2-cell-full">
+        <i class="lp2-idx" aria-hidden="true">01</i>
         <div class="lp2-cell-copy" data-r>
-          <p class="lp2-kicker"><b>01</b> Enterprise Search</p>
+          <p class="lp2-kicker">Enterprise Search</p>
           <h2>One question. Every system. The exact source.</h2>
           <p>Permissions-aware search across documents, messages, and databases — every answer opens the passage, cell, or row it came from.</p>
         </div>
@@ -124,8 +129,9 @@ const editions = [
       <div class="lp2-row">
         <!-- Bitemporal -->
         <div class="lp2-cell">
+          <i class="lp2-idx" aria-hidden="true">02</i>
           <div class="lp2-cell-copy" data-r>
-            <p class="lp2-kicker"><b>02</b> Knowledge Graph</p>
+            <p class="lp2-kicker">Knowledge Graph</p>
             <h2>Your entire business, one living map.</h2>
             <p>LACE reads your documents and maps what your company actually knows — every customer, contract, and commitment. Ask what you owe, what expires, what changed — and get the answer with the source attached.</p>
           </div>
@@ -143,8 +149,9 @@ const editions = [
 
         <!-- Conflicts -->
         <div class="lp2-cell">
+          <i class="lp2-idx" aria-hidden="true">02</i>
           <div class="lp2-cell-copy" data-r>
-            <p class="lp2-kicker"><b>02</b> Knowledge Graph</p>
+            <p class="lp2-kicker">Knowledge Graph</p>
             <h2>It catches what everyone missed.</h2>
             <p>When two documents disagree on a fee, a date, an obligation — LACE surfaces it with the evidence, before it becomes a dispute. Your experts make the call; the graph remembers it.</p>
           </div>
@@ -174,8 +181,9 @@ const editions = [
       <div class="lp2-row">
         <!-- Approval gates -->
         <div class="lp2-cell">
+          <i class="lp2-idx" aria-hidden="true">03</i>
           <div class="lp2-cell-copy" data-r>
-            <p class="lp2-kicker"><b>03</b> Agentic Platform</p>
+            <p class="lp2-kicker">Agentic Platform</p>
             <h2>Job description in. AI teammate out.</h2>
             <p>Describe the role in the Agent Studio — renewals watchdog, intake clerk, research analyst. LACE builds it with you, proves it against test scenarios, and puts it to work: on a budget, inside your permissions, with the risky step held for a human.</p>
           </div>
@@ -199,8 +207,9 @@ const editions = [
 
         <!-- Channels -->
         <div class="lp2-cell">
+          <i class="lp2-idx" aria-hidden="true">03</i>
           <div class="lp2-cell-copy" data-r>
-            <p class="lp2-kicker"><b>03</b> Agentic Platform</p>
+            <p class="lp2-kicker">Agentic Platform</p>
             <h2>Everywhere your customers already are.</h2>
             <p>One agent, every channel — web chat, Slack, Teams, email, SMS, WhatsApp, live voice. It answers from your verified knowledge, and hands off to a human the moment it should.</p>
           </div>
@@ -249,8 +258,9 @@ const editions = [
 
     <!-- ── 04 App Builder: prompt → production ────────────────────── -->
     <section class="lp2-appbuild">
+      <i class="lp2-idx" aria-hidden="true">04</i>
       <div class="lp2-appbuild-copy" data-r>
-        <p class="lp2-kicker"><b>04</b> App Builder</p>
+        <p class="lp2-kicker">App Builder</p>
         <h2>Describe it. <span class="lp-accent">It's software.</span></h2>
         <p class="lp2-appbuild-lead">The tool your team keeps wishing for — described in a sentence, live at a real URL in minutes. Pages, portals, and full applications, with sign-in, database, releases, and rollback handled for you.</p>
       </div>
@@ -322,8 +332,9 @@ const editions = [
 
     <!-- ── 04b App Builder: launch a business ─────────────────────── -->
     <section class="lp2-saas">
+      <i class="lp2-idx" aria-hidden="true">04</i>
       <div class="lp2-saas-copy" data-r>
-        <p class="lp2-kicker"><b>04</b> App Builder · Launch</p>
+        <p class="lp2-kicker">App Builder · Launch</p>
         <h2>Your SaaS idea. <span class="lp-accent">Live. Selling.</span></h2>
         <p>Build the product — and the business around it. Subscriptions and billing are built in, hosting scales as you grow, and LACE handles the launch checklist down to the domain and the entity. From idea to real revenue, on one platform.</p>
         <ul class="lp2-saas-list">
@@ -489,6 +500,12 @@ const editions = [
       return;
     }
 
+    // Below 880px the CSS releases the pin, drops the screenshot and collapses
+    // the stage to an auto-height hero, so there is nothing for the scroll
+    // maths to drive. Checked live rather than once, so a rotation or a
+    // resize across the breakpoint hands control back without a reload.
+    const phone = window.matchMedia("(max-width: 880px)");
+
     const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v));
     const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
@@ -525,6 +542,12 @@ const editions = [
     let REST = restY();
 
     const apply = (p: number) => {
+      if (phone.matches) {
+        hero.style.removeProperty("--copy-opacity");
+        hero.style.removeProperty("--copy-y");
+        return;
+      }
+
       // Screenshot rises linearly from its resting peek up to settled.
       const rise = clamp(p / 0.82, 0, 1);
       hero.style.setProperty("--introshot-y", `${lerp(REST, SETTLED, rise)}svh`);
@@ -556,7 +579,7 @@ const editions = [
       hero.classList.remove("is-hero-anim");
     };
 
-    if (shown < 0.02) {
+    if (shown < 0.02 && !phone.matches) {
       const shot = hero.querySelector<HTMLElement>(".lp2-introshot");
       shot?.addEventListener("transitionend", endIntro, { once: true });
       // Two frames guarantee the off-screen start state is painted first, so
@@ -611,5 +634,6 @@ const editions = [
 
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onResize);
+    phone.addEventListener("change", onResize);
   })();
 </script>

@@ -146,6 +146,8 @@ const toc = [
 ---
 
 <div class="lpd">
+  <a class="lp-skip" href="#lp-main">Skip to content</a>
+
   <!-- ── Docs header ──────────────────────────────────────────────── -->
   <header class="lpd-header">
     <div class="lpd-header-row">
@@ -250,7 +252,7 @@ const toc = [
       <p class="lpd-side-empty" data-side-empty hidden>No matches.</p>
     </aside>
 
-    <main class="lpd-main">
+    <main id="lp-main" class="lpd-main">
       <!-- Get started -->
       <section id="introduction" class="lpd-sec" data-sec>
         <p class="lpd-crumb">Get Started</p>
@@ -753,6 +755,7 @@ const toc = [
   .lpd-gh {
     display: inline-flex;
     align-items: center;
+    min-height: 24px;
     gap: 0.45rem;
     text-decoration: none;
     font-size: 0.8rem;
@@ -1123,6 +1126,9 @@ const toc = [
   }
 
   .lpd-foot a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
     font-size: 0.82rem;
     color: var(--lp-green-deep);
     text-decoration: none;

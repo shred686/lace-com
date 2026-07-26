@@ -5,28 +5,29 @@ import { laceSite } from "../../site.config";
 ---
 
 <BaseLayout
-  title={`Message Sent | ${laceSite.name}`}
-  description={`Your message has been sent to ${laceSite.name}.`}
+  title={`Request Received | ${laceSite.name}`}
+  description={`Your evaluation request has been sent to ${laceSite.name}.`}
   theme="lace"
   themeColor="#f6f7f9"
   lang="en"
   siteName={laceSite.name}
   noindex={true}
 >
-  <main class="lp-site lp-success">
+  <main id="lp-main" class="lp-site lp-success">
     <section class="lp-success-shell">
       <div class="lp-card lp-success-card" data-r>
         <p class="lp-kicker">Contact</p>
         <h1 class="lp-h2 lp-success-title">
-          Message <span class="lp-accent">sent.</span>
+          Request <span class="lp-accent">received.</span>
         </h1>
         <p class="lp-success-copy">
-          Thanks for reaching out. We'll review your note and follow up by
-          email — usually within one business day.
+          We'll reply by email within one business day, usually with a few
+          questions about your corpus and where it needs to run. If we're not
+          the right fit, we'll tell you that instead.
         </p>
         <div class="lp-success-actions">
-          <a href="/" class="lp-btn lp-btn-primary">Back home</a>
-          <a href="/contact" class="lp-btn lp-btn-ghost">Send another message</a>
+          <a href="/" class="lp-btn lp-btn-primary">Back to home</a>
+          <a href="/contact" class="lp-btn lp-btn-ghost">Send another request</a>
         </div>
       </div>
     </section>

@@ -34,7 +34,7 @@ const fmt = (date: Date) =>
     { name: "Blog", url: `${laceSite.url}/blog/` },
   ])}
 >
-  <main class="lp-site lp-blog">
+  <main id="lp-main" class="lp-site lp-blog">
     <LaceNav active="blog" />
 
     <section class="lp-blog-hero">
@@ -166,7 +166,9 @@ const fmt = (date: Date) =>
   .lp-blog-pill.is-active {
     color: #fff;
     border-color: transparent;
-    background: var(--lp-grad);
+    /* Solid deep green: white over the gradient's light stop (#00c9a0)
+       measures 2.15:1. On #00745c it is 5.79:1. */
+    background: var(--lp-green-deep);
   }
 
   .lp-blog-list {
@@ -199,7 +201,7 @@ const fmt = (date: Date) =>
   .lp-blog-flag {
     padding: 0.2rem 0.55rem;
     border-radius: 100px;
-    background: var(--lp-grad);
+    background: var(--lp-green-deep);
     color: #fff;
     font-family: "JetBrains Mono", monospace;
     font-size: 0.52rem;

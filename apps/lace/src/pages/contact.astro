@@ -15,7 +15,7 @@ import { laceSite } from "../site.config";
   siteName={laceSite.name}
   imageAlt="Book a LACE enterprise AI platform demo"
 >
-  <main class="lp-site lp-contact">
+  <main id="lp-main" class="lp-site lp-contact">
     <LaceNav />
 
     <section class="lp-contact-shell">
@@ -87,32 +87,52 @@ import { laceSite } from "../site.config";
             <div class="lp-form-row">
               <label class="lp-field">
                 <span>Name</span>
-                <input type="text" name="name" placeholder="Jane Smith" required />
+                <input
+                  type="text"
+                  name="name"
+                  autocomplete="name"
+                  placeholder="Jane Smith"
+                  required
+                />
               </label>
 
               <label class="lp-field">
                 <span>Work email</span>
-                <input type="email" name="email" placeholder="jane@company.com" required />
+                <input
+                  type="email"
+                  name="email"
+                  autocomplete="email"
+                  placeholder="jane@company.com"
+                  required
+                />
               </label>
             </div>
 
             <label class="lp-field">
-              <span>Company</span>
-              <input type="text" name="company" placeholder="Company or program name" />
+              <span>Company <i>Optional</i></span>
+              <input
+                type="text"
+                name="company"
+                autocomplete="organization"
+                placeholder="Company or program name"
+              />
             </label>
 
             <label class="lp-field">
               <span>What should LACE run?</span>
+              <small class="lp-field-help">
+                The corpus, the workflow, and any constraints. A few lines is enough.
+              </small>
               <textarea
                 name="message"
                 rows="6"
-                placeholder="The corpus (contracts, filings, tickets…), the workflow (search, intake, review…), and any constraints (on-prem, air-gapped, standards)…"
+                placeholder="Five years of vendor contracts in SharePoint. We need renewal dates and termination windows, with the clause attached. Must run in our VPC."
                 required></textarea>
             </label>
 
             <div class="lp-form-row">
               <label class="lp-field">
-                <span>Timeline</span>
+                <span>Timeline <i>Optional</i></span>
                 <select name="timeline">
                   <option>Exploring options</option>
                   <option>This quarter</option>
@@ -121,7 +141,7 @@ import { laceSite } from "../site.config";
               </label>
 
               <label class="lp-field">
-                <span>Deployment preference</span>
+                <span>Deployment preference <i>Optional</i></span>
                 <select name="deployment">
                   <option>Not sure yet</option>
                   <option>Managed cloud</option>
@@ -132,8 +152,14 @@ import { laceSite } from "../site.config";
             </div>
 
             <button type="submit" class="lp-btn lp-btn-primary lp-form-submit">
-              Send inquiry
+              Request an evaluation
             </button>
+
+            <p class="lp-form-note">
+              Goes straight to our sales team. Expect a reply by email within
+              one business day — and we can sign an NDA before you share
+              anything about your data.
+            </p>
           </form>
         </div>
       </div>
@@ -247,12 +273,42 @@ import { laceSite } from "../site.config";
   }
 
   .lp-field span {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
     font-family: "Space Grotesk", "JetBrains Mono", monospace;
     font-size: 0.62rem;
     font-weight: 600;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--lp-ink-soft);
+  }
+
+  /* Optional marker. Marking the three optional fields is less noise than
+     marking the four required ones, and nothing is unlabelled either way. */
+  .lp-field span i {
+    font-style: normal;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.54rem;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    color: var(--lp-faint);
+  }
+
+  /* Persistent helper text. The placeholder is an example and disappears on
+     first keystroke, so the guidance cannot live there. */
+  .lp-field-help {
+    margin: -0.1rem 0 0;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: var(--lp-muted);
+  }
+
+  .lp-form-note {
+    margin: 0;
+    font-size: 0.8rem;
+    line-height: 1.6;
+    color: var(--lp-muted);
   }
 
   .lp-field input,

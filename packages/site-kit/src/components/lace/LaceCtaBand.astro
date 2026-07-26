@@ -20,7 +20,7 @@ const {
   line = "We set up a pilot on your documents and one workflow your team actually runs. You judge the working output — in weeks, not a quarter-long project.",
   primaryLabel = "Book a demo",
   primaryHref = "/contact",
-  secondaryLabel = "Download the overview →",
+  secondaryLabel = "Platform overview (PDF) →",
   secondaryHref = whitepaper,
 } = Astro.props;
 
@@ -45,6 +45,7 @@ const external = secondaryHref === whitepaper;
           rel={external ? "noopener noreferrer" : undefined}
         >
           {secondaryLabel}
+          {external && <span class="lp-sr-only">Opens in a new tab</span>}
         </a>
       </div>
     </div>

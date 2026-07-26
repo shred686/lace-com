@@ -65,7 +65,7 @@ const seoDescription = post.data.seoDescription ?? post.data.description;
     },
   ]}
 >
-  <main class="lp-site lp-post">
+  <main id="lp-main" class="lp-site lp-post">
     <LaceNav active="blog" />
 
     <article class="lp-post-shell">
@@ -553,7 +553,7 @@ const seoDescription = post.data.seoDescription ?? post.data.description;
   }
 
   .lp-post-prose :global(.lp-tree-row.is-omitted .lp-tree-branch) {
-    color: #c2544a;
+    color: var(--lp-flag-denied);
     font-weight: 700;
   }
 

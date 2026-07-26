@@ -1,0 +1,203 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-07-25T00:00:00Z",
+  "title": "Design System: Determinant Systems",
+  "extensions": {
+    "colorMeta": {
+      "accent": {
+        "role": "primary",
+        "displayName": "Signal Mint",
+        "canonical": "#00ffc2",
+        "tonalRamp": ["#002218", "#00402e", "#005f45", "#00805d", "#00a87a", "#00d4a8", "#00ffc2", "#aaffdc"]
+      },
+      "substrate": {
+        "role": "neutral",
+        "displayName": "Substrate",
+        "canonical": "#0a0a0a",
+        "tonalRamp": ["#0a0a0a", "#151617", "#232527", "#35383b", "#4d5155", "#6e7377", "#94a3b8", "#d8dee6"]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Cool Grey",
+        "canonical": "#94a3b8",
+        "tonalRamp": ["#11151b", "#1d242e", "#2c3543", "#3f4a5c", "#5a6779", "#7787a0", "#94a3b8", "#cbd5e1"]
+      },
+      "svc-agents": {
+        "role": "secondary",
+        "displayName": "Agent Cyan",
+        "canonical": "#5be9ff",
+        "tonalRamp": ["#022530", "#04404f", "#065a6f", "#0a7a93", "#1a9db8", "#38c5da", "#5be9ff", "#b5f5ff"]
+      },
+      "svc-apps": {
+        "role": "secondary",
+        "displayName": "Factory Coral",
+        "canonical": "#ff9d7a",
+        "tonalRamp": ["#33150c", "#4f2214", "#6e321f", "#94472e", "#bd6042", "#e07d5c", "#ff9d7a", "#ffcbb8"]
+      },
+      "svc-workflows": {
+        "role": "secondary",
+        "displayName": "Workflow Mint",
+        "canonical": "#00ffc2",
+        "tonalRamp": ["#002218", "#00402e", "#005f45", "#00805d", "#00a87a", "#00d4a8", "#00ffc2", "#aaffdc"]
+      },
+      "svc-rag": {
+        "role": "secondary",
+        "displayName": "Retrieval Amber",
+        "canonical": "#ffd86f",
+        "tonalRamp": ["#332600", "#4f3b00", "#6e5300", "#946f05", "#bd8f16", "#e0b23c", "#ffd86f", "#fff3b8"]
+      },
+      "svc-search": {
+        "role": "secondary",
+        "displayName": "Search Periwinkle",
+        "canonical": "#7aa2ff",
+        "tonalRamp": ["#0d1633", "#16264f", "#20386e", "#2e4d94", "#4066bd", "#5c83e0", "#7aa2ff", "#c2d4ff"]
+      },
+      "svc-graphs": {
+        "role": "secondary",
+        "displayName": "Graph Violet",
+        "canonical": "#c58dff",
+        "tonalRamp": ["#22103a", "#341a56", "#492775", "#623899", "#7f4dbd", "#a26be0", "#c58dff", "#e4ccff"]
+      },
+      "spark": {
+        "role": "tertiary",
+        "displayName": "Spark Amber",
+        "canonical": "#ffd86f",
+        "tonalRamp": ["#332600", "#4f3b00", "#6e5300", "#946f05", "#bd8f16", "#e0b23c", "#ffd86f", "#fff3b8"]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Hero headline, staged as individual .hero-title-line elements. The tightest tracking in either site." },
+      "headline": { "displayName": "Headline", "purpose": "Section H2s, uppercase white." },
+      "title": { "displayName": "Tile Title", "purpose": "Card and tile headings. Weight jumps to 700 to hold at 0.86rem against a translucent panel." },
+      "lead": { "displayName": "Lead", "purpose": "The paragraph directly beneath a heading." },
+      "body": { "displayName": "Body", "purpose": "All running copy. Inter 300 at 1.75 line-height, which a dark ground requires." },
+      "label": { "displayName": "Kicker", "purpose": "One per section, above the H2, in the firm accent or the section's --svc hue." },
+      "control": { "displayName": "Control", "purpose": "Every button and nav CTA." }
+    },
+    "shadows": [
+      { "name": "tile-bloom", "value": "0 0 22px -14px var(--tile-accent), inset 0 0 26px -20px var(--tile-accent)", "purpose": "Service tile at rest. Heavy negative spread so the tile reads as lit from within, not haloed. Only valid alongside a matching border and icon." },
+      { "name": "tile-lift", "value": "0 0 28px -10px var(--tile-accent), inset 0 0 26px -18px var(--tile-accent), 0 18px 44px rgba(0,0,0,0.45)", "purpose": "Service tile hover. The neutral third layer makes the 3px lift read as physical." },
+      { "name": "nav-settle", "value": "0 18px 40px rgba(0,0,0,0.46)", "purpose": "Sticky nav, interpolated by the --nav-solid scroll property alongside its background and blur." },
+      { "name": "brand-dot-bloom", "value": "0 0 18px rgba(98,185,255,0.62)", "purpose": "The wordmark's gradient status dot only." }
+    ],
+    "motion": [
+      { "name": "dur-control", "value": "180ms ease", "purpose": "Button and link colour transitions." },
+      { "name": "dur-tile", "value": "260ms ease", "purpose": "Service tile border, transform, and bloom." },
+      { "name": "dur-panel", "value": "300ms ease", "purpose": "Glass card border brightening on hover." },
+      { "name": "nav-condense", "value": "160ms linear", "purpose": "Nav background, border, blur, and shadow interpolating from --nav-solid." },
+      { "name": "hero-canvas", "value": "continuous, fixed at z-index 0", "purpose": "Drifting amber spark field behind every section — the substrate made literal. Must be suppressed under prefers-reduced-motion." }
+    ],
+    "breakpoints": [
+      { "name": "shell", "value": "min(1440px, calc(100% - 4rem))" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Glass Card",
+      "kind": "card",
+      "refersTo": "glass-card",
+      "description": "The default container: a translucent plane over the substrate. Brightens its border on hover; never moves.",
+      "html": "<div class=\"ds-stage\"><div class=\"ds-glass\"><h3 class=\"ds-glass-title\">Governance is part of the runtime</h3><p class=\"ds-glass-body\">Prompt instructions are not a security boundary. We enforce budgets, allowed actions, and data access in the system around the model.</p></div></div>",
+      "css": ".ds-stage { padding: 2rem; background: #0a0a0a; } .ds-glass { padding: 1.6rem 1.5rem; border: 1px solid rgba(255,255,255,0.14); border-radius: 0; background: rgba(30,30,30,0.65); backdrop-filter: blur(20px); transition: border-color 300ms ease; } .ds-glass:hover { border-color: rgba(0,255,194,0.35); } .ds-glass-title { margin: 0 0 0.7rem; font-family: 'Space Grotesk', monospace; font-size: 0.86rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; line-height: 1.25; color: #ffffff; } .ds-glass-body { margin: 0; font-family: Inter, sans-serif; font-size: 0.96rem; font-weight: 300; line-height: 1.75; color: #94a3b8; }"
+    },
+    {
+      "name": "Service Tile",
+      "kind": "card",
+      "refersTo": "service-tile",
+      "description": "The signature component. Each of the six capabilities owns a hue, carried through border, bloom, icon, and link — set inline via --tile-accent.",
+      "html": "<div class=\"ds-stage ds-tile-grid\"><a class=\"ds-tile\" href=\"#0\" style=\"--tile-accent:#5be9ff\"><span class=\"ds-tile-icon\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><rect x=\"7\" y=\"7\" width=\"10\" height=\"10\"/><path d=\"M10 3v4M14 3v4M10 17v4M14 17v4M3 10h4M3 14h4M17 10h4M17 14h4\"/></svg></span><h3>AI Agents</h3><p>Digital teammates that take a task and drive it to done — inside your rules.</p><span class=\"ds-tile-more\">Explore →</span></a><a class=\"ds-tile\" href=\"#0\" style=\"--tile-accent:#c58dff\"><span class=\"ds-tile-icon\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><circle cx=\"6\" cy=\"7\" r=\"2.4\"/><circle cx=\"18\" cy=\"9\" r=\"2.4\"/><circle cx=\"11\" cy=\"18\" r=\"2.4\"/><path d=\"M8.2 8.1 15.7 9M7.1 9.2 10 15.7M16.6 11.1 12.6 16.3\"/></svg></span><h3>Knowledge Graphs</h3><p>Your documents, distilled into a network of facts you can query.</p><span class=\"ds-tile-more\">Explore →</span></a></div>",
+      "css": ".ds-stage { padding: 2rem; background: #0a0a0a; } .ds-tile-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 1rem; } .ds-tile { display: flex; flex-direction: column; gap: 0.55rem; padding: 1.5rem 1.4rem 1.3rem; border-radius: 0; text-decoration: none; background: linear-gradient(155deg, color-mix(in srgb, var(--tile-accent) 6%, transparent), transparent 60%), rgba(30,30,30,0.65); border: 1px solid color-mix(in srgb, var(--tile-accent) 30%, transparent); box-shadow: 0 0 22px -14px var(--tile-accent), inset 0 0 26px -20px var(--tile-accent); backdrop-filter: blur(18px); transition: border-color 260ms ease, transform 260ms ease, box-shadow 260ms ease; } .ds-tile:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--tile-accent) 55%, transparent); box-shadow: 0 0 28px -10px var(--tile-accent), inset 0 0 26px -18px var(--tile-accent), 0 18px 44px rgba(0,0,0,0.45); } .ds-tile:focus-visible { outline: 2px solid var(--tile-accent); outline-offset: 3px; } .ds-tile-icon { width: 1.6rem; height: 1.6rem; color: var(--tile-accent); } .ds-tile-icon svg { width: 100%; height: 100%; } .ds-tile h3 { margin: 0; font-family: 'Space Grotesk', monospace; font-size: 0.86rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; line-height: 1.25; color: #ffffff; } .ds-tile p { margin: 0; font-family: Inter, sans-serif; font-size: 0.82rem; font-weight: 300; line-height: 1.6; color: #94a3b8; } .ds-tile-more { margin-top: auto; padding-top: 0.5rem; font-family: 'Space Grotesk', monospace; font-size: 0.6rem; letter-spacing: 0.16em; text-transform: uppercase; color: color-mix(in srgb, var(--tile-accent) 80%, white); } @media (prefers-reduced-motion: reduce) { .ds-tile { transition: none; } .ds-tile:hover { transform: none; } }"
+    },
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The conversion control. On hover the mint gradient flattens to solid white — the light goes neutral rather than intensifying.",
+      "html": "<a class=\"ds-btn-primary\" href=\"#0\">Talk to us →</a>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; gap: 0.5rem; padding: 1rem 2rem; border: 0; border-radius: 0; font-family: 'Space Grotesk', monospace; font-size: 0.75rem; font-weight: 400; letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none; cursor: pointer; color: #000; background: linear-gradient(135deg, #aaffdc, #00fdc1); transition: background 180ms ease; } .ds-btn-primary:hover { background: #fff; } .ds-btn-primary:focus-visible { outline: 2px solid #00ffc2; outline-offset: 3px; }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "The secondary control — a faint translucent plane that takes the accent on its border and label when hovered.",
+      "html": "<a class=\"ds-btn-ghost\" href=\"#0\">Download whitepaper</a>",
+      "css": ".ds-btn-ghost { display: inline-flex; align-items: center; gap: 0.5rem; padding: 1rem 2rem; border: 1px solid rgba(255,255,255,0.15); border-radius: 0; font-family: 'Space Grotesk', monospace; font-size: 0.75rem; font-weight: 300; letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none; cursor: pointer; color: #ffffff; background: rgba(255,255,255,0.04); backdrop-filter: blur(8px); transition: color 180ms ease, border-color 180ms ease; } .ds-btn-ghost:hover { border-color: rgba(0,255,194,0.4); color: #00ffc2; } .ds-btn-ghost:focus-visible { outline: 2px solid #00ffc2; outline-offset: 3px; }"
+    },
+    {
+      "name": "Section Kicker",
+      "kind": "custom",
+      "refersTo": "kicker",
+      "description": "One per section, above the H2. Takes the section's --svc hue where one is set, otherwise the firm accent.",
+      "html": "<div class=\"ds-stage\"><p class=\"ds-kicker\">What we build</p><h2 class=\"ds-h2\">AI agents that can safely do real work</h2></div>",
+      "css": ".ds-stage { padding: 2rem; background: #0a0a0a; } .ds-kicker { margin: 0 0 1.4rem; font-family: 'Space Grotesk', monospace; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase; color: #00ffc2; } .ds-h2 { margin: 0; font-family: 'Space Grotesk', monospace; font-size: 2.4rem; font-weight: 400; letter-spacing: -0.02em; text-transform: uppercase; line-height: 1.02; color: #ffffff; text-wrap: balance; }"
+    },
+    {
+      "name": "Navigation",
+      "kind": "nav",
+      "refersTo": "glass-card",
+      "description": "Sticky bar that condenses out of the page: background, border, blur, and shadow all interpolate from a --nav-solid scroll property.",
+      "html": "<nav class=\"ds-nav\" style=\"--nav-solid:1\"><a class=\"ds-brand\" href=\"#0\"><i class=\"ds-brand-dot\"></i>Determinant Systems</a><span class=\"ds-nav-links\"><a href=\"#0\">Services</a><a href=\"#0\">About</a><a href=\"#0\">LACE platform</a><a class=\"ds-nav-cta\" href=\"#0\">Contact</a></span></nav>",
+      "css": ".ds-nav { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.82rem 1rem; border-radius: 0; border: 1px solid rgba(255,255,255,calc(0.17 * var(--nav-solid))); background: rgba(7,9,11,calc(0.82 * var(--nav-solid))); backdrop-filter: blur(calc(2px + 12px * var(--nav-solid))); box-shadow: 0 18px 40px rgba(0,0,0,calc(0.46 * var(--nav-solid))); transition: border-color 160ms linear, background-color 160ms linear, box-shadow 160ms linear; } .ds-brand { display: inline-flex; align-items: center; gap: 0.62rem; font-family: 'Red Hat Display', Inter, sans-serif; font-weight: 300; font-size: 0.98rem; letter-spacing: 0.02em; text-decoration: none; color: #f3f5f8; } .ds-brand-dot { width: 0.58rem; height: 0.58rem; border-radius: 999px; background: linear-gradient(130deg, #ffffff 0%, #63b9ff 62%, #4ee6c7 100%); box-shadow: 0 0 18px rgba(98,185,255,0.62); } .ds-nav-links { display: inline-flex; align-items: center; gap: 0.9rem; } .ds-nav-links a { font-family: Inter, sans-serif; font-size: 0.9rem; font-weight: 300; text-decoration: none; color: #a7afb8; transition: color 180ms ease; } .ds-nav-links a:hover { color: #f3f5f8; } .ds-nav-cta { border: 1px solid rgba(255,255,255,0.22); border-radius: 0; padding: 0.44rem 0.84rem; font-size: 0.84rem; background: rgba(255,255,255,0.05); color: #f3f5f8 !important; transition: background 170ms ease; } .ds-nav-cta:hover { background: rgba(255,255,255,0.1); } .ds-nav-links a:focus-visible { outline: 2px solid #00ffc2; outline-offset: 4px; }"
+    },
+    {
+      "name": "Visual Panel",
+      "kind": "custom",
+      "refersTo": "visual-panel",
+      "description": "The frame for product diagrams inside a service section. Its border and caption take the section's --svc hue.",
+      "html": "<div class=\"ds-stage\" style=\"--svc:#7aa2ff\"><div class=\"ds-visual\"><p class=\"ds-visual-inner\">One search across every place your company keeps information.</p></div><p class=\"ds-visual-caption\">Enterprise Search — federated query</p></div>",
+      "css": ".ds-stage { padding: 2rem; background: #0a0a0a; } .ds-visual { padding: 2rem; border: 1px solid color-mix(in srgb, var(--svc) 22%, transparent); border-radius: 0; background: rgba(10,11,12,0.72); backdrop-filter: blur(16px); } .ds-visual-inner { margin: 0; font-family: Inter, sans-serif; font-size: 0.96rem; font-weight: 300; line-height: 1.75; color: #94a3b8; } .ds-visual-caption { margin: 0.9rem 0 0; font-family: 'Space Grotesk', monospace; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--svc); }"
+    },
+    {
+      "name": "Accent Word",
+      "kind": "custom",
+      "refersTo": "kicker",
+      "description": "The gradient treatment reserved for the word LACE inside a display headline. The one place gradient text is permitted.",
+      "html": "<div class=\"ds-stage\"><h1 class=\"ds-display\">Built on <span class=\"ds-accent-word\">LACE</span></h1></div>",
+      "css": ".ds-stage { padding: 2rem; background: #0a0a0a; } .ds-display { margin: 0; font-family: 'Space Grotesk', monospace; font-size: 3.4rem; font-weight: 400; letter-spacing: -0.04em; line-height: 0.92; text-transform: uppercase; color: #ffffff; } .ds-accent-word { background: linear-gradient(90deg, #00ffc2 0%, #00d4a8 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Layer",
+    "overview": "The firm's own sentence is the design brief: we build the layer between AI models and your business. This system makes that layer visible. Everything sits on one near-black substrate (#0a0a0a), and content arrives as translucent planes laid over it — panels at 65% opacity with blur(18–20px) behind them, hairline white borders, and light from below showing through. You can always see that there is something underneath. Nothing is opaque, because an opaque box would be a black box, and a black box is the exact thing this firm sells against.\n\nThe register is instrument-grade rather than warm. Every corner is hard 0 — a global !important rule enforces it across the whole site — and the type is uppercase Space Grotesk with heavy negative tracking, set against Inter at weight 300 for reading. The result reads as equipment, not as a brochure: matte, square, precisely lit. Trust here comes from precision, not friendliness.\n\nThe one place the system allows itself real colour is the service layer. Each of the six capabilities owns a hue, carried through its tile border, glow, icon, and its section's --svc custom property — cyan for agents, coral for the app factory, mint for workflows, amber for RAG, periwinkle for search, violet for knowledge graphs. Everything else is monochrome. The palette says the firm is one substrate; the services are six different lights passing through it.",
+    "keyCharacteristics": [
+      "Hard 0-radius everywhere, enforced globally; only status dots are round.",
+      "Translucent panels with real backdrop blur over a single dark substrate — never opaque cards.",
+      "Uppercase Space Grotesk for every heading and control; Inter 300 for all reading.",
+      "Monochrome by default, with one owned accent hue per service capability.",
+      "Light comes from behind and below the interface, never from a decorative glow on top of it."
+    ],
+    "rules": [
+      { "name": "The One-Light Rule", "body": "A surface takes the firm accent or a service hue, never both. If a section carries --svc, its kickers, borders, and links all take that hue; the mint stands down.", "section": "colors" },
+      { "name": "The Translucent-Plane Rule", "body": "Every content panel is translucent with a real backdrop blur and a hairline border. An opaque panel breaks the metaphor — the layer has to show what is underneath it.", "section": "colors" },
+      { "name": "The Cool-Grey Rule", "body": "Body copy is #94a3b8, never a neutral grey. On a black substrate a true grey reads as dead; the blue bias keeps it alive next to the accent.", "section": "colors" },
+      { "name": "The Two-Face Rule", "body": "Space Grotesk is structure — headings, labels, controls, anything uppercase. Inter is prose. A sentence never appears in Space Grotesk and a heading never appears in Inter.", "section": "typography" },
+      { "name": "The Uppercase-Structure Rule", "body": "Every heading, kicker, tile title, and control is uppercase. The sentence-case Red Hat Display headings on the interior pages belong to the retired system.", "section": "typography" },
+      { "name": "The Tracking-Inverts Rule", "body": "Big type tracks tight and negative (-0.02em to -0.04em); small type tracks wide and positive (0.12em to 0.3em). There is no heading at default tracking anywhere in the system.", "section": "typography" },
+      { "name": "The Glass-Not-Shadow Rule", "body": "Depth comes from backdrop-filter and a hairline border. If a panel needs a shadow to separate from the ground, the blur or the border is wrong.", "section": "elevation" },
+      { "name": "The Glow-Is-Lit-From-Within Rule", "body": "A coloured glow is only permitted when the element also carries that colour as its border and its content — the tile is made of that light. A coloured shadow under an element that is otherwise monochrome is decoration and does not belong here.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do keep every corner at 0. The global !important rule is the system, not a bug to work around.",
+      "Do build containers as translucent planes: rgba(30,30,30,0.65), blur(18–20px), 1px hairline border.",
+      "Do set headings, kickers, tile titles, and controls in uppercase Space Grotesk with negative tracking on the large sizes and wide tracking on the small ones.",
+      "Do set all reading copy in Inter at weight 300 with 1.7–1.75 line-height and #94a3b8.",
+      "Do give each service its own hue and carry it consistently across tile border, glow, icon, link, and the matching section's --svc.",
+      "Do let a coloured glow appear only on an element that is itself made of that colour.",
+      "Do keep clamp(5.5rem, 10vw, 10rem) of section padding; the air is what separates this from a sales page.",
+      "Do treat the Spanish /es/ surface and the language toggle as first-class.",
+      "Do suppress the hero canvas and all ambient motion under prefers-reduced-motion."
+    ],
+    "donts": [
+      "Don't add a border radius to anything. Round is reserved for status dots and third-party logo tiles.",
+      "Don't use an opaque panel. If you cannot see the substrate through it, it is not a layer.",
+      "Don't put a coloured glow on a monochrome element — that is the decorative-halo pattern this system explicitly avoids.",
+      "Don't set a heading in sentence case or in Red Hat Display; that is the retired interior system.",
+      "Don't introduce a seventh service hue, or reuse an existing one for a new capability. The spectrum is a fixed set of six.",
+      "Don't let the firm accent and a service hue appear as peers on the same surface.",
+      "Don't reinstate the 0.52–1.25rem radii or the --radius-square-lg token still present in global.css; they are dead code.",
+      "Don't move Determinant's accent off the mint family — the resemblance to LACE's green is deliberate. The two brands separate by register (luminous on black vs. muted on white), not by hue.",
+      "Don't invent client names, logos, project counts, or outcome metrics to fill a panel — none exist."
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "space grotesk",
+        "createdAt": "2026-07-25T23:17:24.673Z",
+        "reason": "Canonical typeface for both sites; committed in apps/lace/DESIGN.md and apps/determinant/DESIGN.md"
+      }
+    ]
+  }
+}

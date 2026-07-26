@@ -111,6 +111,17 @@ const pageJsonLd = !noindex
     }
   : undefined;
 
+/**
+ * Fonts are requested per theme so neither site pays for the other's faces.
+ * The LACE ruled-grid system uses Space Grotesk + JetBrains Mono only;
+ * Determinant's dark-glass system adds Inter (body) and Red Hat Display
+ * (the wordmark and the retired interior pages).
+ */
+const laceFonts =
+  "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap";
+const determinantFonts =
+  "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Red+Hat+Display:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap";
+const fontHref = theme === "lace" ? laceFonts : determinantFonts;
 ---
 
 <!doctype html>
@@ -139,10 +150,7 @@ const pageJsonLd = !noindex
       href="https://fonts.gstatic.com"
       crossorigin="anonymous"
     />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&family=Inter:wght@300;400;500;600;700&family=Red+Hat+Display:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
-    />
+    <link rel="stylesheet" href={fontHref} />
     <title>{title}</title>
     <meta name="description" content={description} />
     {author && <meta name="author" content={author} />}

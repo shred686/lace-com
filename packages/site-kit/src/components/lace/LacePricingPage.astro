@@ -150,7 +150,7 @@ const accentize = (title: string, accent: string) =>
   title.replace(accent, `<span class="lp-accent">${accent}</span>`);
 ---
 
-<main class="lp-site lp-pricing">
+<main id="lp-main" class="lp-site lp-pricing">
   <LaceNav active="pricing" />
 
   <!-- ── Hero ─────────────────────────────────────────────────────── -->
@@ -331,7 +331,8 @@ const accentize = (title: string, accent: string) =>
             rel="noopener noreferrer"
             class="lp-btn lp-btn-ghost lp-btn-lg"
           >
-            Download the overview →
+            Platform overview (PDF) →
+            <span class="lp-sr-only">Opens in a new tab</span>
           </a>
         </div>
       </div>
@@ -391,7 +392,9 @@ const accentize = (title: string, accent: string) =>
     left: 1.6rem;
     padding: 0.28rem 0.7rem;
     border-radius: var(--lp-radius);
-    background: var(--lp-grad);
+    /* Solid deep green, not --lp-grad: white over the gradient's light
+       stop (#00c9a0) measures 2.15:1. On #00745c it is 5.79:1. */
+    background: var(--lp-green-deep);
     color: #ffffff;
     font-family: "Space Grotesk", "JetBrains Mono", monospace;
     font-size: 0.55rem;

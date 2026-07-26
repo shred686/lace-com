@@ -62,7 +62,7 @@ const accentize = (text: string, word?: string) =>
   word ? text.replace(word, `<span class="lp-accent">${word}</span>`) : text;
 ---
 
-<main class="lp-site lp-offpage">
+<main id="lp-main" class="lp-site lp-offpage">
   <LaceNav active="product" />
 
   <!-- ── Hero ─────────────────────────────────────────────────────── -->
@@ -94,7 +94,9 @@ const accentize = (text: string, word?: string) =>
         {
           points.map((point, index) => (
             <article class="lp-card lp-off-point" data-r data-reveal-delay={60 + (index % 3) * 70}>
-              <h3 class="lp-h3">{point.title}</h3>
+              {/* h2: these precede the page's first h2, so h3 skipped a level.
+                  Size comes from .lp-h3, so the tag change is visually inert. */}
+              <h2 class="lp-h3">{point.title}</h2>
               <p>
                 {point.detail}
                 {point.link && (
@@ -297,7 +299,8 @@ const accentize = (text: string, word?: string) =>
     font-family: "JetBrains Mono", monospace;
     font-size: 0.62rem;
     letter-spacing: 0.2em;
-    color: var(--lp-green);
+    /* Deep green: --lp-green is 2.83:1 on the sheet and fails AA. */
+    color: var(--lp-green-deep);
   }
 
   .lp-off-deepcard p {

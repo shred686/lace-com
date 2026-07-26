@@ -1,0 +1,413 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-07-25T00:00:00Z",
+  "title": "Design System: LACE Platform",
+  "extensions": {
+    "colorMeta": {
+      "verified-green": {
+        "role": "primary",
+        "displayName": "Verified Green",
+        "canonical": "#00a882",
+        "tonalRamp": [
+          "#00170f",
+          "#002d20",
+          "#004a37",
+          "#00745c",
+          "#00a882",
+          "#00c9a0",
+          "#5fe0c4",
+          "#b8f4e5"
+        ]
+      },
+      "verified-green-deep": {
+        "role": "primary",
+        "displayName": "Verified Green Deep",
+        "canonical": "#00745c",
+        "tonalRamp": [
+          "#00120c",
+          "#00251c",
+          "#003d2f",
+          "#005a46",
+          "#00745c",
+          "#009475",
+          "#00b891",
+          "#7fe3ca"
+        ]
+      },
+      "verified-green-bright": {
+        "role": "primary",
+        "displayName": "Verified Green Bright",
+        "canonical": "#00c9a0",
+        "tonalRamp": [
+          "#001c16",
+          "#00352a",
+          "#005342",
+          "#00785f",
+          "#009d7c",
+          "#00c9a0",
+          "#4fdfbe",
+          "#c2f6e9"
+        ]
+      },
+      "flag-amber": {
+        "role": "secondary",
+        "displayName": "Flag Amber",
+        "canonical": "#d99a06",
+        "tonalRamp": [
+          "#231800",
+          "#3d2b00",
+          "#5c4100",
+          "#7a5200",
+          "#a37100",
+          "#d99a06",
+          "#f5c94e",
+          "#ffe6a8"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "#0e1210",
+        "tonalRamp": [
+          "#0e1210",
+          "#1a201d",
+          "#2d3748",
+          "#4a5568",
+          "#7b8794",
+          "#a8b2bc",
+          "#d5dbe0",
+          "#f6f7f9"
+        ]
+      },
+      "sheet": {
+        "role": "neutral",
+        "displayName": "Sheet",
+        "canonical": "#f6f7f9",
+        "tonalRamp": [
+          "#0e1210",
+          "#22282b",
+          "#3d4548",
+          "#5c6568",
+          "#8b9499",
+          "#bcc3c7",
+          "#e4e8ea",
+          "#f6f7f9"
+        ]
+      },
+      "hair": {
+        "role": "neutral",
+        "displayName": "Hair",
+        "canonical": "rgba(13, 27, 22, 0.09)",
+        "tonalRamp": [
+          "rgba(13,27,22,0.03)",
+          "rgba(13,27,22,0.055)",
+          "rgba(13,27,22,0.09)",
+          "rgba(13,27,22,0.14)",
+          "rgba(13,27,22,0.2)",
+          "rgba(13,27,22,0.3)",
+          "rgba(13,27,22,0.5)",
+          "rgba(13,27,22,0.8)"
+        ]
+      },
+      "faint": {
+        "role": "neutral",
+        "displayName": "Faint",
+        "canonical": "#656f7c",
+        "tonalRamp": [
+          "#14171b",
+          "#22272d",
+          "#333a42",
+          "#4a525c",
+          "#656f7c",
+          "#8b939e",
+          "#b6bcc4",
+          "#e2e5e9"
+        ]
+      },
+      "flag-denied": {
+        "role": "secondary",
+        "displayName": "Flag Denied",
+        "canonical": "#c2544a",
+        "tonalRamp": [
+          "#2b0f0c",
+          "#451815",
+          "#63241f",
+          "#84332c",
+          "#a5423a",
+          "#c2544a",
+          "#d98077",
+          "#f0bcb6"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Home hero headline only. One per site."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Page-opening H1s."
+      },
+      "editorial": {
+        "displayName": "Editorial Statement",
+        "purpose": "The large uppercase paragraph that argues in place of body copy. Max 46ch."
+      },
+      "title": {
+        "displayName": "Cell Title",
+        "purpose": "The H2 inside a cell."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Cell copy. Two to three sentences; the fragment window carries the argument."
+      },
+      "lead": {
+        "displayName": "Lead",
+        "purpose": "The single subhead beneath a hero."
+      },
+      "label": {
+        "displayName": "Cell Kicker",
+        "purpose": "Mono uppercase label with a green offering index."
+      },
+      "eyebrow": {
+        "displayName": "Eyebrow",
+        "purpose": "One per page, above the hero headline."
+      },
+      "readout": {
+        "displayName": "Readout",
+        "purpose": "Values reported inside fragment windows: sources, paths, times, ticks."
+      }
+    },
+    "shadows": [
+      {
+        "name": "fragment-lift",
+        "value": "0 26px 60px -24px rgba(15, 30, 26, 0.3)",
+        "purpose": "The fragment window only. Long, soft, far-offset — something held above a sheet."
+      },
+      {
+        "name": "evidence-rest",
+        "value": "0 1px 2px rgba(15,30,26,0.05), 0 2px 12px rgba(15,30,26,0.05)",
+        "purpose": "Small tiles inside a fragment window. Barely there, neutral, two-layer."
+      },
+      {
+        "name": "screenshot-bezel",
+        "value": "0 22px 60px rgba(2,10,14,0.22), 0 8px 24px rgba(2,10,14,0.14), 0 0 0 1px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.22), inset 0 -1px 0 rgba(0,0,0,0.72)",
+        "purpose": "The dark hero screenshot frame only. Inset highlights simulate a physical device edge."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-rise",
+        "value": "cubic-bezier(0.22, 0.61, 0.36, 1)",
+        "purpose": "The system's standard exponential ease-out for reveals and menu entrances."
+      },
+      {
+        "name": "ease-glide",
+        "value": "cubic-bezier(0.16, 0.84, 0.32, 1)",
+        "purpose": "The hero screenshot's one-shot load glide (1400ms)."
+      },
+      {
+        "name": "dur-state",
+        "value": "160ms",
+        "purpose": "Link and label colour changes."
+      },
+      {
+        "name": "dur-control",
+        "value": "180ms",
+        "purpose": "Button fill, border, and lift transitions."
+      },
+      {
+        "name": "dur-panel",
+        "value": "280ms",
+        "purpose": "Megamenu open; 300ms on close."
+      },
+      {
+        "name": "hero-in",
+        "value": "980ms cubic-bezier(0.22,0.61,0.36,1), staggered 140 / 320 / 560ms",
+        "purpose": "Eyebrow, headline, and subhead rise out of a 12px blur on first paint. The site's only load sequence."
+      },
+      {
+        "name": "lace-sheen",
+        "value": "1500ms cubic-bezier(0.4,0,0.2,1) 980ms",
+        "purpose": "A single mint highlight sweeps across the word LACE once, after it lands. Both endpoints resolve to solid green."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "stack",
+        "value": "560px"
+      },
+      {
+        "name": "cells-collapse",
+        "value": "780px"
+      },
+      {
+        "name": "nav-mobile",
+        "value": "880px"
+      },
+      {
+        "name": "rails-on",
+        "value": "1080px"
+      },
+      {
+        "name": "frame",
+        "value": "1180px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Cell",
+      "kind": "custom",
+      "refersTo": "cell",
+      "description": "The fundamental unit and the replacement for the card: content bounded by the grid's hairlines, never by a container.",
+      "html": "<div class=\"ds-row\"><div class=\"ds-cell\"><p class=\"ds-kicker\"><b>02</b> Knowledge Graph</p><h2 class=\"ds-cell-title\">Ask what you owe.</h2><p class=\"ds-cell-body\">Ask what you owe, what expires, what changed — and get the answer with the source attached.</p><a class=\"ds-cell-link\" href=\"#0\">Knowledge Graph →</a></div><div class=\"ds-cell\"><p class=\"ds-kicker\"><b>02</b> Knowledge Graph</p><h2 class=\"ds-cell-title\">It catches what everyone missed.</h2><p class=\"ds-cell-body\">When two documents disagree on a fee, a date, an obligation — LACE surfaces it with the evidence.</p><a class=\"ds-cell-link\" href=\"#0\">Knowledge Graph →</a></div></div>",
+      "css": ".ds-row { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); border-top: 1px solid rgba(13,27,22,0.09); background: #f6f7f9; } .ds-row > .ds-cell + .ds-cell { border-left: 1px solid rgba(13,27,22,0.09); } .ds-cell { display: flex; flex-direction: column; gap: 1.8rem; padding: 2.4rem 2rem; font-family: 'Space Grotesk', 'Red Hat Display', sans-serif; } .ds-kicker { margin: 0 0 0.8rem; font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: #7b8794; } .ds-kicker b { margin-right: 0.4rem; font-weight: 600; color: #00745c; } .ds-cell-title { margin: 0 0 0.55rem; font-size: 1.6rem; font-weight: 400; letter-spacing: -0.015em; text-transform: uppercase; line-height: 1.05; color: #0e1210; text-wrap: balance; } .ds-cell-body { margin: 0; font-size: 0.95rem; line-height: 1.6; color: #4a5568; } .ds-cell-link { margin-top: auto; align-self: flex-start; font-family: 'JetBrains Mono', monospace; font-size: 0.66rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; color: #00745c; transition: opacity 160ms ease; } .ds-cell-link:hover { opacity: 0.7; } .ds-cell-link:focus-visible { outline: 2px solid #00a882; outline-offset: 3px; }",
+      "notes": "At ≥1080px the enclosing frame draws vertical rails and a green '+' crosshair at each rule junction."
+    },
+    {
+      "name": "Frame Crosshair",
+      "kind": "custom",
+      "refersTo": "cell",
+      "description": "The signature structural mark: a mono '+' astride every junction where a section rule meets the frame's vertical rail.",
+      "html": "<div class=\"ds-frame\"><section class=\"ds-frame-sec\"><p class=\"ds-frame-label\">Section boundary</p></section><section class=\"ds-frame-sec\"><p class=\"ds-frame-label\">Next station</p></section></div>",
+      "css": ".ds-frame { position: relative; padding: 0 2rem; background: #f6f7f9; } .ds-frame::before, .ds-frame::after { content: ''; position: absolute; top: 0; bottom: 0; width: 1px; background: rgba(13,27,22,0.09); } .ds-frame::before { left: 0; } .ds-frame::after { right: 0; } .ds-frame-sec { position: relative; border-top: 1px solid rgba(13,27,22,0.09); padding: 2.2rem 0; } .ds-frame-sec::before, .ds-frame-sec::after { content: '+'; position: absolute; top: -0.72em; z-index: 2; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; font-weight: 400; line-height: 1; color: rgba(0,168,130,0.65); } .ds-frame-sec::before { left: -2.34rem; } .ds-frame-sec::after { right: -2.34rem; } .ds-frame-label { margin: 0; font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: #7b8794; }"
+    },
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The conversion control. On hover the accent withdraws to ink rather than intensifying.",
+      "html": "<a class=\"ds-btn-primary\" href=\"#0\">Book a demo</a>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 0.55rem; padding: 1rem 2rem; border: 1px solid transparent; border-radius: 3px; font-family: 'Space Grotesk', 'JetBrains Mono', monospace; font-size: 0.76rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none; cursor: pointer; color: #03271e; background: linear-gradient(135deg, #00b88d, #00d9ae); transition: color 180ms ease, background 180ms ease, transform 180ms ease; } .ds-btn-primary:hover { background: #0e1210; color: #ffffff; transform: translateY(-1px); } .ds-btn-primary:focus-visible { outline: 2px solid #00745c; outline-offset: 3px; }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "The secondary control. Translucent and blurred so it reads as chrome laid over the sheet.",
+      "html": "<a class=\"ds-btn-ghost\" href=\"#0\">Read the overview</a>",
+      "css": ".ds-btn-ghost { display: inline-flex; align-items: center; justify-content: center; gap: 0.55rem; padding: 1rem 2rem; border: 1px solid rgba(13,27,22,0.18); border-radius: 3px; font-family: 'Space Grotesk', 'JetBrains Mono', monospace; font-size: 0.76rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none; cursor: pointer; color: #0e1210; background: rgba(255,255,255,0.6); backdrop-filter: blur(8px); transition: color 180ms ease, border-color 180ms ease; } .ds-btn-ghost:hover { border-color: #00a882; color: #00745c; } .ds-btn-ghost:focus-visible { outline: 2px solid #00745c; outline-offset: 3px; }"
+    },
+    {
+      "name": "Fragment Window",
+      "kind": "card",
+      "refersTo": "fragment-window",
+      "description": "A cropped picture of the real product — the only element allowed to lift off the sheet, because it is evidence rather than argument.",
+      "html": "<div class=\"ds-win\"><div class=\"ds-win-bar\"><i></i><i></i><i></i><span>graph.lace — conflict review</span></div><div class=\"ds-win-body\"><div class=\"ds-pair\"><div class=\"ds-ev\"><em>MSA-2024 · §7.1</em><p>“…written notice of <mark>ninety (90) days</mark>…”</p></div><span class=\"ds-vs\">vs</span><div class=\"ds-ev\"><em>Summary deck · p.4</em><p>“…terminable on <mark class=\"is-warn\">60 days’</mark> notice…”</p></div></div></div></div>",
+      "css": ".ds-win { width: min(460px,100%); overflow: hidden; border: 1px solid rgba(13,27,22,0.1); border-radius: 10px; background: #ffffff; box-shadow: 0 26px 60px -24px rgba(15,30,26,0.3); text-align: left; font-family: 'Space Grotesk', sans-serif; } .ds-win-bar { display: flex; align-items: center; gap: 0.38rem; padding: 0.55rem 0.9rem; border-bottom: 1px solid rgba(13,27,22,0.06); background: #f6f7f8; } .ds-win-bar i { width: 0.55rem; height: 0.55rem; border-radius: 50%; } .ds-win-bar i:nth-child(1) { background: #f57d72; } .ds-win-bar i:nth-child(2) { background: #f5c94e; } .ds-win-bar i:nth-child(3) { background: #55ca77; } .ds-win-bar span { margin-inline: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.58rem; letter-spacing: 0.08em; color: #7b8794; } .ds-win-body { display: grid; gap: 0.65rem; padding: 1.1rem; } .ds-pair { display: grid; grid-template-columns: 1fr auto 1fr; align-items: stretch; gap: 0.6rem; } .ds-ev { padding: 0.75rem 0.85rem; border: 1px solid rgba(13,27,22,0.1); border-radius: 6px; background: #fff; box-shadow: 0 1px 2px rgba(15,30,26,0.05), 0 2px 12px rgba(15,30,26,0.05); } .ds-ev em { display: block; margin-bottom: 0.35rem; font-style: normal; font-family: 'JetBrains Mono', monospace; font-size: 0.54rem; letter-spacing: 0.08em; text-transform: uppercase; color: #7b8794; } .ds-ev p { margin: 0; font-size: 0.76rem; line-height: 1.55; color: #2d3748; } .ds-ev mark { padding: 0.05em 0.2em; background: rgba(0,168,130,0.16); color: inherit; } .ds-ev mark.is-warn { background: rgba(255,190,70,0.3); } .ds-vs { align-self: center; font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: #7b8794; }"
+    },
+    {
+      "name": "Conflict Flag",
+      "kind": "custom",
+      "refersTo": "flag-warning",
+      "description": "The contested-state signal. Always names the count and the resolution path — never just the problem.",
+      "html": "<div class=\"ds-flag\"><i></i> 1 conflict open · routed to counsel@ for ruling</div>",
+      "css": ".ds-flag { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.55rem 0.8rem; border: 1px solid rgba(196,132,12,0.4); border-radius: 6px; background: rgba(255,216,111,0.12); font-family: 'Space Grotesk', sans-serif; font-size: 0.74rem; font-weight: 500; color: #7a5200; } .ds-flag i { width: 0.42rem; height: 0.42rem; border-radius: 50%; background: #d99a06; animation: ds-blink 2s ease-in-out infinite; } @keyframes ds-blink { 50% { opacity: 0.35; } } @media (prefers-reduced-motion: reduce) { .ds-flag i { animation: none; } }"
+    },
+    {
+      "name": "Chip",
+      "kind": "chip",
+      "refersTo": "kicker-index",
+      "description": "A short verified attribute, marked by a single green dot.",
+      "html": "<span class=\"ds-chip\">Evidence-locked</span>",
+      "css": ".ds-chip { display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.45rem 0.85rem; border: 1px solid rgba(0,168,130,0.3); border-radius: 3px; background: rgba(255,255,255,0.65); font-family: 'Space Grotesk', 'JetBrains Mono', monospace; font-size: 0.6rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: #2d3748; } .ds-chip::before { content: ''; width: 0.32rem; height: 0.32rem; border-radius: 50%; background: #00a882; }"
+    },
+    {
+      "name": "Navigation Link",
+      "kind": "nav",
+      "refersTo": "cell-link",
+      "description": "Nav item with the gradient current-page underline. The bar itself materialises on scroll via a --np progress property.",
+      "html": "<nav class=\"ds-nav\"><a href=\"#0\">Platform</a><a href=\"#0\" aria-current=\"page\">Pricing</a><a href=\"#0\">Docs</a></nav>",
+      "css": ".ds-nav { display: flex; align-items: center; gap: 2rem; padding: 0.95rem 1.2rem; background: rgba(246,247,249,0.88); border-bottom: 1px solid rgba(13,27,22,0.09); backdrop-filter: blur(14px); } .ds-nav a { position: relative; font-family: 'Space Grotesk', 'JetBrains Mono', monospace; font-size: 0.7rem; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; text-decoration: none; color: #4a5568; transition: color 160ms ease; } .ds-nav a:hover { color: #00745c; } .ds-nav a[aria-current='page'] { color: #0e1210; } .ds-nav a[aria-current='page']::after { content: ''; position: absolute; left: 0; right: 0; bottom: -0.45rem; height: 2px; background: linear-gradient(100deg,#007a60 0%,#00a882 55%,#00c9a0 100%); } .ds-nav a:focus-visible { outline: 2px solid #00745c; outline-offset: 4px; }"
+    },
+    {
+      "name": "Editorial Statement",
+      "kind": "custom",
+      "refersTo": "cell",
+      "description": "The large uppercase paragraph that argues in place of body copy. Faint by default; the phrase that matters steps up in weight and colour.",
+      "html": "<div class=\"ds-editorial\"><p>Most AI tools ask you to trust the answer. <strong>LACE hands you the passage it came from</strong> <span class=\"ds-ed-green\">— every time, on every surface.</span></p></div>",
+      "css": ".ds-editorial { padding: 3.2rem 2rem; background: #f6f7f9; } .ds-editorial p { max-width: 46ch; margin: 0; font-family: 'Space Grotesk', 'Red Hat Display', sans-serif; font-size: 2.1rem; font-weight: 400; letter-spacing: -0.015em; text-transform: uppercase; line-height: 1.15; color: #7b8794; } .ds-editorial strong { display: block; font-weight: 500; color: #4a5568; } .ds-editorial .ds-ed-green { color: #00745c; font-weight: 500; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Governed Line",
+    "overview": "LACE's own business plan describes the product as a manufacturing line: raw material in one end, inspectable stations along the way, a finished artifact out the other — and you can walk up to any station and see what it did. This system draws that line literally. The page is built on hairline rules. Content sits in surveyed cells divided by those rules. Where rules meet, a small green '+' crosshair marks the junction, the way a drawing marks a surveyed point. Nothing floats above the page; nothing casts a decorative shadow. The line is the structure, and the structure is the argument.\n\nThis is an engineering drawing, not a brochure. That choice is doing commercial work: the buyer is a technical champion who will forward these pages to a security reviewer, and the reviewer's instinct is to distrust polish. A ruled sheet with labeled cells and a monospaced index reads as a specification. The moments of warmth are rationed and specific — one mint sheen across the word LACE on first paint, a green highlight on a matched citation — and they land harder for being rare.\n\nThe system runs on a near-white ground (#f6f7f9) under a faint 48px blueprint grid and soft green radial light. Type is Space Grotesk set in uppercase for every heading level, which keeps headings reading as labels on a drawing rather than as magazine display. The single accent green is never decorative: it marks things the system verified. Depth appears in exactly one place — the product fragment windows, which lift off the sheet because they are the only real evidence on the page.",
+    "keyCharacteristics": [
+      "Hairline rules and + crosshairs are the page structure; there are no cards.",
+      "Flat by default — the fragment window is the one thing allowed to lift.",
+      "Uppercase Space Grotesk headings; JetBrains Mono for every label, index, and readout.",
+      "One accent green, rationed and earned; a separate amber reserved for flagged conflicts.",
+      "Every claim on the page is accompanied by the product surface that proves it."
+    ],
+    "rules": [
+      {
+        "name": "The Earned Green Rule",
+        "body": "Green marks something the system verified — a matched citation, a resolved fact, a passing gate, a surveyed junction. It never marks something we merely want the visitor to click. If you cannot name what was checked, use ink.",
+        "section": "colors"
+      },
+      {
+        "name": "The Three-Signal Rule",
+        "body": "Green means verified, amber means contested, red means denied or absent. That is the complete set. A fourth state does not get a fourth hue — it gets a label.",
+        "section": "colors"
+      },
+      {
+        "name": "The Deep-Green-For-Text Rule",
+        "body": "Green text is always #00745c (5.36:1 on the sheet). #00a882 measures 2.83:1 and is a marking colour only — rules, dots, fills, highlights — never small text.",
+        "section": "colors"
+      },
+      {
+        "name": "The Uppercase-Heading Rule",
+        "body": "Every heading level is uppercase. There is no sentence-case heading in this system; a sentence-case H2 is the single fastest way to make a page look like it came from somewhere else.",
+        "section": "typography"
+      },
+      {
+        "name": "The Mono-Is-A-Readout Rule",
+        "body": "JetBrains Mono is used only where the page reports a value the system produced: an index, a source, a path, a time, a measurement. Prose never becomes mono to look technical.",
+        "section": "typography"
+      },
+      {
+        "name": "The Two-Weights Rule",
+        "body": "Space Grotesk runs at 400 and 500 across the whole system, with 600 reserved for the green index number. Emphasis comes from case, colour, and scale — not from bolder weights.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat-Sheet Rule",
+        "body": "If an element contains words the page is asserting, it is flat. If it contains a picture of the product, it may lift. Nothing else casts a shadow.",
+        "section": "elevation"
+      },
+      {
+        "name": "The No-Glow Rule",
+        "body": "Shadows are neutral and offset. A coloured, zero-offset halo is decoration; this system does not use one.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Measured-Neutral Rule",
+        "body": "Every ink step clears 4.5:1 on the sheet: Faint 4.76:1, Muted 7.02:1, Ink Soft 11.18:1. Faint is the floor of the system; nothing lighter than #656f7c may carry text.",
+        "section": "colors"
+      }
+    ],
+    "dos": [
+      "Do build sections as cells in the ruled frame — 1px hairlines, + crosshairs at the junctions, no container around the content.",
+      "Do set every heading in uppercase Space Grotesk at weight 400–500 with negative tracking.",
+      "Do reserve JetBrains Mono for values the system reports: indices, sources, paths, times, measurements.",
+      "Do spend green only where something was verified, and use #00745c for any green text.",
+      "Do pair every claim with a fragment window showing the real surface that proves it, with a specific record inside.",
+      "Do let the fragment window be the only element that lifts off the sheet.",
+      "Do use amber (#d99a06 / #7a5200) for contested or conflicting state, and state the resolution path alongside it.",
+      "Do keep cell copy to two or three sentences; the product surface carries the argument.",
+      "Do give the hero's motion a full prefers-reduced-motion fallback that releases the pin and collapses the section to auto height."
+    ],
+    "donts": [
+      "Don't add a card. No white rounded container with a resting shadow holding text — that is the retired system.",
+      "Don't put a shadow, glow, or hover lift on anything that contains an assertion rather than a product image.",
+      "Don't set a heading in sentence case.",
+      "Don't introduce a fourth signal hue. Green is verified, amber is contested, red is denied; a new state gets a label, not a colour.",
+      "Don't use #00a882 as small text on the sheet — it fails AA. It is a marking colour.",
+      "Don't use a coloured border-left rail to emphasise a cell; the index number and grid position do that job.",
+      "Don't put monospace on prose to make it feel technical.",
+      "Don't add a second scroll-driven or pinned moment. The hero screenshot rise is the site's one authored motion; everything else is a state transition of 160–280ms.",
+      "Don't invent customer logos, metrics, or testimonials to fill a cell — none exist. An empty cell is better than a fabricated one."
+    ]
+  }
+}

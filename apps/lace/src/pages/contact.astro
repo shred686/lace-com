@@ -346,5 +346,14 @@ import { laceSite } from "../site.config";
     .lp-form-row {
       grid-template-columns: 1fr;
     }
+
+    /* iOS Safari zooms the whole page in on any field it can't read at a
+       glance — anything under 16px. The inherited 0.88rem lands at 14.08px
+       and the form jumps on first tap. */
+    .lp-field input,
+    .lp-field textarea,
+    .lp-field select {
+      font-size: 16px;
+    }
   }
 </style>

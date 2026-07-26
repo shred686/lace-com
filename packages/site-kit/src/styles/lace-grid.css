@@ -111,6 +111,15 @@
     color: var(--lp-ink);
   }
 
+  /* The footer sits inside the same <main class="lp2">, so its column
+     headings were picking up the negative tracking above — which is set for
+     uppercase display type at 2–3rem, not for a 10px mono-ish label. They
+     keep the footer's own wide tracking. */
+  .lp2 .lp-footer h2 {
+    font-weight: 700;
+    letter-spacing: 0.24em;
+  }
+
   .lp2-actions {
     display: flex;
     flex-wrap: wrap;
@@ -361,9 +370,9 @@
       align-items: center;
       justify-content: center;
       height: auto;
-      min-height: min(62svh, 33rem);
-      padding: calc(var(--lp-nav-h, 4.4rem) + clamp(2.2rem, 8vw, 3.6rem)) 0
-        clamp(3.4rem, 11vw, 4.6rem);
+      min-height: min(56svh, 30rem);
+      padding: calc(var(--lp-nav-h, 4.4rem) + clamp(1.8rem, 6vw, 3rem)) 0
+        clamp(3rem, 10vw, 4.2rem);
       overflow: visible;
     }
 
@@ -377,12 +386,24 @@
       transform: none !important;
     }
 
+    /* The statement is the whole hero on this width — the screenshot is
+       dropped below 880px — so it gets the width it can carry. The subject
+       takes its own line rather than letting `balance` split it as
+       "ENTERPRISE / AI. GOVERNED.", which reads as a different sentence. */
     .lp2-intro-h1 {
-      font-size: clamp(2.05rem, 9.6vw, 3.4rem);
+      font-size: clamp(2.35rem, 11.2vw, 3.6rem);
+      line-height: 0.95;
+      letter-spacing: -0.035em;
+    }
+
+    .lp2-intro-subject {
+      display: block;
     }
 
     .lp2-intro-sub {
-      margin-top: 1.25rem;
+      margin-top: 1.35rem;
+      font-size: 1.06rem;
+      line-height: 1.62;
     }
 
     .lp2-introshot {
@@ -2299,6 +2320,124 @@
 
     .lp2-vs {
       justify-self: center;
+    }
+  }
+
+  /* ═══ Phone typography ══════════════════════════════════════════
+     The page's label sizes are drawing annotations read on a desk: 0.54–0.6rem
+     mono lands at 8.6–9.6px, which is legible at a metre on a 27-inch monitor
+     and not legible at all in a hand. Every label that belongs to the PAGE —
+     kickers, tags, indices, markets, step names — steps up to 10.5–11.5px
+     here, with the tracking pulled in to pay for the extra width.
+
+     The mono inside a fragment window is deliberately NOT touched: that type
+     is the product's own chrome, and it is meant to read at the size a real
+     application would set it. Enlarging it would break the illusion that you
+     are looking at a screenshot. */
+  @media (max-width: 620px) {
+    .lp2-cell-copy .lp2-kicker,
+    .lp2-appbuild-copy .lp2-kicker,
+    .lp2-saas-copy .lp2-kicker {
+      font-size: 0.7rem;
+      letter-spacing: 0.16em;
+    }
+
+    .lp2-cell-link {
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+    }
+
+    .lp2-gov-tags span {
+      padding: 0.42rem 0.8rem;
+      font-size: 0.66rem;
+      letter-spacing: 0.1em;
+    }
+
+    .lp2-runrow em {
+      font-size: 0.62rem;
+      letter-spacing: 0.16em;
+    }
+
+    .lp2-runrow strong {
+      font-size: 0.95rem;
+    }
+
+    .lp2-editions-grid em {
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+    }
+
+    .lp2-ring-chip em {
+      font-size: 0.54rem;
+      letter-spacing: 0.1em;
+    }
+
+    .lp-flow-arrow-label {
+      font-size: 0.62rem;
+      letter-spacing: 0.12em;
+    }
+
+    /* Paired with the footer's own size bump in lace-site.css; the tracking
+       has to be re-stated here to stay ahead of `.lp2 h2`. */
+    .lp2 .lp-footer h2 {
+      letter-spacing: 0.2em;
+    }
+
+    .lp-flow-badge {
+      font-size: 0.58rem;
+      letter-spacing: 0.14em;
+    }
+
+    /* Body copy: 15.7px is under the 16px floor a phone needs, and these are
+       the sentences the page is actually arguing with. */
+    .lp2-cell-copy p,
+    .lp2-saas-copy > p,
+    .lp2-deploy p,
+    .lp2-editions-head p {
+      font-size: 1.02rem;
+      line-height: 1.62;
+    }
+
+    .lp-flow-cap {
+      font-size: 0.85rem;
+    }
+
+    .lp-flow-base-text,
+    .lp-flow-base-text strong {
+      font-size: 0.88rem;
+    }
+
+    /* A cell headline at 21.6px sits too close to its own body copy to lead
+       it; the step has to be visible at arm's length. */
+    .lp2-cell-copy h2 {
+      font-size: clamp(1.5rem, 6.2vw, 1.9rem);
+    }
+
+    /* A whole desktop application fitted to a 324px column is a texture, not
+       evidence — the node labels, the conflict count and the entity panel all
+       fall under 5px. The fragment is meant to show a real surface with a
+       specific record in it, so on a phone the window crops INTO the graph
+       instead of shrinking all of it: same screenshot, framed like a detail
+       view, at a scale where the entities and their relations can be read. */
+    .lp2-kg-shot {
+      aspect-ratio: 4 / 3;
+    }
+
+    .lp2-kg-img {
+      width: 170%;
+      height: auto;
+      /* Framed on the Acme cluster: its 134 open conflicts, the relations
+         leaving it, and the entity panel that names it. */
+      margin: -44% 0 0 -30%;
+    }
+
+    /* The edition numeral is sized off the desktop card's 340px minimum. On a
+       220px-tall stacked row, 112px of numeral stops being a watermark and
+       starts being the loudest thing in the row. */
+    .lp2-editions-grid .lp2-edition-card::before {
+      right: -0.35rem;
+      bottom: -1.4rem;
+      font-size: 5.6rem;
     }
   }
 

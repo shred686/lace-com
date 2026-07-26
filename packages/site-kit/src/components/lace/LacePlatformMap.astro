@@ -113,6 +113,9 @@ const GATE = 500;
   /* The section itself carries no horizontal padding: the drawing runs rail to
      rail so its column rules meet the frame's own hairlines. */
   .lp2-map {
+    /* What has been through the line is drawn in verified green: the
+       outbound wires, and on a phone the rail they collapse into. */
+    --lp2-map-out-c: rgba(var(--lp-green-rgb), 0.32);
     padding: 0;
   }
 
@@ -134,8 +137,8 @@ const GATE = 500;
   .lp2-map-head p {
     max-width: 54ch;
     margin: 0;
-    font-size: clamp(0.98rem, 1.3vw, 1.08rem);
-    line-height: 1.6;
+    font-size: clamp(1rem, 1.3vw, 1.08rem);
+    line-height: 1.62;
     color: var(--lp-muted);
     text-wrap: balance;
   }
@@ -200,7 +203,7 @@ const GATE = 500;
   /* Raw material goes in on neutral hairlines; what comes out has been
      through the line, so it carries the verified green. */
   .lp2-map-flow-out .lp2-map-wire {
-    stroke: rgba(var(--lp-green-rgb), 0.32);
+    stroke: var(--lp2-map-out-c);
   }
 
   /* One pass, once. Every wire is normalised to pathLength 100, so the six
@@ -405,21 +408,32 @@ const GATE = 500;
 
   /* ── Narrow: the honest form is a stack ───────────────────────── */
   @media (max-width: 780px) {
+    /* 9px mono is a diagram key on a 27-inch monitor and unreadable in a
+       hand. Every label in the drawing steps up to 11px here, and the
+       tracking comes in to pay for it. */
+    .lp2-map-layer {
+      font-size: 0.66rem;
+      letter-spacing: 0.2em;
+    }
+
     .lp2-map-sources {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 0.45rem 1rem;
-      padding-inline: 1.4rem;
+      gap: 0.5rem 1.1rem;
+      padding-inline: 1.2rem;
     }
 
     .lp2-map-sources li {
       flex-direction: row;
-      gap: 0.5rem;
+      gap: 0.45rem;
+      padding-inline: 0;
+      font-size: 0.7rem;
+      letter-spacing: 0.06em;
     }
 
     .lp2-map-sources i {
-      width: 7px;
+      width: 8px;
       height: 1px;
       order: -1;
     }
@@ -436,10 +450,14 @@ const GATE = 500;
       display: none;
     }
 
+    .lp2-map-rule-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.16em;
+    }
+
     .lp2-map-out {
       grid-template-columns: repeat(2, minmax(0, 1fr));
       border-top: 1px solid var(--hair);
-      margin-top: 1.6rem;
     }
 
     .lp2-map-out > a {
@@ -467,14 +485,39 @@ const GATE = 500;
     }
   }
 
-  /* One column of centred four-line blocks runs 250px per surface and reads
-     as four more sections. Set as a ledger row instead — index, name, then
-     the line underneath — the four terminals read as one legend again, and
-     the arrow that hover revealed on the pointer version becomes permanent
-     because there is no hover to reveal it. */
-  @media (max-width: 540px) {
+  /* ── Phone: the same drawing, drawn as a riser ──────────────────
+     One column of centred four-line blocks runs 250px per surface and reads
+     as four more sections, and a centred outbound spine has nothing left to
+     describe once the four surfaces are stacked under it — it just leaves a
+     hole between the rule and the list.
+
+     So on a phone the schematic is drawn the way a riser diagram is drawn.
+     The runtime's exit turns once, becomes a rail down the left margin, and
+     each surface branches off it on its own tick. Six in, one line, four
+     out is still literally true, and the line is now continuous from the
+     rule to the last surface rather than stopping in mid-air. Each terminal
+     is a ledger row — index, name, then its line underneath — so the four
+     read as one legend, and the arrow that hover revealed on the pointer
+     version is permanent because there is no hover to reveal it. */
+  @media (max-width: 560px) {
     .lp2-map-out {
+      /* Distance from the sheet edge to the rail — the cells' own text edge
+         below, so the trunk lands on the page's left measure. The row's text
+         column clears it, and the branch tick spans the gap between. */
+      --rail: 1.2rem;
       grid-template-columns: minmax(0, 1fr);
+    }
+
+    /* The elbow out of the gate: down the centre, across to the rail, then
+       into the list. Drawn in backgrounds rather than in the SVG's paths
+       because both legs are axis-aligned — a non-uniformly scaled path
+       would soften the corner. */
+    .lp2-map-flow-out {
+      height: 46px;
+      background:
+        linear-gradient(var(--lp2-map-out-c), var(--lp2-map-out-c)) 50% 0 / 1px 24px no-repeat,
+        linear-gradient(var(--lp2-map-out-c), var(--lp2-map-out-c)) 1.2rem 23px / calc(50% - 1.2rem) 1px no-repeat,
+        linear-gradient(var(--lp2-map-out-c), var(--lp2-map-out-c)) 1.2rem 23px / 1px 23px no-repeat;
     }
 
     .lp2-map-out > a:nth-child(odd) {
@@ -492,17 +535,48 @@ const GATE = 500;
       grid-template-columns: auto minmax(0, 1fr) auto;
       align-items: baseline;
       column-gap: 0.7rem;
-      row-gap: 0.3rem;
-      padding: 1.25rem clamp(1rem, 4.5vw, 1.6rem);
+      row-gap: 0.35rem;
+      padding: 1.2rem clamp(1rem, 4.5vw, 1.6rem) 1.2rem calc(var(--rail) + 1.6rem);
       text-align: left;
+    }
+
+    /* The rail is laid one segment per row, so it always ends on the last
+       branch tick whatever the rows happen to measure. */
+    .lp2-map-out > a::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: var(--rail);
+      width: 1px;
+      background: var(--lp2-map-out-c);
+    }
+
+    .lp2-map-out > a:last-child::before {
+      bottom: auto;
+      height: 1.62rem;
+    }
+
+    /* …and this is the branch into the surface it feeds — the landing tick
+       from the wide version, turned to meet a row. */
+    .lp2-map-out > a::after {
+      content: "";
+      position: absolute;
+      top: 1.62rem;
+      left: var(--rail);
+      width: 0.85rem;
+      height: 1px;
+      background: rgba(var(--lp-green-rgb), 0.5);
     }
 
     .lp2-map-surface b {
       grid-column: 1;
+      font-size: 0.68rem;
     }
 
     .lp2-map-surface strong {
       grid-column: 2;
+      font-size: 1.02rem;
     }
 
     .lp2-map-surface em {
@@ -510,6 +584,7 @@ const GATE = 500;
       grid-column: 3;
       grid-row: 1;
       margin-top: 0;
+      font-size: 0.86rem;
       opacity: 1;
       transform: none;
     }
@@ -517,7 +592,7 @@ const GATE = 500;
     .lp2-map-surface span {
       grid-column: 2 / -1;
       max-width: none;
-      font-size: 0.82rem;
+      font-size: 0.86rem;
     }
   }
 

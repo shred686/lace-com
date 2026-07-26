@@ -1409,9 +1409,29 @@
   }
 }
 
+/* One column turns the footer into 1200px of list — four headings and
+   seventeen 40px rows the reader scrolls past to reach the small print. The
+   two-column pairing survives 390px: the longest label is 21 characters at
+   0.86rem, which fits a 165px track. The brand block keeps the full width. */
 @media (max-width: 560px) {
   .lp-footer-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.4rem 1.2rem;
+  }
+
+  .lp-footer-grid > div:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .lp-footer-grid a,
+  .lp-footer-soon {
+    overflow-wrap: anywhere;
+  }
+
+  /* 9.6px column headings sit below the links they are meant to label. */
+  .lp-footer h2 {
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
   }
 }
 

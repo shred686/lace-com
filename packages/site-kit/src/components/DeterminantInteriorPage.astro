@@ -1,4 +1,18 @@
 ---
+/**
+ * Interior page shell for the six service pages, the services index, about,
+ * and 404.
+ *
+ * These run the current system: one near-black substrate, content arriving as
+ * translucent planes over it, uppercase Space Grotesk for structure and Inter
+ * 300 for reading. Each service page carries its own hue through `accent` —
+ * kicker, rules, bullet marks, and links all take it, and the firm mint stands
+ * down. Pages that are not a single capability keep the mint.
+ */
+import DeterminantNav from "./determinant/DeterminantNav.astro";
+import DeterminantFooter from "./determinant/DeterminantFooter.astro";
+import { firmAccent } from "../data/determinantNav";
+
 interface Section {
   heading: string;
   paragraphs?: string[];
@@ -9,6 +23,8 @@ interface LinkCard {
   href: string;
   title: string;
   description: string;
+  /** The capability's own hue. Falls back to the firm accent. */
+  accent?: string;
 }
 
 interface Faq {
@@ -25,6 +41,8 @@ interface Props {
   eyebrow: string;
   title: string;
   lede: string;
+  /** This page's hue from the six-hue service spectrum. */
+  accent?: string;
   breadcrumbs?: Breadcrumb[];
   sections?: Section[];
   links?: LinkCard[];
@@ -40,6 +58,7 @@ const {
   eyebrow,
   title,
   lede,
+  accent = firmAccent,
   breadcrumbs = [],
   sections = [],
   links = [],
@@ -50,44 +69,18 @@ const {
   ctaLabel = "Talk to an AI engineer",
   ctaHref = "/contact",
 } = Astro.props;
-
-const year = new Date().getFullYear();
 ---
 
 <a class="ds-skip" href="#main-content">Skip to content</a>
 
-<main class="ds-site ds-interior">
-  <header class="top-nav ds-interior-nav">
-    <a href="/" class="brand-wordmark" aria-label="Determinant Systems home">
-      <span class="brand-dot" aria-hidden="true"></span>
-      Determinant Systems
-    </a>
+<DeterminantNav locale="en" offset />
 
-    <button
-      type="button"
-      class="top-nav-toggle"
-      aria-expanded="false"
-      aria-controls="determinantInteriorNav"
-      aria-label="Toggle navigation"
-      data-interior-nav-toggle
-    >
-      <span class="top-nav-toggle-line"></span>
-      <span class="top-nav-toggle-line"></span>
-    </button>
+<div class="dsi" style={`--svc: ${accent}`}>
+  <div class="dsi-substrate" aria-hidden="true"></div>
 
-    <div class="top-nav-panel" id="determinantInteriorNav" data-interior-nav-panel>
-      <nav class="top-links" aria-label="Primary">
-        <a href="/services">Services</a>
-        <a href="/about">About</a>
-        <a href="https://laceplatform.com">LACE platform</a>
-      </nav>
-      <a href="/contact" class="nav-cta">Contact</a>
-    </div>
-  </header>
-
-  <div id="main-content">
+  <div class="dsi-shell">
     {breadcrumbs.length > 0 && (
-      <nav class="ds-breadcrumbs" aria-label="Breadcrumb">
+      <nav class="dsi-crumbs" aria-label="Breadcrumb">
         <ol>
           {breadcrumbs.map((item, index) => (
             <li>
@@ -100,110 +93,88 @@ const year = new Date().getFullYear();
       </nav>
     )}
 
-    <section class="ds-interior-hero">
-      <p class="ds-eyebrow">{eyebrow}</p>
-      <h1>{title}</h1>
-      <p class="ds-lede">{lede}</p>
-      <div class="ds-hero-actions">
-        <a href={ctaHref} class="btn btn-primary">{ctaLabel}</a>
-        <a href="/services" class="btn btn-ghost">Explore all services</a>
-      </div>
-    </section>
+    <main id="main-content">
+      <header class="dsi-hero">
+        <p class="dsi-kicker">{eyebrow}</p>
+        <h1>{title}</h1>
+        <p class="dsi-lede">{lede}</p>
+        <div class="dsi-actions">
+          <a href={ctaHref} class="dsi-btn dsi-btn-primary">{ctaLabel}</a>
+          <a href="/services" class="dsi-btn dsi-btn-ghost">Explore all services</a>
+        </div>
+        <!-- The page's one authored moment: the capability's hue drawing itself
+             across the page on load. -->
+        <div class="dsi-hue-rule" aria-hidden="true"></div>
+      </header>
 
-    {sections.length > 0 && (
-      <section class="ds-content-grid" aria-label={`${title} details`}>
-        {sections.map((section, index) => (
-          <article class:list={["surface-card", "ds-content-card", index === 0 && "ds-content-card-featured"]}>
-            <span class="ds-card-index" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
-            <h2>{section.heading}</h2>
-            {section.paragraphs?.map((paragraph) => <p>{paragraph}</p>)}
-            {section.bullets && (
-              <ul>
-                {section.bullets.map((bullet) => <li>{bullet}</li>)}
-              </ul>
-            )}
-          </article>
-        ))}
-      </section>
-    )}
-
-    {links.length > 0 && (
-      <section class="ds-related" aria-labelledby="related-title">
-        <p class="ds-eyebrow">Explore</p>
-        <h2 id="related-title">{linksTitle}</h2>
-        <div class="ds-related-grid">
-          {links.map((link) => (
-            <a class="surface-card ds-related-card" href={link.href}>
-              <h3>{link.title}</h3>
-              <p>{link.description}</p>
-              <span>Learn more →</span>
-            </a>
+      {sections.length > 0 && (
+        <section class="dsi-sections" aria-label={`${title} details`}>
+          {sections.map((section) => (
+            <article class="dsi-plane">
+              <h2>{section.heading}</h2>
+              <div class="dsi-plane-body">
+                {section.paragraphs?.map((paragraph) => <p>{paragraph}</p>)}
+                {section.bullets && (
+                  <ul>
+                    {section.bullets.map((bullet) => <li>{bullet}</li>)}
+                  </ul>
+                )}
+              </div>
+            </article>
           ))}
+        </section>
+      )}
+
+      {faqs.length > 0 && (
+        <section class="dsi-faq" aria-labelledby="faq-title">
+          <div class="dsi-faq-head">
+            <p class="dsi-kicker">FAQ</p>
+            <h2 id="faq-title">Questions teams ask before they build.</h2>
+          </div>
+          <div class="dsi-faq-list">
+            {faqs.map((faq) => (
+              <details>
+                <summary>
+                  <span>{faq.q}</span>
+                  <span class="dsi-faq-mark" aria-hidden="true"></span>
+                </summary>
+                <p>{faq.a}</p>
+              </details>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {links.length > 0 && (
+        <section class="dsi-related" aria-labelledby="related-title">
+          <p class="dsi-kicker">Explore</p>
+          <h2 id="related-title">{linksTitle}</h2>
+          <div class="dsi-related-grid">
+            {links.map((link) => (
+              <a class="dsi-tile" href={link.href} style={`--tile-accent: ${link.accent ?? firmAccent}`}>
+                <span class="dsi-tile-mark" aria-hidden="true"></span>
+                <h3>{link.title}</h3>
+                <p>{link.description}</p>
+                <span class="dsi-tile-more">Learn more →</span>
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <section class="dsi-cta">
+        <div class="dsi-plane dsi-cta-plane">
+          <p class="dsi-kicker">Next step</p>
+          <h2>{ctaTitle}</h2>
+          <p class="dsi-lede">{ctaBody}</p>
+          <a href={ctaHref} class="dsi-btn dsi-btn-primary">{ctaLabel}</a>
         </div>
       </section>
-    )}
-
-    {faqs.length > 0 && (
-      <section class="ds-faq" aria-labelledby="faq-title">
-        <p class="ds-eyebrow">FAQ</p>
-        <h2 id="faq-title">Questions teams ask before they build.</h2>
-        <div class="ds-faq-list">
-          {faqs.map((faq) => (
-            <details class="surface-card">
-              <summary>{faq.q}<span aria-hidden="true">+</span></summary>
-              <p>{faq.a}</p>
-            </details>
-          ))}
-        </div>
-      </section>
-    )}
-
-    <section class="surface-card ds-interior-cta">
-      <p class="ds-eyebrow">Next step</p>
-      <h2>{ctaTitle}</h2>
-      <p>{ctaBody}</p>
-      <a href={ctaHref} class="btn btn-primary">{ctaLabel}</a>
-    </section>
+    </main>
   </div>
+</div>
 
-  <footer class="ds-interior-footer">
-    <div>
-      <a href="/" class="brand-wordmark">
-        <span class="brand-dot" aria-hidden="true"></span>
-        Determinant Systems
-      </a>
-      <p>© {year} Determinant Systems · Enterprise AI engineering</p>
-    </div>
-    <nav aria-label="Footer">
-      <a href="/services">Services</a>
-      <a href="/about">About</a>
-      <a href="/contact">Contact</a>
-      <a href="https://laceplatform.com">LACE</a>
-    </nav>
-  </footer>
-</main>
-
-<script>
-  const interiorNav = document.querySelector<HTMLElement>(".ds-interior-nav");
-  const interiorToggle = document.querySelector<HTMLButtonElement>("[data-interior-nav-toggle]");
-  const interiorPanel = document.querySelector<HTMLElement>("[data-interior-nav-panel]");
-  const mobileNav = window.matchMedia("(max-width: 900px)");
-
-  const setInteriorNav = (open: boolean) => {
-    if (!interiorNav || !interiorToggle || !interiorPanel) return;
-    interiorNav.classList.toggle("is-open", open);
-    interiorToggle.setAttribute("aria-expanded", String(open));
-    if (mobileNav.matches) interiorPanel.toggleAttribute("hidden", !open);
-    else interiorPanel.removeAttribute("hidden");
-  };
-
-  interiorToggle?.addEventListener("click", () => {
-    setInteriorNav(!interiorNav?.classList.contains("is-open"));
-  });
-  interiorPanel?.querySelectorAll("a").forEach((link) => link.addEventListener("click", () => setInteriorNav(false)));
-  mobileNav.addEventListener("change", () => setInteriorNav(false));
-  setInteriorNav(false);
-</script>
+<DeterminantFooter locale="en" />
 
 <style>
   .ds-skip {
@@ -219,133 +190,474 @@ const year = new Date().getFullYear();
 
   .ds-skip:focus { transform: translateY(0); }
 
-  .ds-interior { padding-bottom: 2rem; }
+  /* ── Substrate ──────────────────────────────────────────────────────
+     One near-black ground under everything, laid over the retired blue/teal
+     body haze. The only colour in it is this page's own capability hue. */
+  .dsi {
+    --bright: #ffffff;
+    --muted: #94a3b8;
+    /* Lighter than DESIGN.md's #555 muted-soft: breadcrumbs are navigation at
+       0.6rem, so they have to clear 4.5:1 rather than read as disabled meta. */
+    --muted-soft: #7f8896;
+    --line: rgba(255, 255, 255, 0.14);
+    --line-soft: rgba(255, 255, 255, 0.08);
+    --panel: rgba(30, 30, 30, 0.65);
+    --shell: min(1440px, calc(100% - 4rem));
+    --measure: 68ch;
 
-  .ds-interior-nav {
-    position: sticky;
-    margin-bottom: 0;
+    position: relative;
+    z-index: 1;
+    font-family: "Inter", "Red Hat Display", "Segoe UI", sans-serif;
+    font-weight: 300;
+    color: var(--muted);
+    letter-spacing: normal;
   }
 
-  .ds-breadcrumbs { padding: clamp(2rem, 5vw, 4rem) 0 0; }
-  .ds-breadcrumbs ol {
+  /* Light comes from behind the page, in this capability's own hue — the
+     substrate made continuous without the home page's canvas cost. */
+  .dsi-substrate {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(52rem 40rem at 76% 14%, color-mix(in srgb, var(--svc) 15%, transparent), transparent 66%),
+      radial-gradient(40rem 30rem at 96% 2%, color-mix(in srgb, var(--svc) 10%, transparent), transparent 62%),
+      radial-gradient(46rem 30rem at -6% 92%, color-mix(in srgb, var(--svc) 6%, transparent), transparent 70%),
+      #0a0a0a;
+  }
+
+  .dsi-shell {
+    width: var(--shell);
+    margin: 0 auto;
+  }
+
+  /* ── Breadcrumbs ────────────────────────────────────────────────── */
+  .dsi-crumbs {
+    padding: clamp(1.6rem, 3.5vw, 2.6rem) 0 0;
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+  }
+
+  .dsi-crumbs ol {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.55rem;
+    gap: 0.6rem;
     margin: 0;
     padding: 0;
     list-style: none;
-    font-size: 0.78rem;
-    color: var(--muted);
-  }
-  .ds-breadcrumbs li { margin: 0; }
-  .ds-breadcrumbs li:not(:last-child)::after { content: "/"; margin-left: 0.55rem; opacity: 0.45; }
-  .ds-breadcrumbs a { text-decoration: none; }
-  .ds-breadcrumbs a:hover { color: var(--text); }
-
-  .ds-interior-hero {
-    max-width: 1000px;
-    padding: clamp(4.5rem, 10vw, 8.5rem) 0 clamp(4rem, 8vw, 7rem);
-  }
-
-  .ds-eyebrow,
-  .ds-card-index {
-    font-family: "JetBrains Mono", monospace;
-    font-size: 0.68rem;
-    font-weight: 500;
+    font-size: 0.6rem;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: #62e6c6;
+    color: var(--muted-soft);
   }
 
-  .ds-interior-hero h1 { max-width: 17ch; margin-top: 1rem; }
-  .ds-lede {
-    max-width: 760px;
-    margin-top: 1.5rem;
-    font-size: clamp(1.05rem, 1.6vw, 1.25rem);
-    line-height: 1.75;
+  .dsi-crumbs li { margin: 0; }
+  .dsi-crumbs li:not(:last-child)::after {
+    content: "/";
+    margin-left: 0.6rem;
+    color: var(--line);
+  }
+  .dsi-crumbs a { color: var(--muted); text-decoration: none; transition: color 180ms ease; }
+  .dsi-crumbs a:hover { color: var(--bright); }
+  .dsi-crumbs [aria-current="page"] { color: var(--muted-soft); }
+
+  /* ── Hero ───────────────────────────────────────────────────────── */
+  .dsi-hero {
+    position: relative;
+    padding: clamp(3rem, 7vw, 5.5rem) 0 clamp(3rem, 5.5vw, 4.5rem);
   }
 
-  .ds-hero-actions { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 2rem; }
+  .dsi-kicker {
+    margin: 0;
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: 0.62rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--svc);
+  }
 
-  .ds-content-grid {
+  .dsi-hero h1 {
+    max-width: 22ch;
+    margin: 1.6rem 0 0;
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: clamp(2.1rem, 4.6vw, 3.75rem);
+    font-weight: 400;
+    line-height: 0.98;
+    letter-spacing: -0.035em;
+    text-transform: uppercase;
+    text-wrap: balance;
+    color: var(--bright);
+  }
+
+  .dsi-lede {
+    max-width: var(--measure);
+    margin: 1.75rem 0 0;
+    font-size: clamp(1.02rem, 1.5vw, 1.18rem);
+    line-height: 1.7;
+    color: var(--muted);
+  }
+
+  .dsi-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-top: 2.4rem;
+  }
+
+  .dsi-hue-rule {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    transform-origin: left center;
+    background: linear-gradient(90deg, var(--svc), color-mix(in srgb, var(--svc) 12%, transparent) 62%, transparent);
+    animation: dsi-draw 900ms cubic-bezier(0.2, 1, 0.28, 1) both;
+  }
+
+  @keyframes dsi-draw {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
+
+  /* ── Buttons ────────────────────────────────────────────────────── */
+  .dsi-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 2rem;
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: 0.75rem;
+    font-weight: 400;
+    line-height: 1.6;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background 200ms ease, border-color 200ms ease, color 200ms ease;
+  }
+
+  .dsi-btn-primary {
+    color: #000;
+    background: linear-gradient(135deg, #aaffdc, #00fdc1);
+    border: 1px solid transparent;
+  }
+
+  .dsi-btn-primary:hover,
+  .dsi-btn-primary:focus-visible { background: #fff; }
+
+  .dsi-btn-ghost {
+    color: var(--bright);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+  }
+
+  .dsi-btn-ghost:hover,
+  .dsi-btn-ghost:focus-visible {
+    color: #00ffc2;
+    border-color: rgba(0, 255, 194, 0.4);
+  }
+
+  /* ── Content planes ─────────────────────────────────────────────────
+     Prose arrives as full-width translucent layers split heading / body,
+     rather than as a grid of same-size cards. */
+  .dsi-sections {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1rem;
+    padding-top: clamp(3.5rem, 7vw, 6rem);
   }
 
-  .ds-content-card { padding: clamp(1.5rem, 3vw, 2.4rem); }
-  .ds-content-card-featured { grid-column: 1 / -1; }
-  .ds-content-card h2 { margin: 0.8rem 0 1.2rem; font-size: clamp(1.45rem, 2.4vw, 2.1rem); }
-  .ds-content-card p + p { margin-top: 1rem; }
-  .ds-content-card ul { margin-top: 1.2rem; }
+  .dsi-plane {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: clamp(1.6rem, 4vw, 4rem);
+    padding: clamp(1.8rem, 3.4vw, 3rem);
+    border: 1px solid var(--line);
+    background: var(--panel);
+    backdrop-filter: blur(20px);
+    transition: border-color 300ms ease;
+  }
 
-  .ds-related,
-  .ds-faq { padding: clamp(5rem, 9vw, 8rem) 0 0; }
-  .ds-related > h2,
-  .ds-faq > h2 { margin-top: 0.8rem; max-width: 18ch; }
+  .dsi-plane:hover {
+    border-color: color-mix(in srgb, var(--svc) 32%, transparent);
+  }
 
-  .ds-related-grid {
+  .dsi-plane h2 {
+    margin: 0;
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: clamp(1.4rem, 2.4vw, 2rem);
+    font-weight: 400;
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    text-wrap: balance;
+    color: var(--bright);
+  }
+
+  .dsi-plane-body {
+    display: grid;
+    gap: 1.1rem;
+    max-width: var(--measure);
+  }
+
+  .dsi-plane-body p {
+    margin: 0;
+    font-size: 0.96rem;
+    line-height: 1.75;
+    color: var(--muted);
+  }
+
+  .dsi-plane-body ul {
+    display: grid;
+    gap: 0.85rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .dsi-plane-body li {
+    position: relative;
+    margin: 0;
+    padding-left: 1.4rem;
+    font-size: 0.96rem;
+    line-height: 1.75;
+    color: var(--muted);
+  }
+
+  /* Square mark, not a bullet — round is reserved for state. */
+  .dsi-plane-body li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.72em;
+    width: 5px;
+    height: 5px;
+    background: var(--svc);
+  }
+
+  /* ── FAQ ──────────────────────────────────────────────────────────
+     Same 5fr/6fr split as the content planes, so the accordion inherits the
+     page's reading column instead of running the full shell width. */
+  .dsi-faq {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: clamp(1.6rem, 4vw, 4rem);
+    padding-top: clamp(5.5rem, 10vw, 10rem);
+  }
+
+  .dsi-faq-head {
+    position: sticky;
+    top: 8rem;
+    align-self: start;
+  }
+
+  .dsi-faq-head h2,
+  .dsi-related h2 {
+    max-width: 20ch;
+    margin: 1.1rem 0 0;
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: clamp(1.7rem, 3.2vw, 2.7rem);
+    font-weight: 400;
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    text-wrap: balance;
+    color: var(--bright);
+  }
+
+  .dsi-faq-list {
+    margin-top: 2.4rem;
+    border-top: 1px solid var(--line-soft);
+  }
+
+  .dsi-faq-list details {
+    border-bottom: 1px solid var(--line-soft);
+  }
+
+  .dsi-faq-list summary {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 1.25rem 0;
+    cursor: pointer;
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: 0.86rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--bright);
+    list-style: none;
+    transition: color 180ms ease;
+  }
+
+  .dsi-faq-list summary::-webkit-details-marker { display: none; }
+  .dsi-faq-list summary:hover { color: var(--svc); }
+
+  /* Plus that becomes a minus — two 1px bars, no glyph. */
+  .dsi-faq-mark {
+    position: relative;
+    flex: none;
+    width: 11px;
+    height: 11px;
+    transform: translateY(1px);
+  }
+
+  .dsi-faq-mark::before,
+  .dsi-faq-mark::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    background: var(--svc);
+    transition: transform 240ms cubic-bezier(0.2, 1, 0.28, 1), opacity 240ms ease;
+  }
+
+  .dsi-faq-mark::before { width: 100%; height: 1px; }
+  .dsi-faq-mark::after { width: 1px; height: 100%; }
+
+  .dsi-faq-list details[open] .dsi-faq-mark::after {
+    transform: scaleY(0);
+    opacity: 0;
+  }
+
+  .dsi-faq-list details p {
+    max-width: var(--measure);
+    margin: 0;
+    padding: 0 0 1.5rem;
+    font-size: 0.96rem;
+    line-height: 1.75;
+    color: var(--muted);
+  }
+
+  /* ── Related capabilities ───────────────────────────────────────────
+     Peers, each lit by its own hue — the system's signature component. */
+  .dsi-related {
+    padding-top: clamp(5.5rem, 10vw, 10rem);
+  }
+
+  .dsi-related-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 1rem;
-    margin-top: 2rem;
+    margin-top: 2.4rem;
   }
 
-  .ds-related-card {
-    display: block;
-    min-height: 100%;
-    padding: 1.5rem;
+  .dsi-tile {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    padding: 1.5rem 1.4rem 1.3rem;
+    border: 1px solid color-mix(in srgb, var(--tile-accent) 30%, transparent);
+    background:
+      linear-gradient(155deg, color-mix(in srgb, var(--tile-accent) 6%, transparent), transparent 60%),
+      var(--panel);
+    backdrop-filter: blur(18px);
+    box-shadow:
+      0 0 22px -14px var(--tile-accent),
+      inset 0 0 26px -20px var(--tile-accent);
     text-decoration: none;
-    transition: transform 160ms ease, border-color 160ms ease;
-  }
-  .ds-related-card:hover { transform: translateY(-3px); border-color: rgba(98, 230, 198, 0.45); }
-  .ds-related-card p { margin-top: 0.7rem; }
-  .ds-related-card span { display: block; margin-top: 1.2rem; color: #62e6c6; font-size: 0.82rem; }
-
-  .ds-faq-list { display: grid; gap: 0.7rem; max-width: 940px; margin-top: 2rem; }
-  .ds-faq-list details { padding: 1.1rem 1.25rem; }
-  .ds-faq-list summary {
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-    cursor: pointer;
-    color: var(--text);
-    font-weight: 500;
-  }
-  .ds-faq-list summary::-webkit-details-marker { display: none; }
-  .ds-faq-list details[open] summary span { transform: rotate(45deg); }
-  .ds-faq-list details p { max-width: 78ch; margin-top: 1rem; }
-
-  .ds-interior-cta {
-    margin-top: clamp(5rem, 10vw, 9rem);
-    padding: clamp(1.8rem, 5vw, 4rem);
-  }
-  .ds-interior-cta h2 { margin-top: 0.8rem; }
-  .ds-interior-cta > p:not(.ds-eyebrow) { max-width: 700px; margin-top: 1rem; }
-  .ds-interior-cta .btn { display: inline-flex; margin-top: 1.6rem; }
-
-  .ds-interior-footer {
-    display: flex;
-    justify-content: space-between;
-    gap: 2rem;
-    margin-top: 4rem;
-    padding: 2rem 0 0;
-    border-top: 1px solid var(--line);
-  }
-  .ds-interior-footer p { margin-top: 0.65rem; font-size: 0.75rem; }
-  .ds-interior-footer nav { display: flex; flex-wrap: wrap; align-items: center; gap: 1.2rem; }
-  .ds-interior-footer nav a { color: var(--muted); text-decoration: none; font-size: 0.82rem; }
-  .ds-interior-footer nav a:hover { color: var(--text); }
-
-  @media (max-width: 900px) {
-    .ds-related-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    transition: transform 260ms ease, border-color 260ms ease, box-shadow 260ms ease;
   }
 
-  @media (max-width: 680px) {
-    .ds-content-grid,
-    .ds-related-grid { grid-template-columns: 1fr; }
-    .ds-content-card-featured { grid-column: auto; }
-    .ds-hero-actions { flex-direction: column; align-items: stretch; }
-    .ds-interior-footer { flex-direction: column; }
+  .dsi-tile:hover,
+  .dsi-tile:focus-visible {
+    transform: translateY(-3px);
+    border-color: color-mix(in srgb, var(--tile-accent) 55%, transparent);
+    box-shadow:
+      0 0 28px -10px var(--tile-accent),
+      inset 0 0 26px -18px var(--tile-accent),
+      0 18px 44px rgba(0, 0, 0, 0.45);
+  }
+
+  .dsi-tile-mark {
+    width: 14px;
+    height: 2px;
+    background: var(--tile-accent);
+    box-shadow: 0 0 12px -2px var(--tile-accent);
+  }
+
+  .dsi-tile h3 {
+    margin: 0.35rem 0 0;
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: 0.86rem;
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--bright);
+  }
+
+  .dsi-tile p {
+    margin: 0;
+    font-size: 0.82rem;
+    line-height: 1.65;
+    color: var(--muted);
+  }
+
+  .dsi-tile-more {
+    margin-top: auto;
+    padding-top: 1.1rem;
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--tile-accent) 80%, #ffffff);
+  }
+
+  /* ── Closing CTA ────────────────────────────────────────────────── */
+  .dsi-cta {
+    padding: clamp(5.5rem, 10vw, 10rem) 0 clamp(2rem, 4vw, 4rem);
+  }
+
+  .dsi-cta-plane {
+    display: block;
+    padding: clamp(2rem, 4.5vw, 3.6rem);
+  }
+
+  .dsi-cta-plane h2 {
+    max-width: 20ch;
+    margin: 1.1rem 0 0;
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: clamp(1.7rem, 3.2vw, 2.7rem);
+    font-weight: 400;
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    text-wrap: balance;
+    color: var(--bright);
+  }
+
+  .dsi-cta-plane .dsi-lede { margin-top: 1.2rem; }
+  .dsi-cta-plane .dsi-btn { margin-top: 2rem; }
+
+  /* ── Responsive ─────────────────────────────────────────────────── */
+  @media (max-width: 1000px) {
+    .dsi-related-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  @media (max-width: 860px) {
+    .dsi { --shell: min(1440px, calc(100% - 2rem)); }
+    .dsi-plane,
+    .dsi-faq { grid-template-columns: 1fr; gap: 1.3rem; }
+    .dsi-faq-head { position: static; }
+    .dsi-faq-list { margin-top: 1.6rem; }
+  }
+
+  @media (max-width: 620px) {
+    .dsi-related-grid { grid-template-columns: 1fr; }
+    .dsi-actions { flex-direction: column; align-items: stretch; }
+    .dsi-hero h1 { max-width: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dsi-hue-rule { animation: none; }
+    .dsi-tile,
+    .dsi-plane,
+    .dsi-faq-mark::before,
+    .dsi-faq-mark::after { transition: none; }
+    .dsi-tile:hover { transform: none; }
   }
 </style>

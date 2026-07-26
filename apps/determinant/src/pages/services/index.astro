@@ -2,6 +2,7 @@
 import BaseLayout from "@determinant/site-kit/layouts/BaseLayout.astro";
 import DeterminantInteriorPage from "@determinant/site-kit/components/DeterminantInteriorPage.astro";
 import { breadcrumbSchema } from "@determinant/site-kit/seo/schema";
+import { serviceAccent } from "@determinant/site-kit/data/determinantNav";
 import { services } from "../../data/services";
 import { determinantSite } from "../../site.config";
 
@@ -12,6 +13,7 @@ const links = services.map((service) => ({
   href: `/services/${service.slug}`,
   title: service.shortName,
   description: service.description,
+  accent: serviceAccent(service.slug),
 }));
 const schema = breadcrumbSchema([
   { name: "Home", url: `${determinantSite.url}/` },

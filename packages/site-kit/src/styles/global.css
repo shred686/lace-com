@@ -8138,21 +8138,6 @@ li {
   font-size: 0.82rem;
 }
 
-/* Ghost button must stay legible on the light LACE zone — drive it from
-   CSS vars so it adapts whether the zone is dark or in its .is-light state. */
-.official-home.home-v2 .v2-lace-btn-ghost {
-  color: var(--oh-bright);
-  border: 1px solid var(--oh-accent);
-  background: transparent;
-  backdrop-filter: none;
-}
-
-.official-home.home-v2 .v2-lace-btn-ghost:hover {
-  color: #fff;
-  border-color: var(--oh-accent);
-  background: var(--oh-accent);
-}
-
 /* ── Lightbox ──────────────────────────────────────────────────────── */
 
 .official-home.home-v2 ~ .v2-lightbox,

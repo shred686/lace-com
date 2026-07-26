@@ -6,6 +6,7 @@ import {
   faqSchema,
   serviceSchema,
 } from "@determinant/site-kit/seo/schema";
+import { serviceAccent } from "@determinant/site-kit/data/determinantNav";
 import { services, type ServicePage } from "../../data/services";
 import { determinantOrgId, determinantSite } from "../../site.config";
 
@@ -25,6 +26,7 @@ const related = services
     href: `/services/${entry.slug}`,
     title: entry.shortName,
     description: entry.description,
+    accent: serviceAccent(entry.slug),
   }));
 const schema = [
   breadcrumbSchema([
@@ -55,6 +57,7 @@ const schema = [
     eyebrow={service.eyebrow}
     title={service.title}
     lede={service.lede}
+    accent={serviceAccent(service.slug)}
     breadcrumbs={[
       { href: "/", label: "Home" },
       { href: "/services", label: "Services" },

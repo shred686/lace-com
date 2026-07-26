@@ -1,0 +1,635 @@
+---
+/**
+ * The canonical Determinant Systems navigation.
+ *
+ * There used to be three: the home page bar, the `.ds-interior-nav` on service
+ * and about pages, and a "back home" stub on contact. The interior ones could
+ * not reach the six service pages in one hop and dropped the home sections and
+ * the language toggle entirely. This component is the only nav on the site —
+ * every page renders it, and everything in `data/determinantNav.ts` is
+ * reachable from every page.
+ */
+import { resolveNav, type NavLocale, servicesIndexHref, aboutHref, contactHref } from "../../data/determinantNav";
+
+interface Props {
+  /** Language surface this nav is rendered on. */
+  locale?: NavLocale;
+  /**
+   * Render a spacer equal to the nav height. The home hero already reserves
+   * 64px under the fixed bar; every other page needs the spacer.
+   */
+  offset?: boolean;
+}
+
+const { locale = "en", offset = false } = Astro.props;
+const { t, services, sections, isCurrent } = resolveNav(locale, Astro.url.pathname);
+const servicesActive = Astro.url.pathname.startsWith("/services");
+---
+
+<header id="topnav" class="dsn" data-dsn>
+  <div class="dsn-inner">
+    <a href={t.brandHref} class="dsn-brand" aria-label={locale === "es" ? "Inicio de Determinant Systems" : "Determinant Systems home"}>
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+        <circle cx="9" cy="9" r="3" fill="#00FFC2"></circle>
+        <circle cx="9" cy="9" r="6.5" stroke="#00FFC2" stroke-width="0.5" opacity="0.4"></circle>
+        <circle cx="9" cy="9" r="9" stroke="#00FFC2" stroke-width="0.3" opacity="0.15"></circle>
+      </svg>
+      <span>DETERMINANT SYSTEMS</span>
+    </a>
+
+    <button class="dsn-toggle" type="button" aria-expanded="false" aria-controls="dsnPanel" aria-label={t.toggle} data-dsn-toggle>
+      <span></span>
+      <span></span>
+    </button>
+
+    <div class="dsn-panel" id="dsnPanel">
+      <nav class="dsn-links" aria-label={t.primary}>
+        <div class="dsn-group" data-dsn-group>
+          <button
+            type="button"
+            class:list={["dsn-link", "dsn-trigger", servicesActive && "is-current"]}
+            aria-expanded="false"
+            aria-controls="dsnServices"
+            data-dsn-trigger
+          >
+            {t.services}
+            <svg class="dsn-chevron" width="9" height="6" viewBox="0 0 9 6" fill="none" aria-hidden="true">
+              <path d="M1 1.2 4.5 4.6 8 1.2" stroke="currentColor" stroke-width="1.2"></path>
+            </svg>
+          </button>
+
+          <div class="dsn-menu" id="dsnServices" aria-label={t.servicesMenu} data-dsn-menu>
+            <p class="dsn-menu-label">{t.services}</p>
+            <div class="dsn-menu-grid">
+              {services.map((service) => (
+                <a
+                  class="dsn-menu-item"
+                  href={service.href}
+                  style={`--svc: ${service.accent}`}
+                  aria-current={isCurrent(service.href) ? "page" : undefined}
+                >
+                  <span class="dsn-menu-dot" aria-hidden="true"></span>
+                  <span class="dsn-menu-title">{service.label}</span>
+                  <span class="dsn-menu-blurb">{service.blurb}</span>
+                </a>
+              ))}
+            </div>
+            <a class="dsn-menu-all" href={servicesIndexHref} aria-current={isCurrent(servicesIndexHref) ? "page" : undefined}>
+              <span>{t.allServices}</span>
+            <span class="dsn-menu-arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+
+        {sections.map((section) => <a class="dsn-link" href={section.href}>{section.label}</a>)}
+
+        <a class="dsn-link" href={aboutHref} aria-current={isCurrent(aboutHref) ? "page" : undefined}>{t.about}</a>
+      </nav>
+
+      <div class="dsn-actions">
+        <a class="dsn-lang" href={t.languageHref} lang={locale === "es" ? "en" : "es"} aria-label={t.languageAria}>
+          {t.languageLabel}
+        </a>
+        <a class="dsn-cta" href={contactHref} aria-current={isCurrent(contactHref) ? "page" : undefined}>{t.contact}</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+{offset && <div class="dsn-offset" aria-hidden="true"></div>}
+
+<script>
+  (() => {
+    const nav = document.querySelector<HTMLElement>("[data-dsn]");
+    const toggle = document.querySelector<HTMLButtonElement>("[data-dsn-toggle]");
+    const panel = document.getElementById("dsnPanel");
+    if (!nav || !toggle || !panel) return;
+
+    const group = nav.querySelector<HTMLElement>("[data-dsn-group]");
+    const trigger = nav.querySelector<HTMLButtonElement>("[data-dsn-trigger]");
+    const compact = window.matchMedia("(max-width: 980px)");
+    const hoverable = window.matchMedia("(hover: hover) and (pointer: fine)");
+
+    // --- mobile panel -----------------------------------------------------
+    const setPanel = (open: boolean) => {
+      nav.classList.toggle("is-open", open);
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+    };
+
+    toggle.addEventListener("click", () => setPanel(!nav.classList.contains("is-open")));
+    panel.querySelectorAll("a").forEach((link) => link.addEventListener("click", () => setPanel(false)));
+
+    // --- services menu ----------------------------------------------------
+    // Below 980px the menu is always visible inside the panel, so the trigger
+    // is hidden and none of this applies.
+    let closeTimer = 0;
+
+    const setMenu = (open: boolean) => {
+      if (!group || !trigger) return;
+      group.classList.toggle("is-open", open);
+      trigger.setAttribute("aria-expanded", open ? "true" : "false");
+    };
+
+    const openMenu = () => {
+      window.clearTimeout(closeTimer);
+      if (!compact.matches) setMenu(true);
+    };
+
+    const closeMenu = (delay = 0) => {
+      window.clearTimeout(closeTimer);
+      if (!delay) return setMenu(false);
+      closeTimer = window.setTimeout(() => setMenu(false), delay);
+    };
+
+    if (group && trigger) {
+      trigger.addEventListener("click", () => {
+        if (compact.matches) return;
+        setMenu(trigger.getAttribute("aria-expanded") !== "true");
+      });
+
+      if (hoverable.matches) {
+        group.addEventListener("mouseenter", openMenu);
+        group.addEventListener("mouseleave", () => closeMenu(120));
+      }
+
+      group.addEventListener("focusin", openMenu);
+      group.addEventListener("focusout", (event) => {
+        const next = event.relatedTarget as Node | null;
+        if (!next || !group.contains(next)) closeMenu();
+      });
+    }
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key !== "Escape") return;
+      closeMenu();
+      setPanel(false);
+      if (nav.contains(document.activeElement)) trigger?.focus();
+    });
+
+    document.addEventListener("click", (event) => {
+      if (nav.contains(event.target as Node)) return;
+      closeMenu();
+      setPanel(false);
+    });
+
+    compact.addEventListener("change", () => {
+      setPanel(false);
+      setMenu(false);
+    });
+
+    // --- scroll condensation ---------------------------------------------
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const progress = Math.min(1, Math.max(0, (window.scrollY - 20) / 100));
+      nav.style.setProperty("--nav-progress", String(progress));
+    };
+    const request = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", request, { passive: true });
+    window.addEventListener("resize", request);
+  })();
+</script>
+
+<style>
+  /* Self-contained so the bar renders identically over the home substrate and
+     over the interior shell — no dependency on an ancestor page class. */
+  .dsn {
+    --nav-progress: 0;
+    --dsn-bright: #ffffff;
+    --dsn-muted: #94a3b8;
+    --dsn-dim: #888888;
+    --dsn-accent: #00ffc2;
+    --dsn-accent-2: #aaffdc;
+    --dsn-line: rgba(255, 255, 255, 0.14);
+    --dsn-line-soft: rgba(255, 255, 255, 0.08);
+    --dsn-height: 64px;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 60;
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    border-bottom: 1px solid rgba(255, 255, 255, calc(0.06 * var(--nav-progress)));
+    background: rgba(5, 5, 5, calc(0.92 * var(--nav-progress)));
+    backdrop-filter: blur(calc(20px * var(--nav-progress)));
+  }
+
+  .dsn *,
+  .dsn-offset {
+    box-sizing: border-box;
+  }
+
+  .dsn-offset {
+    height: 64px;
+  }
+
+  .dsn-inner {
+    position: relative;
+    width: min(1440px, calc(100% - 4rem));
+    margin: 0 auto;
+    min-height: var(--dsn-height);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.2rem;
+  }
+
+  .dsn-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    text-decoration: none;
+  }
+
+  .dsn-brand span {
+    font-size: 0.72rem;
+    font-weight: 300;
+    letter-spacing: 0.18em;
+    color: var(--dsn-bright);
+  }
+
+  .dsn-toggle {
+    display: none;
+    width: 2.3rem;
+    height: 2.3rem;
+    border: 1px solid var(--dsn-line);
+    background: rgba(255, 255, 255, 0.03);
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 0.26rem;
+    color: var(--dsn-bright);
+    cursor: pointer;
+  }
+
+  .dsn-toggle span {
+    width: 1rem;
+    height: 2px;
+    background: currentColor;
+    transition: transform 180ms ease, opacity 180ms ease;
+  }
+
+  .dsn.is-open .dsn-toggle span:first-child {
+    transform: translateY(4px) rotate(45deg);
+  }
+
+  .dsn.is-open .dsn-toggle span:last-child {
+    transform: translateY(-4px) rotate(-45deg);
+  }
+
+  .dsn-panel {
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    margin-left: auto;
+  }
+
+  .dsn-links {
+    display: inline-flex;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .dsn-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border: 0;
+    padding: 0;
+    background: none;
+    font: inherit;
+    font-size: 0.66rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--dsn-dim);
+    cursor: pointer;
+    transition: color 180ms ease;
+  }
+
+  .dsn-link:hover,
+  .dsn-link:focus-visible,
+  .dsn-link[aria-current="page"] {
+    color: var(--dsn-bright);
+  }
+
+  /* Static, so the menu below hangs off .dsn-inner and can centre on the page
+     rather than on the trigger — which sits far right and pushed a wide menu
+     off the viewport. */
+  .dsn-group {
+    position: static;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  /* The services entry keeps the accent underline the home bar has always
+     carried — it is the site's primary commercial path. */
+  .dsn-trigger {
+    color: var(--dsn-accent);
+    border-bottom: 1px solid rgba(0, 255, 194, 0.4);
+    padding-bottom: 0.14rem;
+  }
+
+  .dsn-trigger:hover,
+  .dsn-trigger:focus-visible,
+  .dsn-trigger.is-current {
+    color: var(--dsn-accent);
+    border-bottom-color: var(--dsn-accent);
+  }
+
+  .dsn-chevron {
+    transition: transform 180ms ease;
+  }
+
+  .dsn-group.is-open .dsn-chevron {
+    transform: rotate(180deg);
+  }
+
+  .dsn-menu {
+    position: absolute;
+    top: calc(100% + 0.85rem);
+    left: 50%;
+    width: min(52rem, calc(100vw - 3rem));
+    padding: 1.15rem 1.25rem;
+    border: 1px solid var(--dsn-line);
+    /* Nav chrome, not a content panel: solid so page copy cannot ghost through
+       the labels. The translucent-plane rule governs content surfaces. */
+    background: #06070a;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+    opacity: 0;
+    visibility: hidden;
+    transform: translate(-50%, -6px);
+    transition: opacity 180ms ease, transform 180ms ease, visibility 180ms;
+  }
+
+  .dsn-group.is-open .dsn-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, 0);
+  }
+
+  .dsn-menu-label {
+    display: none;
+  }
+
+  .dsn-menu-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.15rem 1.4rem;
+  }
+
+  /* Each row is its own surface, so it may carry its capability's hue without
+     competing with the firm accent in the bar above it. */
+  .dsn-menu-item {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: baseline;
+    column-gap: 0.6rem;
+    padding: 0.6rem 0.7rem;
+    border: 1px solid transparent;
+    text-decoration: none;
+    transition: border-color 180ms ease, background 180ms ease;
+  }
+
+  .dsn-menu-item:hover,
+  .dsn-menu-item:focus-visible,
+  .dsn-menu-item[aria-current="page"] {
+    border-color: color-mix(in srgb, var(--svc) 34%, transparent);
+    background: color-mix(in srgb, var(--svc) 6%, transparent);
+  }
+
+  .dsn-menu-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--svc);
+    box-shadow: 0 0 10px -2px var(--svc);
+    transform: translateY(-1px);
+  }
+
+  .dsn-menu-title {
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--dsn-bright);
+  }
+
+  .dsn-menu-blurb {
+    grid-column: 2;
+    margin-top: 0.3rem;
+    font-family: "Inter", "Red Hat Display", "Segoe UI", sans-serif;
+    font-size: 0.76rem;
+    font-weight: 300;
+    letter-spacing: normal;
+    line-height: 1.5;
+    text-transform: none;
+    color: var(--dsn-muted);
+  }
+
+  .dsn-menu-all {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    margin-top: 0.9rem;
+    padding-top: 0.85rem;
+    border-top: 1px solid var(--dsn-line-soft);
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--dsn-muted);
+    transition: color 180ms ease;
+  }
+
+  .dsn-menu-all:hover,
+  .dsn-menu-all:focus-visible {
+    color: var(--dsn-bright);
+  }
+
+  .dsn-menu-arrow {
+    letter-spacing: 0;
+    transition: transform 180ms ease;
+  }
+
+  .dsn-menu-all:hover .dsn-menu-arrow,
+  .dsn-menu-all:focus-visible .dsn-menu-arrow {
+    transform: translateX(3px);
+  }
+
+  .dsn-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+  }
+
+  .dsn-lang,
+  .dsn-cta {
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: color 180ms ease, border-color 180ms ease, background 180ms ease;
+  }
+
+  .dsn-lang {
+    color: var(--dsn-muted);
+    border: 1px solid var(--dsn-line-soft);
+    padding: 0.48rem 0.78rem;
+  }
+
+  .dsn-lang:hover,
+  .dsn-lang:focus-visible {
+    color: var(--dsn-bright);
+    border-color: var(--dsn-line);
+  }
+
+  .dsn-cta {
+    color: #000;
+    background: linear-gradient(135deg, var(--dsn-accent-2), var(--dsn-accent));
+    padding: 0.58rem 1.2rem;
+    font-weight: 800;
+  }
+
+  .dsn-cta:hover,
+  .dsn-cta:focus-visible {
+    background: #fff;
+  }
+
+  @media (max-width: 980px) {
+    .dsn {
+      --dsn-height: 58px;
+    }
+
+    .dsn-offset {
+      height: 58px;
+    }
+
+    .dsn-inner {
+      position: relative;
+      width: min(1440px, calc(100% - 2rem));
+    }
+
+    .dsn-toggle {
+      display: inline-flex;
+    }
+
+    .dsn-panel {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 100%;
+      margin: 0;
+      display: grid;
+      gap: 0.7rem;
+      max-height: calc(100svh - 58px - 1rem);
+      overflow-y: auto;
+      background: #06070a;
+      border: 1px solid var(--dsn-line-soft);
+      border-top: none;
+      padding: 0.7rem;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-8px);
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+
+    .dsn.is-open .dsn-panel {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .dsn-links,
+    .dsn-actions {
+      display: grid;
+      gap: 0.5rem;
+    }
+
+    .dsn-group {
+      display: block;
+    }
+
+    /* No nested disclosure on small screens: every service is visible the
+       moment the panel opens. */
+    .dsn-trigger {
+      display: none;
+    }
+
+    .dsn-menu {
+      position: static;
+      width: auto;
+      padding: 0.55rem 0.6rem 0.7rem;
+      border-color: var(--dsn-line-soft);
+      background: rgba(255, 255, 255, 0.02);
+      backdrop-filter: none;
+      box-shadow: none;
+      opacity: 1;
+      visibility: visible;
+      transform: none;
+    }
+
+    .dsn-menu-label {
+      display: block;
+      margin: 0 0 0.5rem;
+      font-size: 0.58rem;
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--dsn-accent);
+    }
+
+    .dsn-menu-grid {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+
+    .dsn-menu-item {
+      padding: 0.5rem 0.4rem;
+    }
+
+    .dsn-menu-blurb {
+      display: none;
+    }
+
+    .dsn-menu-all {
+      margin-top: 0.6rem;
+      padding-top: 0.6rem;
+    }
+
+    .dsn-links > .dsn-link,
+    .dsn-actions > a {
+      min-height: 2.4rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--dsn-line-soft);
+      padding: 0;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .dsn-inner {
+      width: min(100%, calc(100% - 1rem));
+    }
+
+    .dsn-brand span {
+      font-size: 0.64rem;
+      letter-spacing: 0.14em;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dsn-menu,
+    .dsn-panel,
+    .dsn-chevron,
+    .dsn-toggle span {
+      transition: none;
+    }
+  }
+</style>

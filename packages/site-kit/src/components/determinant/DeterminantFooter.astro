@@ -1,0 +1,163 @@
+---
+/**
+ * The canonical Determinant Systems footer — the second half of the
+ * reachability guarantee. The nav's services menu and this sitemap render from
+ * the same `data/determinantNav.ts` list, so a page cannot exist in one and be
+ * missing from the other.
+ */
+import { resolveNav, type NavLocale, servicesIndexHref, aboutHref, contactHref, lacePlatformHref } from "../../data/determinantNav";
+
+interface Props {
+  locale?: NavLocale;
+}
+
+const { locale = "en" } = Astro.props;
+const { t, services, sections, isCurrent } = resolveNav(locale, Astro.url.pathname);
+const year = new Date().getFullYear();
+---
+
+<footer class="dsf">
+  <div class="dsf-inner">
+    <div class="dsf-brand-col">
+      <a href={t.brandHref} class="dsf-brand">
+        <svg width="14" height="14" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+          <circle cx="9" cy="9" r="3" fill="#00FFC2"></circle>
+          <circle cx="9" cy="9" r="6.5" stroke="#00FFC2" stroke-width="0.5" opacity="0.4"></circle>
+        </svg>
+        <span>Determinant Systems</span>
+      </a>
+      <p class="dsf-tagline">© {year} Determinant Systems · {t.tagline}</p>
+    </div>
+
+    <nav class="dsf-cols" aria-label={t.footerNav}>
+      <div class="dsf-col">
+        <p class="dsf-col-title">{t.services}</p>
+        <ul>
+          {services.map((service) => (
+            <li>
+              <a href={service.href} aria-current={isCurrent(service.href) ? "page" : undefined}>{service.label}</a>
+            </li>
+          ))}
+          <li>
+            <a href={servicesIndexHref} aria-current={isCurrent(servicesIndexHref) ? "page" : undefined}>{t.allServices}</a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="dsf-col">
+        <p class="dsf-col-title">{t.company}</p>
+        <ul>
+          <li><a href={aboutHref} aria-current={isCurrent(aboutHref) ? "page" : undefined}>{t.about}</a></li>
+          <li><a href={contactHref} aria-current={isCurrent(contactHref) ? "page" : undefined}>{t.contact}</a></li>
+          {sections.map((section) => <li><a href={section.href}>{section.label}</a></li>)}
+          <li><a href={lacePlatformHref}>{t.platformProduct}</a></li>
+          <li><a href={t.languageHref} lang={locale === "es" ? "en" : "es"}>{t.languageLabel}</a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+</footer>
+
+<style>
+  .dsf {
+    --dsf-bright: #ffffff;
+    --dsf-muted: #94a3b8;
+    --dsf-dim: #666f7d;
+    --dsf-accent: #00ffc2;
+    --dsf-line-soft: rgba(255, 255, 255, 0.08);
+
+    position: relative;
+    z-index: 2;
+    margin-top: clamp(4rem, 8vw, 7rem);
+    border-top: 1px solid var(--dsf-line-soft);
+    padding: clamp(2.5rem, 5vw, 3.5rem) 0 clamp(2rem, 4vw, 3rem);
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+  }
+
+  .dsf-inner {
+    width: min(1440px, calc(100% - 4rem));
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: start;
+  }
+
+  .dsf-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    text-decoration: none;
+  }
+
+  .dsf-brand span {
+    font-size: 0.72rem;
+    font-weight: 300;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--dsf-bright);
+  }
+
+  .dsf-tagline {
+    margin: 0.85rem 0 0;
+    font-family: "Inter", "Red Hat Display", "Segoe UI", sans-serif;
+    font-size: 0.75rem;
+    font-weight: 300;
+    color: var(--dsf-dim);
+  }
+
+  .dsf-cols {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(2rem, 4vw, 4rem);
+  }
+
+  .dsf-col-title {
+    margin: 0 0 1rem;
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--dsf-accent);
+  }
+
+  .dsf-col ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  .dsf-col li {
+    margin: 0;
+  }
+
+  .dsf-col a {
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    color: var(--dsf-muted);
+    transition: color 180ms ease;
+  }
+
+  .dsf-col a:hover,
+  .dsf-col a:focus-visible,
+  .dsf-col a[aria-current="page"] {
+    color: var(--dsf-bright);
+  }
+
+  @media (max-width: 860px) {
+    .dsf-inner {
+      width: min(1440px, calc(100% - 2rem));
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .dsf-cols {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+  }
+</style>

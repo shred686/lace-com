@@ -1,0 +1,493 @@
+---
+/**
+ * App Builder — the SaaS lane.
+ * "You built a product; LACE gives you the business around it."
+ * Ruled-grid language (lp2-*): hairline cells, one fragment window that
+ * lifts, mono only where the page reports a value. The window is tagged
+ * Example — the figures inside are illustrative, not a customer's.
+ */
+import "../../styles/lace-site.css";
+import "../../styles/lace-grid.css";
+
+const stack = [
+  {
+    label: "Billing",
+    title: "Plans, subscriptions, checkout",
+    detail:
+      "Tiers, trials, seats, and metered usage. Checkout, invoices, retries, and tax handling come with the platform — not with three vendors and a webhook you maintain.",
+  },
+  {
+    label: "Accounts",
+    title: "Sign-in, orgs, and roles",
+    detail:
+      "Email and SSO/OIDC sign-in, organization accounts, per-role permissions. Enforced by the runtime at every request, not by instructions in a prompt.",
+  },
+  {
+    label: "Address",
+    title: "Your domain, your certificates",
+    detail:
+      "Publish to a domain you own. Certificates are issued and renewed for you, and the app answers on it from the first release.",
+  },
+  {
+    label: "Capacity",
+    title: "Hosting that follows demand",
+    detail:
+      "Each application runs as its own isolated sidecar runtime. Capacity follows traffic; you never provision a server to launch a price change.",
+  },
+  {
+    label: "Releases",
+    title: "Versioned, gradual, reversible",
+    detail:
+      "Every deploy is a numbered release. Roll it out gradually, watch it, and roll back in one click — with the previous version still intact.",
+  },
+  {
+    label: "Company",
+    title: "Entity and payouts",
+    detail:
+      "Form the company, connect the account that receives the money, and take payouts on a schedule you set. The business exists, not just the software.",
+  },
+];
+---
+
+<section class="ab-saas" id="saas">
+  <div class="ab-saas-split">
+    <div class="ab-saas-copy" data-r>
+      <p class="lp2-kicker">App Builder · SaaS</p>
+      <h2>Not just an app. <span class="ab-em">A business.</span></h2>
+      <p class="ab-lead">
+        Most builders stop at working software and leave you the hard part: the
+        plan customers subscribe to, the checkout that takes their money, the
+        domain, the certificates, the entity, the bank account. LACE ships that
+        with the app.
+      </p>
+      <p class="ab-lead ab-lead-tight">
+        Describe the product, price it, publish it. The first subscription can
+        arrive the same afternoon.
+      </p>
+      <a class="lp2-cell-link" href="/contact">Talk to us about launching →</a>
+    </div>
+
+    <div class="ab-saas-visual" data-r data-reveal-delay="140" aria-hidden="true">
+      <div class="lp2-win ab-win">
+        <div class="lp2-win-bar">
+          <i></i><i></i><i></i><span>billing.lace — flowlane.app</span>
+          <em class="lp2-win-tag">Example</em>
+        </div>
+        <div class="lp2-win-body">
+          <div class="ab-plans">
+            <div class="ab-plan">
+              <em>Starter</em><strong>$19</strong><b>/mo</b>
+            </div>
+            <div class="ab-plan is-on">
+              <em>Pro</em><strong>$49</strong><b>/mo</b>
+            </div>
+            <div class="ab-plan">
+              <em>Team</em><strong>$149</strong><b>/mo</b>
+            </div>
+          </div>
+
+          <div class="ab-feed">
+            <div class="ab-feed-row" style="--fd: 0ms">
+              <i></i><em>12:04:31</em><span>subscription.created</span><b>Pro · $49/mo</b>
+            </div>
+            <div class="ab-feed-row" style="--fd: 140ms">
+              <i></i><em>12:04:32</em><span>invoice.paid</span><b>$49.00</b>
+            </div>
+            <div class="ab-feed-row" style="--fd: 280ms">
+              <i></i><em>11:58:07</em><span>trial.started</span><b>Starter · 14 days</b>
+            </div>
+          </div>
+
+          <div class="ab-payout">
+            <i></i> Payout scheduled · business checking <b>FRI</b>
+          </div>
+        </div>
+      </div>
+
+      <div class="lp2-win ab-win ab-win-second">
+        <div class="lp2-win-bar">
+          <i></i><i></i><i></i><span>launch — flowlane.app</span>
+          <em class="lp2-win-tag">Example</em>
+        </div>
+        <div class="lp2-win-body ab-check-body">
+          <div class="ab-check" style="--fd: 0ms"><i></i><span>Domain <b>flowlane.app</b> connected</span></div>
+          <div class="ab-check" style="--fd: 120ms"><i></i><span>TLS certificate issued · auto-renew</span></div>
+          <div class="ab-check" style="--fd: 240ms"><i></i><span>Sign-in live · email + SSO</span></div>
+          <div class="ab-check" style="--fd: 360ms"><i></i><span>Release <b>v4</b> published · rollback ready</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ab-stack">
+    {
+      stack.map((item, index) => (
+        <article class="ab-stack-cell" data-r data-reveal-delay={40 + (index % 3) * 70}>
+          <p class="ab-stack-label">{item.label}</p>
+          <h3>{item.title}</h3>
+          <p>{item.detail}</p>
+        </article>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  /* ── the split: argument left, evidence right ──────────────────── */
+  .ab-saas-split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.02fr);
+  }
+
+  .ab-saas-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding: clamp(2.6rem, 5.5vw, 4.4rem) clamp(1.2rem, 3.5vw, 3.2rem);
+  }
+
+  .ab-saas-copy .lp2-kicker {
+    margin-bottom: 1.1rem;
+    font-size: 0.64rem;
+  }
+
+  .ab-saas-copy h2 {
+    margin: 0.9rem 0 1.2rem;
+    font-size: clamp(1.9rem, 3.4vw, 2.9rem);
+  }
+
+  /* Solid green emphasis, matching the editorial cell on the home page —
+     not the retired gradient-clipped accent word. */
+  .ab-em {
+    color: var(--lp-green-deep);
+    font-weight: 500;
+  }
+
+  .ab-lead {
+    max-width: 44ch;
+    margin: 0;
+    font-size: clamp(0.96rem, 1.2vw, 1.05rem);
+    line-height: 1.7;
+    color: var(--lp-muted);
+  }
+
+  .ab-lead-tight {
+    margin-top: 1rem;
+    color: var(--lp-ink-soft);
+  }
+
+  .ab-saas-copy .lp2-cell-link {
+    margin-top: 2rem;
+  }
+
+  .ab-saas-visual {
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    gap: 1.1rem;
+    padding: clamp(2.6rem, 5.5vw, 4.4rem) clamp(1.2rem, 3.5vw, 3.2rem);
+    border-left: 1px solid var(--hair);
+  }
+
+  .ab-win {
+    width: min(440px, 100%);
+  }
+
+  /* The second window is a footnote to the first: same material, less
+     presence, so the plan/revenue surface stays the one thing you read. */
+  .ab-win-second {
+    width: min(400px, 100%);
+    box-shadow: 0 18px 40px -26px rgba(15, 30, 26, 0.28);
+  }
+
+  /* ── plans ─────────────────────────────────────────────────────── */
+  .ab-plans {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.45rem;
+  }
+
+  .ab-plan {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.15rem;
+    padding: 0.6rem 0.65rem;
+    border: 1px solid var(--lp-line-soft);
+    border-radius: var(--lp-radius-lg);
+    background: #fdfefe;
+  }
+
+  .ab-plan em {
+    flex: 1 0 100%;
+    margin-bottom: 0.25rem;
+    font-style: normal;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.52rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--lp-faint);
+  }
+
+  .ab-plan strong {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 1.15rem;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: var(--lp-ink);
+  }
+
+  .ab-plan b {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.56rem;
+    font-weight: 400;
+    color: var(--lp-faint);
+  }
+
+  .ab-plan.is-on {
+    border-color: rgba(var(--lp-green-rgb), 0.45);
+    background: rgba(var(--lp-green-rgb), 0.05);
+  }
+
+  .ab-plan.is-on em {
+    color: var(--lp-green-deep);
+  }
+
+  /* ── the money moving ──────────────────────────────────────────── */
+  .ab-feed {
+    display: grid;
+    gap: 0.3rem;
+  }
+
+  .ab-feed-row {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.5rem 0.65rem;
+    border: 1px solid var(--lp-line-soft);
+    border-radius: var(--lp-radius);
+    background: #ffffff;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.62rem;
+    color: var(--lp-ink-soft);
+  }
+
+  .ab-feed-row i {
+    flex: none;
+    width: 0.34rem;
+    height: 0.34rem;
+    border-radius: 50%;
+    background: var(--lp-green);
+  }
+
+  .ab-feed-row em {
+    font-style: normal;
+    color: var(--lp-faint);
+  }
+
+  .ab-feed-row span {
+    color: var(--lp-ink);
+  }
+
+  .ab-feed-row b {
+    margin-left: auto;
+    font-weight: 600;
+    color: var(--lp-green-deep);
+    white-space: nowrap;
+  }
+
+  .ab-payout {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 0.7rem;
+    border: 1px solid rgba(var(--lp-green-rgb), 0.4);
+    border-radius: var(--lp-radius);
+    background: linear-gradient(90deg, rgba(var(--lp-green-rgb), 0.08), transparent 80%);
+    font-size: 0.74rem;
+    color: var(--lp-ink-soft);
+  }
+
+  .ab-payout i {
+    flex: none;
+    width: 0.42rem;
+    height: 0.42rem;
+    border-radius: 50%;
+    background: var(--lp-green);
+  }
+
+  .ab-payout b {
+    margin-left: auto;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.56rem;
+    letter-spacing: 0.12em;
+    color: var(--lp-green-deep);
+  }
+
+  /* ── launch checklist ──────────────────────────────────────────── */
+  .ab-check-body {
+    gap: 0.4rem;
+  }
+
+  .ab-check {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.76rem;
+    color: var(--lp-ink-soft);
+  }
+
+  .ab-check b {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: var(--lp-ink);
+  }
+
+  .ab-check i {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 0.95rem;
+    height: 0.95rem;
+    border: 1px solid rgba(var(--lp-green-rgb), 0.5);
+    border-radius: 50%;
+    background: rgba(var(--lp-green-rgb), 0.12);
+  }
+
+  .ab-check i::after {
+    content: "";
+    width: 0.3rem;
+    height: 0.3rem;
+    border-radius: 50%;
+    background: var(--lp-green);
+  }
+
+  /* Rows settle in on reveal — a 240ms state change, not a second
+     authored motion. */
+  .ab-saas-visual.vis .ab-feed-row,
+  .ab-saas-visual.vis .ab-check {
+    animation: ab-settle 260ms ease-out both;
+    animation-delay: calc(var(--fd, 0ms) + 120ms);
+  }
+
+  @keyframes ab-settle {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+  }
+
+  /* ── the launch stack: six ruled cells ─────────────────────────── */
+  .ab-stack {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-top: 1px solid var(--hair);
+  }
+
+  .ab-stack-cell {
+    padding: clamp(1.6rem, 2.6vw, 2.2rem) clamp(1.2rem, 2.4vw, 2rem);
+    border-left: 1px solid var(--hair);
+  }
+
+  .ab-stack-cell:nth-child(3n + 1) {
+    border-left: 0;
+  }
+
+  .ab-stack-cell:nth-child(n + 4) {
+    border-top: 1px solid var(--hair);
+  }
+
+  .ab-stack-label {
+    margin: 0 0 0.8rem;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.58rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--lp-green-deep);
+  }
+
+  .ab-stack-cell h3 {
+    margin: 0 0 0.5rem;
+    font-family: "Space Grotesk", "Red Hat Display", sans-serif;
+    font-size: 1.02rem;
+    font-weight: 500;
+    letter-spacing: -0.012em;
+    text-transform: uppercase;
+    line-height: 1.2;
+    color: var(--lp-ink);
+  }
+
+  .ab-stack-cell p {
+    margin: 0;
+    font-size: 0.85rem;
+    line-height: 1.65;
+    color: var(--lp-muted);
+  }
+
+  @media (max-width: 980px) {
+    .ab-saas-split {
+      grid-template-columns: 1fr;
+    }
+
+    .ab-saas-visual {
+      border-left: 0;
+      border-top: 1px solid var(--hair);
+    }
+
+    .ab-stack {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .ab-stack-cell:nth-child(3n + 1) {
+      border-left: 1px solid var(--hair);
+    }
+
+    .ab-stack-cell:nth-child(odd) {
+      border-left: 0;
+    }
+
+    .ab-stack-cell:nth-child(n + 3) {
+      border-top: 1px solid var(--hair);
+    }
+  }
+
+  @media (max-width: 620px) {
+    .ab-plans {
+      grid-template-columns: 1fr;
+    }
+
+    .ab-plan {
+      align-items: baseline;
+    }
+
+    .ab-plan em {
+      flex: 1;
+      margin-bottom: 0;
+    }
+
+    .ab-stack {
+      grid-template-columns: 1fr;
+    }
+
+    .ab-stack-cell,
+    .ab-stack-cell:nth-child(3n + 1),
+    .ab-stack-cell:nth-child(odd) {
+      border-left: 0;
+    }
+
+    .ab-stack-cell + .ab-stack-cell {
+      border-top: 1px solid var(--hair);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ab-saas-visual.vis .ab-feed-row,
+    .ab-saas-visual.vis .ab-check {
+      animation: none;
+    }
+  }
+</style>

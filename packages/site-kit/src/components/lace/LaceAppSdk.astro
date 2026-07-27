@@ -1,0 +1,625 @@
+---
+/**
+ * App Builder — the developer lane (lace-app-sdk).
+ * The argument: it is a Git repository. Bring the editor and the coding
+ * agent you already use; commit, and the platform takes it from there.
+ * Ruled-grid language (lp2-*), with two fragment windows as the evidence.
+ */
+import "../../styles/lace-site.css";
+import "../../styles/lace-grid.css";
+
+/* The clip lives in the consuming app's /public, like the knowledge-graph
+   video: apps/lace/public/app-builder-clone.mp4 (+ -poster.jpg). */
+interface Props {
+  clipSrc?: string;
+  clipPoster?: string;
+}
+const {
+  clipSrc = "/app-builder-clone.mp4",
+  clipPoster = "/app-builder-clone-poster.jpg",
+} = Astro.props;
+
+/* Environments a developer already works in. Named, not logo-walled —
+   this is a Git repository, so the list is descriptive, not a partnership. */
+const environments = [
+  "Claude Code",
+  "Codex",
+  "Cursor",
+  "Copilot",
+  "Windsurf",
+  "Zed",
+  "VS Code",
+  "JetBrains",
+  "Vim + a terminal",
+];
+
+const split = {
+  yours: [
+    "The product — routes, screens, and the flow your users came for",
+    "Your data model and the collections behind it",
+    "The tools and agents your app exposes",
+    "Your tests, your review, your merge",
+  ],
+  ours: [
+    "Identity, tenancy, and role resolution",
+    "Policy, permissions, and approval gates",
+    "Secrets, storage, and data governance",
+    "Build, hosting, versioned releases, rollback",
+    "The audit trail under all of it",
+  ],
+};
+---
+
+<section class="ab-sdk" id="sdk">
+  <div class="ab-sdk-head" data-r>
+    <p class="lp2-kicker">App Builder · lace-app-sdk</p>
+    <h2>Build it where <span class="ab-em">you already build.</span></h2>
+    <p class="ab-sdk-lead">
+      The App Builder is one way in. The other is the one you already know:
+      LACE hands you a Git repository, seeded with a working application, the
+      SDK wired in, and agent instructions that tell your coding agent how this
+      platform works — so it spends its context on your product instead of
+      relearning ours. Open it in whatever you use. Commit. LACE takes it from
+      there.
+    </p>
+  </div>
+
+  <div class="ab-envs" data-r data-reveal-delay="80">
+    <ul>
+      {environments.map((environment) => <li>{environment}</li>)}
+    </ul>
+    <p>It is a Git repository. Anything that can open one, works.</p>
+  </div>
+
+  <!-- The product surface behind the claim: create the app, get a seeded
+       repository and a clone command. Full frame width — this is the
+       evidence, so it gets the room. -->
+  <figure class="ab-clip" data-r data-reveal-delay="40">
+    <video
+      class="ab-clip-el"
+      src={clipSrc}
+      poster={clipPoster}
+      loop
+      muted
+      playsinline
+      preload="none"
+      aria-label="LACE App Factory: creating an app produces a seeded Git repository and a clone command"
+      data-autoplay-in-view></video>
+    <figcaption>Create the app in LACE — clone the seeded repository and build locally.</figcaption>
+  </figure>
+
+  <div class="ab-sdk-split">
+    <div class="ab-sdk-cell" data-r>
+      <h3>Seeded, not scaffolded from scratch</h3>
+      <p>
+        The repository arrives with the manifest, a running app, example data
+        collections and tools, tests, and the instruction files your agent reads
+        first. Nothing to wire up before the first useful commit.
+      </p>
+      <div class="lp2-win ab-win" aria-hidden="true">
+        <div class="lp2-win-bar"><i></i><i></i><i></i><span>~/flowlane — main</span></div>
+        <div class="lp2-win-body ab-tree-body">
+          <pre class="ab-tree"><code>flowlane/
+├─ <b>AGENTS.md</b>        <em>how LACE works · what your agent may assume</em>
+├─ <b>CLAUDE.md</b>        <em>same brief, for Claude Code</em>
+├─ app/
+│  ├─ manifest.py     <em>LaceAppManifest — routes, data, tools</em>
+│  ├─ data.py         <em>AppDataCollectionSchema</em>
+│  ├─ tools.py        <em>AppToolMetadata, AppToolContext</em>
+│  └─ agents.py       <em>AgentDefinition, ToolCapability</em>
+├─ tests/
+└─ README.md</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="ab-sdk-cell" data-r data-reveal-delay="120">
+      <h3>One import surface, versioned</h3>
+      <p>
+        Apps import <code>lace_app_sdk</code> and nothing deeper. It is a facade
+        over the live platform contracts — never a fork — so what you write
+        locally is what runs in production, and a breaking symbol is a major
+        version with a deprecation window.
+      </p>
+      <!-- Real code, so it stays in the accessibility tree; only the window
+           chrome is hidden. -->
+      <div class="lp2-win ab-win">
+        <div class="lp2-win-bar" aria-hidden="true"><i></i><i></i><i></i><span>app/manifest.py</span></div>
+        <div class="lp2-win-body ab-code-body">
+          <pre class="ab-code"><code><span class="ab-tk-k">from</span> lace_app_sdk.manifest <span class="ab-tk-k">import</span> <span class="ab-tk-n">LaceAppManifest</span>
+<span class="ab-tk-k">from</span> lace_app_sdk.data <span class="ab-tk-k">import</span> <span class="ab-tk-n">AppDataCollectionSchema</span>
+
+<span class="ab-tk-n">manifest</span> = <span class="ab-tk-n">LaceAppManifest</span>(
+    <span class="ab-tk-a">slug</span>=<span class="ab-tk-s">"flowlane"</span>,
+    <span class="ab-tk-a">title</span>=<span class="ab-tk-s">"Flowlane"</span>,
+    <span class="ab-tk-a">collections</span>=[
+        <span class="ab-tk-n">AppDataCollectionSchema</span>(<span class="ab-tk-a">name</span>=<span class="ab-tk-s">"projects"</span>),
+    ],
+)</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ab-pipe" data-r data-reveal-delay="60">
+    <p class="ab-pipe-label">On commit</p>
+    <ol class="ab-pipe-steps">
+      <li style="--pd: 0ms"><em>git push</em><span>Your branch, your review, your merge.</span></li>
+      <li style="--pd: 340ms"><em>Build</em><span>Packaged in isolation — no credentials, no host access.</span></li>
+      <li style="--pd: 680ms"><em>Verify</em><span>Contracts, policy, and your tests, on every commit.</span></li>
+      <li style="--pd: 1020ms"><em>Seal</em><span>Signed, versioned, recorded against the release.</span></li>
+      <li style="--pd: 1360ms" class="is-live"><em>Live</em><span>Rolled out gradually. One click back.</span></li>
+    </ol>
+  </div>
+
+  <div class="ab-sdk-split">
+    <div class="ab-sdk-cell ab-sdk-cell-tight" data-r>
+      <p class="ab-stack-label">You write</p>
+      <ul class="ab-list ab-list-ink">
+        {split.yours.map((item) => <li>{item}</li>)}
+      </ul>
+    </div>
+    <div class="ab-sdk-cell ab-sdk-cell-tight" data-r data-reveal-delay="100">
+      <p class="ab-stack-label">LACE runs</p>
+      <ul class="ab-list ab-list-green">
+        {split.ours.map((item) => <li>{item}</li>)}
+      </ul>
+    </div>
+  </div>
+
+  <div class="ab-sdk-foot" data-r>
+    <a class="lp2-cell-link" href="/docs#install">Read the SDK reference →</a>
+    <a class="lp2-cell-link" href="/contact">Request repository access →</a>
+  </div>
+</section>
+
+<style>
+  .ab-em {
+    color: var(--lp-green-deep);
+    font-weight: 500;
+  }
+
+  .ab-sdk-head {
+    padding: clamp(2.6rem, 5.5vw, 4.4rem) clamp(1.2rem, 3.5vw, 3.2rem) clamp(1.6rem, 3vw, 2.4rem);
+    max-width: 62rem;
+  }
+
+  .ab-sdk-head .lp2-kicker {
+    margin-bottom: 1.1rem;
+    font-size: 0.64rem;
+  }
+
+  .ab-sdk-head h2 {
+    margin: 0.9rem 0 1.2rem;
+    font-size: clamp(1.9rem, 3.4vw, 2.9rem);
+  }
+
+  .ab-sdk-lead {
+    max-width: 68ch;
+    margin: 0;
+    font-size: clamp(0.96rem, 1.2vw, 1.05rem);
+    line-height: 1.7;
+    color: var(--lp-muted);
+  }
+
+  /* ── environments ──────────────────────────────────────────────── */
+  .ab-envs {
+    padding: 0 clamp(1.2rem, 3.5vw, 3.2rem) clamp(2rem, 3.5vw, 2.8rem);
+  }
+
+  .ab-envs ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .ab-envs li {
+    padding: 0.45rem 0.8rem;
+    border: 1px solid var(--lp-line);
+    border-radius: var(--lp-radius);
+    background: var(--lp-surface);
+    font-family: "Space Grotesk", "Red Hat Display", sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--lp-ink-soft);
+  }
+
+  .ab-envs p {
+    margin: 1rem 0 0;
+    font-size: 0.85rem;
+    color: var(--lp-faint);
+  }
+
+  /* ── the clip ──────────────────────────────────────────────────── */
+  /* The recording carries its own window chrome and shadow, so it is set
+     directly on the sheet rail to rail — a second frame around it would be
+     a frame inside a frame. */
+  .ab-clip {
+    margin: 0;
+    padding: clamp(1.4rem, 2.6vw, 2.2rem) 0 clamp(1.6rem, 3vw, 2.4rem);
+    border-top: 1px solid var(--hair);
+  }
+
+  .ab-clip-el {
+    display: block;
+    width: 100%;
+    height: auto;
+    /* Matches the source (1920×1200) so nothing reflows on load. */
+    aspect-ratio: 1920 / 1200;
+    background: #eef0f0;
+  }
+
+  .ab-clip figcaption {
+    margin-top: 1.1rem;
+    padding-inline: clamp(1.2rem, 3.5vw, 3.2rem);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--lp-faint);
+  }
+
+  /* ── two evidence cells ────────────────────────────────────────── */
+  .ab-sdk-split {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-top: 1px solid var(--hair);
+  }
+
+  .ab-sdk-cell {
+    display: flex;
+    flex-direction: column;
+    padding: clamp(2rem, 3.6vw, 2.8rem) clamp(1.2rem, 3.5vw, 3.2rem);
+  }
+
+  .ab-sdk-cell + .ab-sdk-cell {
+    border-left: 1px solid var(--hair);
+  }
+
+  .ab-sdk-cell h3 {
+    margin: 0 0 0.7rem;
+    font-family: "Space Grotesk", "Red Hat Display", sans-serif;
+    font-size: clamp(1.05rem, 1.6vw, 1.28rem);
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    text-transform: uppercase;
+    line-height: 1.15;
+    color: var(--lp-ink);
+  }
+
+  .ab-sdk-cell > p {
+    max-width: 52ch;
+    margin: 0 0 1.6rem;
+    font-size: 0.88rem;
+    line-height: 1.7;
+    color: var(--lp-muted);
+  }
+
+  /* Inline code in prose only — the windows below style their own. */
+  .ab-sdk-cell > p code {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.82em;
+    color: var(--lp-ink);
+  }
+
+  .ab-win {
+    width: 100%;
+    margin-top: auto;
+  }
+
+  /* ── repo tree + code island ───────────────────────────────────── */
+  .ab-tree-body,
+  .ab-code-body {
+    padding: 0;
+  }
+
+  .ab-tree,
+  .ab-code {
+    margin: 0;
+    padding: clamp(0.9rem, 2vw, 1.15rem);
+    overflow-x: auto;
+    font-family: "JetBrains Mono", monospace;
+    /* Scales with the column so the annotated tree stops overflowing before
+       the two-column split collapses. */
+    font-size: clamp(0.55rem, 0.86vw, 0.66rem);
+    line-height: 1.85;
+    color: var(--lp-ink-soft);
+    tab-size: 2;
+  }
+
+  .ab-tree b {
+    font-weight: 600;
+    color: var(--lp-ink);
+  }
+
+  .ab-tree em {
+    font-style: normal;
+    color: var(--lp-faint);
+  }
+
+  .ab-code {
+    background: #0c1412;
+    color: #d7e3df;
+  }
+
+  .ab-code .ab-tk-k { color: #7fd7bd; }
+  .ab-code .ab-tk-n { color: #ffffff; }
+  .ab-code .ab-tk-s { color: #8fd0ff; }
+  .ab-code .ab-tk-a { color: #a5b3ae; }
+
+  /* ── the commit pipeline ───────────────────────────────────────── */
+  .ab-pipe {
+    padding: clamp(2rem, 3.6vw, 2.8rem) clamp(1.2rem, 3.5vw, 3.2rem);
+    border-top: 1px solid var(--hair);
+  }
+
+  .ab-pipe-label {
+    margin: 0 0 1.2rem;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.58rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--lp-green-deep);
+  }
+
+  .ab-pipe-steps {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: none;
+  }
+
+  .ab-pipe-steps li {
+    position: relative;
+    padding: 1.1rem 1.1rem 1.1rem 0;
+  }
+
+  /* Each station owns its segment of the rule. The segments are separate
+     elements so the line can be drawn one span at a time, left to right —
+     the commit travelling the lane. */
+  .ab-pipe-steps li::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    /* The whole lane is green: every station is a gate the commit passed.
+       Colouring only the last segment read as a glitch rather than as the
+       end of a verified path. */
+    background: var(--lp-green);
+    transform-origin: left center;
+  }
+
+  /* The station mark sits astride the rule, the way a surveyed point sits
+     on a drawn line. */
+  .ab-pipe-steps li::before {
+    content: "";
+    position: absolute;
+    top: -3px;
+    left: 0;
+    z-index: 1;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--lp-green);
+  }
+
+  /* The last station is the one that ships: a filled mark with a ring, so
+     the end of the lane is emphasised by weight rather than by a lone
+     colour change. */
+  .ab-pipe-steps li.is-live::before {
+    box-shadow: 0 0 0 3px rgba(var(--lp-green-rgb), 0.18);
+    background: var(--lp-green);
+  }
+
+  .ab-pipe-steps em {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-style: normal;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--lp-ink);
+  }
+
+  .ab-pipe-steps li.is-live em {
+    color: var(--lp-green-deep);
+  }
+
+  .ab-pipe-steps span {
+    display: block;
+    max-width: 26ch;
+    font-size: 0.79rem;
+    line-height: 1.6;
+    color: var(--lp-muted);
+  }
+
+  /* One continuous run: the rule draws at a constant rate across the five
+     segments, each station pops as the line reaches it, and its label
+     follows a beat later. Handing off between segments at exactly the
+     segment duration keeps the travel unbroken. */
+  .ab-pipe.vis .ab-pipe-steps li::after {
+    animation: ab-draw 340ms linear both;
+    animation-delay: var(--pd, 0ms);
+  }
+
+  .ab-pipe.vis .ab-pipe-steps li::before {
+    animation: ab-mark 280ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: var(--pd, 0ms);
+  }
+
+  .ab-pipe.vis .ab-pipe-steps em,
+  .ab-pipe.vis .ab-pipe-steps span {
+    animation: ab-arrive 320ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+    animation-delay: calc(var(--pd, 0ms) + 90ms);
+  }
+
+  .ab-pipe.vis .ab-pipe-steps span {
+    animation-delay: calc(var(--pd, 0ms) + 150ms);
+  }
+
+  @keyframes ab-draw {
+    from {
+      transform: scaleX(0);
+    }
+  }
+
+  @keyframes ab-mark {
+    from {
+      opacity: 0;
+      transform: scale(0.35);
+    }
+  }
+
+  @keyframes ab-arrive {
+    from {
+      opacity: 0;
+      transform: translateX(-8px);
+    }
+  }
+
+  /* ── you write / LACE runs ─────────────────────────────────────── */
+  .ab-sdk-cell-tight {
+    padding-block: clamp(1.8rem, 3vw, 2.4rem);
+  }
+
+  .ab-stack-label {
+    margin: 0 0 1rem;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.58rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--lp-green-deep);
+  }
+
+  .ab-list {
+    display: grid;
+    gap: 0.65rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .ab-list li {
+    display: flex;
+    gap: 0.65rem;
+    font-size: 0.88rem;
+    line-height: 1.6;
+    color: var(--lp-ink-soft);
+  }
+
+  .ab-list li::before {
+    flex: none;
+    margin-top: 0.42em;
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 50%;
+    content: "";
+  }
+
+  .ab-list-ink li::before {
+    background: rgba(13, 27, 22, 0.28);
+  }
+
+  .ab-list-green li::before {
+    background: var(--lp-green);
+  }
+
+  .ab-sdk-foot {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.6rem;
+    padding: clamp(1.6rem, 3vw, 2.2rem) clamp(1.2rem, 3.5vw, 3.2rem) clamp(2.4rem, 4vw, 3.2rem);
+    border-top: 1px solid var(--hair);
+  }
+
+  @media (max-width: 980px) {
+    .ab-sdk-split {
+      grid-template-columns: 1fr;
+    }
+
+    .ab-sdk-cell + .ab-sdk-cell {
+      border-left: 0;
+      border-top: 1px solid var(--hair);
+    }
+
+    .ab-pipe-steps {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0 1.4rem;
+    }
+  }
+
+  /* A 1920-wide recording on a phone needs every pixel: the clip breaks out
+     of the frame's gutter and runs edge to edge. */
+  @media (max-width: 780px) {
+    .ab-clip {
+      margin-inline: calc(-1 * clamp(1rem, 3.5vw, 1.5rem));
+    }
+  }
+
+  @media (max-width: 620px) {
+    .ab-pipe-steps {
+      grid-template-columns: 1fr;
+    }
+
+    .ab-pipe-steps span {
+      max-width: none;
+    }
+
+    .ab-tree,
+    .ab-code {
+      font-size: 0.61rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ab-pipe.vis .ab-pipe-steps li::after,
+    .ab-pipe.vis .ab-pipe-steps li::before,
+    .ab-pipe.vis .ab-pipe-steps em,
+    .ab-pipe.vis .ab-pipe-steps span {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  // Play the clip while it is on screen, pause when it leaves. The file is
+  // only fetched on the first approach (preload="none" + the poster), and a
+  // blocked autoplay falls back to controls rather than a dead frame.
+  (() => {
+    const video = document.querySelector<HTMLVideoElement>("[data-autoplay-in-view]");
+    if (!video) return;
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      video.controls = true;
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            video.play().catch(() => {
+              video.controls = true;
+            });
+          } else {
+            video.pause();
+          }
+        });
+      },
+      { threshold: 0.25 },
+    );
+
+    observer.observe(video);
+  })();
+</script>

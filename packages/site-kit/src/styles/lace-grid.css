@@ -531,6 +531,9 @@
     color: var(--lp-muted);
   }
 
+  /* The bare class carries the style so sections outside the home page's
+     cell classes (e.g. the offering-page ruled blocks) can use it directly. */
+  .lp2-kicker,
   .lp2-cell-copy .lp2-kicker,
   .lp2-appbuild-copy .lp2-kicker,
   .lp2-saas-copy .lp2-kicker {
@@ -2335,6 +2338,7 @@
      application would set it. Enlarging it would break the illusion that you
      are looking at a screenshot. */
   @media (max-width: 620px) {
+    .lp2-kicker,
     .lp2-cell-copy .lp2-kicker,
     .lp2-appbuild-copy .lp2-kicker,
     .lp2-saas-copy .lp2-kicker {

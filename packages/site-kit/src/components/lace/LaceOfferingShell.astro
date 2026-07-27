@@ -120,6 +120,17 @@ const accentize = (text: string, word?: string) =>
     </div>
   </section>
 
+  <!-- ── Page-specific sections (ruled grid) ──────────────────────── -->
+  <!-- Offering pages that carry their own deep sections drop them in here,
+       inside the lp2 frame so the rails and crosshairs run through them. -->
+  {
+    Astro.slots.has("sections") && (
+      <div class="lp2 lp2-frame lp-off-sections">
+        <slot name="sections" />
+      </div>
+    )
+  }
+
   <!-- ── Deep dive ────────────────────────────────────────────────── -->
   <section class="lp-section lp-off-deep">
     <div class="lp-wrap">
@@ -308,6 +319,13 @@ const accentize = (text: string, word?: string) =>
     font-size: 0.84rem;
     line-height: 1.65;
     color: var(--lp-muted);
+  }
+
+  /* The ruled-grid block is drawn on its own frame; the section rules it
+     carries do the separating, so it takes air above and none below. */
+  .lp-off-sections {
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+    padding-top: 0;
   }
 
   .lp-off-related-label {

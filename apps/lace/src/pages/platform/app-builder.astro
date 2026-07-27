@@ -2,6 +2,8 @@
 import BaseLayout from "@determinant/site-kit/layouts/BaseLayout.astro";
 import LaceOfferingShell from "@determinant/site-kit/components/lace/LaceOfferingShell.astro";
 import LaceBuildDemo from "@determinant/site-kit/components/lace/LaceBuildDemo.astro";
+import LaceSaasStack from "@determinant/site-kit/components/lace/LaceSaasStack.astro";
+import LaceAppSdk from "@determinant/site-kit/components/lace/LaceAppSdk.astro";
 import { createLaceOfferingJsonLd, laceSite } from "../../site.config";
 
 const content = {
@@ -38,8 +40,8 @@ const content = {
     {
       title: "A professional lane for developers",
       detail:
-        "Local development that mirrors production, AI coding agents, automated verification, and push-to-deploy through the public SDK.",
-      link: { href: "/docs#sdk", label: "Explore the SDK →" },
+        "A Git repository seeded with a working app and the SDK wired in. Open it in the editor and coding agent you already use, commit, and LACE builds, verifies, and releases it.",
+      link: { href: "#sdk", label: "See the developer lane →" },
     },
   ],
   practice:
@@ -84,6 +86,14 @@ const content = {
       a: "Yes. Generated and hand-written applications target the same public lace-app-sdk contracts. Developers can work locally, use version control, review changes, and deploy through the same release pipeline.",
     },
     {
+      q: "Can I build a LACE application in my own editor or coding agent?",
+      a: "Yes. Developer access is a Git repository seeded with a working application, the lace-app-sdk wired in, and agent instructions describing the platform. Work in Claude Code, Codex, Cursor, VS Code, JetBrains, or a plain terminal — anything that opens a Git repository. On commit, LACE builds the app in isolation, runs contract, policy, and your own tests, then publishes a versioned release you can roll back.",
+    },
+    {
+      q: "Can I sell subscriptions to an application built on LACE?",
+      a: "Yes. Applications can ship with subscription plans, checkout, invoicing, and metered usage, published on a domain you own with certificates issued and renewed for you. Hosting scales with the application, and every release is versioned and reversible.",
+    },
+    {
       q: "Can applications run in a private or air-gapped environment?",
       a: "Yes. LACE supports managed cloud, private cloud, on-premises, and fully air-gapped deployment. The application inherits the same identity, policy, data governance, and audit controls in each footprint.",
     },
@@ -105,5 +115,9 @@ const pageDescription = "Build governed enterprise AI applications from a prompt
 >
   <LaceOfferingShell {...content}>
     <LaceBuildDemo />
+    <Fragment slot="sections">
+      <LaceSaasStack />
+      <LaceAppSdk />
+    </Fragment>
   </LaceOfferingShell>
 </BaseLayout>

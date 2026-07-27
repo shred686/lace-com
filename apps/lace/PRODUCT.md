@@ -20,7 +20,7 @@ laceplatform.com is the marketing and evaluation site for LACE, an enterprise AI
 
 - **Enterprise Search** — permissions-aware search across company knowledge, enforced at query time.
 - **Knowledge Graph** — an evidence-locked, bitemporal graph that turns documents into queryable facts and relationships.
-- **Agentic Platform** — policy-governed AI agents across web chat, email, Slack, Microsoft Teams, SMS, WhatsApp, and voice, sharing one set of permissions, evidence, and approval paths.
+- **Agent Studio** — policy-governed AI agents across web chat, email, Slack, Microsoft Teams, SMS, WhatsApp, and voice, sharing one set of permissions, evidence, and approval paths.
 - **App Builder** — turns a prompt into deployed software, with hosting and developer access through `lace-app-sdk`.
 
 Success for the site is a qualified inbound conversation: every tier and every offering page routes to `/contact`, not to a signup. There is no self-serve funnel to optimize.

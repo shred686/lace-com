@@ -2107,6 +2107,114 @@
     color: var(--lp-green-deep);
   }
 
+  /* ═══ MCP: works where you work ═════════════════════════════════ */
+  .lp2-mcp {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    min-height: min(88svh, 820px);
+  }
+
+  .lp2-mcp-copy {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: clamp(3rem, 6vw, 5rem) clamp(1.2rem, 3.5vw, 3.2rem);
+  }
+
+  .lp2-mcp-copy .lp2-kicker {
+    margin-bottom: 1.1rem;
+    font-size: 0.64rem;
+  }
+
+  .lp2-mcp-copy h2 {
+    margin: 0 0 1rem;
+    font-size: clamp(1.9rem, 3.6vw, 3rem);
+  }
+
+  .lp2-mcp-copy > p {
+    max-width: 46ch;
+    margin: 0;
+    font-size: clamp(0.98rem, 1.3vw, 1.08rem);
+    line-height: 1.65;
+    color: var(--lp-muted);
+  }
+
+  .lp2-mcp-visual {
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    padding: clamp(3rem, 6vw, 5rem) clamp(1.2rem, 3.5vw, 3.2rem);
+    border-left: 1px solid var(--hair);
+  }
+
+  /* the clients: one tile per harness, real marks, known workflows */
+  .lp2-mcp-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.7rem;
+    width: min(460px, 100%);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .lp2-mcp-client {
+    display: grid;
+    justify-items: center;
+    gap: 0.22rem;
+    padding: 1.15rem 0.9rem 1.05rem;
+    border: 1px solid var(--lp-line);
+    border-radius: var(--lp-radius-lg);
+    background: #ffffff;
+    box-shadow: var(--lp-shadow-sm);
+    text-align: center;
+  }
+
+  .lp2-mcp-client i {
+    display: grid;
+    place-items: center;
+    width: 1.7rem;
+    height: 1.7rem;
+    margin-bottom: 0.4rem;
+    font-style: normal;
+  }
+
+  .lp2-mcp-client i svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .lp2-mcp-client strong {
+    font-size: 0.92rem;
+    font-weight: 600;
+    line-height: 1.15;
+    color: var(--lp-ink);
+  }
+
+  .lp2-mcp-client em {
+    font-style: normal;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.54rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--lp-faint);
+  }
+
+  .lp2-mcp-any {
+    width: fit-content;
+    margin: 1rem 0 0;
+    padding: 0.45rem 0.9rem;
+    border: 1.5px dashed rgba(var(--lp-green-rgb), 0.5);
+    border-radius: 100px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--lp-green-deep);
+  }
+
   /* ═══ CTA ═══════════════════════════════════════════════════════ */
   .lp2-cta {
     padding: clamp(4rem, 8vw, 6.5rem) clamp(1.2rem, 3.5vw, 3.2rem);
@@ -2190,20 +2298,24 @@
        min-height was there to hold a two-column composition together. */
     .lp2-saas,
     .lp2-appbuild,
-    .lp2-deploy {
+    .lp2-deploy,
+    .lp2-mcp {
       min-height: 0;
     }
 
-    .lp2-saas {
+    .lp2-saas,
+    .lp2-mcp {
       grid-template-columns: 1fr;
     }
 
-    .lp2-saas-visual {
+    .lp2-saas-visual,
+    .lp2-mcp-visual {
       border-left: 0;
       padding-top: 0;
     }
 
-    .lp2-saas-copy {
+    .lp2-saas-copy,
+    .lp2-mcp-copy {
       padding-bottom: clamp(1.6rem, 4vw, 2.4rem);
     }
   }

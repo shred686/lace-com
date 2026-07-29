@@ -10,6 +10,7 @@ import LaceNav from "./LaceNav.astro";
 import LaceFooter from "./LaceFooter.astro";
 import LaceSearchDemo from "./LaceSearchDemo.astro";
 import LacePlatformMap from "./LacePlatformMap.astro";
+import LaceMcpSection from "./LaceMcpSection.astro";
 import whitepaper from "../../assets/docs/LACE_Enterprise_Overview_v3.pdf";
 import laceScreen2 from "../../assets/images/lace-workflow-dark.png";
 import laceKgDark from "../../assets/images/lace-kg-dark.jpg";
@@ -29,10 +30,6 @@ const brandLogos: Record<string, string> = {
   s3: `<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#E25444" d="M4.2 5.5C4.2 4 7.7 3 12 3s7.8 1 7.8 2.5l-1.9 13.9c-.1 1.1-2.5 2.1-5.9 2.1s-5.8-1-5.9-2.1z"/><ellipse cx="12" cy="5.5" rx="7.8" ry="2.5" fill="#7B1D13"/></svg>`,
   salesforce: `<svg viewBox="0 0 24 17" aria-hidden="true"><g fill="#00A1E0"><circle cx="6.4" cy="10.6" r="5.1"/><circle cx="12" cy="7.2" r="6"/><circle cx="17.8" cy="10.4" r="5.4"/><rect x="4.5" y="10" width="15" height="5.7" rx="2.8"/></g></svg>`,
   postgres: `<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#336791" d="M4 6.2v11.6C4 19.6 7.6 21 12 21s8-1.4 8-3.2V6.2z"/><ellipse cx="12" cy="6.2" rx="8" ry="3.2" fill="#4A80AA"/></svg>`,
-  claude: `<svg viewBox="0 0 24 24" fill="none" stroke="#D97757" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 2.8v3.9M12 17.3v3.9M2.8 12h3.9M17.3 12h3.9M5.6 5.6l2.7 2.7M15.7 15.7l2.7 2.7M18.4 5.6l-2.7 2.7M8.3 15.7l-2.7 2.7"/></svg>`,
-  openai: `<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#0A0A0A" d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.504 4.504 0 0 1-4.4945 4.4944zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 7.8956zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.407-.667zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.0567V6.0742a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.459a.7948.7948 0 0 0-.3927.6813zm1.0976-2.3654l2.602-1.4998 2.6069 1.4998v2.9994l-2.5974 1.4997-2.6067-1.4997z"/></svg>`,
-  microsoft: `<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="9.5" height="9.5" fill="#F25022"/><rect x="12.5" y="2" width="9.5" height="9.5" fill="#7FBA00"/><rect x="2" y="12.5" width="9.5" height="9.5" fill="#00A4EF"/><rect x="12.5" y="12.5" width="9.5" height="9.5" fill="#FFB900"/></svg>`,
-  cursor: `<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#111111" d="M12 2l8.66 5v10L12 22l-8.66-5V7z"/><path fill="#4b4b4b" d="M12 2v10l8.66 5V7z"/><path fill="#7a7a7a" d="M12 12L3.34 7v10L12 22z"/></svg>`,
 };
 
 const connectors = [
@@ -460,47 +457,7 @@ const editions = [
     </section>
 
     <!-- ── MCP: LACE inside the AI tools the team already uses ────── -->
-    <section class="lp2-mcp">
-      <div class="lp2-mcp-copy" data-r>
-        <p class="lp2-kicker">MCP Server</p>
-        <h2>Works where <span class="lp-accent">you work.</span></h2>
-        <p>
-          The whole platform is an MCP server. Connect it once, and the AI
-          tools your team already lives in can search your knowledge, ask the
-          graph, and put governed agents to work — same permissions, same
-          citations, same audit trail, wherever the question is asked.
-        </p>
-      </div>
-      <div class="lp2-mcp-visual" data-r data-reveal-delay="140">
-        <ul class="lp2-mcp-grid" aria-label="AI tools that connect to LACE over MCP">
-          <li class="lp2-mcp-client">
-            <i set:html={brandLogos.claude} />
-            <strong>Claude Cowork</strong><em>Delegate the busywork</em>
-          </li>
-          <li class="lp2-mcp-client">
-            <i set:html={brandLogos.claude} />
-            <strong>Claude Code</strong><em>In your terminal</em>
-          </li>
-          <li class="lp2-mcp-client">
-            <i set:html={brandLogos.openai} />
-            <strong>ChatGPT</strong><em>Ask in chat</em>
-          </li>
-          <li class="lp2-mcp-client">
-            <i set:html={brandLogos.openai} />
-            <strong>Codex</strong><em>Ships the code</em>
-          </li>
-          <li class="lp2-mcp-client">
-            <i set:html={brandLogos.microsoft} />
-            <strong>Microsoft Copilot</strong><em>Across Microsoft 365</em>
-          </li>
-          <li class="lp2-mcp-client">
-            <i set:html={brandLogos.cursor} />
-            <strong>Cursor</strong><em>In your editor</em>
-          </li>
-        </ul>
-        <p class="lp2-mcp-any">One endpoint — every MCP client</p>
-      </div>
-    </section>
+    <LaceMcpSection />
 
     <!-- ── CTA ────────────────────────────────────────────────────── -->
     <section class="lp2-cta">

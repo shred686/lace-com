@@ -7,6 +7,7 @@
 import LaceNav from "./LaceNav.astro";
 import LaceFooter from "./LaceFooter.astro";
 import LaceCtaBand from "./LaceCtaBand.astro";
+import LaceMcpSection from "./LaceMcpSection.astro";
 import "../../styles/lace-site.css";
 
 interface Point {
@@ -171,6 +172,11 @@ const accentize = (text: string, word?: string) =>
       </div>
     </section>
   )}
+
+  <!-- ── LACE over MCP ────────────────────────────────────────────── -->
+  <div class="lp2 lp2-frame lp-off-sections lp-off-mcp">
+    <LaceMcpSection />
+  </div>
 
   <!-- ── Related offerings ────────────────────────────────────────── -->
   <section class="lp-section-tight">

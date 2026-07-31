@@ -563,7 +563,311 @@ const seoDescription = post.data.seoDescription ?? post.data.description;
     text-decoration-color: rgba(194, 84, 74, 0.6);
   }
 
+  /* ── Diagram 3: horizontal cost-comparison bars ───────────────── */
+  .lp-post-prose :global(.lp-bars) {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+  }
+
+  .lp-post-prose :global(.lp-bars-row) {
+    display: grid;
+    grid-template-columns: minmax(9.5rem, auto) 1fr auto;
+    align-items: center;
+    gap: 0.9rem;
+  }
+
+  .lp-post-prose :global(.lp-bars-label) {
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--lp-ink-soft);
+  }
+
+  .lp-post-prose :global(.lp-bars-track) {
+    position: relative;
+    display: block;
+    height: 0.6rem;
+    border-radius: 100px;
+    background: rgba(13, 27, 22, 0.06);
+    overflow: hidden;
+  }
+
+  .lp-post-prose :global(.lp-bars-fill) {
+    display: block;
+    height: 100%;
+    border-radius: 100px;
+    background: linear-gradient(90deg, rgba(var(--lp-green-rgb), 0.55), var(--lp-green-deep));
+  }
+
+  .lp-post-prose :global(.lp-bars-fill-alt) {
+    background: var(--lp-green-deep);
+  }
+
+  .lp-post-prose :global(.lp-bars-value) {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.78rem;
+    font-weight: 700;
+    white-space: nowrap;
+    color: var(--lp-green-deep);
+  }
+
+  .lp-post-prose :global(.lp-bars-foot) {
+    margin: 0.3rem 0 0;
+    font-size: 0.8rem;
+    line-height: 1.55;
+    color: var(--lp-muted);
+  }
+
+  /* ── Diagram 4: vertical reduction pipeline with a looped core ──── */
+  .lp-post-prose :global(.lp-reduce) {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+  }
+
+  .lp-post-prose :global(.lp-reduce-node) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1.2rem 1.4rem;
+    border: 1px solid rgba(var(--lp-green-rgb), 0.3);
+    border-radius: var(--lp-radius-lg);
+    background:
+      radial-gradient(14rem 6rem at 50% 0%, rgba(var(--lp-green-rgb), 0.05), transparent 70%),
+      #ffffff;
+    box-shadow: var(--lp-shadow-sm);
+    text-align: center;
+  }
+
+  .lp-post-prose :global(.lp-reduce-icon) {
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 1px solid rgba(var(--lp-green-rgb), 0.28);
+    border-radius: var(--lp-radius-lg);
+    background: #f4faf8;
+    color: var(--lp-green-deep);
+  }
+
+  .lp-post-prose :global(.lp-reduce-icon svg) {
+    width: 1.4rem;
+    height: 1.4rem;
+  }
+
+  .lp-post-prose :global(.lp-reduce-title) {
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: 0.98rem;
+    font-weight: 650;
+    letter-spacing: -0.01em;
+    color: var(--lp-ink);
+  }
+
+  .lp-post-prose :global(.lp-reduce-cap) {
+    max-width: 30rem;
+    font-size: 0.8rem;
+    line-height: 1.55;
+    color: var(--lp-muted);
+  }
+
+  .lp-post-prose :global(.lp-reduce-record) {
+    max-width: 32rem;
+    padding: 0.55rem 0.8rem;
+    border: 1px solid var(--lp-line);
+    border-radius: var(--lp-radius);
+    background: rgba(13, 27, 22, 0.03);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.76rem;
+    line-height: 1.5;
+    color: var(--lp-ink-soft);
+  }
+
+  /* vertical connector between stages */
+  .lp-post-prose :global(.lp-reduce-arrow) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.15rem;
+    padding: 0.5rem 0;
+    color: rgba(var(--lp-green-rgb), 0.75);
+  }
+
+  .lp-post-prose :global(.lp-reduce-arrow-label) {
+    order: -1;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.54rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--lp-faint);
+  }
+
+  .lp-post-prose :global(.lp-reduce-arrow)::after {
+    content: "↓";
+    font-size: 1.25rem;
+    line-height: 1;
+  }
+
+  /* the bounded, looping "atomic questions" panel */
+  .lp-post-prose :global(.lp-reduce-loop) {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    padding: 1.3rem 2.7rem 1.3rem 1.4rem;
+    border: 1.5px dashed rgba(var(--lp-green-rgb), 0.5);
+    border-radius: var(--lp-radius-lg);
+    background:
+      radial-gradient(16rem 8rem at 90% 0%, rgba(var(--lp-green-rgb), 0.07), transparent 70%),
+      var(--lp-surface);
+  }
+
+  .lp-post-prose :global(.lp-reduce-loop-head) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+  }
+
+  .lp-post-prose :global(.lp-reduce-loop-title) {
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: 0.98rem;
+    font-weight: 650;
+    letter-spacing: -0.01em;
+    color: var(--lp-ink);
+  }
+
+  .lp-post-prose :global(.lp-reduce-loop-badge) {
+    padding: 0.24rem 0.62rem;
+    border: 1px dashed rgba(var(--lp-green-rgb), 0.5);
+    border-radius: 100px;
+    background: #f4faf8;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.52rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--lp-green-deep);
+  }
+
+  /* the example classification Q&A card */
+  .lp-post-prose :global(.lp-reduce-card) {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    padding: 0.9rem 1rem;
+    border: 1px solid var(--lp-line);
+    border-radius: var(--lp-radius);
+    background: #ffffff;
+    box-shadow: var(--lp-shadow-sm);
+  }
+
+  .lp-post-prose :global(.lp-reduce-card-q),
+  .lp-post-prose :global(.lp-reduce-card-a) {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    font-size: 0.82rem;
+    line-height: 1.55;
+  }
+
+  .lp-post-prose :global(.lp-reduce-card-q) {
+    color: var(--lp-ink-soft);
+  }
+
+  .lp-post-prose :global(.lp-reduce-card-a) {
+    color: var(--lp-ink);
+  }
+
+  .lp-post-prose :global(.lp-reduce-card-label) {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 1.35rem;
+    height: 1.35rem;
+    border-radius: 50%;
+    background: rgba(13, 27, 22, 0.06);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.66rem;
+    font-weight: 700;
+    color: var(--lp-muted);
+  }
+
+  .lp-post-prose :global(.lp-reduce-card-label-a) {
+    background: rgba(var(--lp-green-rgb), 0.18);
+    color: var(--lp-green-deep);
+  }
+
+  .lp-post-prose :global(.lp-reduce-card code) {
+    padding: 0.05em 0.38em;
+    border: 1px solid var(--lp-line);
+    border-radius: 0.3rem;
+    background: rgba(13, 27, 22, 0.04);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.9em;
+  }
+
+  .lp-post-prose :global(.lp-reduce-loop-foot) {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.72rem;
+    color: var(--lp-muted);
+  }
+
+  .lp-post-prose :global(.lp-reduce-loop-foot svg) {
+    flex: none;
+    width: 1rem;
+    height: 1rem;
+    color: var(--lp-green-deep);
+  }
+
+  /* the loop arc: a bracket + arrowhead on the right edge, reading
+     bottom-to-top as "feed the next span back through the same question" */
+  .lp-post-prose :global(.lp-reduce-loop-arc) {
+    position: absolute;
+    top: 1.15rem;
+    bottom: 1.15rem;
+    right: 1rem;
+    width: 1.1rem;
+    border: 2px solid rgba(var(--lp-green-rgb), 0.55);
+    border-left: none;
+    border-radius: 0 999px 999px 0;
+  }
+
+  .lp-post-prose :global(.lp-reduce-loop-arc)::after {
+    content: "";
+    position: absolute;
+    top: -0.3rem;
+    right: 0.02rem;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 0.32rem 0.48rem 0.32rem;
+    border-color: transparent transparent rgba(var(--lp-green-rgb), 0.75) transparent;
+    transform: rotate(-38deg);
+  }
+
   @media (max-width: 640px) {
+    .lp-post-prose :global(.lp-reduce-loop) {
+      padding-right: 1.4rem;
+    }
+
+    .lp-post-prose :global(.lp-reduce-loop-arc) {
+      display: none;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .lp-post-prose :global(.lp-bars-row) {
+      grid-template-columns: 1fr;
+      gap: 0.35rem;
+    }
+
     .lp-post-prose :global(.lp-flow-row) {
       flex-direction: column;
     }

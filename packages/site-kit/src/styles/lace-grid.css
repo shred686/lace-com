@@ -1871,7 +1871,7 @@
     color: var(--lp-ink);
   }
 
-  .lp2-editions-grid span:not(.lp2-edition-soon) {
+  .lp2-editions-grid span {
     position: relative;
     z-index: 1;
     max-width: 30ch;
@@ -1880,12 +1880,25 @@
     color: var(--lp-muted);
   }
 
-  .lp2-edition-soon {
+  /* Each edition now has a real page under /applications/*, so the card ends in
+     a link to it rather than the "coming soon" pill that used to sit here. */
+  .lp2-editions-grid .lp2-edition-card a {
     position: relative;
     z-index: 1;
-    display: inline-block;
     width: fit-content;
     margin-top: auto;
+    padding-top: 0.4rem;
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--lp-green-deep);
+  }
+
+  .lp2-editions-grid .lp2-edition-card a:hover {
+    text-decoration: underline;
   }
 
   /* ═══ Screenshot ════════════════════════════════════════════════ */

@@ -1,0 +1,106 @@
+---
+import DocsPage from "../../layouts/DocsPage.astro";
+import { docsNav, docsHref } from "@determinant/site-kit/data/laceDocsNav";
+---
+
+<DocsPage slug="">
+  <h1>LACE Platform and App SDK Documentation</h1>
+  <p class="lpd-sub">
+    LACE is the AI platform for the governed enterprise — search, knowledge
+    graph, agents, and an app builder on one accountability substrate.
+    This hub covers the public developer surface.
+  </p>
+
+  <div class="lpd-callout">
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M12 8v.5M12 11v5" stroke="currentColor" stroke-width="1.6"/>
+    </svg>
+    <p>
+      Full platform documentation is delivered <strong>in-product</strong> and
+      versioned with the release you run. The
+      <code class="lp-inline-code">lace-app-sdk</code> documented here is the
+      public, stable surface for developers.
+    </p>
+  </div>
+
+  <h2 id="start-here">Start here</h2>
+  <p>
+    If you are building an application on LACE, go straight to
+    <a href="/docs/install">installing the SDK</a> and the
+    <a href="/docs/quickstart">quickstart</a>. If you are evaluating the
+    platform, <a href="/docs/organization">how LACE is organized</a> and
+    <a href="/docs/deployment">deployment options</a> are the shortest path to
+    the shape of the system.
+  </p>
+
+  <h2 id="the-platform">The platform</h2>
+  <div class="lpd-cards">
+    <a href="/platform/enterprise-search" class="lpd-card">
+      <strong>Enterprise Search</strong>
+      <span>Cited, permissions-aware answers across every source.</span>
+    </a>
+    <a href="/platform/knowledge-graph" class="lpd-card">
+      <strong>Knowledge Graph</strong>
+      <span>Bitemporal facts with receipts and conflict detection.</span>
+    </a>
+    <a href="/platform/agents" class="lpd-card">
+      <strong>Agent Studio</strong>
+      <span>Governed agents on chat, email, SMS, and voice.</span>
+    </a>
+    <a href="/platform/app-builder" class="lpd-card">
+      <strong>App Builder</strong>
+      <span>Prompt → sandboxed build → live, versioned application.</span>
+    </a>
+  </div>
+
+  <h2 id="all-pages">Everything in these docs</h2>
+  {
+    docsNav.map((group) => (
+      <>
+        <h3 id={group.group.toLowerCase().replace(/[^a-z0-9]+/g, "-")}>{group.group}</h3>
+        <ul>
+          {group.items
+            .filter((item) => item.slug !== "")
+            .map((item) => (
+              <li>
+                <a href={docsHref(item.slug)}>{item.label}</a> — {item.description}
+              </li>
+            ))}
+        </ul>
+      </>
+    ))
+  }
+</DocsPage>
+
+<script>
+  // The docs used to be one page with #fragment anchors. A fragment is never
+  // sent to the server, so those old inbound links cannot be redirected in
+  // _redirects — they all land here. Forward them to the route that now owns
+  // the section, once, replacing the history entry so Back still works.
+  (() => {
+    const moved: Record<string, string> = {
+      introduction: "/docs",
+      organization: "/docs/organization",
+      deployment: "/docs/deployment",
+      install: "/docs/install",
+      sdk: "/docs/install",
+      quickstart: "/docs/quickstart",
+      manifest: "/docs/manifest",
+      data: "/docs/data-collections",
+      tools: "/docs/tools",
+      agents: "/docs/agents",
+      modules: "/docs/modules",
+      datasets: "/docs/datasets",
+      "search-rag": "/docs/search-rag",
+      "knowledge-graph": "/docs/knowledge-graph",
+      "agents-channels": "/docs/agents-channels",
+      workflows: "/docs/workflows",
+      "app-builder": "/docs/app-builder",
+      governance: "/docs/governance",
+    };
+
+    const target = moved[decodeURIComponent(location.hash.slice(1))];
+    if (target && target !== "/docs") location.replace(target);
+  })();
+</script>

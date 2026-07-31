@@ -1,0 +1,50 @@
+---
+import DocsPage from "../../layouts/DocsPage.astro";
+---
+
+<DocsPage slug="knowledge-graph">
+  <h1>Knowledge graph</h1>
+  <p class="lpd-sub">
+    Schema packs are versioned, executable ontology contracts. Extraction is
+    candidate-first and evidence-gated; assertions are bitemporal.
+  </p>
+
+  <h2 id="schema-packs">Schema packs</h2>
+  <p>
+    A schema pack is a versioned, executable ontology contract rather than a
+    diagram. It defines the entity and relation types the graph will accept, and
+    it is enforced at write time. Packs aligned to the Basic Formal Ontology and
+    the Common Core Ontologies ship for programs that require that conformance —
+    see <a href="/applications/lace-gov">LACE-GOV</a>.
+  </p>
+
+  <h2 id="extraction">Candidate-first, evidence-gated extraction</h2>
+  <p>
+    Extracted facts enter as candidates carrying a pointer to the document span
+    they came from. They become assertions only once the evidence gate — and,
+    where configured, human review — accepts them. A model's confidence is not
+    itself sufficient to put a fact in the graph.
+  </p>
+
+  <h2 id="identity-resolution">Reversible identity resolution</h2>
+  <p>
+    Duplicate entities merge, and the merge is reversible. Because the
+    contributing records keep their identity, an incorrect merge is undone
+    rather than reconstructed by hand — which matters the first time two
+    genuinely different people share a name.
+  </p>
+
+  <h2 id="bitemporal">Bitemporal assertions</h2>
+  <p>
+    Every assertion carries both valid time (when the fact was true) and
+    transaction time (when the system recorded it). Corrections supersede
+    history instead of erasing it, so a point-in-time query returns what the
+    organization actually knew on a given date — the question investigations,
+    audits, and litigation holds all turn on.
+  </p>
+
+  <p>
+    See <a href="/platform/knowledge-graph">Knowledge Graph</a> for the product
+    surface built on this.
+  </p>
+</DocsPage>

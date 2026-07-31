@@ -1,0 +1,113 @@
+---
+import BaseLayout from "@determinant/site-kit/layouts/BaseLayout.astro";
+import LaceOfferingShell from "@determinant/site-kit/components/lace/LaceOfferingShell.astro";
+import { createLaceApplicationJsonLd, laceSite } from "../../site.config";
+
+const content = {
+  kicker: "Applications · LACE Finance",
+  title: "Research where every figure traces to source.",
+  accent: "traces to source.",
+  lead:
+    "LACE Finance grounds research and reporting in filings, agreements, and internal data — numeric answers come from the actual table cell, not a paraphrase of it. Analysis workflows stay auditable and agents operate under hard policy constraints.",
+  points: [
+    {
+      title: "Table-native answers",
+      detail:
+        "Financial tables are parsed as tables, so a figure returns with its row, column, unit, period, and the filing it sits in. The number you get is the number on the page, not a language model's recollection of it.",
+    },
+    {
+      title: "Auditable analysis workflows",
+      detail:
+        "Each step of an analysis — which documents were retrieved, which figures were pulled, how they were combined — is recorded, so a reviewer can reconstruct a conclusion rather than take it on trust.",
+    },
+    {
+      title: "Policy-bound agents",
+      detail:
+        "Agents run under explicit budgets, allowed-action lists, and approval gates. Anything that moves money, sends a communication, or touches a restricted dataset can require human sign-off before it executes.",
+    },
+    {
+      title: "Filing and report drafting",
+      detail:
+        "Grounded drafting across filings, memoranda, and internal reporting, with each figure and assertion linked to the source it was drawn from.",
+    },
+    {
+      title: "Information-barrier enforcement",
+      detail:
+        "Access is evaluated at retrieval time against the requesting identity, so restricted-list and side-of-the-wall constraints hold for people and agents alike — and every access is logged.",
+    },
+    {
+      title: "Cost attribution",
+      detail:
+        "Model and tool spend is attributed per team, workflow, and agent, so AI cost is a line item you can manage rather than an aggregate surprise at the end of the month.",
+    },
+  ],
+  practice:
+    "An analyst asks how a segment's margin moved across three quarters. LACE Finance returns the figure from each filing's actual table cell, cites the filing, period, and unit for each, shows the arithmetic that produced the change, and records the whole retrieval chain for review.",
+  deepTitle: "Built so the number is checkable.",
+  deepAccent: "is checkable.",
+  deep: [
+    {
+      title: "Figures keep their units and periods",
+      detail:
+        "A value extracted without its unit, scale, currency, and reporting period is a liability. Numbers are stored with that context attached, so comparisons across documents fail loudly instead of silently mixing thousands with millions.",
+    },
+    {
+      title: "Restatements do not rewrite history",
+      detail:
+        "Facts are bitemporal: when a figure is restated, the prior value and the date it was believed remain queryable. Point-in-time queries answer what the analysis was based on when it was made.",
+    },
+    {
+      title: "Spend under a hard ceiling",
+      detail:
+        "Budget caps are enforced by the platform at execution, not advised in a dashboard afterward. An agent that would exceed its ceiling stops and escalates rather than continuing and billing.",
+    },
+  ],
+  related: [
+    { href: "/applications/lace-gov", title: "LACE-GOV", line: "Standards inside the boundary." },
+    { href: "/applications/lace-legal", title: "LACE Legal", line: "Contracts with the receipts." },
+    { href: "/platform/agents", title: "Agent Studio", line: "Governed agents, every channel." },
+  ],
+  ctaTitle: "Make every figure traceable.",
+  ctaAccent: "traceable.",
+  faqs: [
+    {
+      q: "How does LACE Finance handle numbers in financial filings?",
+      a: "Tables are parsed as structured tables rather than flattened into prose, so a figure is returned from its actual cell along with the row, column, unit, scale, currency, reporting period, and source filing. That context travels with the value, so comparisons that mix incompatible units fail loudly instead of producing a plausible wrong answer.",
+    },
+    {
+      q: "Can AI agents be prevented from taking financial actions without approval?",
+      a: "Yes. Every agent carries an explicit allowed-action list and budget ceiling enforced by the platform at execution time. Actions that move money, send external communications, or reach restricted datasets can be configured to pause for one or more human approvals before executing.",
+    },
+    {
+      q: "How are information barriers and restricted lists enforced?",
+      a: "Permissions are evaluated when a document is retrieved, not after a model has read it, so restricted material is never reached, summarized, or cited for an identity that lacks access. The same enforcement applies to agents acting on a user's behalf, and every access is recorded.",
+    },
+    {
+      q: "What happens to prior analysis when a figure is restated?",
+      a: "Facts carry both valid time and transaction time, so a restatement adds a new value without erasing the prior one. Point-in-time queries return what the record showed on a given date, which is what lets a past conclusion be reviewed against the data it was actually based on.",
+    },
+  ],
+};
+
+const pageDescription =
+  "LACE Finance grounds research and reporting in filings and internal data with table-native figures, source citations, auditable workflows, information-barrier enforcement, and policy-bound AI agents.";
+---
+
+<BaseLayout
+  title={`LACE Finance — Grounded Financial Research AI with Source Citations | ${laceSite.name}`}
+  description={pageDescription}
+  theme="lace"
+  themeColor="#f6f7f9"
+  lang="en"
+  siteName={laceSite.name}
+  imageAlt="LACE Finance grounded research and reporting with traceable figures"
+  jsonLd={createLaceApplicationJsonLd({
+    path: "/applications/lace-finance",
+    name: "LACE Finance",
+    description: pageDescription,
+    audience: "Financial Services",
+    faqs: content.faqs,
+  })}
+>
+  <LaceOfferingShell {...content} />
+</BaseLayout>

@@ -1,0 +1,67 @@
+---
+import DocsPage from "../../layouts/DocsPage.astro";
+
+const codeAgents = `<span class="tk-c"># app/agents.py — a real agentic loop, with an approval gate on the risky tool.</span>
+<span class="tk-k">from</span> lace_app_sdk.agents <span class="tk-k">import</span> <span class="tk-n">AgentDefinition</span>, <span class="tk-n">ToolCapability</span>
+<span class="tk-k">from</span> lace_app_sdk.skills <span class="tk-k">import</span> <span class="tk-n">AgentSkill</span>
+
+<span class="tk-k">class</span> <span class="tk-n">AgentProvider</span>:
+    app_id = <span class="tk-s">"acme.field_intake"</span>
+
+    <span class="tk-k">def</span> <span class="tk-f">agent_definitions</span>(<span class="tk-k">self</span>):
+        <span class="tk-k">return</span> [
+            <span class="tk-f">AgentDefinition</span>(
+                agent_id=<span class="tk-s">"intake-triage"</span>,
+                slug=<span class="tk-s">"intake-triage"</span>,
+                name=<span class="tk-s">"Intake Triage"</span>,
+                description=<span class="tk-s">"Classifies tickets, drafts replies with citations."</span>,
+                capabilities=[
+                    <span class="tk-f">ToolCapability</span>(tool_id=<span class="tk-s">"lookup_ticket"</span>),
+                    <span class="tk-f">ToolCapability</span>(tool_id=<span class="tk-s">"escalate"</span>, approval_required=<span class="tk-k">True</span>),
+                ],
+            )
+        ]`;
+---
+
+<DocsPage slug="agents">
+  <h1>Agents &amp; skills</h1>
+  <p class="lpd-sub">
+    Declare an <code class="lp-inline-code">AgentDefinition</code> and it runs a
+    real agentic loop in your sidecar — the model chooses tools; the platform
+    enforces capabilities, loop guards, and approval gates.
+  </p>
+
+  <div class="lp-code">
+    <div class="lp-code-head"><span>app/agents.py</span><em>python</em></div>
+    <pre><code set:html={codeAgents} /></pre>
+  </div>
+
+  <h2 id="approval-gates">Approval gates</h2>
+  <p>
+    Set <code class="lp-inline-code">approval_required=True</code> on a
+    capability and every invocation pauses for human sign-off before it
+    executes. The run is suspended durably, not held in memory, so an approval
+    that arrives an hour later resumes the same run rather than starting a new
+    one.
+  </p>
+
+  <h2 id="capabilities">Capabilities are the boundary</h2>
+  <p>
+    An agent can use exactly the tools listed in its capabilities and nothing
+    else. Because that list is part of the declaration rather than the prompt,
+    it cannot be talked around: a model that decides it should escalate still
+    goes through the gate.
+  </p>
+
+  <h2 id="skills">Skills</h2>
+  <p>
+    <code class="lp-inline-code">AgentSkill</code> declares reusable in-loop
+    behaviours inside an agent definition, so common procedures are shared
+    across agents instead of being re-prompted into each one.
+  </p>
+
+  <p>
+    See <a href="/docs/agents-channels">Agents &amp; channels</a> for deploying
+    an agent to email, SMS, Slack, Teams, or voice.
+  </p>
+</DocsPage>

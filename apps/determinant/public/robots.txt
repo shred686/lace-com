@@ -1,4 +1,75 @@
+# determinantsystems.com
+#
+# NOTE: If Cloudflare's "AI Crawl Control" / managed robots.txt feature is
+# enabled on this zone it prepends a managed block that issues `Disallow: /`
+# for the major AI crawlers. The groups below re-grant access — records sharing
+# a user-agent are merged, and for rules of equal path length `Allow` takes
+# precedence over `Disallow`. The authoritative fix is to disable managed
+# robots.txt / AI crawler blocking in the Cloudflare dashboard.
+
 User-agent: *
 Allow: /
 
+# ── AI answer engines & retrieval crawlers ──────────────────────────────
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: meta-externalagent
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+User-agent: YouBot
+Allow: /
+
+User-agent: Diffbot
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
 Sitemap: https://determinantsystems.com/sitemap-index.xml
+
+# Structured summary of this site for AI language models (llms.txt convention)
+# https://determinantsystems.com/llms.txt

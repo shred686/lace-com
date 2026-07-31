@@ -1,0 +1,56 @@
+---
+import DocsPage from "../../layouts/DocsPage.astro";
+
+const modules = [
+  ["manifest", "LaceAppManifest — the canonical app declaration: routes, tools, pipelines, agents, data, UI, schedules, migrations.", "/docs/manifest"],
+  ["data", "App-owned collections, records, and queries plus blob storage — served through the governed AppDataService.", "/docs/data-collections"],
+  ["tools", "Custom tool providers with metadata, registration, and trust-tiered execution contexts.", "/docs/tools"],
+  ["agents", "Agent definitions, capabilities, loop-guard config, in-loop skills, approval gates, hooks, and guardrails.", "/docs/agents"],
+  ["skills", "Reusable agent skills (AgentSkill) declared inside agent definitions.", "/docs/agents"],
+  ["pipelines", "Pipeline providers that contribute typed steps to the workflow graph.", "/docs/workflows"],
+  ["routes", "HTTP route providers served by the sidecar app runtime.", null],
+  ["connectors", "Dataset connector contracts: capability manifest and runtime protocol.", "/docs/datasets"],
+  ["memory", "Identity-scoped memory: custom axes, formation hooks, and governed retrieval.", null],
+  ["policy", "App policy providers for access and action rules.", "/docs/governance"],
+  ["migrations", "App-owned schema evolution, applied through the platform lifecycle.", null],
+  ["ui", "Runtime-UI declarations loaded by the frontend plugin host.", null],
+  ["testing", "Harnesses for validating app builds before they're sealed and published.", null],
+] as const;
+---
+
+<DocsPage slug="modules">
+  <h1>Module reference</h1>
+  <p class="lpd-sub">
+    Every module published by <code class="lp-inline-code">lace-app-sdk</code>,
+    and what each one gives you.
+  </p>
+
+  <h2 id="modules">Modules</h2>
+  <div class="lpd-table-wrap">
+    <table>
+      <thead>
+        <tr><th>Module</th><th>What it gives you</th></tr>
+      </thead>
+      <tbody>
+        {
+          modules.map(([name, description, href]) => (
+            <tr>
+              <td><code class="lp-inline-code">{name}</code></td>
+              <td>
+                {description}
+                {href && <> <a href={href}>Guide →</a></>}
+              </td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="lifecycle">Publishing lifecycle</h2>
+  <p class="lpd-note">
+    Every app — generated or hand-written — publishes through the same audited
+    lifecycle: intent → architect → scaffold → validate → proof lanes → seal →
+    publish.
+  </p>
+</DocsPage>

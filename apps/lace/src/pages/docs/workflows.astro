@@ -1,0 +1,35 @@
+---
+import DocsPage from "../../layouts/DocsPage.astro";
+---
+
+<DocsPage slug="workflows">
+  <h1>Workflows &amp; pipelines</h1>
+  <p class="lpd-sub">
+    Pipelines are versioned graphs of typed steps with checkpoints, retries,
+    idempotency, and dead-letter handling.
+  </p>
+
+  <h2 id="durability">Runs that finish</h2>
+  <p>
+    Every step is checkpointed as it completes. A crash, timeout, or restart
+    resumes from the last completed step rather than starting over or
+    disappearing. Idempotency keys make a retried step safe to re-execute, and
+    work that cannot succeed lands in a dead-letter queue where it can be
+    inspected instead of being silently dropped.
+  </p>
+
+  <h2 id="typed-steps">Typed steps</h2>
+  <p>
+    Steps declare their input and output types, so a graph that would pass the
+    wrong shape between two stages fails when it is compiled rather than in
+    production at 3am.
+  </p>
+
+  <h2 id="workflow-studio">Workflow Studio</h2>
+  <p>
+    Workflow Studio compiles the same contract the API executes — there is no
+    separate visual runtime that drifts from the programmatic one. Drafts,
+    versions, triggers, aliases, and a full run timeline are all part of the
+    same model, so what you built in the editor is what runs.
+  </p>
+</DocsPage>

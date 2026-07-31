@@ -7,9 +7,16 @@ import "@determinant/site-kit/styles/lace-site.css";
 import { breadcrumbSchema } from "@determinant/site-kit/seo/schema";
 import { laceSite } from "../site.config";
 
+/**
+ * Hub page. Each edition is a real route under /applications/* so it can carry
+ * its own title, description, FAQ, and entity — the cards below are the entry
+ * points, not the content. The `id` anchors are kept so older inbound links to
+ * /applications#lace-gov still land on the right card.
+ */
 const editions = [
   {
     id: "lace-gov",
+    href: "/applications/lace-gov",
     name: "LACE-GOV",
     market: "Federal · Defense · Intelligence",
     title: "Standards-conformant knowledge for the mission boundary.",
@@ -19,6 +26,7 @@ const editions = [
   },
   {
     id: "lace-legal",
+    href: "/applications/lace-legal",
     name: "LACE Legal",
     market: "Legal · Compliance",
     title: "Contract intelligence with the receipts attached.",
@@ -28,6 +36,7 @@ const editions = [
   },
   {
     id: "lace-finance",
+    href: "/applications/lace-finance",
     name: "LACE Finance",
     market: "Financial Services",
     title: "Research where every figure traces to source.",
@@ -74,7 +83,7 @@ const description = "Explore LACE industry AI applications for government, defen
       itemListElement: editions.map((edition, index) => ({
         "@type": "ListItem",
         position: index + 1,
-        url: `${laceSite.url}/applications/#${edition.id}`,
+        url: `${laceSite.url}${edition.href}/`,
         name: edition.name,
       })),
     },
@@ -122,7 +131,7 @@ const description = "Explore LACE industry AI applications for government, defen
                   <span class="lp-chip">{chip}</span>
                 ))}
               </div>
-              <a href="/contact" class="lp-edition-cta">Talk to us about {edition.name} →</a>
+              <a href={edition.href} class="lp-edition-cta">Explore {edition.name} →</a>
             </article>
           ))
         }
@@ -161,7 +170,7 @@ const description = "Explore LACE industry AI applications for government, defen
             <h3 class="lp-h3">Launch your own</h3>
             <p>
               Build it with the <a href="/platform/app-builder">App Builder</a> or the
-              <a href="/docs#sdk">lace-app-sdk</a>, host it on LACE, and charge for
+              <a href="/docs/install">lace-app-sdk</a>, host it on LACE, and charge for
               it — billing, sign-in, releases, and rollback are already there.
             </p>
           </div>

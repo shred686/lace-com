@@ -1,7 +1,7 @@
 ---
 /**
  * Fixed top navigation for laceplatform.com (light theme) with the
- * PRODUCT megamenu (Platform · Applications · Customer Stories).
+ * PRODUCT megamenu (Platform · Applications · Resources).
  * Also carries the site-wide interaction script: megamenu, mobile menu,
  * scroll chrome, and the [data-r] reveal observer used by every page.
  */
@@ -41,19 +41,19 @@ const platform = [
 
 const applications = [
   {
-    href: "/applications#lace-gov",
+    href: "/applications/lace-gov",
     icon: "shield",
     title: "LACE-GOV",
     desc: "Federal & defense knowledge, BFO/CCO-conformant",
   },
   {
-    href: "/applications#lace-legal",
+    href: "/applications/lace-legal",
     icon: "scale",
     title: "LACE Legal",
     desc: "Contract intelligence & obligation tracking",
   },
   {
-    href: "/applications#lace-finance",
+    href: "/applications/lace-finance",
     icon: "chart",
     title: "LACE Finance",
     desc: "Research where every figure traces to source",
@@ -110,10 +110,11 @@ const applications = [
             <em>Applications</em>
             <a href="/applications#built-on-lace">Built on LACE</a>
             {applications.map((item) => <a href={item.href}>{item.title}</a>)}
-            <em>Customers</em>
-            {/* Customer stories temporarily disabled — route off until real stories are cleared. */}
-            {/* <a href="/customers">Customer stories</a> */}
-            <span class="lp-nav-acc-soon">Customer stories — coming soon</span>
+            {/* Customer stories temporarily disabled — route off until real stories
+                are cleared. The whole group is dropped rather than left as a
+                "coming soon" line, which advertises the gap without filling it. */}
+            {/* <em>Customers</em>
+            <a href="/customers">Customer stories</a> */}
           </div>
         </details>
 
@@ -229,38 +230,42 @@ const applications = [
         }
       </div>
 
+      {/* This column held customer stories; the /customers route is off
+          (src/pages/_customers.astro) until we have real, cleared ones. It now
+          carries documentation rather than a "coming soon" placeholder — a menu
+          slot is worth more pointing at material that exists. */}
       <div class="lp-mega-col lp-mega-col-story">
-        <p class="lp-mega-label">Customer Stories</p>
-        {/* Customer stories temporarily disabled — the /customers route is off
-            (src/pages/_customers.astro) until we have real, cleared stories.
-            Restore the two anchors below and re-enable the route to bring back. */}
-        {/*
-        <a href="/customers#federal" class="lp-mega-story">
+        <p class="lp-mega-label">Resources</p>
+        <a href="/docs" class="lp-mega-story">
           <span class="lp-mega-story-top">
-            <span class="lp-mega-story-pill">Customer story</span>
+            <span class="lp-mega-story-pill">Documentation</span>
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
               <path d="M3 11 11 3M5 3h6v6" stroke="currentColor" stroke-width="1.4"></path>
             </svg>
           </span>
           <span class="lp-mega-story-title">
-            Searching <em>12 enclaves</em> without moving a single document
+            Build on LACE with the <em>lace-app-sdk</em>
           </span>
-          <span class="lp-mega-story-meta">Federal program office · Enterprise Search + LACE-GOV</span>
+          <span class="lp-mega-story-meta">Install · quickstart · manifest · module reference</span>
         </a>
-        <a href="/customers" class="lp-mega-row lp-mega-row-more">
+        <a href="/docs/deployment" class="lp-mega-row lp-mega-row-more">
           <span class="lp-mega-copy">
-            <strong>Browse customer stories</strong>
-            <span>How teams run governed AI on LACE</span>
+            <strong>Deployment options</strong>
+            <span>Cloud, private VPC, on-premises, or air-gapped</span>
           </span>
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
             <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.4"></path>
           </svg>
         </a>
-        */}
-        <div class="lp-mega-soon">
-          <span class="lp-mega-story-pill">Coming soon</span>
-          <span class="lp-mega-soon-copy">Customer stories are on the way.</span>
-        </div>
+        <a href="/blog" class="lp-mega-row lp-mega-row-more">
+          <span class="lp-mega-copy">
+            <strong>Blog</strong>
+            <span>Engineering and product writing from the team</span>
+          </span>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.4"></path>
+          </svg>
+        </a>
       </div>
     </div>
   </div>

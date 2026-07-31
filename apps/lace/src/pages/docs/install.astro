@@ -1,0 +1,38 @@
+---
+import DocsPage from "../../layouts/DocsPage.astro";
+
+const codeInstall = `<span class="tk-c"># Python 3.11+</span>
+<span class="tk-f">pip</span> <span class="tk-n">install</span> lace-app-sdk`;
+---
+
+<DocsPage slug="install">
+  <h1>Install the lace-app-sdk</h1>
+  <p class="lpd-sub">
+    The public, versioned contract surface for building apps on LACE. A facade
+    over the live platform contracts — never a fork of them.
+  </p>
+
+  <div class="lp-code">
+    <div class="lp-code-head"><span>terminal</span><em>bash</em></div>
+    <pre><code set:html={codeInstall} /></pre>
+  </div>
+
+  <h2 id="what-you-get">What the SDK guarantees</h2>
+  <ul>
+    <li><strong>Facade, not fork</strong> — every symbol re-exports live core contracts; the builder and the sidecar resolve to the same code.</li>
+    <li><strong>Stability boundary</strong> — apps import only <code class="lp-inline-code">lace_app_sdk</code>; breaking a published symbol is a major version bump with a deprecation window.</li>
+    <li><strong>Governed by construction</strong> — data, tools, routes, and agents flow through platform services with tenancy, policy, and audit applied.</li>
+  </ul>
+
+  <h2 id="requirements">Requirements</h2>
+  <p>
+    Python 3.11 or later, and access to a LACE tenant to publish against. The
+    SDK itself can be installed and explored without a tenant; publishing an app
+    requires one.
+  </p>
+
+  <p>
+    Next: the <a href="/docs/quickstart">quickstart</a> builds a working
+    governed application from four small files.
+  </p>
+</DocsPage>

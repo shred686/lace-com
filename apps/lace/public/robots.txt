@@ -1,4 +1,82 @@
+# laceplatform.com
+#
+# NOTE: Cloudflare's "AI Crawl Control" / managed robots.txt feature prepends a
+# managed block to this file at the edge. That managed block currently issues
+# `Disallow: /` for GPTBot, ClaudeBot, Google-Extended, Applebot-Extended,
+# CCBot, Bytespider, Amazonbot and meta-externalagent — which removes LACE from
+# the assistant-answer surface (ChatGPT, Claude, Gemini, Copilot grounding) that
+# our federal and enterprise buyers actually use to shortlist vendors.
+#
+# The groups below re-grant access. Per the robots.txt specification, records
+# sharing a user-agent are merged and, for rules of equal path length, `Allow`
+# takes precedence over `Disallow` — so these lines override the managed block
+# for spec-compliant crawlers. The authoritative fix is to disable the managed
+# robots.txt / AI crawler blocking in the Cloudflare dashboard.
+
 User-agent: *
 Allow: /
 
+# ── AI answer engines & retrieval crawlers ──────────────────────────────
+# Being retrievable and citable by these is a primary discovery channel.
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: meta-externalagent
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+User-agent: YouBot
+Allow: /
+
+User-agent: Diffbot
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
 Sitemap: https://laceplatform.com/sitemap-index.xml
+
+# Structured summary of this site for AI language models (llms.txt convention)
+# https://laceplatform.com/llms.txt

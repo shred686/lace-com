@@ -11,7 +11,7 @@ import LaceFooter from "./LaceFooter.astro";
 import LaceSearchDemo from "./LaceSearchDemo.astro";
 import LacePlatformMap from "./LacePlatformMap.astro";
 import LaceMcpSection from "./LaceMcpSection.astro";
-import whitepaper from "../../assets/docs/LACE_Enterprise_Overview_v3.pdf";
+import { whitepaperEnglishUrl as whitepaper } from "../../data/assets";
 import laceScreen2 from "../../assets/images/lace-workflow-dark.png";
 import laceKgDark from "../../assets/images/lace-kg-dark.jpg";
 import "../../styles/lace-site.css";
@@ -52,19 +52,19 @@ const editions = [
     name: "LACE-GOV",
     market: "Federal · Defense · Intelligence",
     line: "Standards-conformant knowledge for the mission boundary.",
-    href: "/applications#lace-gov",
+    href: "/applications/lace-gov",
   },
   {
     name: "LACE Legal",
     market: "Legal · Compliance",
     line: "Contract intelligence with the receipts attached.",
-    href: "/applications#lace-legal",
+    href: "/applications/lace-legal",
   },
   {
     name: "LACE Finance",
     market: "Financial Services",
     line: "Research where every figure traces to source.",
-    href: "/applications#lace-finance",
+    href: "/applications/lace-finance",
   },
 ];
 ---
@@ -414,8 +414,7 @@ const editions = [
               <em>{edition.market}</em>
               <strong>{edition.name}</strong>
               <span>{edition.line}</span>
-              {/* <a href={edition.href}><b>Explore →</b></a> */}
-              <span class="lp-mega-story-pill lp2-edition-soon">Coming soon</span>
+              <a href={edition.href}><b>Explore →</b></a>
             </div>
           ))
         }

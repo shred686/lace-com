@@ -1,0 +1,49 @@
+---
+import DocsPage from "../../layouts/DocsPage.astro";
+---
+
+<DocsPage slug="organization">
+  <h1>How LACE is organized</h1>
+  <p class="lpd-sub">
+    Five peer product surfaces share one control plane. Understanding that shape
+    explains most of the platform's behaviour.
+  </p>
+
+  <h2 id="surfaces">The five surfaces</h2>
+  <p>
+    <strong>Pipelines</strong> are versioned, typed workflow graphs.
+    <strong>Agents</strong> are tool-using definitions with deployments and
+    channels. <strong>Apps</strong> are manifest-defined packages.
+    <strong>Knowledge</strong> covers datasets, retrieval, search, and the
+    knowledge graph. The <strong>Assistant</strong> is a tenant-scoped copilot
+    over the same APIs everything else uses.
+  </p>
+  <p>
+    None of these is layered on top of another. They are peers over a shared
+    control plane, which is why an agent can call a pipeline, a pipeline can
+    write to the graph, and an app can ship all three.
+  </p>
+
+  <h2 id="principles">The invariants</h2>
+  <ul>
+    <li>Every resource and execution is tenant-scoped; roles resolve to named permission scopes.</li>
+    <li>Model output proposes; deterministic services enforce permissions, validation, budgets, and approvals.</li>
+    <li>Evidence is first-class: retrieval and graph assertions point back to document spans.</li>
+    <li>Durable work uses persisted attempts, checkpoints, idempotency, and dead-letter handling.</li>
+  </ul>
+
+  <h2 id="why-it-matters">Why the split matters</h2>
+  <p>
+    The second invariant is the one that does most of the work. A language model
+    in LACE never <em>decides</em> whether an action is permitted — it proposes
+    an action, and a deterministic service accepts or rejects it against policy
+    the model cannot see or influence. That is what makes the audit trail
+    meaningful: the record shows what was proposed, what was enforced, and why,
+    rather than a transcript of a model asserting it was being careful.
+  </p>
+  <p>
+    Read <a href="/docs/governance">Governance &amp; security</a> for how the
+    enforcement layer is configured, or
+    <a href="/docs/deployment">Deployment options</a> for where it runs.
+  </p>
+</DocsPage>

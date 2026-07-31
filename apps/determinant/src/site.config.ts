@@ -42,7 +42,26 @@ export const determinantJsonLd = {
       sameAs: [
         "https://www.linkedin.com/company/determinant-systems-inc/",
         "https://github.com/Determinant-Systems"
-      ]
+      ],
+      // Declares the LACE platform as this organization's product, using the
+      // same @id LACE's own markup publishes. Stating the relationship from
+      // both domains is what lets a search engine treat "LACE" and
+      // "Determinant Systems" as connected entities rather than two unrelated
+      // sites that happen to link to each other — which matters when the bare
+      // name "LACE" is contested by several established organizations.
+      owns: { "@id": "https://laceplatform.com/#lace" },
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://laceplatform.com/#lace",
+      name: "LACE",
+      url: "https://laceplatform.com/",
+      applicationCategory: "BusinessApplication",
+      applicationSubCategory: "Enterprise AI Platform",
+      operatingSystem: "Web",
+      description:
+        "LACE is the AI platform for the governed enterprise: permissions-aware enterprise search, an evidence-locked knowledge graph, policy-governed AI agents across every channel, and an app builder that turns one prompt into deployed software.",
+      publisher: { "@id": determinantOrgId },
     },
     {
       "@type": "WebSite",

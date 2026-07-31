@@ -1,0 +1,25 @@
+# Determinant Systems
+
+> Determinant Systems is an enterprise AI engineering firm that designs and
+> builds governed agents, retrieval systems, enterprise search, knowledge
+> graphs, workflow automation, and custom AI applications for organizations
+> where auditability is a purchasing requirement.
+
+Determinant Systems is the company behind LACE (https://laceplatform.com), the
+AI platform for the governed enterprise.
+
+## Company
+
+- [Home](https://determinantsystems.com/): Enterprise AI consulting and engineering.
+- [About](https://determinantsystems.com/about): Who we are and how we work.
+- [Services](https://determinantsystems.com/services): Engagement types and engineering practice areas.
+- [Contact](https://determinantsystems.com/contact): Reach the team.
+
+## Product
+
+- [LACE](https://laceplatform.com): The AI platform for the governed enterprise — permissions-aware enterprise search, an evidence-locked bitemporal knowledge graph, policy-governed AI agents across every channel, and an app builder. Deploys to managed cloud, private VPC, on-premises, or fully air-gapped environments with no external AI calls.
+- [LACE documentation](https://laceplatform.com/docs): Platform and `lace-app-sdk` developer documentation.
+
+## Optional
+
+- [Spanish homepage](https://determinantsystems.com/es/): Sitio en español.

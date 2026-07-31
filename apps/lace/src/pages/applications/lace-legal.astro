@@ -1,0 +1,113 @@
+---
+import BaseLayout from "@determinant/site-kit/layouts/BaseLayout.astro";
+import LaceOfferingShell from "@determinant/site-kit/components/lace/LaceOfferingShell.astro";
+import { createLaceApplicationJsonLd, laceSite } from "../../site.config";
+
+const content = {
+  kicker: "Applications · LACE Legal",
+  title: "Contract intelligence with the receipts attached.",
+  accent: "with the receipts attached.",
+  lead:
+    "LACE Legal tracks obligations, renewal and notice-period deadlines, and conflicts across document versions — with every extracted term linked to the clause it came from. Point-in-time queries answer what the organization knew, and when, for investigations and litigation holds.",
+  points: [
+    {
+      title: "Obligation tracking",
+      detail:
+        "Commitments, deliverables, and covenants extracted from executed agreements and kept as structured obligations with owners and dates — not as highlights buried in a PDF.",
+    },
+    {
+      title: "Renewal and notice-period surveillance",
+      detail:
+        "Auto-renewal dates and notice windows are computed from the governing language and surfaced before the window closes, so evergreen terms do not renew by inattention.",
+    },
+    {
+      title: "Version conflict detection",
+      detail:
+        "When an amendment, side letter, or superseding master agreement contradicts an earlier term, the conflict is flagged with both sources side by side rather than silently overwritten.",
+    },
+    {
+      title: "Clause-level citations",
+      detail:
+        "Every extracted term links back to the specific clause, document version, and page it came from. Review means checking a citation, not re-reading the contract to see whether the model was right.",
+    },
+    {
+      title: "Point-in-time queries",
+      detail:
+        "Ask what a given obligation looked like on a specific date. The bitemporal graph separates when a fact was true from when the organization recorded it — the distinction discovery and investigations turn on.",
+    },
+    {
+      title: "Review workflows",
+      detail:
+        "Extractions route to counsel for confirmation before they become relied-upon facts. Approvals, rejections, and edits are all part of the record.",
+    },
+  ],
+  practice:
+    "A vendor asserts a renewal took effect. LACE Legal returns the governing clause, the amendment that changed the notice period, the date each version was executed, and what the contract record showed on the day notice was due — every element citing the document and page it came from.",
+  deepTitle: "Built so the extraction is defensible.",
+  deepAccent: "is defensible.",
+  deep: [
+    {
+      title: "Evidence-locked, not summarized",
+      detail:
+        "An extracted term is stored with a pointer to its source span. If the source document is superseded or corrected, dependent facts are flagged rather than left standing on a citation that no longer says what it did.",
+    },
+    {
+      title: "Bitemporal by default",
+      detail:
+        "Facts carry both valid time and transaction time. That is what makes 'what did we know and when' answerable years later, and what keeps a retroactive correction from quietly rewriting history.",
+    },
+    {
+      title: "Permissions that respect the matter",
+      detail:
+        "Retrieval is permissions-aware at query time, so matter-level walls and litigation holds are enforced when a document is reached — including for agents drafting on a lawyer's behalf.",
+    },
+  ],
+  related: [
+    { href: "/applications/lace-gov", title: "LACE-GOV", line: "Standards inside the boundary." },
+    { href: "/applications/lace-finance", title: "LACE Finance", line: "Every figure traced." },
+    { href: "/platform/enterprise-search", title: "Enterprise Search", line: "Cited answers, one bar." },
+  ],
+  ctaTitle: "Put the contract record on the record.",
+  ctaAccent: "on the record.",
+  faqs: [
+    {
+      q: "How does LACE Legal avoid hallucinated contract terms?",
+      a: "Extractions are evidence-locked: each term stores a pointer to the exact clause, document version, and location it came from, and the citation is shown with the answer. Terms route through review before they are treated as relied-upon facts, and if the source document is superseded, dependent facts are flagged.",
+    },
+    {
+      q: "What is a point-in-time contract query?",
+      a: "It is a query that answers what the contract record showed on a specific past date, rather than what it shows today. LACE stores facts bitemporally — separating when something was true from when it was recorded — so retroactive corrections do not erase what the organization actually knew at the time.",
+    },
+    {
+      q: "Can LACE Legal detect conflicts between contract versions?",
+      a: "Yes. Amendments, side letters, and superseding agreements are resolved against the base agreement, and contradictory terms are surfaced as explicit conflicts with both sources shown, instead of the later document silently overwriting the earlier one.",
+    },
+    {
+      q: "How are matter-level confidentiality walls and litigation holds enforced?",
+      a: "Access is evaluated at retrieval time against the requesting identity, so a document outside a person's permissions is never reached, summarized, or cited. The same enforcement applies to agents acting on a user's behalf, and every access is logged.",
+    },
+  ],
+};
+
+const pageDescription =
+  "LACE Legal delivers contract intelligence with clause-level citations: obligation tracking, renewal and notice-period surveillance, version conflict detection, and point-in-time queries for investigations and litigation holds.";
+---
+
+<BaseLayout
+  title={`LACE Legal — Contract Intelligence with Clause-Level Citations | ${laceSite.name}`}
+  description={pageDescription}
+  theme="lace"
+  themeColor="#f6f7f9"
+  lang="en"
+  siteName={laceSite.name}
+  imageAlt="LACE Legal contract intelligence and obligation tracking"
+  jsonLd={createLaceApplicationJsonLd({
+    path: "/applications/lace-legal",
+    name: "LACE Legal",
+    description: pageDescription,
+    audience: "Legal and Compliance",
+    faqs: content.faqs,
+  })}
+>
+  <LaceOfferingShell {...content} />
+</BaseLayout>

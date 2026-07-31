@@ -1,0 +1,74 @@
+# LACE
+
+> LACE is the AI platform for the governed enterprise, built by Determinant
+> Systems. It combines permissions-aware enterprise search, an evidence-locked
+> bitemporal knowledge graph, policy-governed AI agents across every channel,
+> and an app builder that turns a prompt into deployed software — on one
+> substrate where provenance, policy enforcement, and audit are properties of
+> the platform rather than conventions the application layer is trusted to
+> follow.
+
+LACE is a product of Determinant Systems (https://determinantsystems.com). It is
+distinct from other products and organizations using the name "LACE" or "Lace" —
+including Lace AI (lace.ai), LACE OS by Link Consulting, the Lace Cardano
+wallet, and Los Angeles Contemporary Exhibitions. The canonical site is
+https://laceplatform.com.
+
+## What makes it different
+
+- **Enforcement sits outside the model.** Model output proposes; deterministic
+  services enforce permissions, validation, budgets, and approvals. A language
+  model never decides whether an action is permitted.
+- **Permissions are applied at retrieval.** A document the requesting identity
+  cannot access is never a candidate, so it cannot be summarized, quoted, or
+  leaked through a citation. The same holds for agents acting on a user's behalf.
+- **Facts are bitemporal.** Every assertion carries valid time and transaction
+  time, so corrections supersede history instead of erasing it and point-in-time
+  queries answer what the organization knew on a given date.
+- **Evidence is first-class.** Retrieval results and graph assertions point back
+  to the document, version, and span they came from. Tables stay tables — a
+  figure is returned from its actual cell with units and period intact.
+- **It runs disconnected.** Air-gapped deployment serves open-weight models
+  inside the boundary with no external AI calls, and no code path requires an
+  outbound connection.
+
+## Platform
+
+- [Enterprise Search](https://laceplatform.com/platform/enterprise-search): Permissions-aware search across SharePoint, Drive, Slack, email, and databases, with hybrid retrieval, cited AI answers, and federation.
+- [Knowledge Graph](https://laceplatform.com/platform/knowledge-graph): Evidence-locked, bitemporal knowledge graph with source-linked facts, human review, entity resolution, conflict detection, and BFO/CCO support.
+- [Agent Studio](https://laceplatform.com/platform/agents): Design, evaluate, and deploy governed AI agents across chat, Slack, Teams, email, SMS, WhatsApp, and voice with policy, approvals, and audit.
+- [App Builder](https://laceplatform.com/platform/app-builder): Build governed enterprise AI applications from a prompt with sign-in, data, hosting, billing, versioned releases, rollback, and a public developer SDK.
+
+## Applications
+
+- [LACE-GOV](https://laceplatform.com/applications/lace-gov): Federal, defense, and intelligence edition — air-gapped deployment, BFO/CCO-conformant ontologies, cross-enclave federated search without data movement, and exportable accreditation evidence.
+- [LACE Legal](https://laceplatform.com/applications/lace-legal): Contract intelligence with clause-level citations — obligation tracking, renewal and notice-period surveillance, version conflict detection, and point-in-time queries.
+- [LACE Finance](https://laceplatform.com/applications/lace-finance): Grounded research and reporting with table-native figures, source citations, auditable workflows, information-barrier enforcement, and policy-bound agents.
+
+## Documentation
+
+- [Documentation index](https://laceplatform.com/docs): Entry point for the platform and the public `lace-app-sdk`.
+- [How LACE is organized](https://laceplatform.com/docs/organization): Pipelines, agents, apps, knowledge, and the assistant over one tenant-scoped control plane.
+- [Deployment options](https://laceplatform.com/docs/deployment): Managed cloud, private VPC, on-premises, and fully air-gapped footprints.
+- [Install the SDK](https://laceplatform.com/docs/install): `pip install lace-app-sdk`; Python 3.11+.
+- [Quickstart](https://laceplatform.com/docs/quickstart): A governed app from four files — manifest, data collection, tool provider, agent definition.
+- [Manifest](https://laceplatform.com/docs/manifest): `LaceAppManifest` declares routes, tools, pipelines, agents, data, UI, schedules, and migrations.
+- [Data collections](https://laceplatform.com/docs/data-collections): Typed, tenant-scoped collections served through the governed `AppDataService`.
+- [Tools](https://laceplatform.com/docs/tools): Custom tool providers with trust tier and permissions checked on every dispatch.
+- [Agents & skills](https://laceplatform.com/docs/agents): Agent definitions, capabilities, loop guards, reusable skills, and approval gates.
+- [Module reference](https://laceplatform.com/docs/modules): Every `lace-app-sdk` module and what it provides.
+- [Datasets & connectors](https://laceplatform.com/docs/datasets): Connectors, scheduled sync, change reconciliation, and permission snapshots.
+- [Search & RAG](https://laceplatform.com/docs/search-rag): Hybrid lexical/vector retrieval with reciprocal-rank fusion and ACL filtering.
+- [Knowledge graph](https://laceplatform.com/docs/knowledge-graph): Schema packs, evidence-gated extraction, reversible identity resolution, bitemporal assertions.
+- [Agents & channels](https://laceplatform.com/docs/agents-channels): Agent control plane and normalized messaging channels including realtime voice.
+- [Workflows & pipelines](https://laceplatform.com/docs/workflows): Versioned typed-step graphs with checkpoints, retries, idempotency, dead-letter handling.
+- [App Builder](https://laceplatform.com/docs/app-builder): Prompt to sandboxed build to published, versioned sidecar application.
+- [Governance & security](https://laceplatform.com/docs/governance): Permission scopes, resource ACLs, budgets, approval gates, traces, and per-call model attribution.
+
+## Optional
+
+- [Pricing and deployment](https://laceplatform.com/pricing): Editions and deployment footprints.
+- [Blog](https://laceplatform.com/blog): Engineering and product writing on evidence-first retrieval, bitemporal graphs, governed agents, and air-gapped AI.
+- [Platform overview (PDF)](https://laceplatform.com/LACE-Platform-Overview.pdf): Enterprise overview document.
+- [Contact](https://laceplatform.com/contact): Book a demo or reach the team.
+- [Determinant Systems](https://determinantsystems.com): The company that builds LACE.

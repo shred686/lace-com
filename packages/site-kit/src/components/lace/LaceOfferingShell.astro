@@ -80,13 +80,19 @@ const accentize = (text: string, word?: string) =>
   </section>
 
   <!-- ── Demo ─────────────────────────────────────────────────────── -->
-  <section class="lp-section-tight">
-    <div class="lp-wrap">
-      <div class="lp-off-demo" data-r data-reveal-delay="120">
-        <slot />
-      </div>
-    </div>
-  </section>
+  <!-- Optional: the /applications edition pages reuse this shell without a
+       demo panel, and an empty box would leave a gap under the hero. -->
+  {
+    Astro.slots.has("default") && (
+      <section class="lp-section-tight">
+        <div class="lp-wrap">
+          <div class="lp-off-demo" data-r data-reveal-delay="120">
+            <slot />
+          </div>
+        </div>
+      </section>
+    )
+  }
 
   <!-- ── Capability points ────────────────────────────────────────── -->
   <section class="lp-section-tight">

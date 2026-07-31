@@ -1,0 +1,37 @@
+---
+import DocsPage from "../../layouts/DocsPage.astro";
+---
+
+<DocsPage slug="datasets">
+  <h1>Datasets &amp; connectors</h1>
+  <p class="lpd-sub">
+    Datasets are tenant-scoped containers over uploads and live connectors, with
+    scheduled sync, change reconciliation, and permission snapshots that flow
+    forward to every query.
+  </p>
+
+  <h2 id="connectors">Supported connectors</h2>
+  <p>
+    SharePoint, Google Drive, OneDrive, Dropbox, Notion, Slack, email, S3,
+    databases, and websites. Each connector reports its own capability manifest,
+    so the platform knows what it can and cannot do — incremental sync, deletes,
+    permission reads — rather than assuming a lowest common denominator.
+  </p>
+
+  <h2 id="permission-snapshots">Permission snapshots</h2>
+  <p>
+    A connector does not only bring content across; it brings the source
+    system's access rules with it. Those snapshots are what let
+    <a href="/docs/search-rag">retrieval</a> filter by source ACLs at query
+    time, so a document a person cannot open in SharePoint is not something an
+    answer can quote to them.
+  </p>
+
+  <h2 id="reconciliation">Change reconciliation</h2>
+  <p>
+    Scheduled syncs reconcile against what was previously indexed rather than
+    re-ingesting wholesale: edits update in place, deletes propagate, and moved
+    documents keep their identity. That stability is what makes citations
+    durable — an evidence pointer taken last quarter still resolves.
+  </p>
+</DocsPage>

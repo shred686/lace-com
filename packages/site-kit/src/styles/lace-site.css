@@ -317,9 +317,9 @@
 /* ── Anchor landing ────────────────────────────────────────────────── */
 
 /* The nav is fixed and ~70px tall, so any in-page anchor (#lp-main from the
-   skip link, /applications#built-on-lace, /docs#install …) would otherwise
-   land its target underneath it. LaceDocsPage already solved this locally;
-   this is the same fix for every other lace surface. */
+   skip link, /applications#built-on-lace, /docs/install#requirements …) would
+   otherwise land its target underneath it. The docs shell already solves this
+   locally; this is the same fix for every other lace surface. */
 :root[data-theme="lace"] {
   --lp-nav-h: 4.4rem;
 }
@@ -848,30 +848,6 @@
   margin-top: 0.55rem;
 }
 
-/* Coming-soon placeholder (customer stories temporarily disabled) */
-.lp-mega-soon {
-  display: block;
-  padding: 1.1rem 1.2rem 1.2rem;
-  border: 1px dashed rgba(var(--lp-green-rgb), 0.35);
-  border-radius: var(--lp-radius-lg);
-  background: rgba(var(--lp-green-rgb), 0.04);
-}
-
-.lp-mega-soon-copy {
-  display: block;
-  margin-top: 0.8rem;
-  font-family: "Space Grotesk", "JetBrains Mono", monospace;
-  font-size: 1rem;
-  font-weight: 600;
-  line-height: 1.25;
-  color: var(--lp-faint);
-}
-
-.lp-nav-acc-soon,
-.lp-footer-soon {
-  color: var(--lp-faint);
-}
-
 .lp-mega-veil {
   position: fixed;
   inset: 0;
@@ -955,8 +931,7 @@
     color: var(--lp-faint);
   }
 
-  .lp-nav-acc-body a,
-  .lp-nav-acc-soon {
+  .lp-nav-acc-body a {
     display: flex;
     align-items: center;
     min-height: 42px;
@@ -968,10 +943,6 @@
     color: var(--lp-ink-soft);
   }
 
-  .lp-nav-acc-soon {
-    font-size: 0.68rem;
-    color: var(--lp-faint);
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1423,8 +1394,7 @@
     grid-column: 1 / -1;
   }
 
-  .lp-footer-grid a,
-  .lp-footer-soon {
+  .lp-footer-grid a {
     overflow-wrap: anywhere;
   }
 

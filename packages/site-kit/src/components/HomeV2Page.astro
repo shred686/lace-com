@@ -2,7 +2,7 @@
 import { Image } from "astro:assets";
 import DeterminantNav from "./determinant/DeterminantNav.astro";
 import DeterminantFooter from "./determinant/DeterminantFooter.astro";
-import whitepaperEnglish from "../assets/docs/LACE_Enterprise_Overview_v3.pdf";
+import { whitepaperEnglishUrl as whitepaperEnglish } from "../data/assets";
 import laceScreen1 from "../assets/images/lace-screen1.png";
 import laceScreen2 from "../assets/images/lace-screen2.png";
 import laceScreen3 from "../assets/images/lace-screen3.png";
@@ -317,7 +317,9 @@ const lace = {
   ],
   deployChips: ["Cloud", "Private Cloud", "On-Premise", "Air-Gapped"],
   ctaLabel: "View LACE",
-  ctaHref: "https://www.laceplatform.com/",
+  // Apex, not www: laceplatform.com canonicalises to the apex, and pointing an
+  // inbound link at the other host splits the signal this link exists to give.
+  ctaHref: "https://laceplatform.com/",
 };
 
 const engagement = {

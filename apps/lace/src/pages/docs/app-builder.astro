@@ -1,0 +1,44 @@
+---
+import DocsPage from "../../layouts/DocsPage.astro";
+---
+
+<DocsPage slug="app-builder">
+  <h1>App Builder</h1>
+  <p class="lpd-sub">
+    Describe an application and the builder plans it, constructs it in a
+    sandbox, validates it through proof lanes, and publishes it as an isolated
+    sidecar with versioned releases and one-click rollback.
+  </p>
+
+  <h2 id="lifecycle">The build lifecycle</h2>
+  <p>
+    Intent → architect → scaffold → validate → proof lanes → seal → publish.
+    Generated apps go through exactly the same lifecycle as hand-written ones,
+    which is the point: there is no faster, less-governed path that exists
+    because the code came from a model.
+  </p>
+
+  <h2 id="sdk-boundary">Generated code targets the SDK</h2>
+  <p>
+    The builder emits code against the public
+    <a href="/docs/install"><code class="lp-inline-code">lace-app-sdk</code></a>,
+    never core internals. That boundary is what makes generated software
+    reviewable: identity, data access, policy, limits, and audit are platform
+    capabilities the generated code calls, not concerns it re-implements and
+    could get wrong.
+  </p>
+
+  <h2 id="isolation">Isolation and rollback</h2>
+  <p>
+    Each published app runs as an isolated sidecar with its own release
+    versions. Rollback is one step and does not require a rebuild, so shipping a
+    bad version is a recoverable event rather than an incident.
+  </p>
+
+  <p>
+    See <a href="/platform/app-builder">App Builder</a> for the product surface,
+    or the blog post on
+    <a href="/blog/enterprise-vibe-coding">enterprise vibe coding</a> for the
+    reasoning behind the boundary.
+  </p>
+</DocsPage>

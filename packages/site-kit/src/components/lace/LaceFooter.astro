@@ -3,7 +3,7 @@
  * Site footer for laceplatform.com (light theme).
  * Contact details intentionally mirror apps/lace/src/site.config.ts.
  */
-import whitepaper from "../../assets/docs/LACE_Enterprise_Overview_v3.pdf";
+import { whitepaperEnglishUrl as whitepaper } from "../../data/assets";
 
 const year = new Date().getFullYear();
 ---
@@ -40,9 +40,11 @@ const year = new Date().getFullYear();
         <h2>Product</h2>
         <ul>
           <li><a href="/applications">Applications</a></li>
-          {/* Customer stories temporarily disabled — route off until real stories are cleared. */}
+          {/* Customer stories temporarily disabled — route off until real stories
+              are cleared. Listed as nothing rather than as "coming soon": an
+              unfulfilled promise in the nav reads as an immature site to both
+              visitors and quality classifiers. Restore the link, not a pill. */}
           {/* <li><a href="/customers">Customer stories</a></li> */}
-          <li><span class="lp-footer-soon">Customer stories — coming soon</span></li>
           <li><a href="/blog">Blog</a></li>
           <li>
             <a href={whitepaper} target="_blank" rel="noopener noreferrer">
@@ -57,9 +59,9 @@ const year = new Date().getFullYear();
         <h2>Developers</h2>
         <ul>
           <li><a href="/docs">Documentation</a></li>
-          <li><a href="/docs#install">lace-app-sdk</a></li>
-          <li><a href="/docs#quickstart">Quickstart</a></li>
-          <li><a href="/docs#modules">Module reference</a></li>
+          <li><a href="/docs/install">lace-app-sdk</a></li>
+          <li><a href="/docs/quickstart">Quickstart</a></li>
+          <li><a href="/docs/modules">Module reference</a></li>
         </ul>
       </div>
 

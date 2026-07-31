@@ -1,0 +1,50 @@
+---
+import DocsPage from "../../layouts/DocsPage.astro";
+---
+
+<DocsPage slug="deployment">
+  <h1>Deployment options</h1>
+  <p class="lpd-sub">
+    LACE runs in four footprints. The governance substrate — permissions,
+    evidence, budgets, approvals, audit — is identical in every one of them.
+  </p>
+
+  <h2 id="footprints">Footprints</h2>
+  <div class="lpd-table-wrap">
+    <table>
+      <thead>
+        <tr><th>Footprint</th><th>Where it runs</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Managed cloud</strong></td><td>Our cloud</td><td>Fastest start; usage-based AI budgets with hard caps.</td></tr>
+        <tr><td><strong>Private cloud</strong></td><td>Your VPC</td><td>SSO/OIDC, custom connectors, BYO models.</td></tr>
+        <tr><td><strong>On-premises</strong></td><td>Your data center</td><td>Full platform, your hardware and boundary.</td></tr>
+        <tr><td><strong>Air-gapped</strong></td><td>Disconnected enclave</td><td>No external AI calls; accreditation evidence exportable.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="air-gapped">Air-gapped deployment</h2>
+  <p>
+    Air-gapped is not a configuration flag over a cloud product. Model serving,
+    embedding, indexing, and orchestration all run inside the boundary on
+    open-weight models you host, so no code path requires an outbound
+    connection to function — including model and platform updates, which are
+    applied from media you control.
+  </p>
+  <p>
+    Programs with an accreditation requirement should also read
+    <a href="/applications/lace-gov">LACE-GOV</a>, which packages the platform
+    with BFO/CCO schema packs, cross-enclave federation, and exportable
+    accreditation evidence.
+  </p>
+
+  <h2 id="models">Model choice</h2>
+  <p>
+    Every footprint supports bringing your own models. Managed cloud can use
+    hosted frontier models under budget caps; private cloud, on-premises, and
+    air-gapped deployments serve open-weight models on your hardware. Because
+    enforcement lives outside the model, changing the model does not change what
+    the platform will let it do.
+  </p>
+</DocsPage>

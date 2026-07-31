@@ -62,6 +62,114 @@ export const laceJsonLd = {
   ]
 };
 
+/**
+ * Documentation routes under /docs/*. Each page is a TechArticle in its own
+ * right, breadcrumbed under Documentation, so the long-tail technical queries
+ * these pages target have a distinct entity to match rather than one shared
+ * anchor page.
+ */
+export const createLaceDocsJsonLd = ({
+  path,
+  name,
+  description,
+}: {
+  path: string;
+  name: string;
+  description: string;
+}) => {
+  const url = `${laceSite.url}${path.endsWith("/") ? path : `${path}/`}`;
+  const isIndex = path === "/docs";
+  return [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: `${laceSite.url}/` },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Documentation",
+          item: `${laceSite.url}/docs/`,
+        },
+        ...(isIndex
+          ? []
+          : [{ "@type": "ListItem", position: 3, name, item: url }]),
+      ],
+    },
+    {
+      "@type": "TechArticle",
+      "@id": `${url}#article`,
+      headline: name,
+      name,
+      description,
+      url,
+      inLanguage: "en",
+      isPartOf: { "@id": `${laceSite.url}/#website` },
+      about: { "@id": `${laceSite.url}/#lace` },
+      publisher: { "@id": determinantOrgId },
+      proficiencyLevel: "Expert",
+    },
+  ];
+};
+
+/**
+ * Industry edition pages under /applications/*. Same shape as an offering page
+ * but breadcrumbed under Applications and typed with the vertical it serves, so
+ * each edition is an addressable entity rather than a fragment of one page.
+ */
+export const createLaceApplicationJsonLd = ({
+  path,
+  name,
+  description,
+  audience,
+  faqs = [],
+}: {
+  path: string;
+  name: string;
+  description: string;
+  audience: string;
+  faqs?: Array<{ q: string; a: string }>;
+}) => {
+  const url = `${laceSite.url}${path.endsWith("/") ? path : `${path}/`}`;
+  return [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: `${laceSite.url}/` },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Applications",
+          item: `${laceSite.url}/applications/`,
+        },
+        { "@type": "ListItem", position: 3, name, item: url },
+      ],
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": `${url}#software`,
+      name,
+      description,
+      url,
+      applicationCategory: "BusinessApplication",
+      applicationSubCategory: audience,
+      operatingSystem: "Web",
+      isPartOf: { "@id": `${laceSite.url}/#lace` },
+      publisher: { "@id": determinantOrgId },
+      audience: { "@type": "Audience", audienceType: audience },
+    },
+    ...(faqs.length
+      ? [{
+          "@type": "FAQPage",
+          mainEntity: faqs.map((faq) => ({
+            "@type": "Question",
+            name: faq.q,
+            acceptedAnswer: { "@type": "Answer", text: faq.a },
+          })),
+        }]
+      : []),
+  ];
+};
+
 export const createLaceOfferingJsonLd = ({
   path,
   name,

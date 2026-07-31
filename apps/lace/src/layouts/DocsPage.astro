@@ -1,0 +1,47 @@
+---
+/**
+ * One docs route. Pulls its title and description from the shared docs nav
+ * model so the sidebar, the <title>, the meta description, and the structured
+ * data can never drift apart — a page is defined once, in `laceDocsNav.ts`.
+ */
+import BaseLayout from "@determinant/site-kit/layouts/BaseLayout.astro";
+import LaceDocsShell from "@determinant/site-kit/components/lace/LaceDocsShell.astro";
+import { docsPageBySlug, docsHref } from "@determinant/site-kit/data/laceDocsNav";
+import { createLaceDocsJsonLd, laceSite } from "../site.config";
+
+interface Props {
+  slug: string;
+  /** Crumb above the heading; defaults to the page's sidebar group. */
+  crumb?: string;
+}
+
+const { slug, crumb } = Astro.props;
+
+const page = docsPageBySlug(slug);
+if (!page) {
+  throw new Error(
+    `No entry in laceDocsNav for docs slug "${slug}". Add it there before adding the route.`,
+  );
+}
+
+const path = docsHref(slug);
+---
+
+<BaseLayout
+  title={`${page.title} | ${laceSite.name}`}
+  description={page.description}
+  theme="lace"
+  themeColor="#fdfdfe"
+  lang="en"
+  siteName={laceSite.name}
+  imageAlt={`LACE documentation — ${page.label}`}
+  jsonLd={createLaceDocsJsonLd({
+    path,
+    name: page.title,
+    description: page.description,
+  })}
+>
+  <LaceDocsShell slug={slug} crumb={crumb}>
+    <slot />
+  </LaceDocsShell>
+</BaseLayout>

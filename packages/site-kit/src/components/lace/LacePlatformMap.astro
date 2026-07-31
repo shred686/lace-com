@@ -2,9 +2,9 @@
 /**
  * Platform map — the orienting overview of LACE, drawn rather than written.
  *
- * The whole product in one schematic: six kinds of company material converge
+ * The whole product in one schematic: seven kinds of company material converge
  * into a single governed runtime (the green rule), and four surfaces fan back
- * out of it. Six in, one line, four out. It sits between the editorial
+ * out of it. Seven in, one line, four out. It sits between the editorial
  * statement and cell 01 so a first-time visitor knows what LACE *is* before
  * the page starts arguing offering by offering.
  *
@@ -13,7 +13,50 @@
  * authored scroll moment — they stop entirely under reduced motion.
  */
 
-const sources = ["Documents", "Messages", "Email", "Spreadsheets", "Databases", "Tickets"];
+/* Each source carries a hairline glyph drawn in the same hand as the rest of
+   the sheet: 1px strokes, no fill, no rounding beyond what the object needs.
+   The glyphs are ink, never green — nothing on this tier has been checked yet.
+   They exist so the seven kinds of material are legible at a glance, before the
+   label is read. */
+const sources = [
+  {
+    name: "Documents",
+    d: ["M4.75 2.75h5.75L14.5 6.75v10.5H4.75Z", "M10.5 2.75v4h4", "M7.25 10.75h4.75", "M7.25 13.5h3"],
+  },
+  {
+    name: "Messages",
+    d: ["M2.75 4.25h14.5V13H8.5L5 16v-3H2.75Z", "M6 7.5h8", "M6 10h5"],
+  },
+  {
+    name: "Email",
+    d: ["M2.75 5h14.5v10H2.75Z", "M2.75 5.75 10 11l7.25-5.25"],
+  },
+  {
+    name: "Spreadsheets",
+    d: ["M3 3.75h14v12.5H3Z", "M3 7.75h14", "M3 12h14", "M7.5 3.75v12.5"],
+  },
+  {
+    name: "Databases",
+    d: [
+      "M10 2.75c3.45 0 6.25 1.18 6.25 2.63S13.45 8 10 8 3.75 6.82 3.75 5.38 6.55 2.75 10 2.75Z",
+      "M3.75 5.38v9.25c0 1.45 2.8 2.62 6.25 2.62s6.25-1.17 6.25-2.62V5.38",
+      "M3.75 10c0 1.45 2.8 2.63 6.25 2.63S16.25 11.45 16.25 10",
+    ],
+  },
+  {
+    name: "Tickets",
+    d: [
+      "M3 5h14v3.75a1.25 1.25 0 0 0 0 2.5V15H3v-3.75a1.25 1.25 0 0 0 0-2.5Z",
+      "M12.5 6.25v1.5",
+      "M12.5 9.25v1.5",
+      "M12.5 12.25v1.5",
+    ],
+  },
+  {
+    name: "APIs",
+    d: ["M7.75 6.75 3.75 10l4 3.25", "M12.25 6.75 16.25 10l-4 3.25", "M11.4 5.5 8.6 14.5"],
+  },
+];
 
 /* Terminal nodes of the drawing. Indices match the cell kickers below, so the
    map doubles as a legend for the rest of the page. */
@@ -25,11 +68,20 @@ const surfaces = [
 ];
 
 /* Fan geometry, in the SVGs' 1000-unit width. Origins sit under the centre of
-   each source column (1000/6) and land on the centre of each surface column
-   (1000/4), so every line begins and ends on a label, not near one. */
+   each source column (1000/7) and land on the centre of each surface column
+   (1000/4), so every line begins and ends on a label, not near one.
+
+   The two fans get different viewBox heights on purpose. Both stretch with
+   preserveAspectRatio="none", so a viewBox proportioned like the box it will
+   actually occupy is what keeps the curves from flattening: the inbound fan
+   is drawn inside the narrow funnel column, the outbound one runs rail to
+   rail, and 260 vs 200 is what makes both land near 1:1 scaling on a desktop
+   viewport. */
 const inX = sources.map((_, i) => Math.round((1000 / sources.length) * (i + 0.5)));
 const outX = surfaces.map((_, i) => Math.round((1000 / surfaces.length) * (i + 0.5)));
 const GATE = 500;
+const IN_H = 260;
+const OUT_H = 200;
 ---
 
 <section class="lp2-map">
@@ -44,32 +96,43 @@ const GATE = 500;
   </div>
 
   <div class="lp2-map-fig" data-r data-reveal-delay="140">
-    <!-- IN: the material -->
-    <p class="lp2-map-layer">Your systems</p>
-    <ul class="lp2-map-sources">
-      {sources.map((source) => (
-        <li>{source}<i aria-hidden="true"></i></li>
-      ))}
-    </ul>
+    <!-- IN: the material. The intake tier and its fan share one narrow column
+         so the drawing reads as a funnel — the material is gathered in, not
+         spread across the sheet — and so the wires can start on the exact
+         centre of a label at every width without a second set of coordinates. -->
+    <div class="lp2-map-intake">
+      <p class="lp2-map-layer">Your systems</p>
+      <ul class="lp2-map-sources">
+        {sources.map((source) => (
+          <li>
+            <svg class="lp2-map-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+              {source.d.map((d) => <path d={d} />)}
+            </svg>
+            <span>{source.name}</span>
+            <i aria-hidden="true"></i>
+          </li>
+        ))}
+      </ul>
 
-    <!-- six converge to one -->
-    <svg class="lp2-map-flow" viewBox="0 0 1000 96" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-      {inX.map((x) => (
-        <>
-          <path class="lp2-map-wire" d={`M${x} 0 C${x} 52 ${GATE} 44 ${GATE} 96`} />
-          <path class="lp2-map-pulse" pathLength="100" d={`M${x} 0 C${x} 52 ${GATE} 44 ${GATE} 96`} />
-        </>
-      ))}
-    </svg>
+      <!-- seven converge to one -->
+      <svg class="lp2-map-flow" viewBox={`0 0 1000 ${IN_H}`} preserveAspectRatio="none" aria-hidden="true" focusable="false">
+        {inX.map((x) => (
+          <>
+            <path class="lp2-map-wire" d={`M${x} 0 C${x} 140 ${GATE} 120 ${GATE} ${IN_H}`} />
+            <path class="lp2-map-pulse" pathLength="100" d={`M${x} 0 C${x} 140 ${GATE} 120 ${GATE} ${IN_H}`} />
+          </>
+        ))}
+      </svg>
+    </div>
 
     <!-- THE LINE. The label plate straddles the rule the way a label straddles
-         a dimension line. The six wires land on the junction dot at its top
+         a dimension line. The seven wires land on the junction dot at its top
          edge; the four leave from the exit tick below. Nothing routes around. -->
     <div class="lp2-map-gate">
       <div class="lp2-map-rule">
         <i class="lp2-map-rule-bar"></i>
         <span class="lp2-map-plate">
-          <span class="lp2-map-rule-label">The governed runtime</span>
+          <span class="lp2-map-rule-label">LACE</span>
         </span>
         <i class="lp2-map-rule-bar"></i>
       </div>
@@ -77,11 +140,11 @@ const GATE = 500;
     </div>
 
     <!-- one fans to four -->
-    <svg class="lp2-map-flow lp2-map-flow-out" viewBox="0 0 1000 96" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+    <svg class="lp2-map-flow lp2-map-flow-out" viewBox={`0 0 1000 ${OUT_H}`} preserveAspectRatio="none" aria-hidden="true" focusable="false">
       {outX.map((x) => (
         <>
-          <path class="lp2-map-wire" d={`M${GATE} 0 C${GATE} 52 ${x} 44 ${x} 96`} />
-          <path class="lp2-map-pulse" pathLength="100" d={`M${GATE} 0 C${GATE} 52 ${x} 44 ${x} 96`} />
+          <path class="lp2-map-wire" d={`M${GATE} 0 C${GATE} 108 ${x} 92 ${x} ${OUT_H}`} />
+          <path class="lp2-map-pulse" pathLength="100" d={`M${GATE} 0 C${GATE} 108 ${x} 92 ${x} ${OUT_H}`} />
         </>
       ))}
     </svg>
@@ -116,6 +179,15 @@ const GATE = 500;
     /* What has been through the line is drawn in verified green: the
        outbound wires, and on a phone the rail they collapse into. */
     --lp2-map-out-c: rgba(var(--lp-green-rgb), 0.32);
+    /* Width of the intake column. The seven sources and their fan are gathered
+       into it; the rule and the four surfaces below run the full frame. The
+       drawing is therefore an hourglass — narrow in, one line, wide out — and
+       that shape is the argument, so it is the one measure worth naming.
+
+       An absolute inset rather than a percentage: below the cap it behaves
+       like a drawing margin, holding a constant edge on every frame instead of
+       tightening the seven columns until "Spreadsheets" no longer fits one. */
+    --lp2-map-intake: min(880px, 100% - 5rem);
     padding: 0;
   }
 
@@ -124,7 +196,7 @@ const GATE = 500;
     flex-direction: column;
     align-items: center;
     gap: 1.1rem;
-    padding: clamp(3.2rem, 6vw, 5.2rem) clamp(1.2rem, 3.5vw, 3.2rem) clamp(2.2rem, 4vw, 3rem);
+    padding: clamp(3.2rem, 6vw, 5.2rem) clamp(1.2rem, 3.5vw, 3.2rem) clamp(2rem, 3.4vw, 2.6rem);
     text-align: center;
   }
 
@@ -143,11 +215,20 @@ const GATE = 500;
     text-wrap: balance;
   }
 
+  /* ── The drawing ──────────────────────────────────────────────────
+     The intake tier and its fan share one narrow column, centred on the same
+     axis as the gate below, so the seven wires can be authored once against a
+     1000-unit box and still land on their labels at any width. */
+  .lp2-map-intake {
+    width: var(--lp2-map-intake);
+    margin-inline: auto;
+  }
+
   /* ── Layer labels ─────────────────────────────────────────────── */
   .lp2-map-layer {
-    margin: 0 0 1rem;
+    margin: 0 0 1.4rem;
     font-family: "JetBrains Mono", monospace;
-    font-size: 0.58rem;
+    font-size: 0.6rem;
     font-weight: 500;
     letter-spacing: 0.22em;
     text-transform: uppercase;
@@ -158,7 +239,7 @@ const GATE = 500;
   /* ── In: the material ─────────────────────────────────────────── */
   .lp2-map-sources {
     display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-template-columns: repeat(7, minmax(0, 1fr));
     margin: 0;
     padding: 0;
     list-style: none;
@@ -168,28 +249,47 @@ const GATE = 500;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.6rem;
     padding-inline: 0.25rem;
     font-family: "JetBrains Mono", monospace;
-    font-size: 0.58rem;
-    letter-spacing: 0.08em;
+    font-size: 0.65rem;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
     text-align: center;
-    color: var(--lp-muted);
+    color: var(--lp-ink-soft);
+  }
+
+  /* Drawn, not filled — the same hairline hand as the wires below them, one
+     step lighter than the word so the label leads and the glyph confirms. */
+  .lp2-map-icon {
+    display: block;
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: var(--lp-muted);
+    stroke-width: 1;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
   }
 
   /* The tick marks where each wire leaves its label — a surveyed origin. */
   .lp2-map-sources i {
     width: 1px;
-    height: 7px;
+    height: 10px;
+    margin-top: 0.15rem;
     background: rgba(var(--lp-green-rgb), 0.5);
   }
 
-  /* ── The wires ────────────────────────────────────────────────── */
+  /* ── The wires ────────────────────────────────────────────────────
+     The travel is the point, so it is measured against the viewport rather
+     than the frame: on a deep screen the wires get long vertical runs and the
+     whole schematic stands about a screen tall, and on a shallow one they
+     give the space back instead of pushing the surfaces out of sight. */
   .lp2-map-flow {
     display: block;
     width: 100%;
-    height: clamp(66px, 7.5vw, 100px);
+    height: clamp(120px, 19svh, 230px);
     overflow: visible;
   }
 
@@ -206,9 +306,9 @@ const GATE = 500;
     stroke: var(--lp2-map-out-c);
   }
 
-  /* One pass, once. Every wire is normalised to pathLength 100, so the six
+  /* One pass, once. Every wire is normalised to pathLength 100, so the seven
      inbound pulses travel different distances in the same time and arrive at
-     the runtime together — a single flow, not six independent ones. At rest
+     the runtime together — a single flow, not seven independent ones. At rest
      the dash sits off the start of its path, which is why no fill-mode is
      needed: before the delay and after the run, there is nothing to see. */
   .lp2-map-pulse {
@@ -224,14 +324,16 @@ const GATE = 500;
   }
 
   /* 1 — the material runs down into the line, starting as the figure's own
-     reveal settles. */
+     reveal settles. The run is timed to the longer wires: at the old 950ms it
+     read as a flick across a taller drawing rather than as material travelling
+     the length of it. */
   .lp2-map-fig.vis .lp2-map-pulse {
-    animation: lp2-map-run 950ms cubic-bezier(0.4, 0, 0.35, 1) 700ms;
+    animation: lp2-map-run 1180ms cubic-bezier(0.4, 0, 0.35, 1) 700ms;
   }
 
   /* 3 — …and out to the four surfaces, a beat after the line has answered. */
   .lp2-map-fig.vis .lp2-map-flow-out .lp2-map-pulse {
-    animation-delay: 2060ms;
+    animation-delay: 2290ms;
   }
 
   @keyframes lp2-map-run {
@@ -243,11 +345,11 @@ const GATE = 500;
   /* 2 — the line takes the delivery: the junction lights, the rule brightens.
      Half a second, once, and it is over. */
   .lp2-map-fig.vis .lp2-map-plate::before {
-    animation: lp2-map-strike 620ms cubic-bezier(0.2, 0.8, 0.3, 1) 1650ms;
+    animation: lp2-map-strike 620ms cubic-bezier(0.2, 0.8, 0.3, 1) 1880ms;
   }
 
   .lp2-map-fig.vis .lp2-map-rule-bar {
-    animation: lp2-map-charge 760ms ease-out 1650ms;
+    animation: lp2-map-charge 760ms ease-out 1880ms;
   }
 
   @keyframes lp2-map-strike {
@@ -261,19 +363,30 @@ const GATE = 500;
     26% { --lp2-bar-a: 1; }
   }
 
-  /* ── The line ─────────────────────────────────────────────────── */
+  /* ── The line ──────────────────────────────────────────────────────
+     Below the rule the four surfaces are reached through an exit tick, which
+     costs a gap plus its own length before the outbound fan begins. Above it
+     the wires simply arrive, so without paying that same distance back as
+     padding the nameplate sits hard against the underside of the inbound fan.
+     One measure drives both sides, so the rule stays centred between the two
+     fans whatever the tick is worth. */
   .lp2-map-gate {
+    --lp2-map-tick-gap: 1rem;
+    --lp2-map-tick-len: 9px;
+    --lp2-map-exit-run: calc(var(--lp2-map-tick-gap) + var(--lp2-map-tick-len));
+    padding-top: var(--lp2-map-exit-run);
     padding-inline: clamp(1.2rem, 3.5vw, 3.2rem);
   }
 
   .lp2-map-rule {
     display: flex;
     align-items: center;
-    gap: clamp(0.7rem, 1.6vw, 1.2rem);
+    gap: clamp(1rem, 2.6vw, 2rem);
   }
 
-  /* The label plate straddles the rule; the six wires land on the junction
-     dot at its top edge. */
+  /* The label plate straddles the rule; the seven wires land on the junction
+     dot, which is pulled back up through the gate's padding so it stays on
+     the exact point the wires terminate rather than on the plate. */
   .lp2-map-plate {
     position: relative;
     display: block;
@@ -282,7 +395,7 @@ const GATE = 500;
   .lp2-map-plate::before {
     content: "";
     position: absolute;
-    top: -2px;
+    top: calc(-1 * var(--lp2-map-exit-run) - 2px);
     left: 50%;
     width: 4px;
     height: 4px;
@@ -295,8 +408,8 @@ const GATE = 500;
   .lp2-map-exit {
     display: block;
     width: 1px;
-    height: 9px;
-    margin: 0.75rem auto 0;
+    height: var(--lp2-map-tick-len);
+    margin: var(--lp2-map-tick-gap) auto 0;
     background: rgba(var(--lp-green-rgb), 0.5);
   }
 
@@ -313,11 +426,19 @@ const GATE = 500;
     background: linear-gradient(270deg, rgba(var(--lp-green-rgb), 0) 0%, rgba(var(--lp-green-rgb), var(--lp2-bar-a)) 26%, rgba(var(--lp-green-rgb), var(--lp2-bar-a)) 100%);
   }
 
+  /* The nameplate. Not a caption on the rule — the name of the thing the rule
+     *is*, stamped across it the way a plant name is stamped on a line drawing.
+     Space Grotesk rather than mono because LACE is a name, not a value the
+     system reported, and locked wide because the brand is always locked wide.
+     The text-indent matches the tracking so the trailing letter-space does not
+     pull the word off the drawing's centre axis. */
   .lp2-map-rule-label {
-    font-family: "JetBrains Mono", monospace;
-    font-size: clamp(0.6rem, 1vw, 0.68rem);
+    font-family: "Space Grotesk", "Red Hat Display", sans-serif;
+    font-size: clamp(1.15rem, 2vw, 1.6rem);
     font-weight: 500;
-    letter-spacing: 0.2em;
+    line-height: 1;
+    letter-spacing: 0.3em;
+    text-indent: 0.3em;
     text-transform: uppercase;
     white-space: nowrap;
     color: var(--lp-green-deep);
@@ -408,6 +529,13 @@ const GATE = 500;
 
   /* ── Narrow: the honest form is a stack ───────────────────────── */
   @media (max-width: 780px) {
+    /* The funnel only means something while the fans are drawn. Once they
+       collapse to a spine, a narrowed intake column is just a shorter measure
+       for the source list to wrap inside. */
+    .lp2-map {
+      --lp2-map-intake: 100%;
+    }
+
     /* 9px mono is a diagram key on a 27-inch monitor and unreadable in a
        hand. Every label in the drawing steps up to 11px here, and the
        tracking comes in to pay for it. */
@@ -432,10 +560,16 @@ const GATE = 500;
       letter-spacing: 0.06em;
     }
 
+    .lp2-map-icon {
+      width: 16px;
+      height: 16px;
+      flex: none;
+    }
+
+    /* The glyph is the bullet here. A surveyed origin tick as well would be
+       a mark for a wire that no longer exists at this width. */
     .lp2-map-sources i {
-      width: 8px;
-      height: 1px;
-      order: -1;
+      display: none;
     }
 
     /* The fans no longer describe the layout below this width, so they
@@ -450,9 +584,12 @@ const GATE = 500;
       display: none;
     }
 
+    /* The nameplate keeps its size in a hand — it is the one word on the
+       drawing that has to survive the fans collapsing. Only the lockup comes
+       in, so the bars keep a usable run either side of it. */
     .lp2-map-rule-label {
-      font-size: 0.7rem;
-      letter-spacing: 0.16em;
+      letter-spacing: 0.24em;
+      text-indent: 0.24em;
     }
 
     .lp2-map-out {
@@ -493,7 +630,7 @@ const GATE = 500;
 
      So on a phone the schematic is drawn the way a riser diagram is drawn.
      The runtime's exit turns once, becomes a rail down the left margin, and
-     each surface branches off it on its own tick. Six in, one line, four
+     each surface branches off it on its own tick. Seven in, one line, four
      out is still literally true, and the line is now continuous from the
      rule to the last surface rather than stopping in mid-air. Each terminal
      is a ledger row — index, name, then its line underneath — so the four

@@ -13,11 +13,11 @@
   --lp-surface: #ffffff;
   --lp-surface-soft: rgba(255, 255, 255, 0.82);
   --lp-ink: #0e1210;
-  --lp-ink-soft: #2d3748;
-  --lp-muted: #4a5568;
+  --lp-ink-soft: #000000;
+  --lp-muted: #000000;
+  --lp-faint: #656f7c;
   /* 4.76:1 on --lp-bg. The former #7b8794 measured 3.42:1 and failed
      WCAG AA on every mono label, kicker, and readout in the system. */
-  --lp-faint: #656f7c;
   --lp-line: rgba(13, 27, 22, 0.1);
   --lp-line-soft: rgba(13, 27, 22, 0.06);
 

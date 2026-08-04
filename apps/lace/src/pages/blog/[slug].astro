@@ -290,6 +290,16 @@ const seoDescription = post.data.seoDescription ?? post.data.description;
     background: none;
   }
 
+  .lp-post-prose :global(pre[data-language="text"]) {
+    background-color: #f4faf8 !important;
+    border-color: var(--lp-line);
+  }
+
+  .lp-post-prose :global(pre[data-language="text"] code),
+  .lp-post-prose :global(pre[data-language="text"] span) {
+    color: var(--lp-ink) !important;
+  }
+
   .lp-post-prose :global(blockquote) {
     margin: 0 0 1.25rem;
     padding: 0.2rem 0 0.2rem 1.2rem;

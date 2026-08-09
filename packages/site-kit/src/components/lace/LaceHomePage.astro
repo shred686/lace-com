@@ -76,9 +76,12 @@ const editions = [
   <section class="lp2-hero-intro" data-hero-intro>
     <div class="lp2-hero-pin">
       <div class="lp2-intro-copy">
-        <!-- <p class="lp2-eyebrow">The AI platform for the governed enterprise</p> -->
-        <h1 class="lp2-intro-h1" data-intro-h1><span class="lp2-intro-subject">Enterprise AI.</span> <span class="lp2-intro-lace">Governed.</span></h1>
+        <h1 class="lp2-intro-h1" data-intro-h1><span class="lp2-intro-lace">Your knowledge,</span> <span class="lp2-intro-subject">ready to work.</span></h1>
         <p class="lp2-intro-sub" data-intro-sub>LACE turns your company’s knowledge into trusted answers, governed agents, automated workflows, and production-ready applications.</p>
+        <div class="lp2-intro-actions" data-intro-actions>
+          <a href="/contact" class="lp-btn lp-btn-primary">Book a demo</a>
+          <a href={whitepaper} target="_blank" rel="noopener noreferrer" class="lp-btn lp-btn-ghost">Download platform overview <span aria-hidden="true">→</span><span class="lp-sr-only"> (opens in new tab)</span></a>
+        </div>
       </div>
 
       <!-- Product screenshot that rises into view as you scroll -->
@@ -102,9 +105,8 @@ const editions = [
     <!-- ── Editorial ──────────────────────────────────────────────── -->
     <section class="lp2-editorial">
       <p data-r>
-        <strong>Put everything you know to work.</strong>
-        Find any answer. Build real agentic employees. <span class="lp2-ed-green">Automate real work</span>. Build real software. Explore your enterprise's knowledge graph.<br />
-        All on one platform. Run in your cloud.
+        <strong>Put everything you already know to work.</strong><br />
+        <span class="lp2-ed-green">Search that cites</span> its source. A graph where every fact carries a receipt. <span class="lp2-ed-green">Agents governed</span> by policy. <span class="lp2-ed-green">Tools</span> you describe in a sentence. The <span class="lp2-ed-green">software you want</span>, shipped today. All on one platform. Running where you run — cloud, private VPC or fully air-gapped.
       </p>
     </section>
 
@@ -113,27 +115,27 @@ const editions = [
 
     <!-- ── Feature cells ──────────────────────────────────────────── -->
     <section class="lp2-cells">
-      <!-- Full-width: live search -->
-      <div class="lp2-cell lp2-cell-full">
+      <!-- Enterprise Search — two-column 40/60 -->
+      <div class="lp2-cell lp2-cell-split lp2-cell-enterprise">
         <i class="lp2-idx" aria-hidden="true">01</i>
         <div class="lp2-cell-copy" data-r>
-          <p class="lp2-kicker">Enterprise Search</p>
-          <h2>One question. Every system. The exact source.</h2>
-          <p>Permissions-aware search across documents, messages, and databases — every answer opens the passage, cell, or row it came from.</p>
+          <h2 class="lp2-enterprise-kicker">Enterprise Search</h2>
+          <h3>One question. Every system. The exact source.</h3>
+          <p>Ask in plain language across all channels: SharePoint, Drive, OneDrive, Dropbox, Notion, Slack, Teams, email, S3, databases, and your existing indexes. Search with keywords or plain english: every material claim cites the exact passage, table cell, or row it came from — and permissions are enforced at retrieval, so no one sees a result they shouldn't.</p>
+          <a class="lp2-cell-link" href="/platform/enterprise-search">Enterprise Search →</a>
         </div>
         <div class="lp2-cell-demo" data-r data-reveal-delay="120">
           <LaceSearchDemo />
         </div>
-        <a class="lp2-cell-link" href="/platform/enterprise-search">Enterprise Search →</a>
       </div>
 
-      <div class="lp2-row">
+      <div class="lp2-row lp2-row--no-divide">
         <!-- Bitemporal -->
         <div class="lp2-cell">
           <i class="lp2-idx" aria-hidden="true">02</i>
           <div class="lp2-cell-copy" data-r>
-            <p class="lp2-kicker">Knowledge Graph</p>
-            <h2>Your entire business, one living map.</h2>
+            <h2 class="lp2-enterprise-kicker">Knowledge Graph</h2>
+            <h3>Your entire business, one living map.</h3>
             <p>LACE reads your documents and maps what your company actually knows — every customer, contract, and commitment. Ask what you owe, what expires, what changed — and get the answer with the source attached.</p>
           </div>
           <div class="lp2-fragment lp2-kg-shot" data-r data-reveal-delay="100" aria-hidden="true">
@@ -152,8 +154,8 @@ const editions = [
         <div class="lp2-cell">
           <i class="lp2-idx" aria-hidden="true">02</i>
           <div class="lp2-cell-copy" data-r>
-            <p class="lp2-kicker">Knowledge Graph</p>
-            <h2>It catches what everyone missed.</h2>
+            <h2 class="lp2-enterprise-kicker lp2-enterprise-kicker--spacer" aria-hidden="true">Knowledge Graph</h2>
+            <h3>It catches what everyone missed.</h3>
             <p>When two documents disagree on a fee, a date, an obligation — LACE surfaces it with the evidence, before it becomes a dispute. Your experts make the call; the graph remembers it.</p>
           </div>
           <div class="lp2-fragment lp2-win" data-r data-reveal-delay="100" aria-hidden="true">
@@ -179,14 +181,14 @@ const editions = [
         </div>
       </div>
 
-      <div class="lp2-row">
+      <div class="lp2-row lp2-row--no-divide">
         <!-- Approval gates -->
         <div class="lp2-cell">
           <i class="lp2-idx" aria-hidden="true">03</i>
           <div class="lp2-cell-copy" data-r>
-            <p class="lp2-kicker">Agent Studio</p>
-            <h2>Job description in. AI teammate out.</h2>
-            <p>Describe the role in the Agent Studio — renewals watchdog, intake clerk, research analyst. LACE builds it with you, proves it against test scenarios, and puts it to work: on a budget, inside your permissions, with the risky step held for a human.</p>
+            <h2 class="lp2-enterprise-kicker">Agent Studio</h2>
+            <h3>Job description in. AI teammate out.</h3>
+            <p>Describe the role — renewals watchdog, intake clerk, research analyst. LACE builds it with you, proves it against test scenarios, and puts it to work: on a budget, inside your permissions, with the risky step held for a human.</p>
           </div>
           <div class="lp2-fragment lp2-win" data-r data-reveal-delay="100" aria-hidden="true">
             <div class="lp2-win-bar"><i></i><i></i><i></i><span>agents.lace — contracts-intake · v12</span></div>
@@ -210,8 +212,8 @@ const editions = [
         <div class="lp2-cell">
           <i class="lp2-idx" aria-hidden="true">03</i>
           <div class="lp2-cell-copy" data-r>
-            <p class="lp2-kicker">Agent Studio</p>
-            <h2>Everywhere your customers already are.</h2>
+            <h2 class="lp2-enterprise-kicker lp2-enterprise-kicker--spacer" aria-hidden="true">Agent Studio</h2>
+            <h3>Everywhere your customers already are.</h3>
             <p>One agent, every channel — web chat, Slack, Teams, email, SMS, WhatsApp, live voice. It answers from your verified knowledge, and hands off to a human the moment it should.</p>
           </div>
           <div class="lp2-fragment lp2-win" data-r data-reveal-delay="100" aria-hidden="true">

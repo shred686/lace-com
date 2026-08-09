@@ -237,6 +237,30 @@
   .lp2-eyebrow { animation-delay: 140ms; }
   .lp2-intro-h1 { animation-delay: 320ms; }
   .lp2-intro-sub { animation-delay: 560ms; }
+  .lp2-intro-actions { animation-delay: 760ms; }
+
+  .lp2-intro-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.9rem;
+    margin-top: 2rem;
+    animation: lp2-hero-in 980ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  }
+
+  @media (max-width: 620px) {
+    .lp2-intro-actions {
+      flex-direction: column;
+      align-items: stretch;
+      max-width: 20rem;
+      margin-inline: auto;
+    }
+
+    .lp2-intro-actions .lp-btn {
+      justify-content: center;
+      width: 100%;
+    }
+  }
 
   @keyframes lp2-hero-in {
     from {
@@ -255,7 +279,8 @@
     .lp2-eyebrow,
     .lp2-intro-h1,
     .lp2-intro-sub,
-    .lp2-intro-lace {
+    .lp2-intro-lace,
+    .lp2-intro-actions {
       animation: none;
     }
   }
@@ -463,29 +488,26 @@
   }
 
   .lp2-editorial p {
-    max-width: 46ch;
+    max-width: 52ch;
     margin: 0;
     font-family: "Space Grotesk", "Red Hat Display", sans-serif;
-    /* Two ramps, not one: the phone step has to come down faster than 3.4vw
-       does or the statement runs to ten uppercase lines and stops being a
-       held breath. */
-    font-size: clamp(1.28rem, 5.6vw, 1.7rem);
+    font-size: clamp(1.55rem, 5.8vw, 2.05rem);
     font-weight: 400;
     letter-spacing: -0.015em;
     text-transform: uppercase;
-    line-height: 1.18;
+    line-height: 1.12;
     color: var(--lp-faint);
   }
 
   @media (min-width: 621px) {
     .lp2-editorial p {
-      font-size: clamp(1.7rem, 3.4vw, 2.65rem);
-      line-height: 1.15;
+      font-size: clamp(2.05rem, 3.8vw, 2.5rem);
+      line-height: 1.12;
     }
   }
 
   .lp2-editorial strong {
-    display: block;
+    display: inline;
     font-weight: 500;
     color: var(--lp-muted);
   }
@@ -515,6 +537,10 @@
     border-left: 1px solid var(--hair);
   }
 
+  .lp2-row--no-divide > .lp2-cell + .lp2-cell {
+    border-left: 0;
+  }
+
   .lp2-cell {
     position: relative;
     display: flex;
@@ -531,6 +557,60 @@
   .lp2-cell-full {
     align-items: center;
     text-align: center;
+  }
+
+  /* Enterprise Search — two-column 40/60, left-aligned copy */
+  .lp2-cell-split {
+    display: grid;
+    grid-template-columns: 40% 60%;
+    align-items: center;
+    gap: clamp(2rem, 4vw, 3.5rem);
+    text-align: left;
+  }
+
+  .lp2-cell-split .lp2-cell-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+
+  .lp2-cell-split .lp2-cell-demo {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+  }
+
+  .lp2-cell-split .lp2-cell-link {
+    margin-top: 0.6rem;
+    align-self: flex-start;
+  }
+
+  .lp2-cell-copy h2.lp2-enterprise-kicker {
+    margin: 0 0 1.1rem;
+    font-family: "Space Grotesk", "Red Hat Display", sans-serif;
+    font-size: clamp(1.85rem, 3.2vw, 2.85rem);
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -0.015em;
+    text-transform: uppercase;
+    color: var(--lp-green-deep);
+  }
+
+  /* Spacer to keep right-cell h3 aligned with left-cell h3 after the h2 */
+  .lp2-cell-copy h2.lp2-enterprise-kicker--spacer {
+    visibility: hidden;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .lp2-cell-copy h3 {
+    margin: 0 0 0.2rem;
+    font-family: "Space Grotesk", "Red Hat Display", sans-serif;
+    font-size: clamp(0.95rem, 1.6vw, 1.22rem);
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    color: var(--lp-ink-soft);
   }
 
   .lp2-cell-copy h2 {
@@ -1185,7 +1265,6 @@
     display: grid;
     align-content: center;
     padding: clamp(2.6rem, 5vw, 4.5rem) clamp(1.2rem, 3.5vw, 3.2rem);
-    border-left: 1px solid var(--hair);
   }
 
   .lp2-run {
@@ -1693,7 +1772,6 @@
     display: grid;
     place-items: center;
     padding: clamp(3rem, 6vw, 5rem) clamp(1.2rem, 3.5vw, 3.2rem);
-    border-left: 1px solid var(--hair);
   }
 
   .lp2-saas-win {
@@ -2173,7 +2251,6 @@
     align-content: center;
     justify-items: center;
     padding: clamp(3rem, 6vw, 5rem) clamp(1.2rem, 3.5vw, 3.2rem);
-    border-left: 1px solid var(--hair);
   }
 
   /* the clients: one tile per harness, real marks, known workflows */
@@ -2291,6 +2368,16 @@
 
     .lp2-cell-demo {
       width: 100%;
+    }
+
+    .lp2-cell-split {
+      grid-template-columns: 1fr;
+      gap: 1.8rem;
+      text-align: left;
+    }
+
+    .lp2-cell-copy h2.lp2-enterprise-kicker--spacer {
+      display: none;
     }
 
     /* A rule between two cells is the grid speaking. A rule between a claim

@@ -1,37 +1,79 @@
 ---
 import DocsPage from "../../layouts/DocsPage.astro";
+
+const codeDataset = `<span class="tk-f">POST</span> /v1/datasets
+{ <span class="tk-s">"name"</span>: <span class="tk-s">"Q3 Contracts"</span>, <span class="tk-s">"connector_type"</span>: <span class="tk-s">"sharepoint"</span> }
+<span class="tk-c"># → { dataset_id, status:"ready" }</span>
+
+<span class="tk-f">POST</span> /v1/datasets/&#123;id&#125;/sharepoint/connect
+{ <span class="tk-s">"site_url"</span>: <span class="tk-s">"https://acme.sharepoint.com/sites/legal"</span>, <span class="tk-s">"resource"</span>: <span class="tk-s">"/drive/root"</span> }
+
+<span class="tk-f">POST</span> /v1/datasets/&#123;id&#125;/sync  <span class="tk-c"># ad-hoc, or wait for scheduled sync</span>
+<span class="tk-f">GET</span>  /v1/datasets/&#123;id&#125;/items?limit=20
+`;
 ---
 
 <DocsPage slug="datasets">
-  <h1>Datasets &amp; connectors</h1>
-  <p class="lpd-sub">
-    Datasets are tenant-scoped containers over uploads and live connectors, with
-    scheduled sync, change reconciliation, and permission snapshots that flow
-    forward to every query.
+  <h1>Datasets &amp; enterprise connectors</h1>
+  <p class="lpd-sub">Datasets are tenant-scoped containers over uploads and live connectors, with scheduled sync, change reconciliation, and permission snapshots that flow forward to every query.</p>
+
+  <h2 id="what">What a dataset is</h2>
+  <p>
+    A dataset is the unit of ingestion and permissions. It has an id, a name, a connector type, and a set of sources (e.g. a SharePoint site, a Drive folder, an S3 prefix, a mailbox). Tenancy is enforced at the dataset layer — a dataset belongs to one tenant and only that tenant's principals can query it.
+    Routes live in <code class="lp-inline-code">src/lace/api/routes/datasets.py</code> plus per-connector files (<code class="lp-inline-code">dataset_sharepoint_connectors.py</code>, <code class="lp-inline-code">dataset_google_drive_connectors.py</code>, etc.).
   </p>
+
+  <div class="lp-code"><div class="lp-code-head"><span>terminal</span><em>bash</em></div><pre><code set:html={codeDataset} /></pre></div>
 
   <h2 id="connectors">Supported connectors</h2>
+  <div class="lpd-table-wrap">
+    <table>
+      <thead><tr><th>Connector</th><th>Type</th><th>Incremental? / deletes? / ACLs?</th></tr></thead>
+      <tbody>
+        <tr><td>SharePoint</td><td><code class="lp-inline-code">sharepoint</code></td><td>yes / yes / yes — Graph delta</td></tr>
+        <tr><td>Google Drive</td><td><code class="lp-inline-code">google_drive</code></td><td>yes / yes / yes — changes API + permissions list</td></tr>
+        <tr><td>OneDrive</td><td><code class="lp-inline-code">onedrive</code></td><td>yes / yes / yes</td></tr>
+        <tr><td>Dropbox</td><td><code class="lp-inline-code">dropbox</code></td><td>yes / yes / yes</td></tr>
+        <tr><td>Notion</td><td><code class="lp-inline-code">notion</code></td><td>yes / yes / no (page-level)</td></tr>
+        <tr><td>Gmail / Outlook</td><td><code class="lp-inline-code">gmail</code> / <code class="lp-inline-code">outlook_mail</code></td><td>yes / yes / mailbox ACL</td></tr>
+        <tr><td>Slack</td><td><code class="lp-inline-code">slack</code> (via connector marketplace)</td><td>yes / yes / channel ACL</td></tr>
+        <tr><td>S3</td><td><code class="lp-inline-code">s3</code></td><td>yes (ETag) / yes / bucket policy → snapshot</td></tr>
+        <tr><td>Web / scraper</td><td><code class="lp-inline-code">web</code></td><td>yes (ETag/Last-Modified) / no / n/a</td></tr>
+        <tr><td>Databases</td><td>SQL CDC (postgres/mysql)</td><td>CDC log / yes / row-level</td></tr>
+      </tbody>
+    </table>
+  </div>
   <p>
-    SharePoint, Google Drive, OneDrive, Dropbox, Notion, Slack, email, S3,
-    databases, and websites. Each connector reports its own capability manifest,
-    so the platform knows what it can and cannot do — incremental sync, deletes,
-    permission reads — rather than assuming a lowest common denominator.
+    Each connector reports its own <strong>capability manifest</strong> (<code class="lp-inline-code">src/lace/connectors/datasets/registry.py</code>). It tells the platform whether the connector supports incremental sync, delete propagation, and permission reads, so the platform never assumes a lowest common denominator. Capability gaps degrade gracefully instead of silently dropping deletes or leaking restricted docs.
   </p>
 
-  <h2 id="permission-snapshots">Permission snapshots</h2>
+  <h2 id="sync">Sync, scheduling &amp; reconciliation</h2>
   <p>
-    A connector does not only bring content across; it brings the source
-    system's access rules with it. Those snapshots are what let
-    <a href="/docs/search-rag">retrieval</a> filter by source ACLs at query
-    time, so a document a person cannot open in SharePoint is not something an
-    answer can quote to them.
+    Sync is driven by <code class="lp-inline-code">src/lace/connectors/datasets/sync_engine.py</code> + <code class="lp-inline-code">scheduled_sync.py</code>:
+  </p>
+  <ul>
+    <li><strong>Scheduled sync</strong> — cron per source (<code class="lp-inline-code">POST /v1/datasets/&#123;id&#125;/scheduled-sync</code>); managed by <code class="lp-inline-code">connector_sync.py</code> and <code class="lp-inline-code">scheduler.py</code>.</li>
+    <li><strong>Ad-hoc sync</strong> — <code class="lp-inline-code">POST /v1/datasets/&#123;id&#125;/sync</code> for a one-off crawl.</li>
+    <li><strong>Leases &amp; retries</strong> — source leases (<code class="lp-inline-code">source_operation_lease.py</code>) prevent double-crawl; retry policy (<code class="lp-inline-code">retry_policy.py</code>) backs off on throttling.</li>
+    <li><strong>Reconciliation</strong> — sync diffs against what was previously indexed: edits update in place, deletes propagate to the index and the KG, moves keep stable document / block identity. That stability is why citations stay durable.</li>
+  </ul>
+
+  <h2 id="permissions">Permission snapshots</h2>
+  <p>
+    A connector does not only bring content. It also brings the source system's access rules as an <strong>ACL snapshot</strong> per item. Snapshots are versioned alongside the content and flow forward to every query. <a href="/docs/enterprise-search">Retrieval</a> and <a href="/docs/enterprise-search">enterprise search</a> filter by them at query time (SQL prefilter plus Python finalize) so facet counts never leak a restricted entity. See <code class="lp-inline-code">src/lace/domain/enterprise_search/acl.py</code>.
   </p>
 
-  <h2 id="reconciliation">Change reconciliation</h2>
+  <h2 id="ingest">Ingest — parse, chunk, embed, index</h2>
   <p>
-    Scheduled syncs reconcile against what was previously indexed rather than
-    re-ingesting wholesale: edits update in place, deletes propagate, and moved
-    documents keep their identity. That stability is what makes citations
-    durable — an evidence pointer taken last quarter still resolves.
+    After sync, ingest parses (with docx/xlsx/pdf handling), chunks with stable block identity, embeds, and indexes into Postgres + pgvector (<code class="lp-inline-code">src/lace/domain/ingest</code>, <code class="lp-inline-code">src/lace/domain/parsing</code>). Document / block / span ids are stable across re-ingests — an evidence pointer taken last quarter still resolves.
   </p>
+
+  <h2 id="ops">Operating datasets</h2>
+  <ul>
+    <li>Browse sources: <code class="lp-inline-code">GET /v1/datasets/&#123;id&#125;/sources</code> and <code class="lp-inline-code">POST /v1/datasets/&#123;id&#125;/sources/browse</code>.</li>
+    <li>Admin UI: dataset admin at <code class="lp-inline-code">/admin/datasets</code> (see <code class="lp-inline-code">src/lace/api/routes/dataset_connector_admin.py</code>).</li>
+    <li>Connector marketplace: <code class="lp-inline-code">src/lace/connectors/marketplace.py</code> lists what is enabled for your footprint (cloud / VPC / air-gapped differs).</li>
+  </ul>
+
+  <p>Next: <a href="/docs/enterprise-search">search &amp; RAG</a> or <a href="/docs/enterprise-search">Enterprise Search product</a>.</p>
 </DocsPage>

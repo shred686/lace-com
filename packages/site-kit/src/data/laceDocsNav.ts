@@ -48,6 +48,13 @@ export const docsNav: DocsNavGroup[] = [
           "How the LACE platform is structured: pipelines, agents, apps, knowledge, and the assistant sharing one tenant-scoped control plane with enforced permissions and evidence.",
       },
       {
+        slug: "architecture",
+        label: "Architecture overview",
+        title: "LACE Architecture Overview",
+        description:
+          "The LACE control plane, app framework, execution runtimes, knowledge stack, and platform data stores — and how a request flows through them.",
+      },
+      {
         slug: "deployment",
         label: "Deployment options",
         title: "Deployment Options: Cloud, VPC, On-Premises, Air-Gapped",
@@ -65,7 +72,7 @@ export const docsNav: DocsNavGroup[] = [
         label: "Install",
         title: "Install the lace-app-sdk",
         description:
-          "Install lace-app-sdk, the public versioned contract surface for building governed enterprise AI applications on LACE. Requires Python 3.11 or later.",
+          "Install lace-app-sdk, the public contract for building governed enterprise AI applications on LACE. Requires Python 3.12 or later.",
       },
       {
         slug: "quickstart",
@@ -73,6 +80,34 @@ export const docsNav: DocsNavGroup[] = [
         title: "Quickstart: Build a Governed App",
         description:
           "Build a governed LACE application from four small files: the manifest, a data collection, a tool provider, and an agent definition.",
+      },
+      {
+        slug: "create-app",
+        label: "Create a new app",
+        title: "Create a New App — UI, API & CLI",
+        description:
+          "Create a LACE app three ways: from the App Builder UI, from the REST API, or from the lace-app CLI. Same manifest, same contracts, three entry points.",
+      },
+      {
+        slug: "clone-and-dev",
+        label: "Clone & local dev",
+        title: "Clone the Repo & Run Locally",
+        description:
+          "Clone a graduated app repo with lace-app clone, run it locally with lace-app dev, and understand the compose stack, emulator, and .lace state.",
+      },
+      {
+        slug: "what-you-get",
+        label: "What gets installed",
+        title: "What Gets Installed — Project Layout",
+        description:
+          "The file tree, manifests, generated scaffolding, templates, and dependencies that a new LACE app installs — and what each file owns.",
+      },
+      {
+        slug: "sdk-overview",
+        label: "The SDK itself",
+        title: "The lace-app-sdk",
+        description:
+          "How the SDK re-exports live lace.* code, the base and runtime installs, versioning, and the full module map.",
       },
       {
         slug: "manifest",
@@ -103,6 +138,41 @@ export const docsNav: DocsNavGroup[] = [
           "Declare an AgentDefinition to run a real agentic loop in your sidecar, with platform-enforced capabilities, loop guards, reusable skills, and human approval gates.",
       },
       {
+        slug: "pipelines",
+        label: "Pipelines",
+        title: "Pipelines — Typed Workflow Graphs",
+        description:
+          "Declare pipelines as versioned, typed graphs of steps with checkpoints, retries, idempotency, and dead-letter handling — compiled the same way the platform executes them.",
+      },
+      {
+        slug: "routes-ui",
+        label: "Routes & UI",
+        title: "Routes & Runtime UI",
+        description:
+          "Expose HTTP routes and federated runtime-UI modules from your app sidecar. Routes mount at /apps/<app_id>/api/*, UI at /ui/manifest.json.",
+      },
+      {
+        slug: "testing",
+        label: "Testing & proof lanes",
+        title: "Testing & Proof Lanes",
+        description:
+          "Validate apps locally with lace-app test: typecheck, build, route smoke, tool invocation, permission, and AppData contract lanes.",
+      },
+      {
+        slug: "publishing",
+        label: "Publishing & releases",
+        title: "Publishing, Releases & Rollback",
+        description:
+          "Seal, push, deploy, and version your app. Releases are immutable, content-addressed, and one rollback away.",
+      },
+      {
+        slug: "cli",
+        label: "CLI reference",
+        title: "lace-app CLI Reference",
+        description:
+          "The lace-app CLI: auth, create, clone, dev, test, push, deploy, open, logs, status, releases, and secrets — with flags, env vars, and examples.",
+      },
+      {
         slug: "modules",
         label: "Module reference",
         title: "lace-app-sdk Module Reference",
@@ -123,29 +193,29 @@ export const docsNav: DocsNavGroup[] = [
           "Connect SharePoint, Google Drive, OneDrive, Dropbox, Notion, Slack, email, S3, databases, and websites, with scheduled sync, change reconciliation, and permission snapshots.",
       },
       {
-        slug: "search-rag",
-        label: "Search & RAG",
-        title: "Hybrid Search & Permissions-Aware RAG",
+        slug: "enterprise-search",
+        label: "Enterprise Search",
+        title: "Enterprise Search — Cited, Permissions-Aware Answers",
         description:
-          "Hybrid retrieval fuses lexical and vector legs with reciprocal-rank fusion, filters by source ACLs, and reranks on GPU, with stable document, block, and span identity.",
+          "Product walkthrough for Enterprise Search: three-leg retrieval, RRF fusion, ACL enforcement, GPU reranking, and cited answers that never leak what you cannot see.",
       },
       {
         slug: "knowledge-graph",
-        label: "Knowledge graph",
-        title: "Knowledge Graph, Schema Packs & Bitemporal Facts",
+        label: "Knowledge Graph",
+        title: "Knowledge Graph — Schema Packs & Bitemporal Facts",
         description:
           "Versioned executable ontology contracts, candidate-first evidence-gated extraction, reversible identity resolution, and bitemporal assertions that supersede rather than erase.",
       },
       {
-        slug: "agents-channels",
-        label: "Agents & channels",
-        title: "Agent Control Plane & Messaging Channels",
+        slug: "agent-studio",
+        label: "Agent Studio",
+        title: "Agent Studio — Governed Agents on Every Channel",
         description:
-          "One control plane for sessions, tasks, streaming, steering, and cancellation, across email, SMS, WhatsApp, Slack, Teams, webhooks, and realtime voice.",
+          "Product walkthrough for Agent Studio: design the tool surface, write the system prompt, wire channels, enforce policy, and ship to web, email, SMS, and voice.",
       },
       {
         slug: "workflows",
-        label: "Workflows & pipelines",
+        label: "Workflows & Pipelines",
         title: "Workflows & Pipelines",
         description:
           "Versioned graphs of typed steps with checkpoints, retries, idempotency, and dead-letter handling. Workflow Studio compiles the same contract the API executes.",
@@ -163,6 +233,33 @@ export const docsNav: DocsNavGroup[] = [
         title: "Governance, Security & Auditability",
         description:
           "Permission scopes, resource ACLs, budgets, usage limits, approval gates, structured logs, OpenTelemetry traces, and per-call model attribution for every AI operation.",
+      },
+    ],
+  },
+  {
+    group: "API & Platform",
+    tab: "API Reference",
+    items: [
+      {
+        slug: "api-overview",
+        label: "REST API & other SDKs",
+        title: "REST API, SDKs & Integration Surfaces",
+        description:
+          "The /v1 REST API, lace-app-sdk (Python), frontend SDKs, CLI, webhooks, events, and MCP — auth, versioning, pagination, and errors.",
+      },
+      {
+        slug: "authentication",
+        label: "Authentication",
+        title: "Authentication, Tenancy & Authorization",
+        description:
+          "API keys, JWTs, tenant scoping, RBAC scopes, resource ACLs, and the policy checks that guard every route, tool, and retrieval path.",
+      },
+      {
+        slug: "observability",
+        label: "Observability",
+        title: "Observability — Logs, Traces & Metrics",
+        description:
+          "Structured logs, OpenTelemetry traces, per-call model attribution, pipeline replay, agent session inspection, and cost dashboards.",
       },
     ],
   },

@@ -4,32 +4,46 @@ import DocsPage from "../../layouts/DocsPage.astro";
 
 <DocsPage slug="workflows">
   <h1>Workflows &amp; pipelines</h1>
-  <p class="lpd-sub">
-    Pipelines are versioned graphs of typed steps with checkpoints, retries,
-    idempotency, and dead-letter handling.
+  <p class="lpd-sub">Versioned graphs of typed steps with checkpoints, retries, idempotency, and dead-letter handling. Workflow Studio compiles the same contract the API executes.</p>
+
+  <h2 id="durability">Runs that finish — not runs that disappear</h2>
+  <p>
+    Every step is checkpointed as it completes (<code class="lp-inline-code">src/lace/pipeline/runtime.py</code>). A crash, timeout, or restart resumes from the last completed step — not from the start, and not by vanishing. Idempotency keys make a retried step safe to re-execute even if it already did work. Work that cannot succeed lands in a dead-letter queue where it can be inspected instead of being silently dropped. Traces are emitted per step and surfaced in Studio and the observability stack.
   </p>
 
-  <h2 id="durability">Runs that finish</h2>
+  <h2 id="typed">Typed steps — a compile-time failure beats a 3am production failure</h2>
   <p>
-    Every step is checkpointed as it completes. A crash, timeout, or restart
-    resumes from the last completed step rather than starting over or
-    disappearing. Idempotency keys make a retried step safe to re-execute, and
-    work that cannot succeed lands in a dead-letter queue where it can be
-    inspected instead of being silently dropped.
+    Each step declares its input and output JSON Schemas. The compiler (<code class="lp-inline-code">src/lace/pipeline/compiler.py</code> &amp; <code class="lp-inline-code">control_flow.py</code>) validates the graph — wrong shape between two stages fails at compile time, not in production. Steps can be tools, LLM invocations, sub-pipelines, or control-flow primitives:
+  </p>
+  <div class="lpd-table-wrap">
+    <table>
+      <thead><tr><th>Primitive</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td><code class="lp-inline-code">branch</code> / <code class="lp-inline-code">switch</code></td><td>Conditional fan-out</td></tr>
+        <tr><td><code class="lp-inline-code">foreach</code> / <code class="lp-inline-code">parallel_foreach</code></td><td>Iterate sequentially or in parallel</td></tr>
+        <tr><td><code class="lp-inline-code">parallel</code></td><td>Concurrent steps with join</td></tr>
+        <tr><td><code class="lp-inline-code">reduce</code> / <code class="lp-inline-code">repeat_until</code></td><td>Accumulate / loop until condition</td></tr>
+        <tr><td><code class="lp-inline-code">trycatch</code> / <code class="lp-inline-code">fallback</code></td><td>Handle failures without aborting the graph</td></tr>
+        <tr><td><code class="lp-inline-code">delay</code> / <code class="lp-inline-code">wait_until</code> / <code class="lp-inline-code">wait_for_input</code></td><td>Time &amp; human gates</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    <code class="lp-inline-code">AppPipelineProvider</code> is how apps contribute pipelines to the platform — see <a href="/docs/pipelines">pipelines (SDK)</a> for the provider contract and a full code example.
   </p>
 
-  <h2 id="typed-steps">Typed steps</h2>
+  <h2 id="studio">Workflow Studio — the visual compiler</h2>
   <p>
-    Steps declare their input and output types, so a graph that would pass the
-    wrong shape between two stages fails when it is compiled rather than in
-    production at 3am.
+    Studio is a visual compiler over the same <code class="lp-inline-code">PipelineDefinition</code> schema. You drag steps, bind inputs/outputs, set retry policies and idempotency keys, declare triggers and aliases, and Studio emits YAML the runtime executes verbatim. There is no "Studio-only" runtime that drifts. Drafts, versions, triggers, and the full run timeline (trace_report, replay) are part of the same model.
   </p>
 
-  <h2 id="workflow-studio">Workflow Studio</h2>
-  <p>
-    Workflow Studio compiles the same contract the API executes — there is no
-    separate visual runtime that drifts from the programmatic one. Drafts,
-    versions, triggers, aliases, and a full run timeline are all part of the
-    same model, so what you built in the editor is what runs.
-  </p>
+  <h2 id="ops">Operating workflows</h2>
+  <ul>
+    <li><code class="lp-inline-code">POST /v1/pipelines/&#123;pipeline_id&#125;/runs</code> — start a run.</li>
+    <li><code class="lp-inline-code">GET /v1/pipelines/&#123;pipeline_id&#125;/runs/&#123;run_id&#125;</code> — trace + step statuses.</li>
+    <li>From an agent: declare a <code class="lp-inline-code">PipelineCapability</code> so the model can dispatch to a workflow.</li>
+    <li>On a schedule: declare <code class="lp-inline-code">AppScheduleSpecDeclaration</code> with <code class="lp-inline-code">invoke_path</code> at the manifest.</li>
+  </ul>
+
+  <p>Reference: <a href="/docs/pipelines">pipelines (typed graphs)</a>. Product context: <a href="/platform/enterprise-search">Enterprise Search</a> and <a href="/docs/knowledge-graph">Knowledge Graph</a> both run as pipelines underneath.</p>
 </DocsPage>

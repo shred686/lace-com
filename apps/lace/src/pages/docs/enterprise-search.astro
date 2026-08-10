@@ -1,0 +1,139 @@
+---
+import DocsPage from "../../layouts/DocsPage.astro";
+
+const codeSearchApi = `<span class="tk-f">curl</span> -X POST https://api.laceplatform.com/v1/enterprise-search \\
+  -H <span class="tk-s">"Authorization: Bearer $LACE_API_KEY"</span> \\
+  -d <span class="tk-s">'{
+    "query": "Q3 warranty reserves",
+    "limit": 10,
+    "facets": ["entity_type","dataset"],
+    "rerank": true
+  }'</span>`;
+
+const codeRrf = `<span class="tk-c"># service.py — three legs in parallel, RRF fuse, ACL finalize</span>
+results = <span class="tk-f">await</span> <span class="tk-f">asyncio.gather</span>(
+  <span class="tk-f">catalog_search</span>(req),      <span class="tk-c"># Postgres tsvector + pg_trgm over lace.search_catalog_entity</span>
+  <span class="tk-f">document_search</span>(req),     <span class="tk-c"># pgvector hybrid (state.retrieve_segments)</span>
+  <span class="tk-f">kg_search</span>(req),            <span class="tk-c"># kg.facts lexical (plainto_tsquery, AND semantics)</span>
+)
+fused = <span class="tk-f">reciprocal_rank_fuse</span>(results, k=<span class="tk-n">60</span>)
+visible = [<span class="tk-n">r</span> <span class="tk-k">for</span> r <span class="tk-k">in</span> fused <span class="tk-k">if</span> <span class="tk-f">envelope_visible_to_principals</span>(r, principals)]
+`;
+
+const codeRag = `<span class="tk-k">from</span> lace.domain.rag <span class="tk-k">import</span> <span class="tk-n">rag_answer</span>
+
+<span class="tk-n">answer</span> = <span class="tk-k">await</span> <span class="tk-f">rag_answer</span>(
+    query=<span class="tk-s">"What did Q3 say about warranty reserves?"</span>,
+    dataset_ids=[<span class="tk-s">"0141b..."</span>],
+    tenant_id=<span class="tk-s">"acme"</span>,
+    principals=[<span class="tk-s">"user:4821"</span>],
+)
+<span class="tk-c"># → { text, citations: [{ document_id, block_id, span: [start, end], score }] }</span>
+`;
+---
+
+<DocsPage slug="enterprise-search">
+  <h1>Enterprise Search</h1>
+  <p class="lpd-sub">One search box over every source: documents, datasets, apps, agents, pipelines, KG facts, and messages. Results from three legs are fused and filtered so you only see what you can access, with a citation for what you can see.</p>
+
+  <div class="lpd-callout">
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M12 8v.5M12 11v5" stroke="currentColor" stroke-width="1.6"/></svg>
+    <p><strong>Not a second ingest system.</strong> Enterprise Search is a query and fusion service over the durable Postgres catalog index (<code class="lp-inline-code">lace.search_catalog_entity</code>), the document leg, and the KG leg. It does not re-crawl your sources.</p>
+  </div>
+
+  <h2 id="how-it-works">How it works — three legs, one ranking</h2>
+  <pre class="lpd-diagram"><code>POST /v1/enterprise-search ──▶ EnterpriseSearchService.search()
+                                   ├── catalog leg ── PostgresCatalogSearchBackend (tsvector + trgm) ──┐
+                                   ├── document leg ── retrieve_segments (pgvector hybrid) ─────────────┤── RRF fuse (k=60) ── ACL finalize ── paginate
+                                   └── kg leg ─────── chat_agent_service_runner / kg.facts (lexical) ──┘
+                                                        │                     │
+                                                     planner (lexical-only today, vector parked D3)
+</code></pre>
+  <div class="lp-code"><div class="lp-code-head"><span>python</span><em>src/lace/domain/enterprise_search/service.py</em></div><pre><code set:html={codeRrf} /></pre></div>
+
+  <div class="lpd-table-wrap">
+    <table>
+      <thead><tr><th>Leg</th><th>Source</th><th>Backend</th><th>What it catches</th></tr></thead>
+      <tbody>
+        <tr><td><code class="lp-inline-code">catalog</code></td><td><code class="lp-inline-code">lace.search_catalog_entity</code></td><td><code class="lp-inline-code">PostgresCatalogSearchBackend</code> (default)</td><td>Every LACE entity with browse and facets</td></tr>
+        <tr><td><code class="lp-inline-code">document</code></td><td>pgvector segments</td><td><code class="lp-inline-code">state.retrieve_segments</code></td><td>Paraphrase and semantic recall</td></tr>
+        <tr><td><code class="lp-inline-code">kg</code></td><td>KG entities + evidence</td><td><code class="lp-inline-code">schema_extraction</code> store</td><td>Facts with citations</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="retrieval">Hybrid retrieval</h2>
+  <p>
+    A lexical leg and a vector leg run against the same corpus and their rankings are combined with <strong>reciprocal-rank fusion</strong> (RRF, <code class="lp-inline-code">src/lace/domain/enterprise_search/rrf.py</code>, <code class="lp-inline-code">k=60</code>). Lexical catches the exact identifier or clause reference that embeddings blur. Vector catches the paraphrase that keyword search misses. Fusing them avoids having to choose which failure mode to live with.
+  </p>
+  <div class="lpd-table-wrap">
+    <table>
+      <thead><tr><th>Leg</th><th>Query transform</th><th>Index</th><th>Recall</th></tr></thead>
+      <tbody>
+        <tr><td>Lexical</td><td><code class="lp-inline-code">plainto_tsquery</code> / <code class="lp-inline-code">to_tsvector</code> + <code class="lp-inline-code">pg_trgm</code></td><td>tsvector GIN + trigram GIN on <code class="lp-inline-code">lace.search_catalog_entity</code></td><td>Exact identifiers, BM25-like ranking</td></tr>
+        <tr><td>Vector</td><td>Embedding of query (same encoder as ingest)</td><td>pgvector <code class="lp-inline-code">IVFFLAT</code> / <code class="lp-inline-code">HNSW</code> over segment embeddings</td><td>Semantic recall</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    The vector leg is currently parked and the planner is lexical-only (<code class="lp-inline-code">src/lace/domain/enterprise_search/planner.py</code>, vector re-enable is D3). The fusion point and RRF scorer already exist, so the vector leg can reattach without changing callers.
+  </p>
+
+  <h2 id="acl">Permissions are not post-filtering</h2>
+  <p>
+    Retrieval resolves your principals from auth against each source's <strong>permission snapshots</strong> taken at sync time (<a href="/docs/datasets">datasets</a>). The platform enforces ACL in SQL as a prefilter, so unauthorized rows never leave Postgres, and again in the Python finalize. Facet counts are recomputed over the visible set only so they never leak a restricted document's existence.
+    Code: <code class="lp-inline-code">src/lace/domain/enterprise_search/acl.py</code> + <code class="lp-inline-code">catalog.py</code>.
+  </p>
+
+  <h2 id="rerank">GPU rerank</h2>
+  <p>
+    After fusion, the sidecar at <code class="lp-inline-code">services/reranker</code> (GPU, cross-encoder) may rerank results. The reranker sees the original query plus each candidate's text and re-scores with a cross-attention model. Opt in per request (<code class="lp-inline-code">rerank: true</code>) or per tenant default. When the reranker is saturated or disabled, the RRF ranking is the final ranking.
+  </p>
+
+  <h2 id="identity">Stable identity</h2>
+  <p>
+    Every retrieved result has a stable triple — <code class="lp-inline-code">document_id</code>, <code class="lp-inline-code">block_id</code>, <code class="lp-inline-code">span [start, end]</code> — that survives re-ingest. That triple is what citations point to and what the knowledge graph's evidence checks gate on. See <code class="lp-inline-code">src/lace/domain/document_evidence</code> and <code class="lp-inline-code">src/lace/domain/ingest</code>.
+  </p>
+
+  <h2 id="query">Query shape</h2>
+  <div class="lp-code"><div class="lp-code-head"><span>terminal</span><em>bash</em></div><pre><code set:html={codeSearchApi} /></pre></div>
+  <div class="lpd-table-wrap">
+    <table>
+      <thead><tr><th>Field</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td><code class="lp-inline-code">query</code></td><td>Lexical query (today, <code class="lp-inline-code">plainto_tsquery</code>; vector leg parked, query planner is lexical-only)</td></tr>
+        <tr><td><code class="lp-inline-code">limit / cursor</code></td><td>Paginated; stable over index updates</td></tr>
+        <tr><td><code class="lp-inline-code">facets</code></td><td>Request facet counts (entity type, dataset, connector, etc.)</td></tr>
+        <tr><td><code class="lp-inline-code">rerank</code></td><td>When <code class="lp-inline-code">true</code>, results are reranked on GPU via <code class="lp-inline-code">services/reranker</code></td></tr>
+        <tr><td><code class="lp-inline-code">and_match</code></td><td>Boosts hits that matched <em>all</em> query terms (lexical AND semantics) over OR-recall hits</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="index">The durable catalog index</h2>
+  <p>
+    <code class="lp-inline-code">lace.search_catalog_entity</code> is a Postgres table (tsvector + pg_trgm + GIN indexes) fed by <code class="lp-inline-code">CatalogIndexer</code>: project → diff → sync (bootstrap + reconcile) plus event-driven <code class="lp-inline-code">DocumentStubSyncWorker</code> on ingest success and dataset CRUD. The write store lives at <code class="lp-inline-code">src/lace/api/stores/repositories/search_catalog.py::PostgresCatalogStore</code>.
+    Versioning is single monotonic space (<code class="lp-inline-code">versioning.py</code>) so <code class="lp-inline-code">external_gte</code> gating is coherent and bootstrap is idempotent (second run = drift 0).
+    No per-query live projection on the hot path. The durable index is O(index). The live-projection fallback surfaces a <code class="lp-inline-code">catalog_index_fallback</code> warning when it fires.
+  </p>
+
+  <h2 id="citations">Citations</h2>
+  <p>
+    Every document and KG result carries its source span — document, block, and char offsets — so the answer can point to the paragraph that supports it. The RAG path uses the same legs; enterprise search is the browse and answer surface, RAG is the grounded generation surface.
+  </p>
+
+  <h2 id="rag">RAG — grounded generation</h2>
+  <p>
+    RAG is the same retrieval stack plus a generation pass that is required to cite. The prompt is assembled from the top-N fused, ACL-filtered, reranked spans. The model is instructed to only assert what a span supports. The response carries the spans back as citations. The retrieval and generation spans share trace ids (see <a href="/docs/observability">observability</a>) so you can click a citation from the answer back to the document block.
+  </p>
+  <div class="lp-code"><div class="lp-code-head"><span>python</span><em>programmatic RAG</em></div><pre><code set:html={codeRag} /></pre></div>
+
+  <h2 id="ops">Ops</h2>
+  <ul>
+    <li><code class="lp-inline-code">python -m lace.domain.enterprise_search.ops bootstrap</code> — backfill the catalog.</li>
+    <li><code class="lp-inline-code">python -m lace.domain.enterprise_search.ops reconcile</code> — drift detection and sync.</li>
+    <li>See <code class="lp-inline-code">src/lace/domain/enterprise_search/README.md</code> and <code class="lp-inline-code">docs/agent/enterprise-search.md</code> for the full design.</li>
+  </ul>
+
+  <p>Next: <a href="/docs/datasets">datasets</a> or <a href="/platform/enterprise-search">the marketing page</a>.</p>
+</DocsPage>

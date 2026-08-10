@@ -4,46 +4,42 @@ import DocsPage from "../../layouts/DocsPage.astro";
 
 <DocsPage slug="organization">
   <h1>How LACE is organized</h1>
-  <p class="lpd-sub">
-    Five peer product surfaces share one control plane. Understanding that shape
-    explains most of the platform's behaviour.
-  </p>
+  <p class="lpd-sub">Five peer product surfaces share one tenant-scoped control plane. Understanding that shape explains most of the platform's behaviour.</p>
 
-  <h2 id="surfaces">The five surfaces</h2>
-  <p>
-    <strong>Pipelines</strong> are versioned, typed workflow graphs.
-    <strong>Agents</strong> are tool-using definitions with deployments and
-    channels. <strong>Apps</strong> are manifest-defined packages.
-    <strong>Knowledge</strong> covers datasets, retrieval, search, and the
-    knowledge graph. The <strong>Assistant</strong> is a tenant-scoped copilot
-    over the same APIs everything else uses.
-  </p>
-  <p>
-    None of these is layered on top of another. They are peers over a shared
-    control plane, which is why an agent can call a pipeline, a pipeline can
-    write to the graph, and an app can ship all three.
-  </p>
+  <h2 id="surfaces">The five surfaces — peers, not layers</h2>
+  <div class="lpd-table-wrap">
+    <table>
+      <thead><tr><th>Surface</th><th>What it is</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Pipelines</strong></td><td>Versioned, typed workflow graphs with checkpoints, retries, DLQ</td><td>Extraction pipeline that populates the KG</td></tr>
+        <tr><td><strong>Agents</strong></td><td>Tool-using definitions with deployments and channels; real agentic loops</td><td>Intake Triage agent on web + email</td></tr>
+        <tr><td><strong>Apps</strong></td><td>Manifest-defined packages bundling routes, tools, agents, pipelines, data, UI</td><td>Grid Ops Console sidecar</td></tr>
+        <tr><td><strong>Knowledge</strong></td><td>Datasets, connectors, ingest, retrieval, search, KG, schema packs</td><td>Dataset <code class="lp-inline-code">alpenglow-ops</code> + <code class="lp-inline-code">warranty.v2</code></td></tr>
+        <tr><td><strong>Assistant</strong></td><td>Tenant-scoped copilot over the same APIs — OBO identity, operation catalog</td><td>LACE Assistant answering with citations</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>None of these is layered on top of another. They are peers over a <strong>shared control plane</strong>. That is why an agent can call a pipeline, a pipeline can write to the graph, and an app can ship all three. The control plane provides auth, tenancy, policy, budgets, audit, and observability once, for all five.</p>
 
-  <h2 id="principles">The invariants</h2>
+  <h2 id="invariants">The invariants — what LACE enforces that an LLM never decides</h2>
   <ul>
-    <li>Every resource and execution is tenant-scoped; roles resolve to named permission scopes.</li>
-    <li>Model output proposes; deterministic services enforce permissions, validation, budgets, and approvals.</li>
-    <li>Evidence is first-class: retrieval and graph assertions point back to document spans.</li>
-    <li>Durable work uses persisted attempts, checkpoints, idempotency, and dead-letter handling.</li>
+    <li><strong>Every resource and execution is tenant-scoped</strong> — roles resolve to named permission scopes; tenancy is a bound store context (<code class="lp-inline-code">bind_store_tenant</code>), not a header.</li>
+    <li><strong>Model output proposes; deterministic services enforce.</strong> A model that decides to escalate still goes through the approval gate; a model that invents a tool still needs it in the capability allow-list.</li>
+    <li><strong>Evidence is first-class.</strong> Retrieval and KG assertions point back to document spans (document / block / char offsets) — citations, not summaries.</li>
+    <li><strong>Durable work uses persisted attempts, checkpoints, idempotency, and DLQ.</strong> A pipeline or agent turn that crashes resumes from its checkpoint; an agent that would exceed its budget stops before billing.</li>
   </ul>
 
-  <h2 id="why-it-matters">Why the split matters</h2>
+  <h2 id="why">Why the split matters</h2>
   <p>
-    The second invariant is the one that does most of the work. A language model
-    in LACE never <em>decides</em> whether an action is permitted — it proposes
-    an action, and a deterministic service accepts or rejects it against policy
-    the model cannot see or influence. That is what makes the audit trail
-    meaningful: the record shows what was proposed, what was enforced, and why,
-    rather than a transcript of a model asserting it was being careful.
+    The second invariant does most of the work. A language model in LACE never <em>decides</em> whether an action is permitted — it proposes an action, and a deterministic service accepts or rejects it against policy the model cannot see or influence. That is what makes the audit trail meaningful: the record shows what was proposed, what was enforced, and why, rather than a transcript of a model asserting it was being careful.
+    The same split is why the SDK boundary matters: <a href="/docs/sdk-overview">apps import only <code class="lp-inline-code">lace_app_sdk</code></a>, so the platform can enforce governance without trusting generated code to do it.
   </p>
-  <p>
-    Read <a href="/docs/governance">Governance &amp; security</a> for how the
-    enforcement layer is configured, or
-    <a href="/docs/deployment">Deployment options</a> for where it runs.
-  </p>
+
+  <h2 id="where">Where to go from here</h2>
+  <ul>
+    <li><a href="/docs/architecture">Architecture overview</a> — control plane, app framework, execution, knowledge stack, platform data.</li>
+    <li><a href="/docs/governance">Governance &amp; security</a> — scopes, ACLs, budgets, approvals, audit.</li>
+    <li><a href="/docs/deployment">Deployment options</a> — managed cloud, VPC, on-prem, air-gapped.</li>
+    <li><a href="/docs/api-overview">REST API &amp; SDKs</a> — the same control plane you see in the console is the /v1 API.</li>
+  </ul>
 </DocsPage>

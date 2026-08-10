@@ -1,53 +1,84 @@
 ---
 import DocsPage from "../../layouts/DocsPage.astro";
 
-const codeTools = `<span class="tk-c"># app/tools.py — custom tools run in constrained runtimes; trust tier checked on dispatch.</span>
-<span class="tk-k">from</span> lace_app_sdk.tools <span class="tk-k">import</span> <span class="tk-n">AppToolMetadata</span>, <span class="tk-n">AppToolContext</span>
+const codeTool = `<span class="tk-k">from</span> lace_app_sdk.tools <span class="tk-k">import</span> <span class="tk-n">tool</span>
 
-<span class="tk-k">class</span> <span class="tk-n">ToolProvider</span>:
-    app_id = <span class="tk-s">"acme.field_intake"</span>
+@<span class="tk-f">tool</span>(
+    tool_id=<span class="tk-s">"lookup_ticket"</span>,
+    description_for_model=<span class="tk-s">"Returns the ticket row for a subject. Use when the user names a ticket."</span>,
+    input_schema={<span class="tk-s">"type"</span>: <span class="tk-s">"object"</span>, <span class="tk-s">"properties"</span>: {
+        <span class="tk-s">"subject"</span>: {<span class="tk-s">"type"</span>: <span class="tk-s">"string"</span>, <span class="tk-s">"description"</span>: <span class="tk-s">"Ticket subject, e.g. Heater site 12"</span>}
+    }, <span class="tk-n">required</span>=[<span class="tk-s">"subject"</span>]},
+    output_schema={<span class="tk-s">"type"</span>: <span class="tk-s">"object"</span>, <span class="tk-s">"properties"</span>: {
+        <span class="tk-s">"ticket"</span>: {<span class="tk-s">"type"</span>: <span class="tk-s">"object"</span>}
+    }},
+    policy={<span class="tk-s">"read_only"</span>: <span class="tk-k">True</span>, <span class="tk-s">"network"</span>: <span class="tk-k">False</span>, <span class="tk-s">"writes_app_data"</span>: <span class="tk-k">False</span>},
+)
+<span class="tk-k">def</span> <span class="tk-f">lookup_ticket</span>(args: <span class="tk-n">dict</span>, context: <span class="tk-n">dict</span>) -&gt; <span class="tk-n">dict</span>:
+    <span class="tk-c"># args is the validated input; context carries tenant, principal, trace ids</span>
+    <span class="tk-k">return</span> {<span class="tk-s">"ticket"</span>: {<span class="tk-s">"subject"</span>: args[<span class="tk-s">"subject"</span>], <span class="tk-s">"priority"</span>: <span class="tk-s">"urgent"</span>}}
+<span class="tk-c"># handler signature is always Callable[[dict, dict], dict]</span>
+`;
 
-    <span class="tk-k">def</span> <span class="tk-f">tool_metadata</span>(<span class="tk-k">self</span>) -&gt; <span class="tk-n">AppToolMetadata</span>:
-        <span class="tk-k">return</span> <span class="tk-f">AppToolMetadata</span>(
-            app_id=<span class="tk-k">self</span>.app_id,
-            bundle_id=<span class="tk-s">"field_intake.tools"</span>,
-            tool_ids=[<span class="tk-s">"lookup_ticket"</span>, <span class="tk-s">"escalate"</span>],
-            exposure_scope=<span class="tk-s">"agent_only"</span>,
-        )
-
-    <span class="tk-k">def</span> <span class="tk-f">register_tools</span>(<span class="tk-k">self</span>, registry, context: <span class="tk-n">AppToolContext</span> | <span class="tk-k">None</span> = <span class="tk-k">None</span>):
-        registry.<span class="tk-f">register</span>(<span class="tk-s">"lookup_ticket"</span>, handler=lookup_ticket)
-        registry.<span class="tk-f">register</span>(<span class="tk-s">"escalate"</span>, handler=escalate)`;
+const codeManifest = `<span class="tk-c"># lace_app_manifest.json — tools[] is pure data (no import paths)</span>
+{
+  <span class="tk-s">"tools"</span>: [{
+    <span class="tk-s">"tool_id"</span>: <span class="tk-s">"lookup_ticket"</span>,
+    <span class="tk-s">"name"</span>: <span class="tk-s">"lookup_ticket"</span>,
+    <span class="tk-s">"description_for_model"</span>: <span class="tk-s">"Returns the ticket…"</span>,
+    <span class="tk-s">"input_schema"</span>: {...}, <span class="tk-s">"output_schema"</span>: {...},
+    <span class="tk-s">"policy"</span>: {<span class="tk-s">"read_only"</span>: <span class="tk-k">true</span>, <span class="tk-s">"network"</span>: <span class="tk-k">false</span>}
+  }],
+  <span class="tk-s">"tool_modules"</span>: [<span class="tk-s">"app.tools"</span>]  <span class="tk-c"># sidecar imports this to run decorators</span>
+}
+`;
 ---
 
 <DocsPage slug="tools">
-  <h1>Tools</h1>
-  <p class="lpd-sub">
-    Implement <code class="lp-inline-code">AppToolProvider</code> to expose
-    custom tools. Tools run in constrained runtimes, and trust tier plus
-    permissions are checked before every dispatch.
+  <h1>Custom tools &amp; tool providers</h1>
+  <p class="lpd-sub">Tools declared in your app run <em>in your app's process</em>. The manifest carries the contract as pure data; the sidecar carries the code. Core never imports your handler — it invokes it over HTTP.</p>
+
+  <h2 id="declare">Declare a tool — <code class="lp-inline-code">@tool</code></h2>
+  <div class="lp-code"><div class="lp-code-head"><span>python</span><em>app/tools.py</em></div><pre><code set:html={codeTool} /></pre></div>
+  <p>
+    <code class="lp-inline-code">description_for_model</code> is read by the model, not by a human — say what the tool returns and when to choose it over a sibling. <code class="lp-inline-code">input_schema</code> / <code class="lp-inline-code">output_schema</code> are JSON Schemas validated on every call.
   </p>
 
-  <div class="lp-code">
-    <div class="lp-code-head"><span>app/tools.py</span><em>python</em></div>
-    <pre><code set:html={codeTools} /></pre>
+  <h2 id="registry">Registry — <code class="lp-inline-code">AppToolRegistry</code> keyed by <code class="lp-inline-code">(app_id, tool_id)</code></h2>
+  <p>
+    The decorator registers an <code class="lp-inline-code">AppToolDescriptor</code> in a process-local <code class="lp-inline-code">AppToolRegistry</code>. The key is <code class="lp-inline-code">(app_id, tool_id)</code> — scoping matters because local dev mounts <em>every</em> app into the API process, but a sidecar hosts one app per process. An unscoped <code class="lp-inline-code">tool_id</code> map would let one app's invoke path resolve to another app's handler. A duplicate <code class="lp-inline-code">(app_id, tool_id)</code> raises immediately.
+  </p>
+  <ul>
+    <li>Process-local helpers: <code class="lp-inline-code">registry().register(descriptor, handler)</code>, <code class="lp-inline-code">registry().handler(tool_id, app_id=...)</code>.</li>
+    <li>Import scoping helper: <code class="lp-inline-code">with registering_app("acme.field_intake"): import app.tools</code> — what <code class="lp-inline-code">LocalAppRuntime</code> and the sidecar use so authors never hand-write <code class="lp-inline-code">app_id</code>.</li>
+    <li>Ambiguous lookup (same <code class="lp-inline-code">tool_id</code> under several apps, no <code class="lp-inline-code">app_id</code>) returns <code class="lp-inline-code">None</code> → 404, never a guess.</li>
+  </ul>
+
+  <h2 id="manifest">Manifest — contract, not code</h2>
+  <div class="lp-code"><div class="lp-code-head"><span>json</span><em>lace_app_manifest.json</em></div><pre><code set:html={codeManifest} /></pre></div>
+  <p>
+    The descriptor is pure data so core can project it into <code class="lp-inline-code">lace.catalog_definitions</code> without executing app code. <code class="lp-inline-code">tool_modules</code> tells the sidecar which modules to import so the <code class="lp-inline-code">@tool</code> decorators run; without it, the registry stays empty and every catalog row 404s at invoke time — a classic proof-lane failure (<a href="/docs/testing">testing</a>).
+  </p>
+
+  <h2 id="policy">Policy — least privilege by default</h2>
+  <div class="lpd-table-wrap">
+    <table>
+      <thead><tr><th>Field</th><th>Default</th><th>Effect</th></tr></thead>
+      <tbody>
+        <tr><td><code class="lp-inline-code">read_only</code></td><td><code class="lp-inline-code">true</code></td><td>Must be set <code class="lp-inline-code">false</code> if the tool writes or mutates</td></tr>
+        <tr><td><code class="lp-inline-code">network</code></td><td><code class="lp-inline-code">false</code></td><td>Opt in for outbound network; forces per-call approval on the catalog row (via <code class="lp-inline-code">lace.apps.tool_catalog_sync</code>)</td></tr>
+        <tr><td><code class="lp-inline-code">writes_app_data</code></td><td><code class="lp-inline-code">false</code></td><td>Opt in for AppData writes; also forces per-call approval</td></tr>
+      </tbody>
+    </table>
   </div>
-
-  <h2 id="exposure-scope">Exposure scope</h2>
   <p>
-    <code class="lp-inline-code">exposure_scope</code> controls who can reach a
-    tool. <code class="lp-inline-code">agent_only</code> keeps it out of
-    user-facing surfaces, so a tool built as an internal step of an agent loop
-    does not silently become something a person can invoke directly.
+    Trust tier and permissions are checked <strong>before every dispatch</strong>, not once at registration — an agent that gains or loses a capability mid-run is subject to the change on the next call. Hosted in <code class="lp-inline-code">lace_runtime.tool_host</code>.
   </p>
 
-  <h2 id="dispatch">Checked on every dispatch</h2>
+  <h2 id="test">Test it</h2>
   <p>
-    Trust tier and permissions are evaluated per call, not once at registration.
-    An agent that gains or loses a capability between two steps of the same run
-    is subject to the change on the next dispatch — which is what lets an
-    approval revoke a capability mid-run rather than only before it.
+    Unit-test the handler directly (it's a plain function) and run <code class="lp-inline-code">lace-app test</code> for the tool lane — it invokes each handler via the registry with a representative payload and validates the output schema. See <a href="/docs/testing">testing</a> and <code class="lp-inline-code">src/lace_app_sdk/examples/notes_app</code>.
   </p>
 
-  <p>Next: <a href="/docs/agents">agents &amp; skills</a>.</p>
+  <p>Next: <a href="/docs/agents">agents &amp; skills</a> — wire the tool to a capability.</p>
 </DocsPage>

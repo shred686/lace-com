@@ -4,47 +4,51 @@ import DocsPage from "../../layouts/DocsPage.astro";
 
 <DocsPage slug="deployment">
   <h1>Deployment options</h1>
-  <p class="lpd-sub">
-    LACE runs in four footprints. The governance substrate — permissions,
-    evidence, budgets, approvals, audit — is identical in every one of them.
-  </p>
+  <p class="lpd-sub">LACE runs in four footprints. The governance substrate is the same in every one: permissions, evidence, budgets, approvals, and audit.</p>
 
   <h2 id="footprints">Footprints</h2>
   <div class="lpd-table-wrap">
     <table>
-      <thead>
-        <tr><th>Footprint</th><th>Where it runs</th><th>Notes</th></tr>
-      </thead>
+      <thead><tr><th>Footprint</th><th>Where it runs</th><th>Notes</th></tr></thead>
       <tbody>
-        <tr><td><strong>Managed cloud</strong></td><td>Our cloud</td><td>Fastest start; usage-based AI budgets with hard caps.</td></tr>
-        <tr><td><strong>Private cloud</strong></td><td>Your VPC</td><td>SSO/OIDC, custom connectors, BYO models.</td></tr>
-        <tr><td><strong>On-premises</strong></td><td>Your data center</td><td>Full platform, your hardware and boundary.</td></tr>
-        <tr><td><strong>Air-gapped</strong></td><td>Disconnected enclave</td><td>No external AI calls; accreditation evidence exportable.</td></tr>
+        <tr><td><strong>Managed cloud</strong></td><td>Our cloud (us-east-2, ECS Fargate + S3/CloudFront)</td><td>Fastest start; usage-based AI budgets with hard caps. Frontend on CloudFront, API on ECS.</td></tr>
+        <tr><td><strong>Private cloud</strong></td><td>Your VPC</td><td>SSO/OIDC, custom connectors, BYO models, your boundary.</td></tr>
+        <tr><td><strong>On-premises</strong></td><td>Your data center</td><td>Full platform, your hardware. Same Postgres/pgvector/NATS/Redis topology.</td></tr>
+        <tr><td><strong>Air-gapped</strong></td><td>Disconnected enclave</td><td>No external AI calls; all inference on open-weight models inside the boundary; updates from media you control. Accreditation evidence exportable.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    See <code class="lp-inline-code">infra/aws</code> (Terraform), <code class="lp-inline-code">docker-compose.yml</code> / <code class="lp-inline-code">docker-compose.prod.yml</code> (service topology), and <code class="lp-inline-code">scripts/env/lace_env.py</code> (the environment CLI behind every <code class="lp-inline-code">make env-*</code> target) for the operational surface.
+  </p>
+
+  <h2 id="what-changes">What changes, what does not</h2>
+  <div class="lpd-table-wrap">
+    <table>
+      <thead><tr><th>Concern</th><th>Managed cloud</th><th>Private VPC / on-prem / air-gapped</th></tr></thead>
+      <tbody>
+        <tr><td>Auth</td><td>Managed</td><td>Your IdP via OIDC/SSO (<a href="/docs/authentication">auth</a>)</td></tr>
+        <tr><td>Connectors</td><td>All marketplace connectors</td><td>Same, plus network egress controls per footprint</td></tr>
+        <tr><td>Models</td><td>Hosted frontier under budget caps</td><td>BYO open-weight; hosted frontier where egress allows</td></tr>
+        <tr><td>Governance</td><td colspan="2"><strong>Identical</strong> — scopes, ACLs, budgets, approvals, audit, per-call attribution (<a href="/docs/governance">governance</a>)</td></tr>
+        <tr><td>App sidecars</td><td colspan="2">Same <code class="lp-inline-code">LaceApp.yaml</code> + <code class="lp-inline-code">lace_app_manifest.json</code> contract everywhere</td></tr>
       </tbody>
     </table>
   </div>
 
-  <h2 id="air-gapped">Air-gapped deployment</h2>
+  <h2 id="air-gapped">When air-gapped means air-gapped</h2>
   <p>
-    Air-gapped is not a configuration flag over a cloud product. Model serving,
-    embedding, indexing, and orchestration all run inside the boundary on
-    open-weight models you host, so no code path requires an outbound
-    connection to function — including model and platform updates, which are
-    applied from media you control.
+    Air-gapped is not a toggle on a cloud service. Model serving, embedding, indexing, and orchestration all run inside the boundary on open-weight models you host, so no code path needs an outbound connection. That includes model and platform updates, which come from media you control.
+    Because enforcement lives outside the model, changing the model does not change what the platform will let it do.
   </p>
-  <p>
-    Programs with an accreditation requirement should also read
-    <a href="/applications/lace-gov">LACE-GOV</a>, which packages the platform
-    with BFO/CCO schema packs, cross-enclave federation, and exportable
-    accreditation evidence.
-  </p>
+  <p>Programs with an accreditation requirement should also read <a href="/applications/lace-gov">LACE-GOV</a>, which packages the platform with BFO/CCO schema packs, cross-enclave federation, and exportable accreditation evidence.</p>
 
-  <h2 id="models">Model choice</h2>
-  <p>
-    Every footprint supports bringing your own models. Managed cloud can use
-    hosted frontier models under budget caps; private cloud, on-premises, and
-    air-gapped deployments serve open-weight models on your hardware. Because
-    enforcement lives outside the model, changing the model does not change what
-    the platform will let it do.
-  </p>
+  <h2 id="day-two">Day-two operations</h2>
+  <ul>
+    <li>Local dev: <code class="lp-inline-code">make infra-up</code> (postgres/minio/nats/redis) + <code class="lp-inline-code">make dev</code> (api + workers, bind-mount + reload) + <code class="lp-inline-code">make dev-migrate</code> (schema) — see <a href="/docs/clone-and-dev">clone &amp; local dev</a> and <code class="lp-inline-code">docs/agent</code> runbooks.</li>
+    <li>Cloud: <code class="lp-inline-code">make env-plan ENV=dev</code> (always before <code class="lp-inline-code">env-up</code>) → <code class="lp-inline-code">make env-up / env-deploy</code> → <code class="lp-inline-code">make env-status / env-logs / env-smoke</code> → <code class="lp-inline-code">make env-hibernate / env-resume / env-down</code>. Hot-push with <code class="lp-inline-code">make dev-push-py</code> / <code class="lp-inline-code">dev-push-fe</code> (blocked in prod).</li>
+    <li>Observability: <code class="lp-inline-code">make dev-observability</code> (Tempo/Prometheus/Grafana) locally; OTEL collector in cloud (<a href="/docs/observability">observability</a>).</li>
+  </ul>
+
+  <p>Next: <a href="/docs/architecture">architecture overview</a> or <a href="/docs/install">install the SDK</a>.</p>
 </DocsPage>

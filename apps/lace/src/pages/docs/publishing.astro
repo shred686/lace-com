@@ -1,0 +1,77 @@
+---
+import DocsPage from "../../layouts/DocsPage.astro";
+
+const codePush = `<span class="tk-f">lace-app</span> <span class="tk-n">push</span> <span class="tk-o">--app-id</span> acme.field_intake
+<span class="tk-c"># → tars app/, uploads to CI, CI runs proof lanes, seals image, creates Release row</span>
+<span class="tk-f">lace-app</span> <span class="tk-n">status</span> acme.field_intake
+<span class="tk-f">lace-app</span> <span class="tk-n">releases</span> <span class="tk-n">list</span> acme.field_intake
+<span class="tk-f">lace-app</span> <span class="tk-n">open</span> acme.field_intake  <span class="tk-c"># browser → /apps/acme.field_intake/</span>
+`;
+
+const codeDeploy = `<span class="tk-f">lace-app</span> <span class="tk-n">deploy</span> <span class="tk-o">--dir</span> ./field_intake <span class="tk-o">--cloud</span>
+<span class="tk-c"># → proof lanes locally → seal → upload/register/activate (no CI, AFV-016)</span>
+`;
+
+const codeRollback = `<span class="tk-f">lace-app</span> <span class="tk-n">releases</span> <span class="tk-n">rollback</span> acme.field_intake rel_0Ck8aX9q
+<span class="tk-c"># → re-activates that Release's image + manifest; one-command undo</span>
+`;
+---
+
+<DocsPage slug="publishing">
+  <h1>Publishing, releases &amp; rollback</h1>
+  <p class="lpd-sub">Seal, push, and version your app. Releases are immutable, content-addressed, and one rollback away.</p>
+
+  <h2 id="lifecycle">Lifecycle</h2>
+  <pre class="lpd-diagram"><code>write_app_manifest() → lace-app test → lace-app push (or deploy) → Release sealed
+       │                      │                      │
+  manifest JSON        proof lanes OK         image pinned in LaceApp.yaml
+                                              + uploaded → CI verifies → activated
+                                                                    │
+                                                       lace-app releases list
+                                                       lace-app releases rollback
+</code></pre>
+
+  <h2 id="push">Push through CI — <code class="lp-inline-code">lace-app push</code></h2>
+  <div class="lp-code"><div class="lp-code-head"><span>terminal</span><em>bash</em></div><pre><code set:html={codePush} /></pre></div>
+  <ul>
+    <li>Uploads the app repo to the builder service (<code class="lp-inline-code">src/lace/builder/service.py</code> → <code class="lp-inline-code">BuilderPublisher</code>).</li>
+    <li>CI runs the full proof harness in a throwaway environment.</li>
+    <li>On green, the publisher builds the sidecar image, pins its digest in <code class="lp-inline-code">LaceApp.yaml</code>, creates an immutable <code class="lp-inline-code">Release</code> row, and activates the sidecar (blue-green).</li>
+    <li>Streams later (APB-023) will add live log streaming during the push.</li>
+  </ul>
+
+  <h2 id="deploy">Direct deploy — <code class="lp-inline-code">lace-app deploy</code></h2>
+  <div class="lp-code"><div class="lp-code-head"><span>terminal</span><em>bash</em></div><pre><code set:html={codeDeploy} /></pre></div>
+  <p>
+    Seal + upload/register/activate with no CI (AFV-016). Still runs proof lanes locally before sealing. Useful for air-gapped or operator-driven deploys.
+    Requires a tenant with deploy scope and a reachable sidecar registry.
+  </p>
+
+  <h2 id="releases">Releases are immutable</h2>
+  <ul>
+    <li>Each release has an <code class="lp-inline-code">rel_*</code> id, a pinned image digest, a manifest snapshot, and a created-at.</li>
+    <li><code class="lp-inline-code">lace-app releases list &lt;app_id&gt;</code> — table of releases.</li>
+    <li><code class="lp-inline-code">lace-app status &lt;app_id&gt;</code> — app + latest-release health (sidecar <code class="lp-inline-code">/health/ready</code>, route reachability, migration state).</li>
+    <li><code class="lp-inline-code">lace-app logs &lt;app_id&gt; --lines 200</code> — tail sidecar logs.</li>
+  </ul>
+
+  <h2 id="rollback">Rollback</h2>
+  <div class="lp-code"><div class="lp-code-head"><span>terminal</span><em>bash</em></div><pre><code set:html={codeRollback} /></pre></div>
+  <p>
+    Rollback re-activates an older release's image and manifest — not a git revert. The deactivated release stays addressable.
+    In the API, this is <code class="lp-inline-code">POST /v1/apps/&#123;app_id&#125;/releases/&#123;release_id&#125;/rollback</code> (see <a href="/docs/api-overview">REST API</a>).
+  </p>
+
+  <h2 id="secrets">Secrets &amp; config at deploy time</h2>
+  <p>
+    Set app-scoped secrets with <code class="lp-inline-code">lace-app secrets set &lt;app_id&gt; &lt;key&gt; &lt;value&gt;</code> (server-side, never checked into the repo). They resolve in the sidecar via <code class="lp-inline-code">get_secret()</code> (<a href="/docs/routes-ui">routes &amp; UI</a>). Non-secret config lives in <code class="lp-inline-code">LaceApp.yaml → env_vars</code>.
+  </p>
+
+  <h2 id="versioning">Versioning</h2>
+  <p>
+    <code class="lp-inline-code">LaceAppManifest.version</code> is informational (semver). The platform versions releases by <code class="lp-inline-code">rel_*</code> id and image digest — two releases can share the same manifest version and still be distinct.
+    Pin <code class="lp-inline-code">version</code> when you want human-readable release notes; rely on <code class="lp-inline-code">rel_*</code> for rollback.
+  </p>
+
+  <p>Next: <a href="/docs/cli">CLI reference</a> or back to <a href="/docs/testing">testing</a>.</p>
+</DocsPage>

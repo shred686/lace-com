@@ -1,0 +1,84 @@
+---
+import DocsPage from "../../layouts/DocsPage.astro";
+
+const codePipeline = `<span class="tk-k">from</span> lace_app_sdk.pipelines <span class="tk-k">import</span> <span class="tk-n">AppPipelineProvider</span>
+<span class="tk-k">from</span> lace.pipeline.definition <span class="tk-k">import</span> <span class="tk-n">PipelineDefinition</span>, <span class="tk-n">PipelineStep</span>
+
+<span class="tk-k">class</span> <span class="tk-n">IntakePipelines</span>(<span class="tk-n">AppPipelineProvider</span>):
+    app_id = <span class="tk-s">"acme.field_intake"</span>
+
+    <span class="tk-k">def</span> <span class="tk-f">pipeline_definitions</span>(<span class="tk-k">self</span>):
+        <span class="tk-k">return</span> [
+            <span class="tk-f">PipelineDefinition</span>(
+                pipeline_id=<span class="tk-s">"field_intake.triage"</span>,
+                version=<span class="tk-s">"1.0"</span>,
+                steps=[
+                    <span class="tk-f">PipelineStep</span>(step_id=<span class="tk-s">"normalize"</span>, uses=<span class="tk-s">"acme.normalize:v1"</span>),
+                    <span class="tk-f">PipelineStep</span>(step_id=<span class="tk-s">"classify"</span>, uses=<span class="tk-s">"llm.classify:v1"</span>,
+                                     retry={<span class="tk-s">"max_attempts"</span>: <span class="tk-n">3</span>, <span class="tk-s">"backoff"</span>: <span class="tk-s">"exponential"</span>}),
+                    <span class="tk-f">PipelineStep</span>(step_id=<span class="tk-s">"route"</span>, uses=<span class="tk-s">"branch"</span>,
+                                     config={<span class="tk-s">"branches"</span>: {<span class="tk-s">"urgent"</span>: <span class="tk-s">"escalate"</span>, <span class="tk-s">"default"</span>: <span class="tk-s">"reply"</span>}}),
+                ],
+            )
+        ]
+`;
+---
+
+<DocsPage slug="pipelines">
+  <h1>Pipelines — typed workflow graphs</h1>
+  <p class="lpd-sub">Versioned graphs of typed steps with checkpoints, retries, idempotency, and dead-letter handling. The Studio compiles the same contract the API executes.</p>
+
+  <h2 id="what">What a pipeline is</h2>
+  <p>
+    A pipeline is a <code class="lp-inline-code">PipelineDefinition</code>: an ordered graph of <code class="lp-inline-code">PipelineStep</code>s, each with an input/output JSON Schema, a <code class="lp-inline-code">uses</code> reference (which tool / LLM / sub-pipeline / control-flow primitive it invokes), and orchestration policy (retry, idempotency, timeout, checkpoint).
+    Definitions are versioned — <code class="lp-inline-code">v1.0</code> keeps flat backoff; <code class="lp-inline-code">v1.1+</code> opts into exponential backoff and default transient-error classification.
+  </p>
+
+  <h2 id="declare">Declaring a pipeline</h2>
+  <p>Implement an <code class="lp-inline-code">AppPipelineProvider</code> and expose it in your manifest:</p>
+  <div class="lp-code"><div class="lp-code-head"><span>python</span><em>app/pipelines.py</em></div><pre><code set:html={codePipeline} /></pre></div>
+  <p>In <code class="lp-inline-code">app/manifest.py</code>:</p>
+  <pre class="lpd-diagram"><code>MANIFEST = LaceAppManifest(
+    app_id="acme.field_intake",
+    pipeline_providers=["app.pipelines:IntakePipelines"],
+    ...
+)</code></pre>
+
+  <h2 id="control-flow">Control flow</h2>
+  <p>Steps are not just linear — the pipeline compiler (<code class="lp-inline-code">src/lace/pipeline/compiler.py</code> &amp; <code class="lp-inline-code">control_flow.py</code>) understands:</p>
+  <div class="lpd-table-wrap">
+    <table>
+      <thead><tr><th>Primitive</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td><code class="lp-inline-code">branch</code> / <code class="lp-inline-code">switch</code></td><td>Conditional fan-out to named branches</td></tr>
+        <tr><td><code class="lp-inline-code">foreach</code> / <code class="lp-inline-code">parallel_foreach</code></td><td>Iterate over a collection, sequentially or in parallel</td></tr>
+        <tr><td><code class="lp-inline-code">parallel</code></td><td>Run steps concurrently and join</td></tr>
+        <tr><td><code class="lp-inline-code">reduce</code> / <code class="lp-inline-code">repeat_until</code></td><td>Accumulate / loop until a condition</td></tr>
+        <tr><td><code class="lp-inline-code">trycatch</code> / <code class="lp-inline-code">fallback</code></td><td>Handle step failures without aborting the graph</td></tr>
+        <tr><td><code class="lp-inline-code">delay</code> / <code class="lp-inline-code">wait_until</code> / <code class="lp-inline-code">wait_for_input</code></td><td>Time and human-input gates</td></tr>
+        <tr><td><code class="lp-inline-code">return</code></td><td>Early exit with a value</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="durability">Runs that finish</h2>
+  <p>
+    Every step is checkpointed as it completes (<code class="lp-inline-code">src/lace/pipeline/runtime.py</code>). A crash, timeout, or restart resumes from the last completed step — not from the start, and not by disappearing.
+    Idempotency keys make a retried step safe to re-execute, and work that cannot succeed lands in a dead-letter queue where it can be inspected instead of silently dropped.
+    Traces are emitted per step (<code class="lp-inline-code">src/lace/pipeline/trace.py</code> &amp; <code class="lp-inline-code">trace_report.py</code>) and surfaced in the Studio.
+  </p>
+
+  <h2 id="studio">Workflow Studio</h2>
+  <p>
+    Studio is a visual compiler over the same <code class="lp-inline-code">PipelineDefinition</code> schema. You drag steps, bind inputs/outputs, set retry policies, and Studio emits YAML that the runtime executes verbatim. There is no "Studio-only" pipeline — the file is the contract.
+  </p>
+
+  <h2 id="invoke">Invoking a pipeline</h2>
+  <ul>
+    <li>From code: <code class="lp-inline-code">POST /v1/pipelines/&#123;pipeline_id&#125;/runs</code> (or via an app tool that starts one).</li>
+    <li>From an agent: declare a <code class="lp-inline-code">PipelineCapability</code> on an <code class="lp-inline-code">AgentDefinition</code> so the model can dispatch to it.</li>
+    <li>On a schedule: declare an <code class="lp-inline-code">AppScheduleSpecDeclaration</code> in the manifest with <code class="lp-inline-code">invoke_path</code> pointing at a pipeline trigger route.</li>
+  </ul>
+
+  <p>Next: <a href="/docs/routes-ui">routes &amp; UI</a> or <a href="/docs/workflows">workflows &amp; pipelines overview</a>.</p>
+</DocsPage>

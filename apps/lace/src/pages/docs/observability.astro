@@ -1,0 +1,57 @@
+---
+import DocsPage from "../../layouts/DocsPage.astro";
+---
+
+<DocsPage slug="observability">
+  <h1>Observability — logs, traces &amp; metrics</h1>
+  <p class="lpd-sub">Structured logs, OpenTelemetry traces, and per-call model attribution for every AI operation — not as an add-on, but as a property of the control plane.</p>
+
+  <h2 id="logs">Logs</h2>
+  <p>
+    Every service emits JSON structured logs (via <code class="lp-inline-code">structlog</code>) to stdout. In local dev, read them with <code class="lp-inline-code">docker compose logs -f api</code> or <code class="lp-inline-code">lace-app logs &lt;app_id&gt; --lines 500</code> for a live sidecar.
+    In cloud, logs ship to CloudWatch (or your configured sink) with tenant, request, and trace ids attached.
+  </p>
+
+  <h2 id="traces">Traces — OpenTelemetry</h2>
+  <p>
+    The API and workers are instrumented with OpenTelemetry. Each pipeline step, retrieval leg, and agent turn creates a span with:
+  </p>
+  <ul>
+    <li><code class="lp-inline-code">tenant_id</code>, <code class="lp-inline-code">request_id</code>, <code class="lp-inline-code">trace_id</code></li>
+    <li><code class="lp-inline-code">model_alias</code> and token counts for every LLM call (see <a href="/docs/governance">governance</a>)</li>
+    <li>Step / tool id, input hash, latency, and error code</li>
+  </ul>
+  <p>
+    In dev, bring the full stack with <code class="lp-inline-code">make dev-observability</code> (adds Tempo + Prometheus + Grafana). In cloud, traces flow to your OTEL collector.
+  </p>
+
+  <h2 id="model-attribution">Per-call model attribution</h2>
+  <p>
+    Every AI operation is attributed: which model, which step/tool/agent, which tenant, how many tokens, and what it cost. This is what powers the cost dashboards and budget caps — not an estimate, the actual accounting record for that call.
+  </p>
+
+  <h2 id="pipeline-replay">Pipeline replay &amp; traces</h2>
+  <p>
+    Pipelines persist a trace per run (<code class="lp-inline-code">src/lace/pipeline/trace.py</code> &amp; <code class="lp-inline-code">trace_report.py</code>). You can inspect a run's step graph, retry history, and dead-letter reasons from the API (<code class="lp-inline-code">GET /v1/pipelines/&#123;id&#125;/runs/&#123;run_id&#125;</code>) or from Workflow Studio.
+  </p>
+
+  <h2 id="agent-sessions">Agent sessions</h2>
+  <p>
+    Agent sessions are durable (Postgres-backed). Inspect a session with <code class="lp-inline-code">GET /v1/agents/&#123;agent_id&#125;/sessions/&#123;session_id&#125;</code> — turns, tool calls, approval state, and the full prompt trace.
+    Steering (<code class="lp-inline-code">POST /v1/agents/.../steer</code>) and cancellation (<code class="lp-inline-code">POST .../cancel</code>) are control-plane operations, not client-side conventions.
+  </p>
+
+  <h2 id="sidecars">Sidecars &amp; apps</h2>
+  <ul>
+    <li><code class="lp-inline-code">GET /health/ready</code> on every sidecar — what <code class="lp-inline-code">lace-app status</code> checks.</li>
+    <li><code class="lp-inline-code">GET /v1/apps/&#123;app_id&#125;</code> + <code class="lp-inline-code">GET /v1/apps/&#123;app_id&#125;/releases</code> — release history and health.</li>
+    <li>Platform metrics: pipeline success rate, retrieval latency, reranker GPU queue depth, ingest lag — exposed via Prometheus in dev, CloudWatch in cloud.</li>
+  </ul>
+
+  <h2 id="cost">Cost dashboards</h2>
+  <p>
+    Token and cost accounting is per tenant, per model, per day. Admins see it in the console; operators can pull it from <code class="lp-inline-code">GET /v1/billing/usage</code>. Budgets are enforced — a hard cap stops dispatch before the overrun, not after.
+  </p>
+
+  <p>Next: <a href="/docs/governance">governance &amp; security</a> or <a href="/docs/publishing">publishing &amp; releases</a>.</p>
+</DocsPage>

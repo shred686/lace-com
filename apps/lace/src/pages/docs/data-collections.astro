@@ -1,55 +1,101 @@
 ---
 import DocsPage from "../../layouts/DocsPage.astro";
 
-const codeData = `<span class="tk-c"># app/data.py — typed, tenant-scoped collections with an admin panel for free.</span>
-<span class="tk-k">from</span> lace_app_sdk.data <span class="tk-k">import</span> <span class="tk-n">AppDataCollectionSchema</span>
+const codeData = `<span class="tk-k">from</span> lace_app_sdk.data <span class="tk-k">import</span> <span class="tk-n">AppDataCollectionSchema</span>, <span class="tk-n">AppDataCapability</span>, <span class="tk-n">PhysicalStorageSpec</span>, <span class="tk-n">AppDataUniqueConstraint</span>
 
 <span class="tk-n">TICKETS</span> = <span class="tk-f">AppDataCollectionSchema</span>(
-    app_id=<span class="tk-s">"acme.field_intake"</span>,
-    collection_id=<span class="tk-s">"tickets"</span>,
-    display_name=<span class="tk-s">"Intake Tickets"</span>,
+    app_id=<span class="tk-s">"acme.field_intake"</span>, collection_id=<span class="tk-s">"tickets"</span>, display_name=<span class="tk-s">"Tickets"</span>,
     storage_backend=<span class="tk-s">"generic_app_data"</span>,
-    json_schema={
-        <span class="tk-s">"type"</span>: <span class="tk-s">"object"</span>,
-        <span class="tk-s">"properties"</span>: {
-            <span class="tk-s">"subject"</span>:  {<span class="tk-s">"type"</span>: <span class="tk-s">"string"</span>},
-            <span class="tk-s">"priority"</span>: {<span class="tk-s">"enum"</span>: [<span class="tk-s">"low"</span>, <span class="tk-s">"normal"</span>, <span class="tk-s">"urgent"</span>]},
-            <span class="tk-s">"evidence_blob"</span>: {<span class="tk-s">"type"</span>: <span class="tk-s">"string"</span>},
-        },
-    },
-)`;
+    json_schema={<span class="tk-s">"type"</span>: <span class="tk-s">"object"</span>, <span class="tk-s">"properties"</span>: {
+        <span class="tk-s">"subject"</span>: {<span class="tk-s">"type"</span>: <span class="tk-s">"string"</span>},
+        <span class="tk-s">"priority"</span>: {<span class="tk-s">"enum"</span>: [<span class="tk-s">"low"</span>, <span class="tk-s">"normal"</span>, <span class="tk-s">"urgent"</span>]},
+        <span class="tk-s">"evidence_blob"</span>: {<span class="tk-s">"type"</span>: <span class="tk-s">"string"</span>},
+    }},
+    required_fields=[<span class="tk-s">"subject"</span>], identity_fields=[<span class="tk-s">"subject"</span>],
+    unique_constraints=[<span class="tk-f">AppDataUniqueConstraint</span>(name=<span class="tk-s">"ux_tickets_subject"</span>, fields=[<span class="tk-s">"subject"</span>])],
+    searchable_fields=[<span class="tk-s">"subject"</span>], sortable_fields=[<span class="tk-s">"subject"</span>, <span class="tk-s">"updated_at"</span>],
+    description=<span class="tk-s">"Field intake tickets — one row per subject, searchable."</span>,
+    physical_storage=<span class="tk-f">PhysicalStorageSpec</span>(capabilities=[<span class="tk-n">AppDataCapability</span>.EVENT_LOG, <span class="tk-n">AppDataCapability</span>.FULL_TEXT_INDEX]),
+)
+`;
+
+const codeCrud = `<span class="tk-k">from</span> lace_app_sdk.data <span class="tk-k">import</span> <span class="tk-n">AppDataService</span>, <span class="tk-n">AppDataCreateRequest</span>, <span class="tk-n">AppDataQueryRequest</span>, <span class="tk-n">AppDataPatchRequest</span>
+
+svc = <span class="tk-f">AppDataService</span>(app_state=state)
+
+<span class="tk-c"># create — 409 on unique violation</span>
+rec = svc.<span class="tk-f">create_record</span>(<span class="tk-s">"acme.field_intake"</span>, <span class="tk-s">"tickets"</span>,
+                        <span class="tk-f">AppDataCreateRequest</span>(data_json={<span class="tk-s">"subject"</span>: <span class="tk-s">"Heater site 12"</span>, <span class="tk-s">"priority"</span>: <span class="tk-s">"urgent"</span>}))
+<span class="tk-c"># → AppDataRecordEnvelope(record_id, data_json, created_at, updated_at)</span>
+
+<span class="tk-c"># list / search — full-text over searchable_fields</span>
+page = svc.<span class="tk-f">list_records</span>(<span class="tk-s">"acme.field_intake"</span>, <span class="tk-s">"tickets"</span>,
+                         <span class="tk-f">AppDataQueryRequest</span>(search=<span class="tk-s">"heater"</span>, limit=<span class="tk-n">20</span>, offset=<span class="tk-n">0</span>))
+
+<span class="tk-c"># patch / delete</span>
+svc.<span class="tk-f">patch_record</span>(<span class="tk-s">"acme.field_intake"</span>, <span class="tk-s">"tickets"</span>, rec.record_id,
+                 <span class="tk-f">AppDataPatchRequest</span>(data_json={<span class="tk-s">"priority"</span>: <span class="tk-s">"normal"</span>}))
+svc.<span class="tk-f">delete_record</span>(<span class="tk-s">"acme.field_intake"</span>, <span class="tk-s">"tickets"</span>, rec.record_id)
+
+<span class="tk-c"># blobs — opaque payloads, reference from row</span>
+<span class="tk-k">from</span> lace_app_sdk.data <span class="tk-k">import</span> <span class="tk-n">put_blob</span>, <span class="tk-n">get_blob</span>
+blob_ref = <span class="tk-f">put_blob</span>(state, data=<span class="tk-f">open</span>(<span class="tk-s">"evidence.pdf"</span>,<span class="tk-s">"rb"</span>).<span class="tk-f">read</span>(), content_type=<span class="tk-s">"application/pdf"</span>)
+<span class="tk-c"># store blob_ref in row.evidence_blob so queries stay indexed</span>
+`;
 ---
 
 <DocsPage slug="data-collections">
   <h1>Data collections</h1>
-  <p class="lpd-sub">
-    Collections are typed with JSON Schema and served through the governed
-    <code class="lp-inline-code">AppDataService</code> — tenant-scoped, audited,
-    with an automatic admin panel.
-  </p>
+  <p class="lpd-sub">Collections are typed with JSON Schema and served through the governed <code class="lp-inline-code">AppDataService</code> — tenant-scoped, audited, with an automatic admin panel and durable storage.</p>
 
-  <div class="lp-code">
-    <div class="lp-code-head"><span>app/data.py</span><em>python</em></div>
-    <pre><code set:html={codeData} /></pre>
+  <div class="lp-code"><div class="lp-code-head"><span>python</span><em>app/data.py</em></div><pre><code set:html={codeData} /></pre></div>
+
+  <h2 id="two-planes">Two planes, one rule</h2>
+  <div class="lpd-callout">
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M12 8v.5M12 11v5" stroke="currentColor" stroke-width="1.6"/></svg>
+    <p><strong>Dual-plane hard rule.</strong> Anything you <code class="lp-inline-code">list</code> / <code class="lp-inline-code">get</code> / <code class="lp-inline-code">query</code> must be in a typed <code class="lp-inline-code">AppDataCollectionSchema</code> (Plane 1). Use <code class="lp-inline-code">put_blob</code> only for opaque/large payloads (Plane 2) and reference <code class="lp-inline-code">blob_ref</code> from the row so queries remain indexed. Never use an in-memory dict/list for listing data — it dies on restart and <code class="lp-inline-code">GET /notes</code> returns <code class="lp-inline-code">[]</code> after redeploy (automatic proof-lane FAIL).</p>
+  </div>
+  <div class="lpd-table-wrap">
+    <table>
+      <thead><tr><th>Plane</th><th>What it is</th><th>API</th></tr></thead>
+      <tbody>
+        <tr><td>Plane 1 — RDS typed collections</td><td>JSONB rows in <code class="lp-inline-code">app_data.records</code>, scoped by <code class="lp-inline-code">(tenant_id, app_id, collection_id)</code></td><td><code class="lp-inline-code">AppDataService.create_record / list_records / patch_record / delete_record</code></td></tr>
+        <tr><td>Plane 2 — content-addressed blobs</td><td>MinIO/S3, deduped by hash</td><td><code class="lp-inline-code">put_blob / get_blob / put_blob_json / get_blob_json</code> (<code class="lp-inline-code">lace_app_sdk.data</code> / <code class="lp-inline-code">lace_app_sdk.blob</code>)</td></tr>
+      </tbody>
+    </table>
   </div>
 
-  <h2 id="blobs">Binary payloads</h2>
+  <h2 id="schema">Schema fields that matter</h2>
+  <div class="lpd-table-wrap">
+    <table>
+      <thead><tr><th>Field</th><th>What it controls</th></tr></thead>
+      <tbody>
+        <tr><td><code class="lp-inline-code">json_schema</code></td><td>JSON Schema for the row; validated on write</td></tr>
+        <tr><td><code class="lp-inline-code">required_fields</code></td><td>Must be present on create</td></tr>
+        <tr><td><code class="lp-inline-code">identity_fields</code></td><td>Derives <code class="lp-inline-code">record_id</code> (e.g. <code class="lp-inline-code">["subject"]</code> → <code class="lp-inline-code">record_id == subject</code>)</td></tr>
+        <tr><td><code class="lp-inline-code">unique_constraints</code></td><td>DB-level UNIQUE → HTTP 409 <code class="lp-inline-code">app_data_unique_constraint_failed</code> on violation</td></tr>
+        <tr><td><code class="lp-inline-code">searchable_fields</code> + <code class="lp-inline-code">FULL_TEXT_INDEX</code></td><td>GIN index for <code class="lp-inline-code">search=</code> queries over those fields</td></tr>
+        <tr><td><code class="lp-inline-code">sortable_fields</code></td><td>Allowed <code class="lp-inline-code">sort_by</code></td></tr>
+        <tr><td><code class="lp-inline-code">physical_storage.capabilities</code></td><td><code class="lp-inline-code">EVENT_LOG</code> (audit row per write) + <code class="lp-inline-code">FULL_TEXT_INDEX</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="crud">CRUD — the calls you actually make</h2>
+  <div class="lp-code"><div class="lp-code-head"><span>python</span><em>app/routes.py — AppDataService</em></div><pre><code set:html={codeCrud} /></pre></div>
   <p>
-    Binary content goes through <code class="lp-inline-code">put_blob</code> and
-    <code class="lp-inline-code">get_blob</code> rather than being inlined into
-    records. Blobs are tenant-scoped and audited on the same terms as
-    structured data.
+    In <code class="lp-inline-code">AppRouteProvider.register_routes</code>, register the collection once at boot (idempotent): <code class="lp-inline-code">AppDataService(state).register_collection(TICKETS)</code>. See <code class="lp-inline-code">src/lace_app_sdk/examples/notes_app/routes.py</code> for the full <code class="lp-inline-code">GET /notes</code> example (literal <code class="lp-inline-code">/notes/search</code> before <code class="lp-inline-code">/notes/&#123;note_id&#125;</code>).
   </p>
 
-  <h2 id="no-bypass">No raw tables, no policy bypass</h2>
+  <h2 id="manifest">Wiring to the manifest</h2>
   <p>
-    Apps never hold a database handle. Reads and writes go through
-    <code class="lp-inline-code">AppDataService</code>, which applies tenancy and
-    policy on every call — so there is no path where an app reaches storage
-    directly and the audit log simply does not see it. The admin panel that
-    comes with a collection is generated from the same schema, which is why it
-    exists without being written.
+    Declare <code class="lp-inline-code">TICKETS</code> in <code class="lp-inline-code">data_collections=[TICKETS]</code> of your <code class="lp-inline-code">LaceAppManifest</code> and call <code class="lp-inline-code">write_app_manifest(MANIFEST, "lace_app_manifest.json")</code> so the publisher sees it. The publisher also auto-derives collections from <code class="lp-inline-code">app/data.py</code> as a fallback, but explicit registration is preferred.
   </p>
 
-  <p>Next: <a href="/docs/tools">tools</a>.</p>
+  <h2 id="admin">Admin panel &amp; audit</h2>
+  <p>
+    Every collection gets a generated admin panel at <code class="lp-inline-code">/admin/app-data/&#123;collection_id&#125;</code> — no code. Every create / patch / delete appends a row to the <code class="lp-inline-code">EVENT_LOG</code> with tenant, principal, before/after, and trace id. Retention is per tenant (see <a href="/docs/governance">governance</a>).
+  </p>
+
+  <p>Next: <a href="/docs/tools">tools</a> or <a href="/docs/routes-ui">routes &amp; UI</a>.</p>
 </DocsPage>

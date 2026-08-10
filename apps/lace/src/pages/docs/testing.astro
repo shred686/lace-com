@@ -1,0 +1,69 @@
+---
+import DocsPage from "../../layouts/DocsPage.astro";
+
+const codeTest = `<span class="tk-f">lace-app</span> <span class="tk-n">test</span>
+<span class="tk-c"># → typecheck (pyright/mypy if configured)</span>
+<span class="tk-c"># → build (vite + python -m compileall)</span>
+<span class="tk-c"># → route smoke (mount providers, GET /health/ready, GET /apps/&lt;app_id&gt;/api/* 2xx)</span>
+<span class="tk-c"># → tool invocation (AppToolRegistry handler, real args, 200 schema)</span>
+<span class="tk-c"># → permission lane (RBAC scope × resource ACL matrix)</span>
+<span class="tk-c"># → AppData contract (collections exist, constraints hold, search indexes present)</span>
+
+<span class="tk-f">lace-app</span> <span class="tk-n">test</span> <span class="tk-o">--dir</span> ./field_intake <span class="tk-o">--json</span> &gt; proof.json
+`;
+---
+
+<DocsPage slug="testing">
+  <h1>Testing &amp; proof lanes</h1>
+  <p class="lpd-sub">Every app ships its own proof harness. <code class="lp-inline-code">lace-app test</code> runs it locally — the same lanes CI runs before sealing a release.</p>
+
+  <h2 id="why">Why proof lanes exist</h2>
+  <p>
+    A builder-generated app reaches publish through the same gate as a hand-written one. The harness (<code class="lp-inline-code">src/lace_app_sdk/testing.py</code>, wired by <code class="lp-inline-code">lace.builder.publisher</code>) is the enforcement point: if a lane fails, the publisher refuses to seal.
+    Running it locally closes the loop before you push.
+  </p>
+
+  <h2 id="lanes">The lanes</h2>
+  <div class="lpd-table-wrap">
+    <table>
+      <thead><tr><th>Lane</th><th>What it checks</th><th>Typical failure</th></tr></thead>
+      <tbody>
+        <tr><td><code class="lp-inline-code">typecheck</code></td><td><code class="lp-inline-code">pyright</code> / <code class="lp-inline-code">mypy</code> across <code class="lp-inline-code">app/</code> (if configured)</td><td>Missing import or typed schema drift</td></tr>
+        <tr><td><code class="lp-inline-code">build</code></td><td><code class="lp-inline-code">vite build</code> for <code class="lp-inline-code">ui/</code> + <code class="lp-inline-code">python -m compileall app/</code></td><td>Broken UI bundle or syntax error</td></tr>
+        <tr><td><code class="lp-inline-code">route_smoke</code></td><td>Mounts <code class="lp-inline-code">AppRouteProvider</code>s and curls <code class="lp-inline-code">/health/ready</code> + app routes</td><td>Unmounted route or 500 on GET</td></tr>
+        <tr><td><code class="lp-inline-code">tool</code></td><td>Invokes each <code class="lp-inline-code">@tool</code> handler with a representative payload via <code class="lp-inline-code">AppToolRegistry</code></td><td>Descriptor/handler mismatch or missing <code class="lp-inline-code">tool_modules</code> import</td></tr>
+        <tr><td><code class="lp-inline-code">permission</code></td><td>Matrix of RBAC scopes × resource ACLs over routes and tools</td><td>Public route leaking tenant data</td></tr>
+        <tr><td><code class="lp-inline-code">app_data</code></td><td>Collections registered, unique constraints hold, full-text indexes exist, <code class="lp-inline-code">GET /notes</code> survives restart</td><td>Listing from an in-memory dict (the harness restarts the sidecar and checks persistence)</td></tr>
+        <tr><td><code class="lp-inline-code">isolation</code></td><td>Builder isolation + import-boundary scan (<code class="lp-inline-code">lace.builder.import_boundary</code>)</td><td>App imports <code class="lp-inline-code">lace.apps.*</code> directly</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="run">Running it</h2>
+  <div class="lp-code"><div class="lp-code-head"><span>terminal</span><em>bash</em></div><pre><code set:html={codeTest} /></pre></div>
+  <ul>
+    <li>Requires <code class="lp-inline-code">lace-app-sdk[runtime]</code> — base install prints a clear hint and exits non-zero if you forget.</li>
+    <li>Exit code 0 = all lanes passed. Exit code 1 + JSON report = at least one lane failed (use <code class="lp-inline-code">--json</code> to pipe into CI).</li>
+    <li>Run from the app root (where <code class="lp-inline-code">lace_app_manifest.json</code> lives) or pass <code class="lp-inline-code">--dir</code>.</li>
+  </ul>
+
+  <h2 id="fixtures">Writing fixtures</h2>
+  <p>
+    Put tests under <code class="lp-inline-code">tests/</code>. The harness discovers <code class="lp-inline-code">tests/conftest.py</code> for shared fixtures (a seeded <code class="lp-inline-code">app_state</code>, a test tenant, a fake blob store).
+    Example patterns live in <code class="lp-inline-code">src/lace_app_sdk/examples/notes_app/</code> — see <code class="lp-inline-code">tests/test_routes.py</code> for a route smoke that actually hits <code class="lp-inline-code">AppDataService</code>.
+  </p>
+
+  <h2 id="ci">CI</h2>
+  <p>
+    <code class="lp-inline-code">lace-app push</code> uploads the repo, CI runs the harness in a throwaway environment, and only a green report seals the image. <code class="lp-inline-code">lace-app deploy</code> (direct path, no CI) still runs the same lanes locally before sealing.
+  </p>
+
+  <h2 id="pitfalls">Load-bearing pitfalls the lanes catch</h2>
+  <ul>
+    <li><strong>In-memory list for GET</strong> — <code class="lp-inline-code">GET /notes</code> returning <code class="lp-inline-code">[]</code> after a sidecar restart → automatic harness FAIL. Fix: use <code class="lp-inline-code">AppDataService.list_records</code> (see <a href="/docs/data-collections">data collections</a>).</li>
+    <li><strong>Missing <code class="lp-inline-code">tool_modules</code></strong> — tool descriptor exists but sidecar registry is empty at invoke time → 404. Fix: add <code class="lp-inline-code">tool_modules: ["app.tools"]</code> to the manifest (<a href="/docs/tools">tools</a>).</li>
+    <li><strong>Direct <code class="lp-inline-code">lace.*</code> import</strong> — breaks the facade invariant and will fail the isolation scan. Fix: import from <code class="lp-inline-code">lace_app_sdk.*</code>.</li>
+  </ul>
+
+  <p>Next: <a href="/docs/publishing">publishing &amp; releases</a> or <a href="/docs/cli">CLI reference</a>.</p>
+</DocsPage>

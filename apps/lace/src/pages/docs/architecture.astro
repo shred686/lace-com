@@ -1,0 +1,106 @@
+---
+import DocsPage from "../../layouts/DocsPage.astro";
+---
+
+<DocsPage slug="architecture">
+  <h1>Architecture overview</h1>
+  <p class="lpd-sub">
+    Five peer product surfaces share one tenant-scoped control plane.
+    Understanding that shape explains most of what the platform does and where your code fits.
+  </p>
+
+  <div class="lpd-callout">
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M12 8v5M12 13h.01" stroke="currentColor" stroke-width="1.6"/></svg>
+    <p>
+      This is the <strong>external</strong> architecture. The incremental migrations in <code class="lp-inline-code">migrations/</code>
+      are the source of truth for the schema. <code class="lp-inline-code">full_schema.sql</code> lags behind.
+    </p>
+  </div>
+
+  <h2 id="control-plane">The control plane</h2>
+  <p>
+    Every request enters through FastAPI at <code class="lp-inline-code">/v1</code> behind auth and tenant policy.
+    Tenancy is a bound execution context that follows the request into the store layer
+    (<code class="lp-inline-code">bind_store_tenant</code>), the retrieval path, and the agent runtime. It is not a header convention, and no query or tool dispatch can escape it.
+  </p>
+
+  <pre class="lpd-diagram"><code>React frontend (frontend/ :5173)
+        │
+        ▼
+FastAPI /v1  ── auth + tenant policy (src/lace/auth)
+        │
+        ├── app framework ── LaceAppManifest, collections, routes, tools, agents, pipelines
+        ├── execution ────── agent runtimes (in-process + external), pipeline orchestration, workers
+        ├── knowledge ────── datasets, connectors, ingest, RAG, enterprise search, KG
+        └── platform data ── Postgres + pgvector, object storage (MinIO/S3), event bus (NATS), Redis
+                                │                  │
+                                └──── reranker (services/reranker, GPU) ────┘
+</code></pre>
+
+  <h2 id="five-surfaces">The five surfaces</h2>
+  <div class="lpd-table-wrap">
+    <table>
+      <thead><tr><th>Surface</th><th>What it is</th><th>Where it lives</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Apps</strong></td><td>Manifest-defined packages: routes, tools, agents, pipelines, data, UI, schedules, migrations.</td><td><code class="lp-inline-code">src/lace/apps</code>, <code class="lp-inline-code">src/lace_app_sdk/manifest</code>, <code class="lp-inline-code">src/lace_runtime</code></td></tr>
+        <tr><td><strong>Agents</strong></td><td>Tool-using definitions with deployments and channels; real agentic loops in sidecars.</td><td><code class="lp-inline-code">src/lace/agent</code>, <code class="lp-inline-code">src/lace_app_sdk/agents</code></td></tr>
+        <tr><td><strong>Pipelines</strong></td><td>Versioned, typed workflow graphs with checkpoints, retries, idempotency, DLQ.</td><td><code class="lp-inline-code">src/lace/pipeline</code></td></tr>
+        <tr><td><strong>Knowledge</strong></td><td>Datasets, connectors, ingest, retrieval, search, knowledge graph, extraction, schema packs.</td><td><code class="lp-inline-code">src/lace/domain</code>, <code class="lp-inline-code">src/lace/connectors</code></td></tr>
+        <tr><td><strong>Assistant</strong></td><td>Tenant-scoped copilot over the same APIs — OBO identity, operation catalog, context resolvers.</td><td><code class="lp-inline-code">src/lace/assistant</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="app-framework">App framework</h2>
+  <p>
+    An app is a <code class="lp-inline-code">LaceAppManifest</code> plus providers. The manifest contains only data and has no import paths for handlers,
+    so the platform can project it into catalog rows without executing app code. At activation, the sidecar imports the declared
+    <code class="lp-inline-code">tool_modules</code> / <code class="lp-inline-code">route_providers</code> / <code class="lp-inline-code">agent_providers</code> in the app's own process and registers handlers locally.
+    The platform then invokes them over HTTP (<code class="lp-inline-code">lace_runtime.tool_host</code>).
+  </p>
+  <ul>
+    <li><code class="lp-inline-code">LaceAppManifest</code> — <a href="/docs/manifest">manifest reference</a></li>
+    <li><code class="lp-inline-code">AppDataCollectionSchema</code> + <code class="lp-inline-code">AppDataService</code> — <a href="/docs/data-collections">data collections</a></li>
+    <li><code class="lp-inline-code">@tool</code> + <code class="lp-inline-code">AppToolDescriptor</code> — <a href="/docs/tools">tools</a></li>
+    <li><code class="lp-inline-code">AgentDefinition</code> + <code class="lp-inline-code">AppAgentProvider</code> — <a href="/docs/agents">agents</a></li>
+    <li><code class="lp-inline-code">AppRouteProvider</code> — <a href="/docs/routes-ui">routes &amp; UI</a></li>
+    <li><code class="lp-inline-code">AppPipelineProvider</code> — <a href="/docs/pipelines">pipelines</a></li>
+  </ul>
+
+  <h2 id="execution">Execution</h2>
+  <p>
+    <strong>Agent runtime</strong> runs turns through a real agentic loop where the model chooses tools. Guardrails, hooks, loop guards, skills,
+    and approval gates are host-registered. The manifest declares the agent and the runtime enforces the policy.
+    <strong>Pipeline runtime</strong> checkpoints every step, so a crash resumes from the last completed step. Idempotency keys make retries safe,
+    and work that cannot succeed goes to a dead-letter queue instead of disappearing.
+  </p>
+
+  <h2 id="knowledge">Knowledge stack</h2>
+  <p>
+    <strong>Datasets</strong> are tenant-scoped containers over uploads and live connectors (SharePoint, Drive, OneDrive, Dropbox, Notion, Slack, email, S3, DBs, web).
+    Each connector reports a capability manifest (incremental sync, deletes, permission reads) so the platform never assumes a lowest common denominator.
+    <strong>Ingest</strong> parses, chunks, and embeds with stable document / block / span identity.
+    <strong>Retrieval</strong> fuses lexical and vector legs with RRF, filters by source ACLs, and optionally reranks on GPU.
+    <strong>Knowledge Graph</strong> is bitemporal and evidence-gated: schema packs are versioned executable contracts, extraction is candidate-first, identity is reversible, assertions supersede rather than erase.
+  </p>
+
+  <h2 id="platform-data">Platform data</h2>
+  <p>
+    Postgres is the write store (with pgvector), NATS is the event bus, Redis is the cache/lock layer, object storage holds blobs and UI bundles.
+    Services: <code class="lp-inline-code">postgres</code>, <code class="lp-inline-code">minio</code>, <code class="lp-inline-code">nats</code>, <code class="lp-inline-code">redis</code> (base compose) plus <code class="lp-inline-code">api</code> (:8000), <code class="lp-inline-code">frontend</code> (:5173), <code class="lp-inline-code">ingest-worker</code>, <code class="lp-inline-code">chat-worker</code>, <code class="lp-inline-code">reranker</code> (dev overlay).
+    Cloud is ECS Fargate in <code class="lp-inline-code">us-east-2</code>; frontend on S3/CloudFront.
+  </p>
+
+  <h2 id="request-flow">Request flow</h2>
+  <ol>
+    <li>Browser → FastAPI → auth + tenant binding → route handler or app sidecar (via <code class="lp-inline-code">/apps/&lt;app_id&gt;/api/*</code>).</li>
+    <li>Data writes go through <code class="lp-inline-code">AppDataService</code> → Postgres (JSONB collections) or blob store (content-addressed).</li>
+    <li>Tool calls are dispatched to the owning app's sidecar over HTTP, with trust tier and permissions checked before dispatch.</li>
+    <li>Retrieval and enterprise search fan out to catalog / document / KG legs, fuse, ACL-finalize, and return cited results.</li>
+    <li>Every hop emits structured logs and OpenTelemetry spans with per-call model attribution.</li>
+  </ol>
+
+  <p>
+    Next: <a href="/docs/deployment">deployment options</a> or jump to <a href="/docs/install">install the SDK</a>.
+  </p>
+</DocsPage>

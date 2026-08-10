@@ -2,55 +2,71 @@
 import DocsPage from "../../layouts/DocsPage.astro";
 
 const modules = [
-  ["manifest", "LaceAppManifest — the canonical app declaration: routes, tools, pipelines, agents, data, UI, schedules, migrations.", "/docs/manifest"],
-  ["data", "App-owned collections, records, and queries plus blob storage — served through the governed AppDataService.", "/docs/data-collections"],
-  ["tools", "Custom tool providers with metadata, registration, and trust-tiered execution contexts.", "/docs/tools"],
-  ["agents", "Agent definitions, capabilities, loop-guard config, in-loop skills, approval gates, hooks, and guardrails.", "/docs/agents"],
-  ["skills", "Reusable agent skills (AgentSkill) declared inside agent definitions.", "/docs/agents"],
-  ["pipelines", "Pipeline providers that contribute typed steps to the workflow graph.", "/docs/workflows"],
-  ["routes", "HTTP route providers served by the sidecar app runtime.", null],
-  ["connectors", "Dataset connector contracts: capability manifest and runtime protocol.", "/docs/datasets"],
-  ["memory", "Identity-scoped memory: custom axes, formation hooks, and governed retrieval.", null],
-  ["policy", "App policy providers for access and action rules.", "/docs/governance"],
-  ["migrations", "App-owned schema evolution, applied through the platform lifecycle.", null],
-  ["ui", "Runtime-UI declarations loaded by the frontend plugin host.", null],
-  ["testing", "Harnesses for validating app builds before they're sealed and published.", null],
+  ["manifest", "LaceAppManifest — canonical app declaration; routes, tools, pipelines, agents, data, UI, schedules, migrations. Pure _contracts layer.", "/docs/manifest", "No"],
+  ["data", "AppDataCollectionSchema, AppDataService, put_blob/get_blob, BlobStore — Plane 1 (RDS) + Plane 2 (blobs).", "/docs/data-collections", "Contracts: no; Service/blob: yes"],
+  ["tools", "@tool, AppToolDescriptor, AppToolRegistry — process-local, (app_id, tool_id)-scoped.", "/docs/tools", "No"],
+  ["agents", "AgentDefinition, AppAgentProvider, capabilities, LoopGuardConfig, HookRegistry, GuardrailRegistry, make_default_app_agent.", "/docs/agents", "Yes"],
+  ["skills", "AgentSkill — reusable in-loop behaviours (in_loop_skills + use_skill progressive disclosure).", "/docs/agents", "Yes"],
+  ["pipelines", "AppPipelineProvider — typed workflow graphs compiled by the same compiler the platform runs.", "/docs/pipelines", "Yes"],
+  ["routes", "AppRouteProvider, AppRouteContext, AppRouteMetadata — FastAPI routes at /apps/<app_id>/api/*.", "/docs/routes-ui", "Yes"],
+  ["connectors", "Connector capability manifest + runtime protocol (capability-scoped sync).", "/docs/datasets", "Yes"],
+  ["memory", "register_axis_type, register_formation_hook, form_axis_memories — custom memory axes.", null, "Yes"],
+  ["policy", "AppPolicyProvider — access & action rules (RBAC supplementary).", "/docs/governance", "Yes"],
+  ["migrations", "AppDataMigrations — collection evolution via platform lifecycle.", null, "Yes"],
+  ["ui", "AppRuntimeUiDeclaration — Module Federation remote at /ui/manifest.json.", "/docs/routes-ui", "No (declaration)"],
+  ["testing", "Proof harness — typecheck / build / route_smoke / tool / permission / app_data lanes.", "/docs/testing", "Yes"],
+  ["blob / cache / secrets / jobs", "put_blob, BlobStore, cache helpers, get_secret, job handlers.", "/docs/routes-ui", "Mixed"],
 ] as const;
 ---
 
 <DocsPage slug="modules">
-  <h1>Module reference</h1>
-  <p class="lpd-sub">
-    Every module published by <code class="lp-inline-code">lace-app-sdk</code>,
-    and what each one gives you.
-  </p>
+  <h1>lace-app-sdk module reference</h1>
+  <p class="lpd-sub">Every module published by <code class="lp-inline-code">lace-app-sdk</code> — what it re-exports, where to read more, and whether it needs the live <code class="lp-inline-code">lace</code> runtime.</p>
+
+  <div class="lpd-callout">
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M12 8v.5M12 11v5" stroke="currentColor" stroke-width="1.6"/></svg>
+    <p>New to the SDK? Start at <a href="/docs/sdk-overview">the SDK itself — facade, not fork</a> (two installs, lazy binding, <code class="lp-inline-code">_contracts</code> layer) then <a href="/docs/quickstart">quickstart</a>.</p>
+  </div>
 
   <h2 id="modules">Modules</h2>
   <div class="lpd-table-wrap">
     <table>
-      <thead>
-        <tr><th>Module</th><th>What it gives you</th></tr>
-      </thead>
+      <thead><tr><th>Module</th><th>What it gives you</th><th>Needs runtime?</th></tr></thead>
       <tbody>
-        {
-          modules.map(([name, description, href]) => (
-            <tr>
-              <td><code class="lp-inline-code">{name}</code></td>
-              <td>
-                {description}
-                {href && <> <a href={href}>Guide →</a></>}
-              </td>
-            </tr>
-          ))
-        }
+        {modules.map(([name, description, href, needs]) => (
+          <tr>
+            <td><code class="lp-inline-code">lace_app_sdk.{name}</code></td>
+            <td>{description} {href && <> <a href={href}>Guide →</a></>}</td>
+            <td>{needs}</td>
+          </tr>
+        ))}
       </tbody>
     </table>
   </div>
 
+  <h2 id="lifted">Top-level lifted symbols</h2>
+  <p>Available as <code class="lp-inline-code">import lace_app_sdk; lace_app_sdk.LaceAppManifest</code>:</p>
+  <ul>
+    <li><code class="lp-inline-code">LaceAppManifest</code>, <code class="lp-inline-code">write_app_manifest</code></li>
+    <li><code class="lp-inline-code">AppDataCollectionSchema</code>, <code class="lp-inline-code">AppDataService</code>, <code class="lp-inline-code">AppDataCreateRequest</code>, <code class="lp-inline-code">AppDataQueryRequest</code>, <code class="lp-inline-code">put_blob</code>, <code class="lp-inline-code">get_blob</code></li>
+    <li><code class="lp-inline-code">tool</code>, <code class="lp-inline-code">AppToolDescriptor</code>, <code class="lp-inline-code">AppToolRegistry</code></li>
+    <li><code class="lp-inline-code">AppRouteProvider</code>, <code class="lp-inline-code">AppAgentProvider</code>, <code class="lp-inline-code">AgentDefinition</code>, <code class="lp-inline-code">AppAgentRunner</code>, <code class="lp-inline-code">AppPipelineProvider</code>, <code class="lp-inline-code">AppPolicyProvider</code>, <code class="lp-inline-code">AgentSkill</code></li>
+    <li><code class="lp-inline-code">register_axis_type</code>, <code class="lp-inline-code">register_formation_hook</code>, <code class="lp-inline-code">form_axis_memories</code>, <code class="lp-inline-code">get_secret</code>, <code class="lp-inline-code">get_setting</code></li>
+  </ul>
+  <p>See <code class="lp-inline-code">src/lace_app_sdk/__init__.py</code> — <code class="lp-inline-code">_SUBMODULES</code> + <code class="lp-inline-code">_LIFTED_SYMBOLS</code> — for the full map.</p>
+
+  <h2 id="contracts">Where to read deeper</h2>
+  <ul>
+    <li><a href="/docs/manifest">Manifest reference</a> — every <code class="lp-inline-code">LaceAppManifest</code> field</li>
+    <li><a href="/docs/data-collections">Data collections &amp; blobs</a> — dual-plane rule + CRUD</li>
+    <li><a href="/docs/tools">Tools</a> — <code class="lp-inline-code">@tool</code> + registry + policy</li>
+    <li><a href="/docs/agents">Agents &amp; skills</a> — loop guards, skills, hooks, guardrails</li>
+    <li><a href="/docs/pipelines">Pipelines</a> — control-flow primitives + durability</li>
+    <li><a href="/docs/routes-ui">Routes &amp; UI</a> — sidecar mounting + <code class="lp-inline-code">/ui/manifest.json</code></li>
+    <li><a href="/docs/testing">Testing &amp; proof lanes</a> — what <code class="lp-inline-code">lace-app test</code> checks</li>
+    <li><a href="/docs/cli">CLI reference</a> — every verb + flags</li>
+  </ul>
+
   <h2 id="lifecycle">Publishing lifecycle</h2>
-  <p class="lpd-note">
-    Every app — generated or hand-written — publishes through the same audited
-    lifecycle: intent → architect → scaffold → validate → proof lanes → seal →
-    publish.
-  </p>
+  <p class="lpd-note">Every app — generated or hand-written — publishes through the same audited lifecycle: intent → architect → scaffold → validate → proof lanes → seal → publish. There is no faster, less-governed path because the code came from a model. See <a href="/docs/publishing">publishing &amp; releases</a>.</p>
 </DocsPage>

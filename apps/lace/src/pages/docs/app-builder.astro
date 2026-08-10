@@ -1,44 +1,107 @@
 ---
 import DocsPage from "../../layouts/DocsPage.astro";
+
+const codePlan = `<span class="tk-c"># What you typed</span>
+<span class="tk-s">"An operations console: browse work orders by site/status, ask the Grid Dispatch
+ agent operations questions, and have it text the on-call tech when you escalate."</span>
+
+<span class="tk-c"># What the architect returns — a plan, not code yet</span>
+{
+  <span class="tk-s">"app_id"</span>: <span class="tk-s">"alpenglow.grid_ops_console"</span>,
+  <span class="tk-s">"data_collections"</span>: [{<span class="tk-s">"collection_id"</span>: <span class="tk-s">"work_orders"</span>, <span class="tk-s">"indexes"</span>: [<span class="tk-s">"site"</span>, <span class="tk-s">"status"</span>]}],
+  <span class="tk-s">"routes"</span>: [{<span class="tk-s">"path"</span>: <span class="tk-s">"/work-orders"</span>, <span class="tk-s">"methods"</span>: [<span class="tk-s">"GET"</span>]}],
+  <span class="tk-s">"agents"</span>: [{<span class="tk-s">"agent_id"</span>: <span class="tk-s">"grid_dispatch"</span>, <span class="tk-s">"capabilities"</span>: [<span class="tk-s">"lookup_work_order"</span>, <span class="tk-s">"notify_tech"</span>]}],
+  <span class="tk-s">"proof_lanes"</span>: [<span class="tk-s">"typecheck"</span>, <span class="tk-s">"build"</span>, <span class="tk-s">"route_smoke"</span>, <span class="tk-s">"tool"</span>, <span class="tk-s">"permission"</span>]
+}
+`;
+
+const codePush = `<span class="tk-f">lace-app</span> <span class="tk-n">clone</span> alpenglow.grid_ops_console  <span class="tk-c"># → ./grid_ops_console</span>
+<span class="tk-f">cd</span> grid_ops_console <span class="tk-o">&&</span> <span class="tk-f">lace-app</span> <span class="tk-n">dev</span>          <span class="tk-c"># local sidecar at localhost:8080</span>
+<span class="tk-c"># edit app/routes.py, app/agents.py, app/data.py</span>
+<span class="tk-f">lace-app</span> <span class="tk-n">test</span>                              <span class="tk-c"># proof lanes locally</span>
+<span class="tk-f">lace-app</span> <span class="tk-n">push</span>                              <span class="tk-c"># CI → seal → Release rel_…</span>
+<span class="tk-f">lace-app</span> <span class="tk-n">releases</span> <span class="tk-n">list</span> alpenglow.grid_ops_console
+<span class="tk-f">lace-app</span> <span class="tk-n">releases</span> <span class="tk-n">rollback</span> alpenglow.grid_ops_console rel_0Ck8aX9q
+`;
 ---
 
 <DocsPage slug="app-builder">
   <h1>App Builder</h1>
-  <p class="lpd-sub">
-    Describe an application and the builder plans it, constructs it in a
-    sandbox, validates it through proof lanes, and publishes it as an isolated
-    sidecar with versioned releases and one-click rollback.
+  <p class="lpd-sub">Describe an application in plain language and the builder plans it, constructs it in a sandbox, proves it, and publishes it as a versioned, isolated sidecar — with the same contracts a senior engineer would hand-write.</p>
+
+  <div class="lpd-callout">
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M12 8v.5M12 11v5" stroke="currentColor" stroke-width="1.6"/></svg>
+    <p>The builder emits code against the public <code class="lp-inline-code">lace-app-sdk</code> and never against core internals. Generated software stays reviewable because identity, data access, policy, limits, and audit are platform capabilities that the generated code calls. See <a href="/blog/enterprise-vibe-coding">enterprise vibe coding</a>.</p>
+  </div>
+
+  <h2 id="lifecycle">The build lifecycle — intent → published app</h2>
+  <pre class="lpd-diagram"><code>Intent (your prompt)
+   │  ──▶  Architect (lace.builder.architect_model) ──▶ Plan (AppDefinitionIR)
+   │         renders app-type templates, app-builder clone instructions, and AppDefinitionIR
+   ▼
+Scaffold ──▶ Sandbox workspace (lace.builder.workspace.BuilderWorkspaceManager, isolated filesystem)
+   │
+   ├─▶ Validate ──▶ import-boundary scan, schema checks, dependency graph
+   ├─▶ Proof lanes ──▶ typecheck / build / route_smoke / tool / permission / app_data / isolation
+   ├─▶ Seal ──▶ package (lace.builder.package) → image + manifest snapshot
+   └─▶ Publish ──▶ BuilderPublisher → Release row (immutable, content-addressed)
+                        │
+                        └─▶ SidecarActivator → isolated sidecar at /apps/&lt;app_id&gt;/api/*, /ui/manifest.json
+                                      │
+                                      └─▶ day-two: prompt an edit OR clone + lace-app dev/push/rollback
+</code></pre>
+  <p>
+    Generated apps go through the same lifecycle as hand-written ones. There is no shortcut for code that came from a model. The builder service is <code class="lp-inline-code">src/lace/builder/service.py</code>, the workspace manager is <code class="lp-inline-code">src/lace/builder/workspace.py</code>, and sealing and publishing are <code class="lp-inline-code">src/lace/builder/publisher.py</code> and <code class="lp-inline-code">src/lace/builder/app_sidecar_activation.py</code>.
   </p>
 
-  <h2 id="lifecycle">The build lifecycle</h2>
+  <h2 id="plan">The plan — what you approve before code is written</h2>
   <p>
-    Intent → architect → scaffold → validate → proof lanes → seal → publish.
-    Generated apps go through exactly the same lifecycle as hand-written ones,
-    which is the point: there is no faster, less-governed path that exists
-    because the code came from a model.
+    The architect does not jump to files. It first renders a <strong>plan</strong> — an <code class="lp-inline-code">AppDefinitionIR</code> that names the app, its data collections (with indexes and constraints), tools, agent definitions (with capabilities and approval gates), routes, pipelines, and the proof lanes it will run. You review the plan and the builder only scaffolds once you approve. Templates for common app types live in <code class="lp-inline-code">src/lace/builder/templates.py</code> and <code class="lp-inline-code">starter_scaffolds.py</code>.
+  </p>
+  <div class="lp-code"><div class="lp-code-head"><span>json</span><em>plan preview</em></div><pre><code set:html={codePlan} /></pre></div>
+
+  <h2 id="sandbox">Sandboxed construction</h2>
+  <p>
+    Construction happens in an isolated workspace on the builder host (see <code class="lp-inline-code">lace.builder.workspace</code> + <code class="lp-inline-code">lace.builder.app_shell</code>). The workspace is namespaced per builder session (stored in <code class="lp-inline-code">BuilderSessionStore</code>, Postgres-backed). The builder writes files, runs the toolchain, and proves the result there — the host install is never touched by the generated code until publish.
+    Specialist sub-agents (<code class="lp-inline-code">lace.builder.specialist_agents</code>) can be invoked for app-type-specific scaffolding (for example <code class="lp-inline-code">grid_ops_console</code>).
   </p>
 
-  <h2 id="sdk-boundary">Generated code targets the SDK</h2>
+  <h2 id="proof">Proof lanes — the same gate hand-written apps go through</h2>
   <p>
-    The builder emits code against the public
-    <a href="/docs/install"><code class="lp-inline-code">lace-app-sdk</code></a>,
-    never core internals. That boundary is what makes generated software
-    reviewable: identity, data access, policy, limits, and audit are platform
-    capabilities the generated code calls, not concerns it re-implements and
-    could get wrong.
+    Generated apps go through the same proof harness as hand-written ones. There is no shortcut for code that came from a model. See <a href="/docs/testing">testing &amp; proof lanes</a> for the lane table (typecheck, build, route_smoke, tool, permission, app_data, isolation).
+    A lane failure refuses to seal. The builder surfaces the diagnostic and you (or the architect) fix the source.
   </p>
 
-  <h2 id="isolation">Isolation and rollback</h2>
+  <h2 id="publish">Publish and versions</h2>
   <p>
-    Each published app runs as an isolated sidecar with its own release
-    versions. Rollback is one step and does not require a rebuild, so shipping a
-    bad version is a recoverable event rather than an incident.
+    On green, the publisher (<code class="lp-inline-code">lace.builder.publisher.BuilderPublisher</code>) builds the sidecar image, pins its digest in <code class="lp-inline-code">LaceApp.yaml</code>, and creates an immutable <code class="lp-inline-code">Release</code> row. The sidecar activator (<code class="lp-inline-code">lace.builder.app_sidecar_activation</code>) boots the release in its own isolated sidecar — routes at <code class="lp-inline-code">/apps/&lt;app_id&gt;/api/*</code>, UI at <code class="lp-inline-code">/ui/manifest.json</code>. Rollback is one command: re-activate the prior release's image.
   </p>
 
+  <h2 id="day-two">Day two — iterate like a real app</h2>
+  <p>Two modes, same manifest:</p>
+  <div class="lpd-table-wrap">
+    <table>
+      <thead><tr><th>Mode</th><th>How</th><th>Good for</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Prompt an edit</strong></td><td>Open the app in Builder, describe the change, approve the incremental plan. The builder re-enters the sandboxed lifecycle.</td><td>Product tweaks, new field, new agent capability, copy changes.</td></tr>
+        <tr><td><strong>Clone and code</strong></td><td><code class="lp-inline-code">lace-app clone &lt;app_id&gt;</code> → <code class="lp-inline-code">lace-app dev</code> → edit <code class="lp-inline-code">app/</code> → <code class="lp-inline-code">lace-app test</code> → <code class="lp-inline-code">lace-app push</code> (or <code class="lp-inline-code">deploy --cloud</code>).</td><td>Deep logic, custom tools, pipelines, migrations, UI bundles.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="lp-code"><div class="lp-code-head"><span>terminal</span><em>bash</em></div><pre><code set:html={codePush} /></pre></div>
+
+  <h2 id="starter-apps">Starter apps and examples</h2>
   <p>
-    See <a href="/platform/app-builder">App Builder</a> for the product surface,
-    or the blog post on
-    <a href="/blog/enterprise-vibe-coding">enterprise vibe coding</a> for the
-    reasoning behind the boundary.
+    The quickest way to evaluate the Builder's output is to clone a promoted sidecar: <code class="lp-inline-code">apps/grid_ops_console</code> (fleet operations + Grid Dispatch agent), <code class="lp-inline-code">apps/research_notes_v3</code>, <code class="lp-inline-code">src/lace_app_sdk/examples/notes_app</code> (minimal SDK tutorial). Each is a real sidecar with a <code class="lp-inline-code">main.py</code> using <code class="lp-inline-code">create_sidecar_app_from_manifest</code> plus a <code class="lp-inline-code">lace_app_manifest.json</code> and <code class="lp-inline-code">LaceApp.yaml</code>.
   </p>
+
+  <h2 id="governance">Governance does not bend for generated code</h2>
+  <ul>
+    <li>Data stays tenant-scoped through <code class="lp-inline-code">AppDataService</code>. No in-memory list reaches production.</li>
+    <li>Tool dispatch is policy-checked before execution. <code class="lp-inline-code">approval_required</code> still pauses the loop.</li>
+    <li>Logs, traces, and per-call model attribution are emitted the same way they are for hand-written apps (<a href="/docs/observability">observability</a>, <a href="/docs/governance">governance</a>).</li>
+    <li>Import-boundary scan rejects any generated file that imports <code class="lp-inline-code">lace.apps.*</code> directly. The SDK boundary is enforced at seal time.</li>
+  </ul>
+
+  <p>Publishing details: <a href="/docs/publishing">publishing &amp; releases</a> · Product surface: <a href="/platform/app-builder">App Builder</a></p>
 </DocsPage>

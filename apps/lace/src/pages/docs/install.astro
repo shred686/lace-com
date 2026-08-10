@@ -1,38 +1,93 @@
 ---
 import DocsPage from "../../layouts/DocsPage.astro";
 
-const codeInstall = `<span class="tk-c"># Python 3.11+</span>
-<span class="tk-f">pip</span> <span class="tk-n">install</span> lace-app-sdk`;
+const codeInstall = `<span class="tk-c"># Python 3.12+ — base install (pure contracts + CLI, no lace runtime needed)</span>
+<span class="tk-f">pip</span> <span class="tk-n">install</span> lace-app-sdk
+<span class="tk-f">lace-app</span> <span class="tk-n">--help</span>
+
+<span class="tk-c"># inside the LACE monorepo or your sidecar — full runtime bindings</span>
+<span class="tk-f">pip</span> <span class="tk-n">install</span> lace-app-sdk[runtime]
+
+<span class="tk-c"># isolated — recommended for CLI tools</span>
+<span class="tk-f">pipx</span> <span class="tk-n">install</span> lace-app-sdk
+`;
+
+const codeWheel = `<span class="tk-c"># until a hosted index exists, install from the wheel you build:</span>
+<span class="tk-f">python</span> -m pip wheel <span class="tk-o">--no-deps</span> <span class="tk-o">--no-build-isolation</span> \\
+  <span class="tk-o">--wheel-dir</span> dist_sdk src/lace_app_sdk
+<span class="tk-f">pip</span> <span class="tk-n">install</span> dist_sdk/lace_app_sdk-*.whl
+<span class="tk-f">lace-app</span> <span class="tk-n">--help</span>
+`;
+
+const codeVerify = `<span class="tk-f">python3</span> -c <span class="tk-s">"import lace_app_sdk; print(lace_app_sdk.__version__)"</span>
+<span class="tk-f">python3</span> -c <span class="tk-s">"from lace_app_sdk.manifest import LaceAppManifest; print('contracts ok')"</span>
+<span class="tk-f">python3</span> -c <span class="tk-s">"from lace_app_sdk.data import AppDataCollectionSchema; print('data ok')"</span>
+`;
 ---
 
 <DocsPage slug="install">
   <h1>Install the lace-app-sdk</h1>
-  <p class="lpd-sub">
-    The public, versioned contract surface for building apps on LACE. A facade
-    over the live platform contracts — never a fork of them.
-  </p>
+  <p class="lpd-sub">The public contract for building apps on LACE. It re-exports the live platform code instead of copying it.</p>
 
-  <div class="lp-code">
-    <div class="lp-code-head"><span>terminal</span><em>bash</em></div>
-    <pre><code set:html={codeInstall} /></pre>
-  </div>
+  <div class="lp-code"><div class="lp-code-head"><span>terminal</span><em>bash</em></div><pre><code set:html={codeInstall} /></pre></div>
 
   <h2 id="what-you-get">What the SDK guarantees</h2>
   <ul>
-    <li><strong>Facade, not fork</strong> — every symbol re-exports live core contracts; the builder and the sidecar resolve to the same code.</li>
-    <li><strong>Stability boundary</strong> — apps import only <code class="lp-inline-code">lace_app_sdk</code>; breaking a published symbol is a major version bump with a deprecation window.</li>
-    <li><strong>Governed by construction</strong> — data, tools, routes, and agents flow through platform services with tenancy, policy, and audit applied.</li>
+    <li><strong>Shared code</strong> — every symbol re-exports the actual platform implementation. The builder and the sidecar run the same code, so SDK updates follow core updates.</li>
+    <li><strong>Stable import path</strong> — apps import only <code class="lp-inline-code">lace_app_sdk</code>. A breaking change to a published symbol requires a major version bump with a deprecation window.</li>
+    <li><strong>Governance by default</strong> — data, tools, routes, and agents go through the platform services that enforce tenancy, policy, and audit.</li>
+    <li><strong>Works offline</strong> — the base install has no <code class="lp-inline-code">lace.*</code> dependency and runs in an air-gapped enclave.</li>
   </ul>
 
   <h2 id="requirements">Requirements</h2>
-  <p>
-    Python 3.11 or later, and access to a LACE tenant to publish against. The
-    SDK itself can be installed and explored without a tenant; publishing an app
-    requires one.
-  </p>
+  <div class="lpd-table-wrap">
+    <table>
+      <thead><tr><th>Requirement</th><th>Details</th></tr></thead>
+      <tbody>
+        <tr><td>Python</td><td><code class="lp-inline-code">>=3.12</code> (the SDK's <code class="lp-inline-code">requires-python</code>; older 3.11 pages now outdated)</td></tr>
+        <tr><td>Base deps</td><td><code class="lp-inline-code">pydantic&gt;=2,&lt;3</code> only — no <code class="lp-inline-code">lace</code>, no FastAPI, no heavy ML deps</td></tr>
+        <tr><td>To publish</td><td>A LACE tenant + API key with <code class="lp-inline-code">apps:write</code> (see <a href="/docs/authentication">authentication</a>)</td></tr>
+        <tr><td>To run locally with data</td><td>Install <code class="lp-inline-code">lace-app-sdk[runtime]</code> <em>or</em> run inside the LACE monorepo / your sidecar</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>The SDK can be installed and explored without a tenant — only <code class="lp-inline-code">publish</code> / <code class="lp-inline-code">push</code> / <code class="lp-inline-code">deploy</code> need one.</p>
 
+  <h2 id="installation-options">Installation options</h2>
   <p>
-    Next: the <a href="/docs/quickstart">quickstart</a> builds a working
-    governed application from four small files.
+    The wheel is built from <code class="lp-inline-code">src/lace_app_sdk/pyproject.toml</code> as a standalone distribution. The base package includes the pure <code class="lp-inline-code">_contracts</code> layer only. Add the <code class="lp-inline-code">runtime</code> extra when a live <code class="lp-inline-code">lace</code> runtime is available.
   </p>
+  <div class="lpd-table-wrap">
+    <table>
+      <thead><tr><th>Install</th><th>What works</th></tr></thead>
+      <tbody>
+        <tr><td><code class="lp-inline-code">pip install lace-app-sdk</code></td><td>All contracts, the <code class="lp-inline-code">lace-app</code> CLI (<code class="lp-inline-code">auth</code>, <code class="lp-inline-code">create</code>, <code class="lp-inline-code">clone</code>, <code class="lp-inline-code">open</code>/<code class="lp-inline-code">logs</code>/<code class="lp-inline-code">status</code>/<code class="lp-inline-code">releases</code>), and pure facades. <strong>No <code class="lp-inline-code">lace</code> required.</strong></td></tr>
+        <tr><td><code class="lp-inline-code">pip install lace-app-sdk[runtime]</code></td><td>Plus <code class="lp-inline-code">lace-app dev</code> (migration-apply), <code class="lp-inline-code">lace-app test</code> proof harness, and any symbol that needs the runtime (<code class="lp-inline-code">AppDataService</code>, agent/pipeline engines, blob store).</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="wheel">Installing from a wheel (today)</h2>
+  <p>
+    There is no hosted internal index yet — hosting is a pure ops step (S3-backed simple index, CodeArtifact, or private PyPI). The substance already works from the built wheel directly:
+  </p>
+  <div class="lp-code"><div class="lp-code-head"><span>terminal</span><em>bash</em></div><pre><code set:html={codeWheel} /></pre></div>
+  <p>Once published, the same line becomes <code class="lp-inline-code">pipx install lace-app-sdk</code> (or <code class="lp-inline-code">pip install lace-app-sdk</code>) with <code class="lp-inline-code">--index-url</code> — no other mechanics change.</p>
+
+  <h2 id="verify">Verify</h2>
+  <div class="lp-code"><div class="lp-code-head"><span>terminal</span><em>bash</em></div><pre><code set:html={codeVerify} /></pre></div>
+  <ul>
+    <li><code class="lp-inline-code">lace_app_sdk.__version__</code> — package version (today <code class="lp-inline-code">0.1.0.dev0</code>).</li>
+    <li><code class="lp-inline-code">lace_app_sdk.__lace_core_requires__ == "&gt;=0,&lt;1"</code> — enforced lazily at first runtime touch.</li>
+    <li>Touching a runtime symbol without <code class="lp-inline-code">lace</code> installed prints a legible <em>install with <code class="lp-inline-code">pip install lace-app-sdk[runtime]</code></em> instead of a bare <code class="lp-inline-code">ModuleNotFoundError</code>.</li>
+  </ul>
+
+  <h2 id="troubleshooting">Troubleshooting</h2>
+  <ul>
+    <li><strong><code class="lp-inline-code">lace-app: command not found</code></strong> — ensure the venv's <code class="lp-inline-code">bin</code> is on <code class="lp-inline-code">PATH</code>, or use <code class="lp-inline-code">pipx</code>.</li>
+    <li><strong><code class="lp-inline-code">ImportError: lace_app_sdk.agents.AgentDefinition requires the LACE runtime</code></strong> — expected on base install; add <code class="lp-inline-code">[runtime]</code> or run inside the monorepo.</li>
+    <li><strong>Python 3.11</strong> — upgrade; the SDK now requires 3.12.</li>
+  </ul>
+
+  <p>Next: <a href="/docs/quickstart">quickstart</a> builds a governed app from four files, or see <a href="/docs/sdk-overview">the SDK itself — facade, not fork</a>.</p>
 </DocsPage>

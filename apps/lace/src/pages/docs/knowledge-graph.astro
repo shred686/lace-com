@@ -1,50 +1,84 @@
 ---
 import DocsPage from "../../layouts/DocsPage.astro";
+
+const codePackYaml = `<span class="tk-n">pack_id</span>: <span class="tk-s">warranty.v2</span>
+<span class="tk-n">version</span>: <span class="tk-s">2.0.0</span>
+<span class="tk-n">ontology</span>: <span class="tk-s">BFO/CCO</span>
+<span class="tk-n">classes</span>:
+  - <span class="tk-n">name</span>: <span class="tk-s">WarrantyClaim</span>
+    <span class="tk-n">parent</span>: <span class="tk-s">cco:Stasis</span>
+    <span class="tk-n">attributes</span>:
+      - <span class="tk-n">reserve_amount</span>: <span class="tk-s">Money</span>
+      - <span class="tk-n">failure_mode</span>: <span class="tk-s">ControlledVocab</span>
+<span class="tk-n">relations</span>:
+  - <span class="tk-s">claim --[caused_by]--&gt; failure_mode</span>
+`;
+
+const codeExtractPoll = `<span class="tk-f">POST</span> /v1/kg/extractions
+{ <span class="tk-s">"dataset_id"</span>: <span class="tk-s">"0141b..."</span>, <span class="tk-s">"schema_pack_id"</span>: <span class="tk-s">"warranty.v2"</span>, <span class="tk-s">"budget_cap"</span>: <span class="tk-s">"small"</span> }
+<span class="tk-c"># → 202 { id, status:"running" }</span>
+<span class="tk-f">GET</span> /v1/kg/extractions/&#123;id&#125;  <span class="tk-c"># poll to succeeded | failed | cancelled (single-run law)</span>
+<span class="tk-f">GET</span> /v1/kg/entities?pack=warranty.v2&amp;query=warranty+reserves
+<span class="tk-c"># → entities + assertions + evidence_span_ids[] + conflict_sets[]</span>
+`;
 ---
 
 <DocsPage slug="knowledge-graph">
-  <h1>Knowledge graph</h1>
-  <p class="lpd-sub">
-    Schema packs are versioned, executable ontology contracts. Extraction is
-    candidate-first and evidence-gated; assertions are bitemporal.
-  </p>
+  <h1>Knowledge Graph</h1>
+  <p class="lpd-sub">Schema packs are versioned, executable ontology contracts. Extraction is candidate-first and evidence-gated. Assertions are bitemporal and reversible. Nothing is asserted without a receipt.</p>
 
-  <h2 id="schema-packs">Schema packs</h2>
+  <h2 id="schema-packs">Schema packs — contracts, not diagrams</h2>
   <p>
-    A schema pack is a versioned, executable ontology contract rather than a
-    diagram. It defines the entity and relation types the graph will accept, and
-    it is enforced at write time. Packs aligned to the Basic Formal Ontology and
-    the Common Core Ontologies ship for programs that require that conformance —
-    see <a href="/applications/lace-gov">LACE-GOV</a>.
+    A schema pack defines the entity and relation types the graph will accept and is <strong>enforced at write time</strong>. The spec is <code class="lp-inline-code">docs/SCHEMA_PACK_SYSTEM.md</code> — the single source for pack structure, forking, migration, and compliance. Packs are how the platform guarantees that what is true in the graph has the shape the ontology said it would have.
   </p>
+  <div class="lp-code"><div class="lp-code-head"><span>yaml</span><em>schema_pack.yaml</em></div><pre><code set:html={codePackYaml} /></pre></div>
+  <ul>
+    <li><strong>Versioned</strong> — <code class="lp-inline-code">warranty.v1 → warranty.v2</code> is a migration, not a rename. The pack version gates which facts are valid.</li>
+    <li><strong>Executable</strong> — the pack compiles to DB constraints and validation logic. A hand-authored diagram that drifts from the DB is impossible.</li>
+    <li><strong>BFO/CCO-aligned</strong> — packs aligned to Basic Formal Ontology and Common Core Ontologies ship for programs that require that conformance — see <a href="/applications/lace-gov">LACE-GOV</a>.</li>
+    <li><strong>Authored</strong> by hand, via the Build-with-AI Pack Architect, or programmatically.</li>
+  </ul>
 
   <h2 id="extraction">Candidate-first, evidence-gated extraction</h2>
   <p>
-    Extracted facts enter as candidates carrying a pointer to the document span
-    they came from. They become assertions only once the evidence gate — and,
-    where configured, human review — accepts them. A model's confidence is not
-    itself sufficient to put a fact in the graph.
+    Facts enter as <strong>candidates</strong> carrying a pointer to the source document span they came from (document, block, and char offsets). They become <strong>assertions</strong> only after the evidence gate accepts them, and after human review where configured. Model confidence alone is not enough to add a fact to the graph.
+  </p>
+  <p>One run, one terminal state, and a cost cap that actually stops the run.</p>
+  <div class="lp-code"><div class="lp-code-head"><span>terminal</span><em>bash</em></div><pre><code set:html={codeExtractPoll} /></pre></div>
+  <ul>
+    <li><strong>Single-run law</strong> — one active run per <code class="lp-inline-code">(dataset, pack)</code>. A second <code class="lp-inline-code">POST</code> while one is <code class="lp-inline-code">running</code> returns 409.</li>
+    <li><strong>202 → poll</strong> — launch shape is <code class="lp-inline-code">POST /v1/kg/extractions → 202</code>, then <code class="lp-inline-code">GET /v1/kg/extractions/&#123;id&#125;</code> to <code class="lp-inline-code">succeeded | failed | cancelled</code> (see <code class="lp-inline-code">.agents/skills/lace-extraction-workflow</code>).</li>
+    <li><strong>Cost cap</strong> — <code class="lp-inline-code">budget_cap: small | medium | large</code> bounds LLM spend. The run fails cleanly at the cap instead of silently degrading.</li>
+    <li><strong>Pipeline underneath</strong> — extraction is a pipeline with checkpoints and DLQ, so it resumes from the last completed step on crash or restart.</li>
+  </ul>
+  <p>
+    Inside the pipeline, the system proposes candidates and then checks each one for evidence. Without a span, there is no assertion. This candidate-first approach replaced the earlier guess-then-filter pass.
   </p>
 
-  <h2 id="identity-resolution">Reversible identity resolution</h2>
+  <h2 id="identity">Reversible identity resolution</h2>
   <p>
-    Duplicate entities merge, and the merge is reversible. Because the
-    contributing records keep their identity, an incorrect merge is undone
-    rather than reconstructed by hand — which matters the first time two
-    genuinely different people share a name.
+    Duplicate entities merge, and the merge is reversible. Because contributing records keep their identity (and the merge itself is ledgered as a fact with evidence), an incorrect merge is undone rather than reconstructed by hand. This matters the first time two genuinely different people share a name. Identity resolution clusters mentions of the same real-world entity, and splitting restores prior versions. Gazetteer grounding pins canonical forms. Proofs are in the repo as <code class="lp-inline-code">gazetteer-grounding-*.png</code>.
   </p>
 
-  <h2 id="bitemporal">Bitemporal assertions</h2>
+  <h2 id="bitemporal">Bitemporal assertions — corrections supersede, not erase</h2>
   <p>
-    Every assertion carries both valid time (when the fact was true) and
-    transaction time (when the system recorded it). Corrections supersede
-    history instead of erasing it, so a point-in-time query returns what the
-    organization actually knew on a given date — the question investigations,
-    audits, and litigation holds all turn on.
+    Every assertion carries <strong>valid time</strong> (when the fact was true in the world) and <strong>transaction time</strong> (when the system recorded it). Corrections create a new assertion that <em>supersedes</em> the prior one. History stays addressable. Point-in-time queries return what the organization actually knew on a given date — the question audits and holds turn on.
+    Conflicts — overlapping valid-time assertions on the same relation — surface as <strong>conflict sets</strong> (<code class="lp-inline-code">conflict_sets[]</code> in the query response), not as a silent winner. A human or a merge policy resolves the set.
   </p>
 
+  <h2 id="panels">Knowledge panels and citations</h2>
   <p>
-    See <a href="/platform/knowledge-graph">Knowledge Graph</a> for the product
-    surface built on this.
+    Query via <code class="lp-inline-code">POST /v1/kg/query</code> or from an agent's <code class="lp-inline-code">KnowledgeCapability</code>. Every result carries <code class="lp-inline-code">assertion_id</code> + <code class="lp-inline-code">evidence_span_ids[]</code> + <code class="lp-inline-code">security_labels</code> for ACL checks. The frontend renders <strong>knowledge panels</strong> per entity: canonical attributes, relations, timeline, and the source spans that support each fact. Every claim is traceable to the document block and char offset that justified it. The same evidence spans power enterprise search and RAG citations.
   </p>
+
+  <h2 id="walkthrough">Walkthrough — warranty reserves</h2>
+  <ol>
+    <li>Curate a dataset (<code class="lp-inline-code">alpenglow-ops</code>) from uploads or a live connector.</li>
+    <li>Author or fork a pack — <code class="lp-inline-code">warranty.v2</code> with <code class="lp-inline-code">WarrantyClaim</code> and <code class="lp-inline-code">caused_by</code>.</li>
+    <li>Run extraction at <code class="lp-inline-code">small</code> cap, poll to <code class="lp-inline-code">succeeded</code>, inspect candidates and evidence coverage.</li>
+    <li>Review conflict sets (for example, two reserve amounts for the same claim in overlapping periods) and accept, supersede, or split.</li>
+    <li>Query via <code class="lp-inline-code">POST /v1/kg/query</code> or from an agent's <code class="lp-inline-code">KnowledgeCapability</code> — every result carries <code class="lp-inline-code">assertion_id</code> + <code class="lp-inline-code">evidence_span_ids</code>.</li>
+  </ol>
+
+  <p>Platform surface: <a href="/platform/knowledge-graph">Knowledge Graph</a> · See also <a href="/docs/enterprise-search">Enterprise Search</a> (three-leg RRF over the same evidence).</p>
 </DocsPage>

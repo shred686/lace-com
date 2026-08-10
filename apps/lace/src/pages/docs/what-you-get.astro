@@ -1,0 +1,101 @@
+---
+import DocsPage from "../../layouts/DocsPage.astro";
+
+const codeManifestJson = `{
+  <span class="tk-s">"app_id"</span>: <span class="tk-s">"acme.field_intake"</span>,
+  <span class="tk-s">"display_name"</span>: <span class="tk-s">"Field Intake"</span>,
+  <span class="tk-s">"version"</span>: <span class="tk-s">"0.1.0"</span>,
+  <span class="tk-s">"data_collections"</span>: [ ... ],
+  <span class="tk-s">"route_providers"</span>: [<span class="tk-s">"app.routes:RouteProvider"</span>],
+  <span class="tk-s">"agent_providers"</span>: [<span class="tk-s">"app.agents:AgentProvider"</span>],
+  <span class="tk-s">"tool_modules"</span>: [<span class="tk-s">"app.tools"</span>],
+  <span class="tk-s">"migration_provider"</span>: <span class="tk-s">"app.migrations:Migrations"</span>
+}`;
+
+const codeSdkInstall = `<span class="tk-c"># base install — pure-pydantic contracts + CLI, no lace runtime needed</span>
+<span class="tk-f">pip</span> <span class="tk-n">install</span> lace-app-sdk
+<span class="tk-f">lace-app</span> <span class="tk-n">--help</span>  <span class="tk-c"># works</span>
+
+<span class="tk-c"># inside the monorepo / sidecar — full runtime bindings</span>
+<span class="tk-f">pip</span> <span class="tk-n">install</span> lace-app-sdk[runtime]
+`;
+---
+
+<DocsPage slug="what-you-get">
+  <h1>What gets installed — project layout</h1>
+  <p class="lpd-sub">A new LACE app is a small, conventional Python package plus two manifests. Everything else is derived from those.</p>
+
+  <h2 id="tree">The file tree</h2>
+  <pre class="lpd-diagram"><code>acme.field_intake/
+├── app/
+│   ├── __init__.py
+│   ├── data.py            # AppDataCollectionSchema — typed, tenant-scoped collections
+│   ├── tools.py           # @tool handlers + AppToolDescriptor registration
+│   ├── agents.py          # AgentDefinition + AppAgentProvider
+│   ├── routes.py          # AppRouteProvider (FastAPI routes)
+│   ├── migrations.py      # AppDataMigrations / schema evolution
+│   ├── jobs.py            # @app_task handlers (optional)
+│   └── policy.py          # AppPolicyProvider (optional)
+├── ui/                    # federated runtime-UI (optional, Module Federation)
+│   ├── src/
+│   ├── package.json
+│   └── vite.config.ts
+├── tests/
+│   ├── test_routes.py
+│   ├── test_tools.py
+│   └── conftest.py
+├── lace_app_manifest.json # canonical manifest — what the publisher seals
+├── LaceApp.yaml           # sidecar / deploy descriptor (image, limits, env, health)
+├── compose.yaml           # local dev stack (from SDK templates/lace_compose.yaml)
+├── pyproject.toml         # depends on lace-app-sdk (+ gunicorn/uvicorn/fastapi)
+├── .lace/                 # local state (git-ignored): dev state, build cache
+└── README.md
+</code></pre>
+
+  <h2 id="manifests">Two manifests, one app</h2>
+  <div class="lpd-table-wrap">
+    <table>
+      <thead><tr><th>File</th><th>Owns</th><th>When it changes</th></tr></thead>
+      <tbody>
+        <tr><td><code class="lp-inline-code">lace_app_manifest.json</code></td><td>The <strong>canonical</strong> <code class="lp-inline-code">LaceAppManifest</code> — <code class="lp-inline-code">app_id</code>, <code class="lp-inline-code">data_collections</code>, <code class="lp-inline-code">tools[]</code>, <code class="lp-inline-code">route_providers</code>, <code class="lp-inline-code">agent_providers</code>, <code class="lp-inline-code">tool_modules</code>, <code class="lp-inline-code">pipeline_providers</code>, <code class="lp-inline-code">runtime_ui</code>, etc. The publisher seals this.</td><td>Written by <code class="lp-inline-code">write_app_manifest()</code> or derived from <code class="lp-inline-code">app/data.py</code> at package time.</td></tr>
+        <tr><td><code class="lp-inline-code">LaceApp.yaml</code></td><td>Sidecar runtime wiring — <code class="lp-inline-code">base_image</code>, <code class="lp-inline-code">health_check_path</code>, <code class="lp-inline-code">env_vars</code>, <code class="lp-inline-code">resource_limits</code>, <code class="lp-inline-code">network_policy</code>, <code class="lp-inline-code">storage</code>.</td><td>At scaffold + on deploy (image digest pinned).</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>Canonical example — what <code class="lp-inline-code">lace_app_manifest.json</code> looks like after you call <code class="lp-inline-code">write_app_manifest()</code>:</p>
+  <div class="lp-code"><div class="lp-code-head"><span>json</span><em>lace_app_manifest.json</em></div><pre><code set:html={codeManifestJson} /></pre></div>
+
+  <h2 id="app">The <code class="lp-inline-code">app/</code> package</h2>
+  <ul>
+    <li><code class="lp-inline-code">app/data.py</code> — one or more <code class="lp-inline-code">AppDataCollectionSchema</code> objects. Each declares a JSON Schema, required fields, identity fields, unique constraints, searchable/sortable fields, and physical storage capabilities (<code class="lp-inline-code">EVENT_LOG</code>, <code class="lp-inline-code">FULL_TEXT_INDEX</code>). See <a href="/docs/data-collections">data collections</a>.</li>
+    <li><code class="lp-inline-code">app/tools.py</code> — tools declared with <code class="lp-inline-code">@tool(tool_id=..., description_for_model=..., input_schema=...)</code>. The descriptor is pure data (no dotted refs); the handler lives in the sidecar and is looked up via <code class="lp-inline-code">AppToolRegistry</code> keyed by <code class="lp-inline-code">(app_id, tool_id)</code>. See <a href="/docs/tools">tools</a>.</li>
+    <li><code class="lp-inline-code">app/agents.py</code> — an <code class="lp-inline-code">AgentDefinition</code> (model policy, instructions, capabilities, orchestration) plus an <code class="lp-inline-code">AppAgentProvider</code> that returns it. The sidecar runs a real agentic loop. See <a href="/docs/agents">agents</a>.</li>
+    <li><code class="lp-inline-code">app/routes.py</code> — an <code class="lp-inline-code">AppRouteProvider</code> that mounts FastAPI routes at <code class="lp-inline-code">/apps/&lt;app_id&gt;/api/*</code>. See <a href="/docs/routes-ui">routes &amp; UI</a>.</li>
+    <li><code class="lp-inline-code">app/migrations.py</code> — optional <code class="lp-inline-code">AppDataMigrations</code> for schema evolution (applied through the platform lifecycle).</li>
+  </ul>
+
+  <h2 id="sdk-deps">SDK dependencies</h2>
+  <div class="lp-code"><div class="lp-code-head"><span>terminal</span><em>bash</em></div><pre><code set:html={codeSdkInstall} /></pre></div>
+  <div class="lpd-table-wrap">
+    <table>
+      <thead><tr><th>What</th><th>Depends on</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td><code class="lp-inline-code">lace-app-sdk</code> (base)</td><td><code class="lp-inline-code">pydantic&gt;=2</code> only</td><td>Every pure contract (<code class="lp-inline-code">_contracts/*</code>) + all <code class="lp-inline-code">--help</code>/<code class="lp-inline-code">auth</code>/<code class="lp-inline-code">create</code>/<code class="lp-inline-code">clone</code> verbs work with no <code class="lp-inline-code">lace</code> installed.</td></tr>
+        <tr><td><code class="lp-inline-code">lace-app-sdk[runtime]</code></td><td><code class="lp-inline-code">lace</code> monorepo + sidecar deps</td><td>Required for <code class="lp-inline-code">lace-app dev</code> (migration-apply) and <code class="lp-inline-code">lace-app test</code> proof harness. Installed automatically in the sidecar and when running inside the monorepo.</td></tr>
+        <tr><td>Your app's <code class="lp-inline-code">pyproject.toml</code></td><td><code class="lp-inline-code">fastapi</code>, <code class="lp-inline-code">uvicorn</code>, <code class="lp-inline-code">lace-app-sdk</code></td><td>Sidecar image bakes these. Pin what you need; the platform pins the sidecar base.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="templates">Templates &amp; scaffolding</h2>
+  <p>
+    The SDK ships a compose template at <code class="lp-inline-code">lace_app_sdk/templates/lace_compose.yaml</code> and starter scaffolds in <code class="lp-inline-code">lace.builder.starter_scaffolds</code>.
+    <code class="lp-inline-code">lace-app create --template notes</code> copies the <code class="lp-inline-code">notes_app</code> example (see <code class="lp-inline-code">src/lace_app_sdk/examples/notes_app/</code>) — a complete minimal app with data, routes, and an agent.
+  </p>
+
+  <h2 id="ignored">What is git-ignored</h2>
+  <p><code class="lp-inline-code">.lace/</code>, <code class="lp-inline-code">__pycache__/</code>, <code class="lp-inline-code">.venv/</code>, <code class="lp-inline-code">dist/</code>, <code class="lp-inline-code">dist_sdk/</code>. Commit <code class="lp-inline-code">lace_app_manifest.json</code> — the publisher reads it.</p>
+
+  <p>Next: <a href="/docs/sdk-overview">the SDK itself — facade, not fork</a> or <a href="/docs/manifest">manifest reference</a>.</p>
+</DocsPage>

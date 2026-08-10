@@ -1,0 +1,88 @@
+---
+import DocsPage from "../../layouts/DocsPage.astro";
+
+const codeCurl = `<span class="tk-f">curl</span> https://api.laceplatform.com/v1/enterprise-search \\
+  -H <span class="tk-s">"Authorization: Bearer $LACE_API_KEY"</span> \\
+  -H <span class="tk-s">"Content-Type: application/json"</span> \\
+  -d <span class="tk-s">'{"query":"Q3 warranty reserves","limit":10,"rerank":true}'</span> | <span class="tk-f">jq</span>
+`;
+
+const codePython = `<span class="tk-k">from</span> lace_app_sdk.data <span class="tk-k">import</span> <span class="tk-n">AppDataService</span>, <span class="tk-n">AppDataQueryRequest</span>
+
+svc = <span class="tk-f">AppDataService</span>(app_state=state)
+page = svc.<span class="tk-f">list_records</span>(<span class="tk-s">"acme.field_intake"</span>, <span class="tk-s">"tickets"</span>,
+                         <span class="tk-f">AppDataQueryRequest</span>(search=<span class="tk-s">"warranty"</span>, limit=<span class="tk-n">20</span>))
+`;
+---
+
+<DocsPage slug="api-overview">
+  <h1>REST API, SDKs &amp; integration surfaces</h1>
+  <p class="lpd-sub">Every capability the platform offers is reachable three ways: the <code class="lp-inline-code">/v1</code> REST API, the <code class="lp-inline-code">lace-app-sdk</code> (Python), and the event/hook surfaces the platform operates.</p>
+
+  <h2 id="rest">The REST API — <code class="lp-inline-code">/v1</code></h2>
+  <p>
+    Base URL: <code class="lp-inline-code">https://api.laceplatform.com</code> (or <code class="lp-inline-code">http://localhost:8000</code> in dev).
+    Auth: <code class="lp-inline-code">Authorization: Bearer &lt;api_key&gt;</code> (API key scoped to a tenant; see <a href="/docs/authentication">authentication</a>).
+    All routes are tenant-scoped — the tenant is derived from the principal, not from a request parameter you can spoof.
+  </p>
+
+  <div class="lp-code"><div class="lp-code-head"><span>terminal</span><em>bash</em></div><pre><code set:html={codeCurl} /></pre></div>
+
+  <div class="lpd-table-wrap">
+    <table>
+      <thead><tr><th>Group</th><th>Example routes</th><th>What it owns</th></tr></thead>
+      <tbody>
+        <tr><td>Auth</td><td><code class="lp-inline-code">POST /v1/auth/login</code>, <code class="lp-inline-code">GET /v1/auth/whoami</code></td><td>Session + principal</td></tr>
+        <tr><td>Apps</td><td><code class="lp-inline-code">POST /v1/apps</code>, <code class="lp-inline-code">GET /v1/apps/&#123;id&#125;</code>, <code class="lp-inline-code">GET /v1/apps/&#123;id&#125;/git-credential</code></td><td>Lifecycle, releases, sidecar</td></tr>
+        <tr><td>App data</td><td><code class="lp-inline-code">GET /v1/apps/&#123;id&#125;/collections/&#123;coll&#125;/records</code></td><td>Typed collections + blobs</td></tr>
+        <tr><td>Datasets</td><td><code class="lp-inline-code">POST /v1/datasets</code>, <code class="lp-inline-code">POST /v1/datasets/&#123;id&#125;/sync</code></td><td>Connectors, sync, permissions snapshots</td></tr>
+        <tr><td>Search</td><td><code class="lp-inline-code">POST /v1/enterprise-search</code>, <code class="lp-inline-code">POST /v1/search</code></td><td>Enterprise search &amp; RAG retrieval</td></tr>
+        <tr><td>Knowledge graph</td><td><code class="lp-inline-code">POST /v1/kg/query</code>, <code class="lp-inline-code">POST /v1/kg/assertions</code></td><td>Entities, assertions, evidence</td></tr>
+        <tr><td>Pipelines</td><td><code class="lp-inline-code">POST /v1/pipelines/&#123;id&#125;/runs</code></td><td>Workflow execution</td></tr>
+        <tr><td>Agents</td><td><code class="lp-inline-code">POST /v1/agents/&#123;id&#125;/sessions</code></td><td>Sessions, tasks, control plane</td></tr>
+        <tr><td>Builder</td><td><code class="lp-inline-code">POST /v1/builder/sessions</code></td><td>App Builder architect sessions</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>Conventions:</strong> JSON everywhere, paginated lists with <code class="lp-inline-code">limit</code>/<code class="lp-inline-code">offset</code> (or <code class="lp-inline-code">cursor</code> where noted), stable error shape <code class="lp-inline-code">&#123;"detail": "...", "code": "..."&#125;</code>, and OpenAPI at <code class="lp-inline-code">/openapi.json</code> in dev. Read <code class="lp-inline-code">src/lace/api/routes/</code> (159 files, ~713 paths) for the full inventory.</p>
+
+  <h2 id="sdks">SDKs we ship</h2>
+  <div class="lpd-table-wrap">
+    <table>
+      <thead><tr><th>SDK</th><th>Package</th><th>For</th><th>Import / install</th></tr></thead>
+      <tbody>
+        <tr><td><strong>lace-app-sdk</strong> (Python)</td><td><code class="lp-inline-code">lace-app-sdk</code> on PyPI</td><td>App authors — the only supported surface for apps</td><td><code class="lp-inline-code">pip install lace-app-sdk</code> → <code class="lp-inline-code">from lace_app_sdk.data import AppDataService</code></td></tr>
+        <tr><td><strong>lace-runtime</strong> (Python)</td><td>internal (<code class="lp-inline-code">src/lace_runtime</code>)</td><td>Sidecar server — you don't install this, the platform runs it</td><td><code class="lp-inline-code">from lace_runtime.tool_host import ...</code> (inside sidecar only)</td></tr>
+        <tr><td><strong>lace CLI</strong></td><td>entry point <code class="lp-inline-code">lace-app</code> in the SDK wheel</td><td>Local dev, CI, operator tasks</td><td><code class="lp-inline-code">lace-app --help</code> — see <a href="/docs/cli">CLI reference</a></td></tr>
+        <tr><td><strong>Frontend SDK</strong></td><td>JS/TS in <code class="lp-inline-code">frontend/</code></td><td>Internal app shell + generated runtime UI</td><td>Module Federation remote — apps expose <code class="lp-inline-code">./RuntimeView</code></td></tr>
+        <tr><td><strong>OpenAPI client</strong></td><td>generated from <code class="lp-inline-code">/openapi.json</code></td><td>Any language</td><td><code class="lp-inline-code">npx openapi-generator-cli ...</code> against dev spec</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="lp-code"><div class="lp-code-head"><span>python</span><em>AppData query via SDK vs raw REST</em></div><pre><code set:html={codePython} /></pre></div>
+
+  <h2 id="other">Other integration surfaces</h2>
+  <div class="lpd-table-wrap">
+    <table>
+      <thead><tr><th>Surface</th><th>What it is</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Webhooks</strong></td><td>Outbound HTTP on dataset sync, pipeline run, agent task, and release events. HMAC-signed.</td></tr>
+        <tr><td><strong>Event bus (NATS)</strong></td><td>Internal pub/sub for ingest and KG events — not a public contract today; webhooks are the stable outbound surface.</td></tr>
+        <tr><td><strong>MCP</strong></td><td>Builder and assistant expose Model Context Protocol tools for workspace and platform operations.</td></tr>
+        <tr><td><strong>Sidecar HTTP</strong></td><td>Your app's own routes at <code class="lp-inline-code">/apps/&lt;app_id&gt;/api/*</code> + <code class="lp-inline-code">/ui/manifest.json</code> — see <a href="/docs/routes-ui">routes &amp; UI</a>.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="versioning">Versioning &amp; pagination</h2>
+  <ul>
+    <li>API is versioned by path prefix (<code class="lp-inline-code">/v1</code>). Breaking changes bump the prefix; additive changes don't.</li>
+    <li>SDK is semver — breaking a published <code class="lp-inline-code">lace_app_sdk</code> symbol is a major bump with a deprecation window.</li>
+    <li>Lists paginate with <code class="lp-inline-code">limit</code> (default 20) + <code class="lp-inline-code">offset</code> or cursor; responses include <code class="lp-inline-code">total</code> where stable.</li>
+  </ul>
+
+  <h2 id="errors">Errors</h2>
+  <p>Errors are JSON: <code class="lp-inline-code">&#123;"detail": "human message", "code": "app_data_unique_constraint_failed"&#125;</code>. Constraint violations (unique, foreign) surface as HTTP 409; permission failures as 403 — not 404 — so callers can distinguish "not found" from "not allowed."</p>
+
+  <p>Next: <a href="/docs/authentication">authentication &amp; tenancy</a> or <a href="/docs/cli">CLI reference</a>.</p>
+</DocsPage>

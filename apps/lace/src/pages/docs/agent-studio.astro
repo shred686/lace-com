@@ -1,0 +1,153 @@
+---
+import DocsPage from "../../layouts/DocsPage.astro";
+
+const codeStudio = `<span class="tk-k">from</span> lace_app_sdk.agents <span class="tk-k">import</span> <span class="tk-n">AgentDefinition</span>, <span class="tk-n">ToolCapability</span>, <span class="tk-n">ModelPolicy</span>, <span class="tk-n">InstructionProfile</span>
+<span class="tk-k">from</span> lace_app_sdk.skills <span class="tk-k">import</span> <span class="tk-n">AgentSkill</span>
+
+<span class="tk-n">TRIAGE</span> = <span class="tk-f">AgentDefinition</span>(
+    <span class="tk-n">agent_id</span>=<span class="tk-s">"field_intake.triage"</span>,
+    <span class="tk-n">slug</span>=<span class="tk-s">"intake-triage"</span>,
+    <span class="tk-n">name</span>=<span class="tk-s">"Intake Triage"</span>,
+    <span class="tk-n">description</span>=<span class="tk-s">"Classifies tickets, drafts replies with citations, escalates when blocked."</span>,
+    <span class="tk-n">instructions</span>=<span class="tk-f">InstructionProfile</span>(
+        <span class="tk-n">system</span>=<span class="tk-s">"You are Intake Triage. Prefer the KB over guessing. Cite every factual claim."</span>,
+    ),
+    <span class="tk-n">model_policy</span>=<span class="tk-f">ModelPolicy</span>(default_model_alias=<span class="tk-s">"anthropic/claude-sonnet-4"</span>, temperature=<span class="tk-n">0.2</span>),
+    <span class="tk-n">capabilities</span>=[
+        <span class="tk-f">ToolCapability</span>(tool_id=<span class="tk-s">"lookup_ticket"</span>),
+        <span class="tk-f">ToolCapability</span>(tool_id=<span class="tk-s">"search_kb"</span>),
+        <span class="tk-f">ToolCapability</span>(tool_id=<span class="tk-s">"escalate"</span>, approval_required=<span class="tk-k">True</span>),
+    ],
+)
+
+<span class="tk-c"># in-loop skill — progressive disclosure, injected as use_skill tool</span>
+<span class="tk-n">CITATION_SKILL</span> = <span class="tk-f">AgentSkill</span>(
+    name=<span class="tk-s">"cite-before-escalate"</span>,
+    description=<span class="tk-s">"Always cite the KB before escalating."</span>,
+    body=<span class="tk-s">"1. search_kb → 2. draft with citations → 3. escalate only if no citation found"</span>,
+)
+`;
+
+const codeChannels = `<span class="tk-f">POST</span> /v1/agents/field_intake.triage/sessions
+<span class="tk-c"># → { session_id }</span>
+<span class="tk-f">POST</span> /v1/agents/field_intake.triage/sessions/&#123;id&#125;/turns
+{ <span class="tk-s">"message"</span>: <span class="tk-s">"Customer says heater failed at site 12, ticket #4821"</span> }
+
+<span class="tk-c"># same agent, different channel — email</span>
+<span class="tk-f">POST</span> /v1/channels/email/inbound
+{ <span class="tk-s">"to"</span>: <span class="tk-s">"intake@acme.lace"</span>, <span class="tk-s">"subject"</span>: <span class="tk-s">"Heater failed site 12"</span> }
+<span class="tk-c"># → creates a session, runs same loop, replies via same channel driver</span>
+`;
+---
+
+<DocsPage slug="agent-studio">
+  <h1>Agent Studio — governed agents on every channel</h1>
+  <p class="lpd-sub">
+    Design the tool surface, write the system prompt people will actually audit, and ship the same agent to web chat, email, SMS, WhatsApp, Slack, Teams, and voice — with one control plane for sessions, tasks, streaming, steering, and cancellation.
+  </p>
+
+  <h2 id="what">What Agent Studio is</h2>
+  <p>
+    Agent Studio is the design surface for <strong>product agents</strong>: tool-using definitions with deployments and channels. An agent is an <code class="lp-inline-code">AgentDefinition</code> (model, instructions, capabilities, guardrails) that runs a real agentic loop in your sidecar where the model chooses tools. The platform enforces the declaration, so an agent can use only the tools listed in its capabilities. The capability list defines the boundary.
+  </p>
+  <p>
+    Studio is the visual complement to <a href="/docs/agents">the code surface</a>. Whether you design in Studio or in <code class="lp-inline-code">app/agents.py</code>, the artifact is the same <code class="lp-inline-code">AgentDefinition</code> contract that the sidecar executes.
+  </p>
+
+  <h2 id="tool-surface">Tool surface — the design question that matters most</h2>
+  <p>
+    The most important decision in Studio is which tools you give the model and what each one promises. Good tools are:
+  </p>
+  <ul>
+    <li><strong>Narrow</strong> — one verb, one return shape, one failure mode the model can understand (<code class="lp-inline-code">lookup_ticket</code> vs <code class="lp-inline-code">do_everything</code>).</li>
+    <li><strong>Described for the model, not for a human</strong> — <code class="lp-inline-code">description_for_model</code> says when to reach for this tool instead of a sibling, not what the UI label is.</li>
+    <li><strong>Policy-scoped</strong> — <code class="lp-inline-code">policy: &#123;read_only, network, writes_app_data&#125;</code> determines per-call approval and audit.</li>
+  </ul>
+  <div class="lp-code"><div class="lp-code-head"><span>python</span><em>app/agents.py</em></div><pre><code set:html={codeStudio} /></pre></div>
+  <p>
+    Capabilities appear as <code class="lp-inline-code">ToolCapability(tool_id="lookup_ticket")</code> and <code class="lp-inline-code">ToolCapability(tool_id="escalate", approval_required=True)</code>. When <code class="lp-inline-code">approval_required=True</code>, the loop pauses with <code class="lp-inline-code">waiting_approval</code> before that tool executes. The pause is durable, so a human can approve an hour later and the same run resumes.
+  </p>
+
+  <h2 id="prompt">The system prompt — what Studio makes auditable</h2>
+  <p>
+    Studio keeps the prompt in a versioned <code class="lp-inline-code">InstructionProfile</code> with history and diff, not as a string buried in code. The guidance we ship with every agent:
+  </p>
+  <ul>
+    <li>Name the role and its scope first (<em>"You are Intake Triage. You classify field tickets..."</em>).</li>
+    <li>Prefer the KB over guessing; cite every factual claim.</li>
+    <li>State the escalation rule explicitly — when to use <code class="lp-inline-code">escalate</code> and what to do when you cannot cite an answer.</li>
+  </ul>
+  <p>Studio previews the loop with a real session against your dev dataset so you can see which tool the model reached for and why before you publish.</p>
+
+  <h2 id="skills">Reusable skills &amp; guardrails</h2>
+  <div class="lpd-table-wrap">
+    <table>
+      <thead><tr><th>Surface</th><th>Declared in</th><th>How it runs</th></tr></thead>
+      <tbody>
+        <tr><td><code class="lp-inline-code">AgentSkill</code></td><td><code class="lp-inline-code">AgentDefinition.capabilities</code> or <code class="lp-inline-code">in_loop_skills</code> (<code class="lp-inline-code">InLoopSkillSpec</code>)</td><td>Progressive disclosure — the loop injects a metadata index + <code class="lp-inline-code">use_skill</code> tool; the model fetches the body on demand</td></tr>
+        <tr><td><code class="lp-inline-code">LoopGuardConfig</code></td><td><code class="lp-inline-code">AgentExecutionConfig.loop_guard</code></td><td>Exact-duplicate threshold, Jaccard near-duplicate, per-tool cap, doom-loop threshold</td></tr>
+        <tr><td><code class="lp-inline-code">HookRegistry</code></td><td>Host-registered (code, not manifest)</td><td><code class="lp-inline-code">PreToolUseHook</code> / <code class="lp-inline-code">PostToolUseHook</code> / <code class="lp-inline-code">StopHook</code> — <code class="lp-inline-code">HookBlock</code> / <code class="lp-inline-code">HookTransform</code> / <code class="lp-inline-code">HookVeto</code></td></tr>
+        <tr><td><code class="lp-inline-code">GuardrailRegistry</code></td><td>Host-registered</td><td><code class="lp-inline-code">input</code> / <code class="lp-inline-code">output</code> / <code class="lp-inline-code">tool</code> placements, <code class="lp-inline-code">GuardrailResult</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="control-plane">The control plane</h2>
+  <p>
+    Sessions, tasks, streaming, steering, and cancellation are platform concerns, not per-agent code. An operator can watch a run, redirect it mid-flight, or cancel it, and the same controls work whether the agent is answering in web chat or on a phone call. The plane lives at <code class="lp-inline-code">src/lace/agent/runtime</code> and <code class="lp-inline-code">src/lace/api/routes/agent_channels.py</code>.
+  </p>
+  <div class="lpd-table-wrap">
+    <table>
+      <thead><tr><th>Operation</th><th>Route</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td>Start session</td><td><code class="lp-inline-code">POST /v1/agents/&#123;agent_id&#125;/sessions</code></td><td>Create a durable session (Postgres-backed turns)</td></tr>
+        <tr><td>Send turn</td><td><code class="lp-inline-code">POST /v1/agents/.../sessions/&#123;id&#125;/turns</code></td><td>Run the agentic loop (model chooses tools)</td></tr>
+        <tr><td>Stream</td><td>SSE on the turn response</td><td>Token and tool-call streaming</td></tr>
+        <tr><td>Steer</td><td><code class="lp-inline-code">POST .../steer</code></td><td>Redirect a running loop</td></tr>
+        <tr><td>Cancel</td><td><code class="lp-inline-code">POST .../cancel</code></td><td>Cancel the turn and roll back in-flight tool calls where possible</td></tr>
+        <tr><td>Inspect</td><td><code class="lp-inline-code">GET .../sessions/&#123;id&#125;</code></td><td>Turns, tool calls, approval state, prompt trace</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="channels">Channels — one control plane, many doors</h2>
+  <p>
+    An agent is a session, task, streaming, steering, and cancellation primitive that happens to have a channel driver. The same agent answers in web chat, on email, over SMS, in Slack and Teams, via webhook, and on a live voice call.
+  </p>
+  <div class="lp-code"><div class="lp-code-head"><span>terminal</span><em>bash</em></div><pre><code set:html={codeChannels} /></pre></div>
+  <div class="lpd-table-wrap">
+    <table>
+      <thead><tr><th>Channel</th><th>Driver</th><th>Inbound</th></tr></thead>
+      <tbody>
+        <tr><td>Email</td><td><code class="lp-inline-code">src/lace/connectors/app_email_connector.py</code></td><td><code class="lp-inline-code">POST /v1/channels/email/inbound</code></td></tr>
+        <tr><td>SMS / WhatsApp</td><td><code class="lp-inline-code">app_sms_connector.py</code></td><td>provider webhook → normalized inbound</td></tr>
+        <tr><td>Slack / Teams</td><td><code class="lp-inline-code">app_slack_connector.py</code></td><td>event subscription → session</td></tr>
+        <tr><td>Webhooks</td><td><code class="lp-inline-code">channel_webhooks.py</code></td><td>generic inbound → session</td></tr>
+        <tr><td>Realtime voice</td><td><code class="lp-inline-code">src/lace/agent/runtime</code> voice driver</td><td>call → session + realtime turn</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <ul>
+    <li>Sessions, tasks, streaming (SSE), steering mid-run, and cancellation are <strong>control-plane operations</strong> — an operator can watch a run, redirect it, or cancel it without the agent cooperating.</li>
+    <li>Every channel driver speaks the same contract: <code class="lp-inline-code">src/lace/connectors/agents</code> + <code class="lp-inline-code">src/lace/api/routes/agent_channels.py</code> + <code class="lp-inline-code">src/lace/api/routes/channel_*</code>.</li>
+    <li>Declarations: <code class="lp-inline-code">channel_providers</code> in the manifest; runtime routing via <code class="lp-inline-code">AgentRuntimeRouting</code> / <code class="lp-inline-code">InteractionShapeKind</code>.</li>
+  </ul>
+
+  <h2 id="walkthrough">Walkthrough — Intake Triage on web + email</h2>
+  <ol>
+    <li>Create a tool that reads your data: <a href="/docs/tools">tools</a> → <code class="lp-inline-code">@tool(tool_id="lookup_ticket")</code> → <code class="lp-inline-code">AppDataService.list_records</code>.</li>
+    <li>Declare the agent in <code class="lp-inline-code">app/agents.py</code> with three capabilities, one approval gate, and a citation skill (above).</li>
+    <li>Register the provider: <code class="lp-inline-code">agent_providers=["app.agents:AgentProvider"]</code> in the manifest. Run locally with <code class="lp-inline-code">lace-app dev</code> and hit <code class="lp-inline-code">POST /v1/agents/intake-triage/sessions</code>.</li>
+    <li>Wire channels in Studio: enable <strong>web chat</strong> and <strong>email</strong> for <code class="lp-inline-code">intake-triage</code>. Studio creates the inbound route and the outbound reply template.</li>
+    <li>Publish (<code class="lp-inline-code">lace-app push</code>) — the agent sidecar boots, the same loop that ran locally now runs behind the channel drivers. Approve escalations from the LACE console; they resume the same durable turn.</li>
+  </ol>
+
+  <h2 id="observe">Operate it</h2>
+  <ul>
+    <li>Inspect a session: <code class="lp-inline-code">GET /v1/agents/&#123;agent_id&#125;/sessions/&#123;session_id&#125;</code> — turns, tool calls, approval state, prompt trace.</li>
+    <li>Trace every LLM call: model alias, tokens, latency, tenant — in OpenTelemetry and the cost dashboard (<a href="/docs/observability">observability</a>, <a href="/docs/governance">governance</a>).</li>
+    <li>Budget caps and per-tool caps stop a runaway loop before it stops your budget.</li>
+  </ul>
+
+  <p>Next: <a href="/docs/agents">agents &amp; skills reference</a> or <a href="/platform/agents">the product page</a>.</p>
+</DocsPage>

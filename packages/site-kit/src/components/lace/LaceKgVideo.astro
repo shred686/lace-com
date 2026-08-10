@@ -5,7 +5,8 @@
  * keep it usable (and light) on mobile where autoplay may be suppressed.
  *
  * Assets live in the consuming app's /public:
- *   /kg-assistant.mp4, /kg-assistant-poster.jpg
+ *   /kg-visualizer-video-light.mp4, /kg-visualizer-video-light-poster.jpg
+ * Legacy alias /kg-assistant.mp4 is kept in public for backward compat.
  */
 interface Props {
   src?: string;
@@ -13,8 +14,8 @@ interface Props {
   caption?: string;
 }
 const {
-  src = "/kg-assistant.mp4",
-  poster = "/kg-assistant-poster.jpg",
+  src = "/kg-visualizer-video-light.mp4",
+  poster = "/kg-visualizer-video-light-poster.jpg",
   caption = "The Knowledge Graph assistant, working over a live graph",
 } = Astro.props;
 ---

@@ -1,49 +1,82 @@
 ---
 import DocsPage from "../../layouts/DocsPage.astro";
 
-const codeManifest = `<span class="tk-c"># app.py — one file declares the whole app. LACE discovers the rest.</span>
-<span class="tk-k">from</span> lace_app_sdk.manifest <span class="tk-k">import</span> <span class="tk-n">LaceAppManifest</span>
+const codeManifest = `<span class="tk-k">from</span> lace_app_sdk.manifest <span class="tk-k">import</span> <span class="tk-n">LaceAppManifest</span>, <span class="tk-n">AppRuntimeUiDeclaration</span>
+<span class="tk-k">from</span> lace_app_sdk.data <span class="tk-k">import</span> <span class="tk-n">AppDataCollectionSchema</span>
 <span class="tk-k">from</span> app.data <span class="tk-k">import</span> <span class="tk-n">TICKETS</span>
 
 <span class="tk-n">MANIFEST</span> = <span class="tk-f">LaceAppManifest</span>(
     app_id=<span class="tk-s">"acme.field_intake"</span>,
     display_name=<span class="tk-s">"Field Intake"</span>,
     version=<span class="tk-s">"0.1.0"</span>,
+    description=<span class="tk-s">"Field intake with triage agent."</span>,
     data_collections=[<span class="tk-n">TICKETS</span>],
-    tool_providers=[<span class="tk-s">"app.tools:ToolProvider"</span>],
-    agent_providers=[<span class="tk-s">"app.agents:AgentProvider"</span>],
+    <span class="tk-c"># pure data — no import paths for handlers</span>
+    tools=[],  <span class="tk-c"># populated by scanning @tool — see tool_modules below</span>
+    tool_modules=[<span class="tk-s">"app.tools"</span>],
     route_providers=[<span class="tk-s">"app.routes:RouteProvider"</span>],
-)`;
+    agent_providers=[<span class="tk-s">"app.agents:AgentProvider"</span>],
+    pipeline_providers=[<span class="tk-s">"app.pipelines:IntakePipelines"</span>],
+    runtime_ui=<span class="tk-f">AppRuntimeUiDeclaration</span>(
+        module_id=<span class="tk-s">"field_intake.ui"</span>, module_version=<span class="tk-s">"1.0.0"</span>,
+        entrypoints={<span class="tk-s">"session_home"</span>: <span class="tk-s">"./RuntimeView"</span>}, isolation_mode=<span class="tk-s">"iframe"</span>),
+)
+<span class="tk-c"># emit the canonical JSON the publisher seals</span>
+<span class="tk-k">from</span> lace_app_sdk.manifest <span class="tk-k">import</span> <span class="tk-n">write_app_manifest</span>
+<span class="tk-f">write_app_manifest</span>(<span class="tk-n">MANIFEST</span>, <span class="tk-s">"lace_app_manifest.json"</span>)
+`;
+
+const codeJson = `{
+  <span class="tk-s">"app_id"</span>: <span class="tk-s">"acme.field_intake"</span>,
+  <span class="tk-s">"display_name"</span>: <span class="tk-s">"Field Intake"</span>,
+  <span class="tk-s">"version"</span>: <span class="tk-s">"0.1.0"</span>,
+  <span class="tk-s">"data_collections"</span>: [ ... ],
+  <span class="tk-s">"route_providers"</span>: [<span class="tk-s">"app.routes:RouteProvider"</span>],
+  <span class="tk-s">"agent_providers"</span>: [<span class="tk-s">"app.agents:AgentProvider"</span>],
+  <span class="tk-s">"tool_modules"</span>: [<span class="tk-s">"app.tools"</span>]
+}
+`;
 ---
 
 <DocsPage slug="manifest">
-  <h1>Manifest</h1>
-  <p class="lpd-sub">
-    <code class="lp-inline-code">LaceAppManifest</code> declares everything your
-    app provides. LACE discovers manifests and wires providers at bootstrap — no
-    registration calls, no glue code.
-  </p>
+  <h1>LaceAppManifest reference</h1>
+  <p class="lpd-sub"><code class="lp-inline-code">LaceAppManifest</code> declares everything your app provides. LACE discovers manifests and wires providers at bootstrap — no registration calls, no glue code.</p>
 
-  <div class="lp-code">
-    <div class="lp-code-head"><span>app.py</span><em>python</em></div>
-    <pre><code set:html={codeManifest} /></pre>
+  <div class="lp-code"><div class="lp-code-head"><span>python</span><em>app/manifest.py</em></div><pre><code set:html={codeManifest} /></pre></div>
+
+  <h2 id="what">What a manifest declares</h2>
+  <div class="lpd-table-wrap">
+    <table>
+      <thead><tr><th>Field</th><th>Type</th><th>What it owns</th></tr></thead>
+      <tbody>
+        <tr><td><code class="lp-inline-code">app_id</code></td><td><code class="lp-inline-code">str</code></td><td>Stable id, e.g. <code class="lp-inline-code">acme.field_intake</code> (used as sidecar mount prefix, collection scope, tool scope)</td></tr>
+        <tr><td><code class="lp-inline-code">display_name</code> / <code class="lp-inline-code">version</code> / <code class="lp-inline-code">description</code></td><td><code class="lp-inline-code">str</code></td><td>Human metadata; <code class="lp-inline-code">version</code> is informational — platform release id is <code class="lp-inline-code">rel_*</code></td></tr>
+        <tr><td><code class="lp-inline-code">data_collections</code></td><td><code class="lp-inline-code">list[AppDataCollectionSchema]</code></td><td>Typed, tenant-scoped collections (see <a href="/docs/data-collections">data</a>)</td></tr>
+        <tr><td><code class="lp-inline-code">tools</code> + <code class="lp-inline-code">tool_modules</code></td><td><code class="lp-inline-code">list[AppToolDeclaration]</code> / <code class="lp-inline-code">list[str]</code></td><td>Tool contracts (pure data) + modules to import so decorators run (<a href="/docs/tools">tools</a>)</td></tr>
+        <tr><td><code class="lp-inline-code">route_providers</code></td><td><code class="lp-inline-code">list[str]</code></td><td>Dotted <code class="lp-inline-code">"app.routes:Provider"</code> paths</td></tr>
+        <tr><td><code class="lp-inline-code">agent_providers</code> / <code class="lp-inline-code">agent_runtime_extensions</code></td><td><code class="lp-inline-code">list[str]</code></td><td><code class="lp-inline-code">AppAgentProvider</code> + extensions (<a href="/docs/agents">agents</a>)</td></tr>
+        <tr><td><code class="lp-inline-code">pipeline_providers</code></td><td><code class="lp-inline-code">list[str]</code></td><td><code class="lp-inline-code">AppPipelineProvider</code> (<a href="/docs/pipelines">pipelines</a>)</td></tr>
+        <tr><td><code class="lp-inline-code">runtime_ui</code></td><td><code class="lp-inline-code">AppRuntimeUiDeclaration</code></td><td>Module Federation remote (<a href="/docs/routes-ui">routes &amp; UI</a>)</td></tr>
+        <tr><td><code class="lp-inline-code">migration_provider</code></td><td><code class="lp-inline-code">str</code></td><td>AppData migrations</td></tr>
+        <tr><td><code class="lp-inline-code">scheduler/schedule_specs</code></td><td><code class="lp-inline-code">list[AppScheduleSpecDeclaration]</code></td><td>Cron schedules → <code class="lp-inline-code">app.route.invoke</code> tasks</td></tr>
+        <tr><td><code class="lp-inline-code">permission/policy/settings_providers</code></td><td><code class="lp-inline-code">list[str]</code></td><td>App-scoped policy and settings</td></tr>
+      </tbody>
+    </table>
   </div>
 
-  <h2 id="what-it-declares">What a manifest declares</h2>
+  <h2 id="pure-data">Pure data — why the manifest carries no import paths for handlers</h2>
   <p>
-    Routes, tools, pipelines, agents, data collections, UI, schedules, and
-    migrations. The manifest is the app's whole contract with the platform: it
-    is what gets reviewed before publish, what the permission model is derived
-    from, and what changes when you ship a new version.
+    <code class="lp-inline-code">tools[]</code> entries are data (<code class="lp-inline-code">tool_id</code>, <code class="lp-inline-code">description_for_model</code>, <code class="lp-inline-code">input_schema</code>, <code class="lp-inline-code">policy</code>) — no dotted refs — so the platform can mint <code class="lp-inline-code">lace.catalog_definitions</code> rows without executing app code. <code class="lp-inline-code">tool_modules</code> is the import sidecar's hint: it imports those modules <em>in the app's own process</em> so <code class="lp-inline-code">@tool</code> decorators populate the registry. Without it, a manifest with <code class="lp-inline-code">tools</code> only would 404 at invoke time. Same split as <code class="lp-inline-code">job_handler_modules</code>.
   </p>
 
-  <h2 id="declaration-is-enforcement">Declaration is enforcement</h2>
+  <h2 id="json">Canonical JSON — what gets sealed</h2>
+  <div class="lp-code"><div class="lp-code-head"><span>json</span><em>lace_app_manifest.json</em></div><pre><code set:html={codeJson} /></pre></div>
   <p>
-    Because the manifest is the only way capabilities enter the runtime, an app
-    cannot acquire a tool, a route, or a data collection it did not declare.
-    That is what makes a diff of the manifest a meaningful review artifact —
-    reviewing the declaration is reviewing the blast radius.
+    Call <code class="lp-inline-code">write_app_manifest(MANIFEST, "lace_app_manifest.json")</code> (from <code class="lp-inline-code">lace_app_sdk.manifest</code>) to emit the canonical file. The publisher (<code class="lp-inline-code">src/lace/builder/publisher.py</code>) reads it — and also auto-derives collections from <code class="lp-inline-code">app/data.py</code> as a fallback. The file is the blast-radius diff reviewers read before publish.
   </p>
 
-  <p>Next: <a href="/docs/data-collections">data collections</a>.</p>
+  <h2 id="enforcement">Declaration is enforcement</h2>
+  <p>Because the manifest is the only way capabilities enter the runtime, an app cannot acquire a tool, route, collection, or schedule it did not declare. Reviewing the manifest diff is reviewing the blast radius.</p>
+
+  <p>Next: <a href="/docs/data-collections">data collections</a> → <a href="/docs/tools">tools</a> → <a href="/docs/agents">agents</a>.</p>
 </DocsPage>

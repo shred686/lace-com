@@ -1,37 +1,105 @@
 ---
 import DocsPage from "../../layouts/DocsPage.astro";
+
+const codeManifest = `<span class="tk-k">from</span> lace_app_sdk.manifest <span class="tk-k">import</span> <span class="tk-n">LaceAppManifest</span>
+<span class="tk-k">from</span> app.data <span class="tk-k">import</span> <span class="tk-n">TICKETS</span>
+
+<span class="tk-n">MANIFEST</span> = <span class="tk-f">LaceAppManifest</span>(
+    app_id=<span class="tk-s">"acme.field_intake"</span>,
+    display_name=<span class="tk-s">"Field Intake"</span>,
+    version=<span class="tk-s">"0.1.0"</span>,
+    data_collections=[<span class="tk-n">TICKETS</span>],
+    tool_providers=[<span class="tk-s">"app.tools:ToolProvider"</span>],
+    agent_providers=[<span class="tk-s">"app.agents:AgentProvider"</span>],
+    route_providers=[<span class="tk-s">"app.routes:RouteProvider"</span>],
+)
+<span class="tk-c"># write once so the publisher sees data_collections</span>
+<span class="tk-k">from</span> lace_app_sdk.manifest <span class="tk-k">import</span> <span class="tk-n">write_app_manifest</span>
+<span class="tk-f">write_app_manifest</span>(<span class="tk-n">MANIFEST</span>, <span class="tk-s">"lace_app_manifest.json"</span>)
+`;
+
+const codeData = `<span class="tk-k">from</span> lace_app_sdk.data <span class="tk-k">import</span> <span class="tk-n">AppDataCollectionSchema</span>, <span class="tk-n">AppDataCapability</span>, <span class="tk-n">PhysicalStorageSpec</span>
+
+<span class="tk-n">TICKETS</span> = <span class="tk-f">AppDataCollectionSchema</span>(
+    app_id=<span class="tk-s">"acme.field_intake"</span>, collection_id=<span class="tk-s">"tickets"</span>, display_name=<span class="tk-s">"Tickets"</span>,
+    storage_backend=<span class="tk-s">"generic_app_data"</span>,
+    json_schema={<span class="tk-s">"type"</span>: <span class="tk-s">"object"</span>, <span class="tk-s">"properties"</span>: {
+        <span class="tk-s">"subject"</span>: {<span class="tk-s">"type"</span>: <span class="tk-s">"string"</span>},
+        <span class="tk-s">"priority"</span>: {<span class="tk-s">"enum"</span>: [<span class="tk-s">"low"</span>, <span class="tk-s">"normal"</span>, <span class="tk-s">"urgent"</span>]},
+    }},
+    required_fields=[<span class="tk-s">"subject"</span>], identity_fields=[<span class="tk-s">"subject"</span>],
+    searchable_fields=[<span class="tk-s">"subject"</span>],
+    physical_storage=<span class="tk-f">PhysicalStorageSpec</span>(capabilities=[<span class="tk-n">AppDataCapability</span>.FULL_TEXT_INDEX]),
+)
+`;
+
+const codeTools = `<span class="tk-k">from</span> lace_app_sdk.tools <span class="tk-k">import</span> <span class="tk-n">tool</span>
+
+@<span class="tk-f">tool</span>(tool_id=<span class="tk-s">"lookup_ticket"</span>,
+      description_for_model=<span class="tk-s">"Returns the ticket row for a subject. Use when the user names a ticket."</span>,
+      input_schema={<span class="tk-s">"type"</span>: <span class="tk-s">"object"</span>, <span class="tk-s">"properties"</span>: {<span class="tk-s">"subject"</span>: {<span class="tk-s">"type"</span>: <span class="tk-s">"string"</span>}}})
+<span class="tk-k">def</span> <span class="tk-f">lookup_ticket</span>(args: <span class="tk-n">dict</span>, context: <span class="tk-n">dict</span>) -&gt; <span class="tk-n">dict</span>:
+    <span class="tk-k">return</span> {<span class="tk-s">"ticket"</span>: {<span class="tk-s">"subject"</span>: args[<span class="tk-s">"subject"</span>], <span class="tk-s">"priority"</span>: <span class="tk-s">"urgent"</span>}}
+`;
+
+const codeAgents = `<span class="tk-k">from</span> lace_app_sdk.agents <span class="tk-k">import</span> <span class="tk-n">AgentDefinition</span>, <span class="tk-n">ToolCapability</span>, <span class="tk-n">ModelPolicy</span>, <span class="tk-n">InstructionProfile</span>
+
+<span class="tk-n">AGENT</span> = <span class="tk-f">AgentDefinition</span>(
+    agent_id=<span class="tk-s">"acme.field_intake.triage"</span>, tenant_id=<span class="tk-s">"default"</span>,
+    slug=<span class="tk-s">"intake-triage"</span>, name=<span class="tk-s">"Intake Triage"</span>,
+    description=<span class="tk-s">"Classifies tickets and drafts replies with citations."</span>,
+    instructions=<span class="tk-f">InstructionProfile</span>(system=<span class="tk-s">"Prefer the KB. Cite every claim."</span>),
+    model_policy=<span class="tk-f">ModelPolicy</span>(default_model_alias=<span class="tk-s">"anthropic/claude-sonnet-4"</span>),
+    capabilities=[<span class="tk-f">ToolCapability</span>(tool_id=<span class="tk-s">"lookup_ticket"</span>),
+                  <span class="tk-f">ToolCapability</span>(tool_id=<span class="tk-s">"escalate"</span>, approval_required=<span class="tk-k">True</span>)],
+)
+<span class="tk-k">class</span> <span class="tk-n">AgentProvider</span>:
+    app_id = <span class="tk-s">"acme.field_intake"</span>
+    <span class="tk-k">def</span> <span class="tk-f">agent_definitions</span>(<span class="tk-k">self</span>, *, tenant_id, context=<span class="tk-k">None</span>): <span class="tk-k">return</span> [<span class="tk-n">AGENT</span>]
+`;
 ---
 
 <DocsPage slug="quickstart">
-  <h1>Quickstart</h1>
-  <p class="lpd-sub">
-    An app is a manifest plus providers. Four small files make a governed
-    application.
-  </p>
+  <h1>Quickstart — build a governed app from four files</h1>
+  <p class="lpd-sub">An app is a manifest plus providers. Four small files make a governed, tenant-scoped application that survives restarts and goes through the same proof lanes as any builder-generated app.</p>
 
-  <h2 id="the-four-files">The four files</h2>
+  <h2 id="prereqs">Prerequisites</h2>
   <ul>
-    <li><a href="/docs/manifest"><code class="lp-inline-code">app.py</code> — the manifest</a>, declaring everything the app provides.</li>
-    <li><a href="/docs/data-collections"><code class="lp-inline-code">app/data.py</code> — a data collection</a>, typed with JSON Schema.</li>
-    <li><a href="/docs/tools"><code class="lp-inline-code">app/tools.py</code> — a tool provider</a>, exposing custom tools to agents.</li>
-    <li><a href="/docs/agents"><code class="lp-inline-code">app/agents.py</code> — an agent definition</a>, with an approval gate on the risky capability.</li>
+    <li>Python 3.12+, <code class="lp-inline-code">pip install lace-app-sdk</code> (<a href="/docs/install">install</a>).</li>
+    <li>Optionally, <code class="lp-inline-code">pip install lace-app-sdk[runtime]</code> if you want to run <code class="lp-inline-code">lace-app dev</code> / <code class="lp-inline-code">lace-app test</code> locally outside the monorepo.</li>
+    <li>A LACE tenant + API key to publish — not needed to scaffold or run locally.</li>
   </ul>
 
+  <h2 id="the-four-files">The four files</h2>
+  <p>You will create <code class="lp-inline-code">app/manifest.py</code>, <code class="lp-inline-code">app/data.py</code>, <code class="lp-inline-code">app/tools.py</code>, and <code class="lp-inline-code">app/agents.py</code>. Each owns one surface.</p>
+
+  <h3 id="manifest">1 — <code class="lp-inline-code">app/manifest.py</code> — the manifest</h3>
+  <p>The manifest is pure data — the platform projects it into catalog rows without importing your code.</p>
+  <div class="lp-code"><div class="lp-code-head"><span>python</span><em>app/manifest.py</em></div><pre><code set:html={codeManifest} /></pre></div>
+  <p>Run <code class="lp-inline-code">python app/manifest.py</code> once to emit <code class="lp-inline-code">lace_app_manifest.json</code> (the publisher seals this file). See <a href="/docs/manifest">manifest reference</a> and <a href="/docs/what-you-get">what gets installed</a>.</p>
+
+  <h3 id="data">2 — <code class="lp-inline-code">app/data.py</code> — a typed collection</h3>
+  <div class="lp-code"><div class="lp-code-head"><span>python</span><em>app/data.py</em></div><pre><code set:html={codeData} /></pre></div>
+  <p>Collections are tenant-scoped Postgres JSONB tables with an audit log and optional full-text index. Use <code class="lp-inline-code">AppDataService</code> for CRUD — never an in-memory dict (see <a href="/docs/data-collections">data collections</a>).</p>
+
+  <h3 id="tools">3 — <code class="lp-inline-code">app/tools.py</code> — a tool the agent can call</h3>
+  <div class="lp-code"><div class="lp-code-head"><span>python</span><em>app/tools.py</em></div><pre><code set:html={codeTools} /></pre></div>
+  <p>Side-effect: the decorator registers an <code class="lp-inline-code">AppToolDescriptor</code> in the process-local <code class="lp-inline-code">AppToolRegistry</code> keyed by <code class="lp-inline-code">(app_id, tool_id)</code>. The descriptor is pure data; core invokes the handler over HTTP against your sidecar.</p>
+
+  <h3 id="agents">4 — <code class="lp-inline-code">app/agents.py</code> — an agent with an approval gate</h3>
+  <div class="lp-code"><div class="lp-code-head"><span>python</span><em>app/agents.py</em></div><pre><code set:html={codeAgents} /></pre></div>
+  <p><code class="lp-inline-code">approval_required=True</code> pauses the loop with <code class="lp-inline-code">waiting_approval</code> before <code class="lp-inline-code">escalate</code> executes — see <a href="/docs/agents">agents &amp; skills</a>.</p>
+
   <h2 id="how-it-runs">How it runs</h2>
-  <p>
-    LACE discovers the manifest at bootstrap and wires the providers itself.
-    There are no registration calls and no glue code: if a provider is declared
-    in the manifest, it is loaded, permissioned, and audited. If it is not
-    declared, it does not run.
-  </p>
+  <ol>
+    <li><strong>Scaffold</strong>: <code class="lp-inline-code">lace-app create acme.field_intake</code> or start from <code class="lp-inline-code">src/lace_app_sdk/examples/notes_app</code>.</li>
+    <li><strong>Dev</strong>: <code class="lp-inline-code">lace-app dev</code> — boots <code class="lp-inline-code">compose.yaml</code>, runs migrations, mounts routes at <code class="lp-inline-code">/apps/acme.field_intake/api/*</code>. Try <code class="lp-inline-code">curl localhost:8080/apps/acme.field_intake/api/notes</code>.</li>
+    <li><strong>Prove</strong>: <code class="lp-inline-code">lace-app test</code> — typecheck / build / route_smoke / tool / permission / app_data lanes (<a href="/docs/testing">testing</a>).</li>
+    <li><strong>Publish</strong>: <code class="lp-inline-code">lace-app push</code> (CI) or <code class="lp-inline-code">lace-app deploy --cloud</code> (direct) → immutable <code class="lp-inline-code">Release</code>, sidecar boots, <code class="lp-inline-code">lace-app open acme.field_intake</code>.</li>
+  </ol>
 
-  <h2 id="publishing">Publishing</h2>
-  <p>
-    Every app — generated by the <a href="/docs/app-builder">App Builder</a> or
-    hand-written against the SDK — publishes through the same audited lifecycle:
-    intent → architect → scaffold → validate → proof lanes → seal → publish.
-    Releases are versioned and roll back in one step.
-  </p>
+  <h2 id="example">Full runnable example</h2>
+  <p>The SDK ships a complete app at <code class="lp-inline-code">src/lace_app_sdk/examples/notes_app/</code> (manifest, data, routes, agents) — copy it with <code class="lp-inline-code">lace-app create --template notes</code> or read the files directly. The sidecar example <code class="lp-inline-code">apps/grid_ops_console/</code> shows a production sidecar with data seeding, an agent with <code class="lp-inline-code">KnowledgeCapability</code>, and a federated UI.</p>
 
-  <p>Start with the <a href="/docs/manifest">manifest</a>.</p>
+  <p>Next: <a href="/docs/create-app">create a new app — UI / API / CLI</a> or <a href="/docs/clone-and-dev">clone &amp; local dev</a>.</p>
 </DocsPage>

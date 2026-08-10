@@ -1,0 +1,94 @@
+---
+import DocsPage from "../../layouts/DocsPage.astro";
+
+const codeFacade = `<span class="tk-k">from</span> lace_app_sdk.manifest <span class="tk-k">import</span> <span class="tk-n">LaceAppManifest</span>   <span class="tk-c"># actually lace_app_sdk._contracts.manifest.LaceAppManifest</span>
+<span class="tk-k">from</span> lace_app_sdk.data <span class="tk-k">import</span> <span class="tk-n">AppDataCollectionSchema</span>          <span class="tk-c"># pure-pydantic, no lace.*</span>
+<span class="tk-k">from</span> lace_app_sdk.agents <span class="tk-k">import</span> <span class="tk-n">AgentDefinition</span>                <span class="tk-c"># lazy → lace.apps.agents when touched</span>
+
+<span class="tk-c"># base install (pip install lace-app-sdk) → first two imports succeed, third defers</span>
+<span class="tk-c"># runtime install (pip install lace-app-sdk[runtime]) → third resolves to live core code</span>
+`;
+
+const codeLazy = `<span class="tk-k">import</span> lace_app_sdk
+
+<span class="tk-k">print</span>(lace_app_sdk.__version__)              <span class="tk-c"># always works (no lace.*)</span>
+<span class="tk-k">import</span> lace_app_sdk.manifest               <span class="tk-c"># always works (_contracts)</span>
+<span class="tk-k">import</span> lace_app_sdk.agents                 <span class="tk-c"># always works (module import)</span>
+lace_app_sdk.agents.AgentDefinition  <span class="tk-c"># touches runtime → ImportError with hint if lace.* missing</span>
+`;
+---
+
+<DocsPage slug="sdk-overview">
+  <h1>The lace-app-sdk</h1>
+  <p class="lpd-sub">Apps import <code class="lp-inline-code">lace_app_sdk</code>. Every public contract re-exports the actual platform code, so updates to the platform flow through without copying.</p>
+
+  <h2 id="principle">How it stays current</h2>
+  <div class="lpd-callout">
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M12 8v.5M12 11v5" stroke="currentColor" stroke-width="1.6"/></svg>
+    <p>The SDK does not vendor the agent runtime, tools, persistence, routes, or pipelines. Every symbol re-exports the real <code class="lp-inline-code">lace.*</code> implementation and is identical at runtime. The builder and the sidecar resolve the same symbol to the same code.</p>
+  </div>
+  <p>
+    Do not import <code class="lp-inline-code">lace.apps.*</code> or <code class="lp-inline-code">lace.agent.*</code> directly. That internal surface can change without notice. <code class="lp-inline-code">lace_app_sdk</code> is the stable boundary with its own versioning. A breaking change to a published symbol requires a major version bump and a deprecation window.
+  </p>
+
+  <h2 id="installation-options">Installation options</h2>
+  <div class="lpd-table-wrap">
+    <table>
+      <thead><tr><th>Install</th><th>Depends on</th><th>What works</th></tr></thead>
+      <tbody>
+        <tr><td><code class="lp-inline-code">pip install lace-app-sdk</code></td><td><code class="lp-inline-code">pydantic&gt;=2</code> only</td><td>Every <code class="lp-inline-code">_contracts.*</code> type, the <code class="lp-inline-code">lace-app</code> CLI (<code class="lp-inline-code">--help</code>, <code class="lp-inline-code">auth</code>, <code class="lp-inline-code">create</code>, <code class="lp-inline-code">clone</code>, <code class="lp-inline-code">open</code>/<code class="lp-inline-code">logs</code>/<code class="lp-inline-code">status</code>/<code class="lp-inline-code">releases</code>/<code class="lp-inline-code">secrets</code>), and pure facades (<code class="lp-inline-code">manifest</code>, <code class="lp-inline-code">data</code> contracts, <code class="lp-inline-code">tools</code> registry). No <code class="lp-inline-code">lace</code> required — this is the distributable wheel built from <code class="lp-inline-code">src/lace_app_sdk/pyproject.toml</code>.</td></tr>
+        <tr><td><code class="lp-inline-code">pip install lace-app-sdk[runtime]</code></td><td>adds <code class="lp-inline-code">lace</code> monorepo</td><td>+ <code class="lp-inline-code">lace-app dev</code> (migration-apply), <code class="lp-inline-code">lace-app test</code> proof harness, and any symbol that genuinely requires the runtime (<code class="lp-inline-code">AppDataService</code>, agent/pipeline engines, blob store).</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="lp-code"><div class="lp-code-head"><span>python</span><em>how the lazy binding works</em></div><pre><code set:html={codeLazy} /></pre></div>
+  <p>
+    Each runtime-coupled facade (<code class="lp-inline-code">agents</code>, <code class="lp-inline-code">data.AppDataService</code>, <code class="lp-inline-code">pipelines</code>, <code class="lp-inline-code">routes</code>, etc.) resolves its <code class="lp-inline-code">lace.*</code> symbol on first attribute access via <code class="lp-inline-code">_lazy_runtime_getattr</code> / PEP-562 <code class="lp-inline-code">__getattr__</code>. If <code class="lp-inline-code">lace</code> is not installed, the error says <em>install with <code class="lp-inline-code">pip install lace-app-sdk[runtime]</code> or run inside the LACE monorepo</em> — not a bare <code class="lp-inline-code">ModuleNotFoundError</code>. The top-level <code class="lp-inline-code">import lace_app_sdk</code> never triggers a <code class="lp-inline-code">lace.*</code> import.
+  </p>
+
+  <h2 id="modules">Module map</h2>
+  <div class="lpd-table-wrap">
+    <table>
+      <thead><tr><th>Module</th><th>What it re-exports</th><th>Needs runtime?</th></tr></thead>
+      <tbody>
+        <tr><td><code class="lp-inline-code">lace_app_sdk.manifest</code></td><td><code class="lp-inline-code">LaceAppManifest</code>, <code class="lp-inline-code">AppRuntimeUiDeclaration</code>, <code class="lp-inline-code">write_app_manifest</code></td><td>No — pure <code class="lp-inline-code">_contracts.manifest</code></td></tr>
+        <tr><td><code class="lp-inline-code">lace_app_sdk.data</code></td><td><code class="lp-inline-code">AppDataCollectionSchema</code>, <code class="lp-inline-code">AppDataService</code>, <code class="lp-inline-code">put_blob/get_blob</code>, <code class="lp-inline-code">BlobStore</code></td><td>Contracts: no. Service/blob: yes</td></tr>
+        <tr><td><code class="lp-inline-code">lace_app_sdk.tools</code></td><td><code class="lp-inline-code">@tool</code>, <code class="lp-inline-code">AppToolDescriptor</code>, <code class="lp-inline-code">AppToolRegistry</code></td><td>No — sidecar-local registry</td></tr>
+        <tr><td><code class="lp-inline-code">lace_app_sdk.agents</code></td><td><code class="lp-inline-code">AgentDefinition</code>, <code class="lp-inline-code">AppAgentProvider</code>, capabilities, <code class="lp-inline-code">LoopGuardConfig</code>, <code class="lp-inline-code">HookRegistry</code>, <code class="lp-inline-code">GuardrailRegistry</code></td><td>Yes — agent runtime</td></tr>
+        <tr><td><code class="lp-inline-code">lace_app_sdk.routes</code></td><td><code class="lp-inline-code">AppRouteProvider</code>, <code class="lp-inline-code">AppRouteContext</code></td><td>Yes — FastAPI-coupled</td></tr>
+        <tr><td><code class="lp-inline-code">lace_app_sdk.pipelines</code></td><td><code class="lp-inline-code">AppPipelineProvider</code></td><td>Yes — orchestration</td></tr>
+        <tr><td><code class="lp-inline-code">lace_app_sdk.skills</code></td><td><code class="lp-inline-code">AgentSkill</code></td><td>Yes</td></tr>
+        <tr><td><code class="lp-inline-code">lace_app_sdk.memory</code></td><td><code class="lp-inline-code">register_axis_type</code>, <code class="lp-inline-code">register_formation_hook</code></td><td>Yes</td></tr>
+        <tr><td><code class="lp-inline-code">lace_app_sdk.policy</code></td><td><code class="lp-inline-code">AppPolicyProvider</code></td><td>Yes</td></tr>
+        <tr><td><code class="lp-inline-code">lace_app_sdk.connectors</code></td><td>Connector action/trigger contracts</td><td>Yes</td></tr>
+        <tr><td><code class="lp-inline-code">lace_app_sdk.migrations</code></td><td>App collection evolution</td><td>Yes (platform lifecycle)</td></tr>
+        <tr><td><code class="lp-inline-code">lace_app_sdk.ui</code></td><td><code class="lp-inline-code">AppUiDeclaration</code></td><td>No — declaration only</td></tr>
+        <tr><td><code class="lp-inline-code">lace_app_sdk.testing</code></td><td>Proof harness entrypoint</td><td>Yes</td></tr>
+        <tr><td><code class="lp-inline-code">lace_app_sdk.blob</code> / <code class="lp-inline-code">cache</code> / <code class="lp-inline-code">secrets</code> / <code class="lp-inline-code">jobs</code></td><td>Blob helpers, cache, <code class="lp-inline-code">get_secret</code>, job handlers</td><td>Mixed — see each module's docstring</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="versioning">Versioning</h2>
+  <ul>
+    <li>Package version: <code class="lp-inline-code">lace_app_sdk.__version__</code> (today <code class="lp-inline-code">0.1.0.dev0</code>).</li>
+    <li>Compatible core range: <code class="lp-inline-code">lace_app_sdk.__lace_core_requires__ == "&gt;=0,&lt;1"</code>. Enforced lazily at first runtime touch via <code class="lp-inline-code">_compat.check_core_compatibility()</code>.</li>
+    <li>Top-level lifted symbols — <code class="lp-inline-code">LaceAppManifest</code>, <code class="lp-inline-code">AppDataCollectionSchema</code>, <code class="lp-inline-code">tool</code>, <code class="lp-inline-code">AgentDefinition</code>, <code class="lp-inline-code">get_secret</code>, … — are available as <code class="lp-inline-code">lace_app_sdk.&lt;symbol&gt;</code> for convenience.</li>
+  </ul>
+
+  <h2 id="contracts">The <code class="lp-inline-code">_contracts</code> layer</h2>
+  <p>
+    <code class="lp-inline-code">lace_app_sdk/_contracts/</code> holds the canonical pure-Pydantic definitions for <code class="lp-inline-code">manifest</code>, <code class="lp-inline-code">data</code>, and <code class="lp-inline-code">routes</code> with zero <code class="lp-inline-code">lace.*</code> imports.
+    <code class="lp-inline-code">lace.apps.manifest</code> is a thin re-export shim over this layer so <code class="lp-inline-code">from lace.apps.manifest import LaceAppManifest</code> keeps working.
+    This is what makes the standalone wheel possible.
+  </p>
+  <div class="lp-code"><div class="lp-code-head"><span>python</span><em>imports that never fork</em></div><pre><code set:html={codeFacade} /></pre></div>
+
+  <h2 id="cli">The CLI is part of the SDK</h2>
+  <p>
+    The <code class="lp-inline-code">lace-app</code> entry point ships with the SDK wheel (<code class="lp-inline-code">[project.scripts]</code> in <code class="lp-inline-code">pyproject.toml</code>). It is what you use to <a href="/docs/create-app">create</a>, <a href="/docs/clone-and-dev">clone/dev</a>, <a href="/docs/testing">test</a>, and <a href="/docs/publishing">publish</a> apps. Full flag reference at <a href="/docs/cli">CLI reference</a>.
+  </p>
+
+  <p>Next: <a href="/docs/manifest">manifest reference</a> → <a href="/docs/data-collections">data collections</a> → <a href="/docs/modules">full module reference</a>.</p>
+</DocsPage>

@@ -1,0 +1,74 @@
+---
+import DocsPage from "../../layouts/DocsPage.astro";
+---
+
+<DocsPage slug="authentication">
+  <h1>Authentication, tenancy &amp; authorization</h1>
+  <p class="lpd-sub">Every request is a scoped principal acting inside a tenant. The platform enforces that scope on every read and every write — not as a filter after the fact, but as a bound context the store layer cannot escape.</p>
+
+  <h2 id="principals">Principals &amp; API keys</h2>
+  <p>
+    A principal is a human user, a service identity, or the app sidecar itself. API keys are tenant-scoped and carry RBAC scopes (e.g. <code class="lp-inline-code">datasets:read</code>, <code class="lp-inline-code">apps:write</code>, <code class="lp-inline-code">builder:plan</code>).
+    Keys live in <code class="lp-inline-code">~/.config/lace/credentials.toml</code> locally (mode 0600) or in ECS/Secrets Manager in cloud. Env var <code class="lp-inline-code">LACE_API_KEY</code> overrides the file — useful in CI.
+  </p>
+  <div class="lpd-table-wrap">
+    <table>
+      <thead><tr><th>Surface</th><th>How you authenticate</th></tr></thead>
+      <tbody>
+        <tr><td>Browser / frontend</td><td>SSO/OIDC via the LACE auth gateway (session cookie → JWT)</td></tr>
+        <tr><td>CLI &amp; REST API</td><td><code class="lp-inline-code">Authorization: Bearer &lt;api_key&gt;</code></td></tr>
+        <tr><td>App sidecar → platform</td><td>Sidecar-injected token for its own tenant (via <code class="lp-inline-code">SidecarActivator</code>)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Introspect with <code class="lp-inline-code">GET /v1/auth/whoami</code> (or <code class="lp-inline-code">lace-app auth whoami</code>) — returns tenant, principal, and granted scopes.</p>
+
+  <h2 id="tenancy">Tenancy — the bound context</h2>
+  <p>
+    Tenancy is not a query param you can mistype. After auth, the request is bound with <code class="lp-inline-code">bind_store_tenant(tenant_id)</code> and every store call — <code class="lp-inline-code">AppDataService</code>, retrieval, KG, pipeline, agent sessions — inherits that binding.
+    The lace-app-sdk's <code class="lp-inline-code">AppDataService</code> never needs a tenant arg for reads/writes because the bound context already carries it. Agents' <code class="lp-inline-code">tenant_id="default"</code> placeholder in <code class="lp-inline-code">AgentDefinition</code> is always substituted with the real request tenant at turn time.
+  </p>
+
+  <h2 id="rbac">RBAC scopes</h2>
+  <p>Top-level gates. Each route declares the scope it requires; the auth middleware rejects before the handler runs.</p>
+  <div class="lpd-table-wrap">
+    <table>
+      <thead><tr><th>Scope</th><th>Grants</th></tr></thead>
+      <tbody>
+        <tr><td><code class="lp-inline-code">apps:read / apps:write</code></td><td>List / create / publish apps and releases</td></tr>
+        <tr><td><code class="lp-inline-code">datasets:read / datasets:write</code></td><td>Connect sources, trigger sync, read indexed content</td></tr>
+        <tr><td><code class="lp-inline-code">search:query</code></td><td>Enterprise search &amp; RAG retrieval</td></tr>
+        <tr><td><code class="lp-inline-code">kg:read / kg:write</code></td><td>Query entities / propose or accept assertions</td></tr>
+        <tr><td><code class="lp-inline-code">agents:run</code></td><td>Start sessions, send turns, invoke tools</td></tr>
+        <tr><td><code class="lp-inline-code">builder:plan</code></td><td>Drive the App Builder architect</td></tr>
+        <tr><td><code class="lp-inline-code">admin:*</code></td><td>Tenant-admin operations (members, budgets, retention)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="acls">Resource ACLs — beneath RBAC</h2>
+  <p>
+    RBAC gets you through the route gate; resource ACLs decide which rows you see. Two places:
+  </p>
+  <ul>
+    <li><strong>Dataset / document ACLs</strong> — permission snapshots captured at sync time flow forward to retrieval. Enterprise search enforces them in SQL (prefilter) <em>and</em> in the Python finalize — facet counts never leak restricted entities (<code class="lp-inline-code">src/lace/domain/enterprise_search/acl.py</code>).</li>
+    <li><strong>AppData ACLs</strong> — declared via <code class="lp-inline-code">AppDataPermissions</code> on a collection; evaluated per-record by <code class="lp-inline-code">AppDataService</code>.</li>
+  </ul>
+  <p>An identity without access never reaches the resource — as opposed to reaching it and having the result filtered afterward.</p>
+
+  <h2 id="governance-box">Governance — budgets, approvals, audit</h2>
+  <p>
+    Beyond auth, the platform enforces <strong>budgets &amp; usage limits</strong> (per-model, per-agent, per-tenant), <strong>approval gates</strong> (tool-level <code class="lp-inline-code">approval_required</code> pauses the loop with <code class="lp-inline-code">waiting_approval</code>), and <strong>audit</strong> (structured logs + OpenTelemetry traces with per-call model attribution).
+    See <a href="/docs/governance">governance &amp; security</a> and <a href="/docs/observability">observability</a>.
+  </p>
+
+  <h2 id="practical">Practically</h2>
+  <ul>
+    <li>Create an API key in the LACE console (tenant → settings → API keys) or via <code class="lp-inline-code">POST /v1/auth/api-clients</code> (admin).</li>
+    <li>Store it with <code class="lp-inline-code">lace-app auth login --api-url https://api.laceplatform.com --api-key $KEY</code>.</li>
+    <li>Use <code class="lp-inline-code">LACE_API_KEY</code> in CI — no file needed.</li>
+    <li>Never check keys into the app repo — use <code class="lp-inline-code">lace-app secrets set</code> for app-scoped secrets.</li>
+  </ul>
+
+  <p>Next: <a href="/docs/api-overview">REST API overview</a> or <a href="/docs/governance">governance</a>.</p>
+</DocsPage>

@@ -1,0 +1,89 @@
+---
+import DocsPage from "../../layouts/DocsPage.astro";
+
+const codeClone = `<span class="tk-f">lace-app</span> <span class="tk-n">clone</span> acme.field_intake
+<span class="tk-f">cd</span> field_intake
+<span class="tk-f">ls</span> -la
+<span class="tk-c"># app/  lace_app_manifest.json  LaceApp.yaml  compose.yaml  ui/  tests/</span>
+`;
+
+const codeDev = `<span class="tk-f">lace-app</span> <span class="tk-n">dev</span> <span class="tk-o">--port</span> 8080
+<span class="tk-c"># → boots compose.yaml (postgres/minio/nats/redis + api)</span>
+<span class="tk-c"># → mounts app/ into the runtime emulator, runs migrations, mounts routes at /apps/&lt;app_id&gt;/api/*</span>
+<span class="tk-f">curl</span> http://localhost:8080/apps/acme.field_intake/api/notes | <span class="tk-f">jq</span>
+`;
+
+const codeTree = `field_intake/
+├── app/
+│   ├── __init__.py
+│   ├── data.py          # AppDataCollectionSchema (typed collections)
+│   ├── tools.py         # @tool handlers + AppToolDescriptor
+│   ├── agents.py        # AgentDefinition + AppAgentProvider
+│   ├── routes.py        # AppRouteProvider (FastAPI routes)
+│   └── migrations.py    # AppDataMigrations
+├── ui/                  # federated runtime-UI (if declared)
+├── lace_app_manifest.json  # canonical manifest (what you publish)
+├── LaceApp.yaml         # sidecar / deploy descriptor
+├── compose.yaml         # local dev stack (from templates/lace_compose.yaml)
+├── .lace/               # local state: credentials, dev AppState, build cache
+└── tests/               # proof-lane fixtures
+`;
+---
+
+<DocsPage slug="clone-and-dev">
+  <h1>Clone the repo &amp; run locally</h1>
+  <p class="lpd-sub">Graduated apps are real git repos. Clone them, run them locally against an emulator, and push them back through the same release pipeline.</p>
+
+  <h2 id="clone">Clone</h2>
+  <div class="lp-code"><div class="lp-code-head"><span>terminal</span><em>bash</em></div><pre><code set:html={codeClone} /></pre></div>
+  <ul>
+    <li><code class="lp-inline-code">lace-app clone &lt;app&gt; [--dir DIR]</code> — mints a short-lived git credential via <code class="lp-inline-code">GET /v1/apps/&#123;app_id&#125;/git-credential</code> and clones with an ephemeral helper.</li>
+    <li>Never stores a raw GitHub token — the helper is scoped to the single <code class="lp-inline-code">git clone</code> invocation.</li>
+    <li>If credential minting fails, it degrades to a plain <code class="lp-inline-code">git clone</code> so advanced git setups still work.</li>
+  </ul>
+
+  <h2 id="dev">Run locally — <code class="lp-inline-code">lace-app dev</code></h2>
+  <div class="lp-code"><div class="lp-code-head"><span>terminal</span><em>bash</em></div><pre><code set:html={codeDev} /></pre></div>
+  <p><code class="lp-inline-code">lace-app dev</code> is the local emulator (APB-020). It:</p>
+  <ol>
+    <li>Reads <code class="lp-inline-code">compose.yaml</code> (copied from <code class="lp-inline-code">src/lace_app_sdk/templates/lace_compose.yaml</code>) and boots Postgres, MinIO/S3, NATS, and Redis.</li>
+    <li>Creates a local <code class="lp-inline-code">.lace/</code> state dir: dev credentials pointer, <code class="lp-inline-code">lace_app_manifest.json</code> cache, build artifacts, and a launcher at <code class="lp-inline-code">.lace/_dev_app.py</code>.</li>
+    <li>Runs migrations via the app's <code class="lp-inline-code">migration_provider</code> (if declared), registers collections through <code class="lp-inline-code">AppDataService</code>, and mounts route/agent providers at <code class="lp-inline-code">/apps/&lt;app_id&gt;/api/*</code>.</li>
+    <li>Watches <code class="lp-inline-code">app/</code> for changes (reload).</li>
+  </ol>
+  <p>Flags: <code class="lp-inline-code">--port PORT</code>, <code class="lp-inline-code">--dir DIR</code>. Requires the <code class="lp-inline-code">runtime</code> extra for migration-apply: <code class="lp-inline-code">pip install lace-app-sdk[runtime]</code>. Without it, <code class="lp-inline-code">dev</code> still boots but warns about skipped migrations.</p>
+
+  <h2 id="layout">What the repo looks like on disk</h2>
+  <pre class="lpd-diagram"><code>{codeTree}</code></pre>
+
+  <h2 id="compose">The local stack</h2>
+  <p>
+    <code class="lp-inline-code">compose.yaml</code> is a slimmed version of the platform's own compose. You can <code class="lp-inline-code">docker compose up</code> it directly, but <code class="lp-inline-code">lace-app dev</code> wraps that plus the emulator bootstrap so routes and agents resolve the same way they do in the sidecar.
+  </p>
+  <div class="lpd-table-wrap">
+    <table><thead><tr><th>Service</th><th>Why it runs locally</th></tr></thead><tbody>
+      <tr><td><code class="lp-inline-code">postgres</code></td><td><code class="lp-inline-code">AppDataService</code> collections + platform stores</td></tr>
+      <tr><td><code class="lp-inline-code">minio</code></td><td>Blob store for <code class="lp-inline-code">put_blob / get_blob</code> + UI bundles</td></tr>
+      <tr><td><code class="lp-inline-code">nats</code></td><td>Event bus for dataset/KG events</td></tr>
+      <tr><td><code class="lp-inline-code">redis</code></td><td>Cache + distributed locks</td></tr>
+      <tr><td><code class="lp-inline-code">api</code> + frontend</td><td>Only if you run the full platform; <code class="lp-inline-code">lace-app dev</code> is lighter — just the app sidecar</td></tr>
+    </tbody></table>
+  </div>
+
+  <h2 id="workflow">Inner-loop workflow</h2>
+  <ol>
+    <li>Edit <code class="lp-inline-code">app/data.py</code>, <code class="lp-inline-code">app/tools.py</code>, <code class="lp-inline-code">app/agents.py</code>, or <code class="lp-inline-code">app/routes.py</code>.</li>
+    <li>Hit <code class="lp-inline-code">GET /apps/&lt;app_id&gt;/api/notes</code> locally or use the federated UI at <code class="lp-inline-code">/apps/&lt;app_id&gt;/</code>.</li>
+    <li>Run proof lanes: <code class="lp-inline-code">lace-app test</code> (see <a href="/docs/testing">testing</a>).</li>
+    <li>Push: <code class="lp-inline-code">lace-app push</code> (polls CI releases) or <code class="lp-inline-code">lace-app deploy --cloud</code> (direct seal/upload/activate, AFV-016).</li>
+  </ol>
+
+  <h2 id="troubleshooting">Troubleshooting</h2>
+  <ul>
+    <li><strong><code class="lp-inline-code">lace-app dev</code> warns about missing runtime</strong> — install <code class="lp-inline-code">pip install lace-app-sdk[runtime]</code> inside the repo or in the sidecar.</li>
+    <li><strong>Port in use</strong> — <code class="lp-inline-code">lace-app dev --port 8081</code>.</li>
+    <li><strong>State bleed between apps</strong> — each app gets its own <code class="lp-inline-code">.lace/</code>; wipe it with <code class="lp-inline-code">rm -rf .lace</code> to re-bootstrap.</li>
+  </ul>
+
+  <p>Next: <a href="/docs/what-you-get">what gets installed</a> or jump to the <a href="/docs/sdk-overview">SDK itself</a>.</p>
+</DocsPage>

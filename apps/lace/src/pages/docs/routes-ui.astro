@@ -1,0 +1,91 @@
+---
+import DocsPage from "../../layouts/DocsPage.astro";
+
+const codeRoutes = `<span class="tk-k">from</span> lace_app_sdk.routes <span class="tk-k">import</span> <span class="tk-n">AppRouteProvider</span>, <span class="tk-n">AppRouteContext</span>, <span class="tk-n">AppRouteMetadata</span>
+<span class="tk-k">from</span> lace_app_sdk.data <span class="tk-k">import</span> <span class="tk-n">AppDataService</span>, <span class="tk-n">AppDataQueryRequest</span>
+<span class="tk-k">from</span> fastapi.responses <span class="tk-k">import</span> <span class="tk-n">JSONResponse</span>
+
+<span class="tk-k">class</span> <span class="tk-n">FieldIntakeRoutes</span>(<span class="tk-n">AppRouteProvider</span>):
+    app_id = <span class="tk-s">"acme.field_intake"</span>
+
+    <span class="tk-k">def</span> <span class="tk-f">route_metadata</span>(<span class="tk-k">self</span>):
+        <span class="tk-k">return</span> [<span class="tk-f">AppRouteMetadata</span>(app_id=<span class="tk-k">self</span>.app_id, route_id=<span class="tk-s">"list_tickets"</span>,
+                                            kind=<span class="tk-s">"public"</span>, path_prefix=<span class="tk-s">"/tickets"</span>)]
+
+    <span class="tk-k">def</span> <span class="tk-f">register_routes</span>(<span class="tk-k">self</span>, context: <span class="tk-n">AppRouteContext</span>):
+        app = context.app
+        state = context.app_state
+
+        @app.get(<span class="tk-s">"/tickets"</span>)
+        <span class="tk-k">async</span> <span class="tk-k">def</span> <span class="tk-f">list_tickets</span>(<span class="tk-n">limit</span>: <span class="tk-n">int</span> = <span class="tk-n">20</span>):
+            svc = <span class="tk-f">AppDataService</span>(app_state=state)
+            res = svc.<span class="tk-f">list_records</span>(<span class="tk-k">self</span>.app_id, <span class="tk-s">"tickets"</span>, <span class="tk-f">AppDataQueryRequest</span>(limit=limit))
+            <span class="tk-k">return</span> <span class="tk-f">JSONResponse</span>({<span class="tk-s">"tickets"</span>: [r.data_json <span class="tk-k">for</span> r <span class="tk-k">in</span> res.records]})
+`;
+
+const codeUi = `<span class="tk-c">// ui/src/RuntimeView.tsx — federated module exposed at ./RuntimeView</span>
+<span class="tk-k">export</span> <span class="tk-k">default</span> <span class="tk-k">function</span> <span class="tk-f">RuntimeView</span>() {
+  <span class="tk-k">return</span> &lt;<span class="tk-n">div</span>&gt;Tickets: &#123;tickets.length&#125;&lt;/<span class="tk-n">div</span>&gt;
+}
+
+<span class="tk-c">// lace_app_manifest.json → runtime_ui block</span>
+{
+  <span class="tk-s">"runtime_ui"</span>: {
+    <span class="tk-s">"module_id"</span>: <span class="tk-s">"field_intake.ui"</span>,
+    <span class="tk-s">"module_version"</span>: <span class="tk-s">"1.0.0"</span>,
+    <span class="tk-s">"entrypoints"</span>: {<span class="tk-s">"session_home"</span>: <span class="tk-s">"./RuntimeView"</span>},
+    <span class="tk-s">"isolation_mode"</span>: <span class="tk-s">"iframe"</span>
+  }
+}
+`;
+---
+
+<DocsPage slug="routes-ui">
+  <h1>Routes &amp; runtime UI</h1>
+  <p class="lpd-sub">Expose HTTP routes and federated UI modules from your app sidecar. Routes mount under <code class="lp-inline-code">/apps/&lt;app_id&gt;/api/*</code> and survive restarts; UI loads as a Module Federation remote with no shell rebuild.</p>
+
+  <h2 id="routes">Routes — <code class="lp-inline-code">AppRouteProvider</code></h2>
+  <p>
+    Routes are declared by a provider class with <code class="lp-inline-code">app_id</code>, a <code class="lp-inline-code">route_metadata()</code> list (pure data — core projects it without importing your code), and a <code class="lp-inline-code">register_routes(context)</code> that receives the sidecar's FastAPI <code class="lp-inline-code">app</code> and <code class="lp-inline-code">app_state</code>.
+  </p>
+  <div class="lp-code"><div class="lp-code-head"><span>python</span><em>app/routes.py</em></div><pre><code set:html={codeRoutes} /></pre></div>
+  <ul>
+    <li>Mount point: <code class="lp-inline-code">/apps/&lt;app_id&gt;/api/&lt;your-path&gt;</code>. The platform's <code class="lp-inline-code">LACE_APP_PATH_PREFIX</code> is injected by <code class="lp-inline-code">SidecarActivator</code>.</li>
+    <li>Use <code class="lp-inline-code">AppDataService(app_state=state)</code> — not an in-memory dict — so <code class="lp-inline-code">GET /tickets</code> survives sidecar restarts (see <a href="/docs/data-collections">data collections</a> dual-plane rule).</li>
+    <li>Register the collection at boot (idempotent) before serving: <code class="lp-inline-code">AppDataService(...).register_collection(TICKETS)</code>.</li>
+    <li>Litmus test: <code class="lp-inline-code">curl /apps/acme.field_intake/api/tickets</code> locally via <code class="lp-inline-code">lace-app dev</code> and again after <code class="lp-inline-code">docker restart</code> — same rows.</li>
+  </ul>
+
+  <h2 id="ui">Runtime UI — federated modules</h2>
+  <p>
+    The LACE shell never rebuilds for your app. Instead it loads your UI as a Module Federation remote at <code class="lp-inline-code">/ui/manifest.json</code> (DEPLOY-007). The shell fetches <code class="lp-inline-code">lace_app_manifest.json → runtime_ui</code>, then hydrates the remote entry.
+  </p>
+  <div class="lp-code"><div class="lp-code-head"><span>tsx</span><em>ui + manifest</em></div><pre><code set:html={codeUi} /></pre></div>
+
+  <div class="lpd-table-wrap">
+    <table>
+      <thead><tr><th>Field</th><th>What it means</th></tr></thead>
+      <tbody>
+        <tr><td><code class="lp-inline-code">module_id</code></td><td>Stable id, e.g. <code class="lp-inline-code">field_intake.ui</code></td></tr>
+        <tr><td><code class="lp-inline-code">entrypoints</code></td><td>At least one of <code class="lp-inline-code">new_run</code> / <code class="lp-inline-code">session_home</code> / <code class="lp-inline-code">run_detail</code> → exposed module path (e.g. <code class="lp-inline-code">"./RuntimeView"</code>)</td></tr>
+        <tr><td><code class="lp-inline-code">isolation_mode</code></td><td><code class="lp-inline-code">host</code> (default) or <code class="lp-inline-code">iframe</code></td></tr>
+        <tr><td><code class="lp-inline-code">sdk_api_min / sdk_api_max</code></td><td>Host SDK contract range (default <code class="lp-inline-code">1..1</code>)</td></tr>
+        <tr><td><code class="lp-inline-code">runtime_contract_version</code></td><td><code class="lp-inline-code">lace.ui_runtime.v1</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="local">Local verification</h2>
+  <ol>
+    <li><code class="lp-inline-code">lace-app dev</code> — routes mounted; UI manifest served at <code class="lp-inline-code">/ui/manifest.json</code>.</li>
+    <li><code class="lp-inline-code">curl http://localhost:8080/ui/manifest.json | jq</code> — expect <code class="lp-inline-code">remote_entry_url</code> (set via <code class="lp-inline-code">LACE_APP_UI_BUNDLE_BASE_URL</code> + <code class="lp-inline-code">LACE_APP_UI_DIGEST</code> in prod).</li>
+    <li>In prod, upload the UI bundle to <code class="lp-inline-code">s3://.../app-bundles/&lt;app_id&gt;/&lt;digest&gt;/ui</code>; the sidecar serves the manifest and the shell loads the remote entry.</li>
+  </ol>
+
+  <h2 id="secrets">App-scoped secrets &amp; settings</h2>
+  <p>
+    Read secrets declared via <code class="lp-inline-code">get_secret("my_key")</code> / <code class="lp-inline-code">get_secret_optional</code> / <code class="lp-inline-code">get_setting</code> from <code class="lp-inline-code">lace_app_sdk.secrets</code>. They resolve through the platform's secret backend (ECS sm_secrets in cloud, filesystem in dev). Write them with <code class="lp-inline-code">lace-app secrets set &lt;app_id&gt; &lt;key&gt; &lt;value&gt;</code>.
+  </p>
+
+  <p>Next: <a href="/docs/testing">testing &amp; proof lanes</a> or <a href="/docs/publishing">publishing</a>.</p>
+</DocsPage>

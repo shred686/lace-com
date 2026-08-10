@@ -1,0 +1,82 @@
+---
+import DocsPage from "../../layouts/DocsPage.astro";
+
+const codeAuth = `<span class="tk-f">lace-app</span> <span class="tk-n">auth</span> <span class="tk-n">login</span> <span class="tk-o">--api-url</span> https://api.laceplatform.com <span class="tk-o">--api-key</span> $LACE_API_KEY
+<span class="tk-f">lace-app</span> <span class="tk-n">auth</span> <span class="tk-n">status</span>
+<span class="tk-f">lace-app</span> <span class="tk-n">auth</span> <span class="tk-n">whoami</span> <span class="tk-c"># GET /v1/auth/whoami</span>
+`;
+
+const codeEnv = `<span class="tk-c"># env overrides (no login needed in CI):</span>
+<span class="tk-n">LACE_API_URL</span>=https://api.laceplatform.com
+<span class="tk-n">LACE_API_KEY</span>=lace_sk_...
+
+<span class="tk-c"># config file (written by auth login, mode 0600):</span>
+~/.config/lace/credentials.toml
+<span class="tk-c">#   [profile.default]</span>
+<span class="tk-c">#   api_url = "https://api.laceplatform.com"</span>
+<span class="tk-c">#   api_key = "lace_sk_..."</span>
+`;
+---
+
+<DocsPage slug="cli">
+  <h1>lace-app CLI reference</h1>
+  <p class="lpd-sub">One binary for the whole app lifecycle — from credential setup to rollback. Ships with the <code class="lp-inline-code">lace-app-sdk</code> wheel.</p>
+
+  <p>
+    Install: <code class="lp-inline-code">pip install lace-app-sdk</code> (or <code class="lp-inline-code">pipx install lace-app-sdk</code>). Verify with <code class="lp-inline-code">lace-app --help</code>.
+    Source: <code class="lp-inline-code">src/lace_app_sdk/cli.py</code> (verb set D6, APB-019/020).
+  </p>
+
+  <h2 id="auth">Auth — <code class="lp-inline-code">lace-app auth</code></h2>
+  <div class="lp-code"><div class="lp-code-head"><span>terminal</span><em>bash</em></div><pre><code set:html={codeAuth} /></pre></div>
+  <div class="lpd-table-wrap">
+    <table>
+      <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td><code class="lp-inline-code">auth login --api-url URL --api-key KEY</code></td><td>Store credentials in <code class="lp-inline-code">~/.config/lace/credentials.toml</code> (mode 0600). Supports <code class="lp-inline-code">--profile NAME</code>.</td></tr>
+        <tr><td><code class="lp-inline-code">auth status</code></td><td>Show whether credentials exist (redacted key).</td></tr>
+        <tr><td><code class="lp-inline-code">auth whoami</code></td><td><code class="lp-inline-code">GET /v1/auth/whoami</code> — tenant, principal, scopes.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="env">Env &amp; config</h2>
+  <div class="lp-code"><div class="lp-code-head"><span>terminal</span><em>bash</em></div><pre><code set:html={codeEnv} /></pre></div>
+  <p>
+    Resolution order: <code class="lp-inline-code">LACE_API_KEY</code> env → credentials file. <code class="lp-inline-code">LACE_API_URL</code> env → credentials file → <code class="lp-inline-code">http://localhost:8000</code>.
+    Every command that talks to the API exits with a clear <em>Not logged in. Run: lace-app auth login</em> if no key resolves.
+  </p>
+
+  <h2 id="verbs">All verbs</h2>
+  <div class="lpd-table-wrap">
+    <table>
+      <thead><tr><th>Verb</th><th>Signature</th><th>Calls</th></tr></thead>
+      <tbody>
+        <tr><td><code class="lp-inline-code">create</code></td><td><code class="lp-inline-code">lace-app create &lt;app-id&gt; [--name NAME] [--dir DIR]</code></td><td><code class="lp-inline-code">POST /v1/apps</code> then <code class="lp-inline-code">GET /v1/apps/&#123;app_id&#125;/git-credential</code> + scaffold</td></tr>
+        <tr><td><code class="lp-inline-code">clone</code></td><td><code class="lp-inline-code">lace-app clone &lt;app&gt; [--dir DIR]</code></td><td><code class="lp-inline-code">GET /v1/apps/&#123;app_id&#125;/git-credential</code> + <code class="lp-inline-code">git clone</code> via ephemeral helper</td></tr>
+        <tr><td><code class="lp-inline-code">dev</code></td><td><code class="lp-inline-code">lace-app dev [--port PORT] [--dir DIR]</code></td><td>Local compose + runtime emulator; needs <code class="lp-inline-code">[runtime]</code> for migrations</td></tr>
+        <tr><td><code class="lp-inline-code">test</code></td><td><code class="lp-inline-code">lace-app test [--dir DIR] [--json]</code></td><td>Proof harness (needs <code class="lp-inline-code">[runtime]</code>)</td></tr>
+        <tr><td><code class="lp-inline-code">push</code></td><td><code class="lp-inline-code">lace-app push [--app-id ID]</code></td><td>Upload + poll CI releases (APB-023 will add streaming)</td></tr>
+        <tr><td><code class="lp-inline-code">deploy</code></td><td><code class="lp-inline-code">lace-app deploy [--dir DIR] [--cloud]</code></td><td>Seal → upload/register/activate, no CI</td></tr>
+        <tr><td><code class="lp-inline-code">open</code></td><td><code class="lp-inline-code">lace-app open &lt;app-id&gt;</code></td><td>Open <code class="lp-inline-code">/apps/&lt;app_id&gt;/</code> in the browser</td></tr>
+        <tr><td><code class="lp-inline-code">logs</code></td><td><code class="lp-inline-code">lace-app logs &lt;app-id&gt; [--lines N]</code></td><td><code class="lp-inline-code">GET /v1/apps/&#123;app_id&#125;/logs</code></td></tr>
+        <tr><td><code class="lp-inline-code">status</code></td><td><code class="lp-inline-code">lace-app status &lt;app-id&gt;</code></td><td><code class="lp-inline-code">GET /v1/apps/&#123;app_id&#125;</code> + latest release</td></tr>
+        <tr><td><code class="lp-inline-code">releases list</code></td><td><code class="lp-inline-code">lace-app releases list &lt;app-id&gt;</code></td><td><code class="lp-inline-code">GET /v1/apps/&#123;app_id&#125;/releases</code></td></tr>
+        <tr><td><code class="lp-inline-code">releases rollback</code></td><td><code class="lp-inline-code">lace-app releases rollback &lt;app-id&gt; &lt;rel&gt;</code></td><td><code class="lp-inline-code">POST /v1/apps/&#123;app_id&#125;/releases/&#123;rel&#125;/rollback</code></td></tr>
+        <tr><td><code class="lp-inline-code">secrets set</code></td><td><code class="lp-inline-code">lace-app secrets set &lt;app-id&gt; &lt;key&gt; &lt;value&gt;</code></td><td><code class="lp-inline-code">PUT /v1/apps/&#123;app_id&#125;/secrets/&#123;key&#125;</code> (server-side)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="patterns">Common patterns</h2>
+  <ul>
+    <li><strong>CI</strong>: set <code class="lp-inline-code">LACE_API_URL</code> + <code class="lp-inline-code">LACE_API_KEY</code> env, then <code class="lp-inline-code">lace-app push</code> or <code class="lp-inline-code">lace-app deploy --cloud</code>. No <code class="lp-inline-code">auth login</code> needed.</li>
+    <li><strong>Local dev without publish</strong>: <code class="lp-inline-code">lace-app dev</code> after any <code class="lp-inline-code">create</code> or <code class="lp-inline-code">clone</code>.</li>
+    <li><strong>Debug a live sidecar</strong>: <code class="lp-inline-code">lace-app status</code> → <code class="lp-inline-code">lace-app logs --lines 500</code>.</li>
+  </ul>
+
+  <h2 id="exit-codes">Exit codes</h2>
+  <p>0 = success, 1 = error (auth missing, proof lane failed, API error). Failed API calls print <code class="lp-inline-code">detail</code> from the JSON error body.</p>
+
+  <p>Next: <a href="/docs/modules">module reference</a> or <a href="/docs/publishing">publishing</a>.</p>
+</DocsPage>

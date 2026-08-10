@@ -1,2 +1,6 @@
 /product /platform/enterprise-search 301
 /product/ /platform/enterprise-search 301
+/docs/search-rag /docs/enterprise-search 301
+/docs/knowledge-graph-product /docs/knowledge-graph 301
+/docs/agents-channels /docs/agent-studio 301
+/docs/app-builder-product /docs/app-builder 301

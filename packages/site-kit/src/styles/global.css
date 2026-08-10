@@ -1673,12 +1673,15 @@ li {
   display: none;
 }
 
-.official-home .accent-glow {
-  background: linear-gradient(135deg, var(--oh-accent-2), #00fdc1);
+.official-home .accent-glow,
+.official-home.home-v2 .accent-glow {
+  background: linear-gradient(100deg, #007a60 0%, #00a882 55%, #00c9a0 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 24px rgba(0, 255, 194, 0.45);
+  color: transparent;
+  text-shadow: 0 0 24px rgba(0, 168, 130, 0.35);
+  display: inline-block;
 }
 
 .official-home .hero-intro {
@@ -1822,7 +1825,7 @@ li {
 
 /* ── Platform intro ─────────────────────────────── */
 .official-home .lace-accent-word {
-  background: linear-gradient(90deg, var(--oh-accent) 0%, #00d4a8 100%);
+  background: linear-gradient(100deg, #007a60 0%, #00a882 55%, #00c9a0 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -7953,7 +7956,11 @@ li {
 }
 
 .official-home.home-v2 .lace-accent-word {
-  color: var(--oh-accent);
+  background: linear-gradient(100deg, #007a60 0%, #00a882 55%, #00c9a0 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
 .official-home.home-v2 .v2-lace-shots {

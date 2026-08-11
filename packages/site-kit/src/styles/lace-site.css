@@ -615,10 +615,10 @@
   top: 100%;
   left: 0;
   right: 0;
-  background: rgba(252, 253, 253, 0.99);
+  background: #ffffff;
   border-top: 1px solid var(--lp-line-soft);
   border-bottom: 1px solid var(--lp-line);
-  box-shadow: 0 34px 70px -28px rgba(15, 30, 26, 0.35);
+  box-shadow: 0 34px 70px -28px rgba(15, 30, 26, 0.18);
   opacity: 0;
   visibility: hidden;
   transform: translateY(-14px);

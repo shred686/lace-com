@@ -16,6 +16,7 @@ const codeLazy = `<span class="tk-k">import</span> lace_app_sdk
 <span class="tk-k">import</span> lace_app_sdk.agents                 <span class="tk-c"># always works (module import)</span>
 lace_app_sdk.agents.AgentDefinition  <span class="tk-c"># touches runtime → ImportError with hint if lace.* missing</span>
 `;
+import "../../styles/mega-override.css";
 ---
 
 <DocsPage slug="sdk-overview">

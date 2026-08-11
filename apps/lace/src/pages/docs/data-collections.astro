@@ -42,6 +42,7 @@ svc.<span class="tk-f">delete_record</span>(<span class="tk-s">"acme.field_intak
 blob_ref = <span class="tk-f">put_blob</span>(state, data=<span class="tk-f">open</span>(<span class="tk-s">"evidence.pdf"</span>,<span class="tk-s">"rb"</span>).<span class="tk-f">read</span>(), content_type=<span class="tk-s">"application/pdf"</span>)
 <span class="tk-c"># store blob_ref in row.evidence_blob so queries stay indexed</span>
 `;
+import "../../styles/mega-override.css";
 ---
 
 <DocsPage slug="data-collections">

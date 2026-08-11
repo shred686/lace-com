@@ -28,6 +28,7 @@ const others = (await getCollection("blog"))
 const pageUrl = `${laceSite.url}/blog/${post.id}/`;
 const seoTitle = post.data.seoTitle ?? `${post.data.title} | ${laceSite.name} Blog`;
 const seoDescription = post.data.seoDescription ?? post.data.description;
+import "../../styles/mega-override.css";
 ---
 
 <BaseLayout

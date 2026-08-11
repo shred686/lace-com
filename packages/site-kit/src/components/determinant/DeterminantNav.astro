@@ -356,11 +356,10 @@ const servicesActive = Astro.url.pathname.startsWith("/services");
     left: 50%;
     width: min(52rem, calc(100vw - 3rem));
     padding: 1.15rem 1.25rem;
-    border: 1px solid var(--dsn-line);
-    /* Nav chrome, not a content panel: solid so page copy cannot ghost through
-       the labels. The translucent-plane rule governs content surfaces. */
-    background: #06070a;
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(13, 27, 22, 0.08);
+    /* White surface so labels and blurbs read on dark theme — reverted per request */
+    background: #ffffff;
+    box-shadow: 0 24px 60px rgba(15, 30, 26, 0.12), 0 8px 24px rgba(15, 30, 26, 0.08);
     opacity: 0;
     visibility: hidden;
     transform: translate(-50%, -6px);
@@ -417,7 +416,7 @@ const servicesActive = Astro.url.pathname.startsWith("/services");
     font-weight: 700;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--dsn-bright);
+    color: #0d1b16;
   }
 
   .dsn-menu-blurb {
@@ -429,7 +428,7 @@ const servicesActive = Astro.url.pathname.startsWith("/services");
     letter-spacing: normal;
     line-height: 1.5;
     text-transform: none;
-    color: var(--dsn-muted);
+    color: #5a6b65;
   }
 
   .dsn-menu-all {
@@ -438,18 +437,18 @@ const servicesActive = Astro.url.pathname.startsWith("/services");
     gap: 0.7rem;
     margin-top: 0.9rem;
     padding-top: 0.85rem;
-    border-top: 1px solid var(--dsn-line-soft);
+    border-top: 1px solid rgba(13, 27, 22, 0.08);
     font-size: 0.62rem;
     letter-spacing: 0.2em;
     text-transform: uppercase;
     text-decoration: none;
-    color: var(--dsn-muted);
+    color: #5a6b65;
     transition: color 180ms ease;
   }
 
   .dsn-menu-all:hover,
   .dsn-menu-all:focus-visible {
-    color: var(--dsn-bright);
+    color: #0d1b16;
   }
 
   .dsn-menu-arrow {
@@ -565,8 +564,8 @@ const servicesActive = Astro.url.pathname.startsWith("/services");
       position: static;
       width: auto;
       padding: 0.55rem 0.6rem 0.7rem;
-      border-color: var(--dsn-line-soft);
-      background: rgba(255, 255, 255, 0.02);
+      border-color: rgba(13, 27, 22, 0.08);
+      background: #ffffff;
       backdrop-filter: none;
       box-shadow: none;
       opacity: 1;

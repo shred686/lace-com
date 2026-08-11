@@ -1,0 +1,107 @@
+/* ── Mega-menu: white bg + dark text ───────────────────────────────
+   Reverted per request: white surface, dark ink.
+   Scoped to [data-theme="lace"] so determinant dark nav untouched.
+   Mirrors lace-site.css lp-mega tokens for consistency.
+   ───────────────────────────────────────────────────────────────────── */
+
+:root[data-theme="lace"] .lp-mega {
+  background: #ffffff;
+  border-top: 1px solid var(--lp-line-soft);
+  border-bottom: 1px solid var(--lp-line);
+  box-shadow: 0 34px 70px -28px rgba(15, 30, 26, 0.18);
+}
+
+:root[data-theme="lace"] .lp-mega-grid {
+  /* keep layout; no change */
+}
+
+:root[data-theme="lace"] .lp-mega-col {
+  border-left-color: var(--lp-line-soft);
+}
+
+:root[data-theme="lace"] .lp-mega-label {
+  color: var(--lp-faint);
+  border-bottom-color: var(--lp-line-soft);
+}
+
+:root[data-theme="lace"] .lp-mega-row {
+  /* transparent base; hover tint is green, not white */
+}
+
+:root[data-theme="lace"] .lp-mega-row:hover {
+  background: rgba(var(--lp-green-rgb), 0.06);
+}
+
+:root[data-theme="lace"] .lp-mega-icon {
+  border-color: rgba(var(--lp-green-rgb), 0.25);
+  background: rgba(var(--lp-green-rgb), 0.05);
+  color: var(--lp-green-deep);
+}
+
+:root[data-theme="lace"] .lp-mega-copy strong {
+  color: var(--lp-ink);
+}
+
+:root[data-theme="lace"] .lp-mega-copy > span {
+  color: var(--lp-muted);
+}
+
+/* Badge: green gradient pill on white */
+:root[data-theme="lace"] .lp-mega-badge {
+  background: var(--lp-grad);
+  color: #ffffff;
+}
+
+/* Secondary rows (Deployment, Blog) */
+:root[data-theme="lace"] .lp-mega-row-more {
+  border-color: var(--lp-line-soft);
+}
+
+:root[data-theme="lace"] .lp-mega-row-more svg {
+  color: var(--lp-green-deep);
+}
+
+/* Featured story cards — white on white with soft green border */
+:root[data-theme="lace"] .lp-mega-story {
+  background: #ffffff;
+  border-color: rgba(var(--lp-green-rgb), 0.18);
+}
+
+:root[data-theme="lace"] .lp-mega-story:hover {
+  border-color: rgba(var(--lp-green-rgb), 0.32);
+  box-shadow: var(--lp-shadow-sm);
+}
+
+:root[data-theme="lace"] .lp-mega-story-top {
+  color: var(--lp-green-deep);
+}
+
+:root[data-theme="lace"] .lp-mega-story-pill {
+  background: rgba(var(--lp-green-rgb), 0.12);
+  color: var(--lp-green-deep);
+}
+
+:root[data-theme="lace"] .lp-mega-story-title {
+  color: var(--lp-ink);
+}
+
+/* Keep gradient-clipped accent on white */
+:root[data-theme="lace"] .lp-mega-story-title em {
+  background: var(--lp-grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+:root[data-theme="lace"] .lp-mega-story-meta {
+  color: var(--lp-faint);
+}
+
+/* Nav stays opaque when mega is open — keep veil behavior */
+:root[data-theme="lace"] .lp-nav.mega-open {
+  background: var(--lp-surface);
+  border-bottom-color: var(--lp-line);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}

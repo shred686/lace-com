@@ -1,0 +1,253 @@
+---
+import BaseLayout from "@determinant/site-kit/layouts/BaseLayout.astro";
+import DeterminantNav from "@determinant/site-kit/components/determinant/DeterminantNav.astro";
+import DeterminantFooter from "@determinant/site-kit/components/determinant/DeterminantFooter.astro";
+import { breadcrumbSchema } from "@determinant/site-kit/seo/schema";
+import { PRIVACY_POLICY_BODY_HTML } from "@determinant/site-kit/legal/privacy-policy-content";
+import { determinantSite } from "../site.config";
+
+const title = "Privacy Policy | Determinant Systems";
+const description =
+  "How Determinant Systems, Inc. collects, uses, and protects personal information across determinantsystems.com, LACE, and related services.";
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  siteName={determinantSite.name}
+  imageAlt="Determinant Systems privacy policy"
+  jsonLd={breadcrumbSchema([
+    { name: "Home", url: `${determinantSite.url}/` },
+    { name: "Privacy Policy", url: `${determinantSite.url}/privacy/` },
+  ])}
+>
+  <a class="ds-skip" href="#main-content">Skip to content</a>
+
+  <DeterminantNav locale="en" offset />
+
+  <div class="dsl">
+    <div class="dsl-substrate" aria-hidden="true"></div>
+
+    <div class="dsl-shell">
+      <nav class="dsl-crumbs" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="/">Home</a></li>
+          <li><span aria-current="page">Privacy Policy</span></li>
+        </ol>
+      </nav>
+
+      <main id="main-content" class="dsl-doc-wrap">
+        <div class="legal-doc" set:html={PRIVACY_POLICY_BODY_HTML} />
+      </main>
+    </div>
+  </div>
+
+  <DeterminantFooter locale="en" />
+</BaseLayout>
+
+<style>
+  .ds-skip {
+    position: fixed;
+    top: 0.5rem;
+    left: 0.5rem;
+    z-index: 100;
+    padding: 0.65rem 0.9rem;
+    background: #fff;
+    color: #050505;
+    transform: translateY(-150%);
+  }
+
+  .ds-skip:focus {
+    transform: translateY(0);
+  }
+
+  .dsl {
+    --bright: #ffffff;
+    --muted: #94a3b8;
+    --muted-soft: #7f8896;
+    --line: rgba(255, 255, 255, 0.14);
+    --line-soft: rgba(255, 255, 255, 0.08);
+    --accent: #00ffc2;
+
+    position: relative;
+    z-index: 1;
+    font-family: "Inter", "Red Hat Display", "Segoe UI", sans-serif;
+    font-weight: 300;
+    color: var(--muted);
+  }
+
+  .dsl-substrate {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(52rem 40rem at 76% 14%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 66%),
+      radial-gradient(46rem 30rem at -6% 92%, color-mix(in srgb, var(--accent) 5%, transparent), transparent 70%),
+      #0a0a0a;
+  }
+
+  .dsl-shell {
+    width: min(920px, calc(100% - 4rem));
+    margin: 0 auto;
+    padding-bottom: clamp(4rem, 8vw, 7rem);
+  }
+
+  .dsl-crumbs {
+    padding: clamp(6.5rem, 13vh, 9rem) 0 0;
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+  }
+
+  .dsl-crumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted-soft);
+  }
+
+  .dsl-crumbs li {
+    margin: 0;
+  }
+
+  .dsl-crumbs li:not(:last-child)::after {
+    content: "/";
+    margin-left: 0.6rem;
+    color: var(--line);
+  }
+
+  .dsl-crumbs a {
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 180ms ease;
+  }
+
+  .dsl-crumbs a:hover {
+    color: var(--bright);
+  }
+
+  .dsl-doc-wrap {
+    margin-top: clamp(2rem, 4vw, 3rem);
+    padding: clamp(1.8rem, 3.4vw, 3rem);
+    border: 1px solid var(--line);
+    background: rgba(30, 30, 30, 0.65);
+    backdrop-filter: blur(20px);
+  }
+</style>
+
+<style is:global>
+  /* Termly's export ships every color inline, which fights the site's dark
+     substrate. `!important` here beats those inline (non-!important) styles
+     without touching the source content. */
+  .legal-doc,
+  .legal-doc div,
+  .legal-doc span,
+  .legal-doc li,
+  .legal-doc td,
+  .legal-doc th,
+  .legal-doc strong,
+  .legal-doc em,
+  .legal-doc u {
+    font-family: "Inter", "Red Hat Display", "Segoe UI", sans-serif !important;
+    font-weight: 300 !important;
+    font-size: 0.94rem !important;
+    line-height: 1.75 !important;
+    color: #94a3b8 !important;
+  }
+
+  .legal-doc > div {
+    margin: 0 0 0.9rem;
+  }
+
+  .legal-doc h1,
+  .legal-doc h2,
+  .legal-doc h3 {
+    font-family: "Space Grotesk", "JetBrains Mono", monospace !important;
+    font-weight: 400 !important;
+    color: #ffffff !important;
+    text-transform: uppercase !important;
+    letter-spacing: -0.01em !important;
+  }
+
+  .legal-doc h1 {
+    margin: 0 0 0.5rem;
+    font-size: clamp(1.6rem, 3vw, 2.2rem) !important;
+    line-height: 1.1 !important;
+  }
+
+  .legal-doc h2 {
+    margin: 2.6rem 0 0.7rem;
+    padding-top: 0.6rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+    font-size: 1.2rem !important;
+    line-height: 1.25 !important;
+  }
+
+  .legal-doc h3 {
+    margin: 1.7rem 0 0.5rem;
+    font-size: 0.98rem !important;
+    line-height: 1.3 !important;
+  }
+
+  .legal-doc [data-custom-class="subtitle"] {
+    color: #7f8896 !important;
+    font-size: 0.78rem !important;
+    text-transform: none;
+  }
+
+  .legal-doc a {
+    color: #00ffc2 !important;
+    text-decoration: underline;
+    text-decoration-color: rgba(0, 255, 194, 0.35);
+    text-underline-offset: 2px;
+  }
+
+  .legal-doc a:hover {
+    text-decoration-color: currentColor;
+  }
+
+  .legal-doc ul {
+    margin: 0 0 0.9rem;
+    padding-left: 1.3rem;
+    list-style: disc;
+  }
+
+  .legal-doc li {
+    margin: 0 0 0.5rem !important;
+  }
+
+  .legal-doc table {
+    width: 100%;
+    margin: 0.5rem 0 1.2rem;
+    border-collapse: collapse;
+    font-size: 0.8rem !important;
+  }
+
+  .legal-doc table * {
+    font-size: 0.8rem !important;
+    color: #94a3b8 !important;
+  }
+
+  .legal-doc th,
+  .legal-doc td {
+    padding: 0.6rem 0.8rem !important;
+    text-align: left;
+    vertical-align: top;
+    border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  }
+
+  .legal-doc th {
+    background: rgba(255, 255, 255, 0.04);
+    color: #ffffff !important;
+    font-weight: 600 !important;
+  }
+
+  .legal-doc div:has(> table) {
+    overflow-x: auto;
+  }
+</style>

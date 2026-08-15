@@ -51,6 +51,7 @@ const year = new Date().getFullYear();
           <li><a href={contactHref} aria-current={isCurrent(contactHref) ? "page" : undefined}>{t.contact}</a></li>
           {sections.map((section) => <li><a href={section.href}>{section.label}</a></li>)}
           <li><a href={lacePlatformHref}>{t.platformProduct}</a></li>
+          <li><a href="/privacy" aria-current={isCurrent("/privacy") ? "page" : undefined}>{t.privacy}</a></li>
           <li><a href={t.languageHref} lang={locale === "es" ? "en" : "es"}>{t.languageLabel}</a></li>
         </ul>
       </div>

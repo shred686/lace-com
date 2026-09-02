@@ -186,6 +186,7 @@ import "../../styles/mega-override.css";
   .lp-post-dek {
     margin: 1.1rem 0 0;
     font-size: clamp(1rem, 1.5vw, 1.15rem);
+    font-weight: 400;
     line-height: 1.65;
     color: var(--lp-muted);
   }
@@ -229,6 +230,7 @@ import "../../styles/mega-override.css";
   .lp-post-prose :global(p) {
     margin: 0 0 1.25rem;
     font-size: 1rem;
+    font-weight: 400;
     line-height: 1.8;
     color: var(--lp-ink-soft);
   }
@@ -258,6 +260,7 @@ import "../../styles/mega-override.css";
   .lp-post-prose :global(li) {
     margin-bottom: 0.55rem;
     font-size: 0.98rem;
+    font-weight: 400;
     line-height: 1.75;
   }
 
@@ -299,6 +302,70 @@ import "../../styles/mega-override.css";
   .lp-post-prose :global(pre[data-language="text"] code),
   .lp-post-prose :global(pre[data-language="text"] span) {
     color: var(--lp-ink-soft) !important;
+  }
+
+  .lp-post-prose :global(table) {
+    width: 100%;
+    margin: 0 0 1.4rem;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+  }
+
+  .lp-post-prose :global(th) {
+    padding: 0.7rem 0.9rem;
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-align: left;
+    color: var(--lp-faint);
+    border-bottom: 1px solid var(--lp-line);
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+  }
+
+  .lp-post-prose :global(th:hover) {
+    color: var(--lp-green-deep);
+  }
+
+  .lp-post-prose :global(th::after) {
+    display: inline-block;
+    width: 0.7em;
+    margin-left: 0.3em;
+    content: "";
+    opacity: 0.35;
+  }
+
+  .lp-post-prose :global(th[aria-sort="ascending"])::after {
+    content: "↑";
+    opacity: 1;
+    color: var(--lp-green-deep);
+  }
+
+  .lp-post-prose :global(th[aria-sort="descending"])::after {
+    content: "↓";
+    opacity: 1;
+    color: var(--lp-green-deep);
+    background: rgba(13, 27, 22, 0.025);
+  }
+
+  .lp-post-prose :global(td) {
+    padding: 0.7rem 0.9rem;
+    font-weight: 400;
+    line-height: 1.6;
+    color: var(--lp-ink-soft);
+    border-bottom: 1px solid var(--lp-line-soft);
+  }
+
+  .lp-post-prose :global(tr:last-child td) {
+    border-bottom: 0;
+  }
+
+  .lp-post-prose :global(td strong) {
+    font-weight: 650;
+    color: var(--lp-ink);
   }
 
   .lp-post-prose :global(blockquote) {
@@ -977,3 +1044,70 @@ import "../../styles/mega-override.css";
     color: var(--lp-ink);
   }
 </style>
+
+<script>
+  // Makes every markdown table in a post's prose sortable by clicking a
+  // column header. Numeric-looking columns (handling "+", "−"/"-", "~",
+  // commas, "M"/"B" suffixes, and "—" for missing) sort numerically;
+  // everything else falls back to locale string sort.
+  function parseCell(text: string): number | null {
+    const trimmed = text.trim();
+    if (trimmed === "" || trimmed === "—" || trimmed === "-") return null;
+    const match = trimmed.replace(/,/g, "").match(/[+-]?~?\d+(\.\d+)?/);
+    if (!match) return null;
+    return parseFloat(match[0].replace("~", "").replace("+", ""));
+  }
+
+  function initSortableTable(table: HTMLTableElement) {
+    const headerRow = table.querySelector("thead tr") ?? table.querySelector("tr");
+    const tbody = table.querySelector("tbody");
+    if (!headerRow || !tbody) return;
+
+    const headers = Array.from(headerRow.querySelectorAll("th"));
+    headers.forEach((th, colIndex) => {
+      th.setAttribute("tabindex", "0");
+      th.setAttribute("role", "button");
+      th.setAttribute("aria-sort", "none");
+
+      const sort = () => {
+        const rows = Array.from(tbody.querySelectorAll("tr"));
+        const current = th.getAttribute("aria-sort");
+        const direction = current === "ascending" ? "descending" : "ascending";
+
+        const values = rows.map((row) => {
+          const cell = row.children[colIndex];
+          return { row, text: cell ? cell.textContent ?? "" : "", num: parseCell(cell ? cell.textContent ?? "" : "") };
+        });
+
+        const allNumeric = values.every((v) => v.num !== null);
+
+        values.sort((a, b) => {
+          let cmp: number;
+          if (allNumeric) {
+            cmp = (a.num as number) - (b.num as number);
+          } else {
+            cmp = a.text.trim().localeCompare(b.text.trim(), undefined, { numeric: true });
+          }
+          return direction === "ascending" ? cmp : -cmp;
+        });
+
+        headers.forEach((h) => h.setAttribute("aria-sort", "none"));
+        th.setAttribute("aria-sort", direction);
+
+        values.forEach((v) => tbody.appendChild(v.row));
+      };
+
+      th.addEventListener("click", sort);
+      th.addEventListener("keydown", (event: KeyboardEvent) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          sort();
+        }
+      });
+    });
+  }
+
+  document
+    .querySelectorAll<HTMLTableElement>(".lp-post-prose table")
+    .forEach(initSortableTable);
+</script>

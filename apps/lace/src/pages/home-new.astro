@@ -1,0 +1,20 @@
+---
+import BaseLayout from "@determinant/site-kit/layouts/BaseLayout.astro";
+import LaceHomeNewPage from "@determinant/site-kit/components/lace/LaceHomeNewPage.astro";
+import { laceSite, laceJsonLd } from "../site.config";
+import "../styles/mega-override.css";
+---
+
+<BaseLayout
+  title="LACE — Home (draft redesign)"
+  description="A draft redesign of the LACE home page: a governed enterprise AI platform drawn as a control plane, with search, knowledge graph, agents, and app builder on one audit trail."
+  theme="lace"
+  themeColor="#f6f7f9"
+  lang="en"
+  siteName={laceSite.name}
+  imageAlt="LACE enterprise AI platform for governed search, knowledge graphs, agents, and applications"
+  jsonLd={laceJsonLd}
+  noindex={true}
+>
+  <LaceHomeNewPage />
+</BaseLayout>

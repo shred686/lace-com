@@ -1,0 +1,480 @@
+---
+/**
+ * laceplatform.com — home (draft redesign, /home-new).
+ *
+ * "The Control Plane." A governed runtime drawn two ways: a dark instrument
+ * console that shows a governed run as a machine readout (query → policy →
+ * evidence → verify → answer → audit), and the familiar near-white engineering
+ * sheet for the offering sections. No neon glass, no logo wall, no invented
+ * metrics — the proof is the receipt, and the receipt is the product.
+ *
+ * Reuses the shared LaceNav / LaceFooter / buttons / [data-r] reveal, and the
+ * LaceSearchDemo + LaceMcpSection fragments. Everything here stays inside the
+ * constraints in apps/lace/PRODUCT.md (four offerings, one substrate, no
+ * fabricated proof).
+ */
+import LaceNav from "./LaceNav.astro";
+import LaceFooter from "./LaceFooter.astro";
+import LaceSearchDemo from "./LaceSearchDemo.astro";
+import LaceMcpSection from "./LaceMcpSection.astro";
+import { whitepaperEnglishUrl as whitepaper } from "../../data/assets";
+import "../../styles/lace-site.css";
+import "../../styles/lace-home-new.css";
+
+const specs = [
+  { idx: "01", name: "Enterprise Search", line: "Ask every system at once.", href: "/platform/enterprise-search" },
+  { idx: "02", name: "Knowledge Graph", line: "Every fact, linked and dated.", href: "/platform/knowledge-graph" },
+  { idx: "03", name: "Agent Studio", line: "Agents that follow policy.", href: "/platform/agents" },
+  { idx: "04", name: "App Builder", line: "A prompt becomes a live app.", href: "/platform/app-builder" },
+];
+
+const controls = [
+  {
+    label: "Provenance",
+    readout: "Every output carries its source — down to the page and paragraph.",
+    glyph: "provenance",
+  },
+  {
+    label: "Permissions",
+    readout: "Enforced at the moment of retrieval, on every surface.",
+    glyph: "permissions",
+  },
+  {
+    label: "Budgets",
+    readout: "Per-run and per-agent caps. The meter is the limit.",
+    glyph: "budgets",
+  },
+  {
+    label: "Approvals",
+    readout: "Risky steps route to a human — on the record.",
+    glyph: "approvals",
+  },
+  {
+    label: "Audit",
+    readout: "Every run signed and retained, replayable end to end.",
+    glyph: "audit",
+  },
+];
+
+const stops = [
+  {
+    name: "Cloud",
+    line: "Fastest start",
+    glyph: "cloud",
+  },
+  {
+    name: "Private Cloud",
+    line: "Your VPC",
+    glyph: "vpc",
+  },
+  {
+    name: "On-Premises",
+    line: "Your hardware",
+    glyph: "onprem",
+  },
+  {
+    name: "Air-Gapped",
+    line: "Zero external calls",
+    glyph: "air",
+  },
+];
+---
+
+<main id="lp-main" class="hn lp-site">
+  <LaceNav active="home" />
+
+  <!-- ── HERO: the console ─────────────────────────────────────────── -->
+  <section class="hn-hero">
+    <div class="hn-hero-inner">
+      <div class="hn-hero-copy">
+        <p class="hn-eyebrow" data-r><span class="hn-pulse" aria-hidden="true"></span> LACE · Governed enterprise AI</p>
+        <h1 class="hn-h1" data-r data-reveal-delay="60">
+          Enterprise AI,<br />
+          <span class="hn-h1-accent">on the record.</span>
+        </h1>
+        <p class="hn-hero-lead" data-r data-reveal-delay="140">
+          Search, a provable knowledge graph, governed agents, and an app
+          builder — on one substrate. Every answer cites its source. Every
+          action is audited. Permissions are enforced in the runtime, not
+          the prompt.
+        </p>
+        <div class="hn-hero-actions" data-r data-reveal-delay="220">
+          <a href="/contact" class="hn-btn hn-btn-primary">Book a demo</a>
+          <a href={whitepaper} target="_blank" rel="noopener noreferrer" class="hn-btn hn-btn-ghost">
+            Platform overview (PDF) →
+            <span class="lp-sr-only">Opens in a new tab</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- The receipt: one governed run, read as a machine transcript. -->
+      <figure class="hn-console" data-r data-reveal-delay="160" aria-label="A governed LACE run, from query to audit">
+        <div class="hn-console-bar" aria-hidden="true">
+          <i></i><i></i><i></i>
+          <span>lace·runtime — governed run #8821</span>
+        </div>
+        <div class="hn-console-body">
+          <div class="hn-log">
+            <div class="hn-log-row" data-r data-reveal-delay="260">
+              <span class="hn-log-mark hn-log-prompt">&gt;</span>
+              <span>query</span>
+              <span>“renewal terms for the Meridian contract”</span>
+            </div>
+            <div class="hn-log-row" data-r data-reveal-delay="340">
+              <span class="hn-log-mark hn-log-ok">✓</span>
+              <span>policy</span>
+              <span>role=legal · clearance=confidential · budget ok</span>
+            </div>
+            <div class="hn-log-row" data-r data-reveal-delay="420">
+              <span class="hn-log-mark hn-log-arrow">→</span>
+              <span>search</span>
+              <span>3 sources · 1 locked (no access)</span>
+            </div>
+            <div class="hn-log-row" data-r data-reveal-delay="500">
+              <span class="hn-log-mark hn-log-ok">✓</span>
+              <span>verify</span>
+              <span>MSA-2024 §4.2 · Jan 15, 2027 · 90-day notice</span>
+            </div>
+            <div class="hn-log-row hn-log-answer" data-r data-reveal-delay="580">
+              <span class="hn-log-mark hn-log-ok">✓</span>
+              <span>answer</span>
+              <span>“Renews Jan 15, 2027 · 90-day written notice”</span>
+              <i>cite: MSA §4.2</i>
+            </div>
+            <div class="hn-log-row" data-r data-reveal-delay="660">
+              <span class="hn-log-mark hn-log-ok">✓</span>
+              <span>audit</span>
+              <span>run #8821 · 14 steps · signed · retained 7y</span>
+            </div>
+          </div>
+        </div>
+        <div class="hn-console-foot" aria-hidden="true">
+          lace·runtime ready<span class="hn-caret"></span>
+        </div>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ── SPEC STRIP: four surfaces, one substrate ──────────────────── -->
+  <section class="hn-spec">
+    <div class="hn-spec-inner">
+      <p class="hn-spec-label" data-r>One platform · four surfaces · one audit trail</p>
+      <nav class="hn-spec-grid" aria-label="Platform surfaces">
+        {
+          specs.map((spec, i) => (
+            <a class="hn-spec-item" href={spec.href} data-r data-reveal-delay={i * 60}>
+              <b>{spec.idx}</b>
+              <strong>{spec.name}</strong>
+              <span>{spec.line}</span>
+            </a>
+          ))
+        }
+      </nav>
+    </div>
+  </section>
+
+  <!-- ── EDITORIAL: the receipt argument ───────────────────────────── -->
+  <section class="hn-editorial">
+    <h2 data-r>Most AI gives you an answer. <span class="hn-accent">LACE gives you the receipt.</span></h2>
+    <p data-r data-reveal-delay="120">
+      Everything LACE produces carries where it came from, what it was allowed
+      to touch, and who approved it. That is not a feature bolted onto a model —
+      it is the platform itself. Which is why the same system runs in the cloud
+      and in an air-gapped room with no external calls.
+    </p>
+  </section>
+
+  <!-- ── OFFERINGS ─────────────────────────────────────────────────── -->
+  <section class="hn-offerings">
+
+    <!-- 01 Enterprise Search -->
+    <div class="hn-offering">
+      <div class="hn-offering-copy">
+        <span class="hn-offering-idx" data-r>01 / Enterprise Search</span>
+        <h2 data-r data-reveal-delay="60">One question. Every system. The exact source.</h2>
+        <p data-r data-reveal-delay="120">
+          Ask across SharePoint, Drive, OneDrive, Dropbox, Notion, Slack, Teams,
+          email, S3, and your databases in plain language. Every material claim
+          cites the passage, cell, or row it came from — and permissions are
+          enforced at retrieval, so no one sees a result they shouldn't.
+        </p>
+        <a class="hn-link" href="/platform/enterprise-search" data-r data-reveal-delay="180">Enterprise Search →</a>
+      </div>
+      <div class="hn-offering-visual" data-r data-reveal-delay="140">
+        <LaceSearchDemo />
+      </div>
+    </div>
+
+    <!-- 02 Knowledge Graph -->
+    <div class="hn-offering">
+      <div class="hn-offering-copy">
+        <span class="hn-offering-idx" data-r>02 / Knowledge Graph</span>
+        <h2 data-r data-reveal-delay="60">Your business, as a living map.</h2>
+        <p data-r data-reveal-delay="120">
+          LACE reads what your company actually knows and turns it into a graph
+          of facts — every customer, contract, and commitment, each with its
+          source and its dates. When two documents disagree, the graph surfaces
+          the conflict with the evidence, before it becomes a dispute.
+        </p>
+        <a class="hn-link" href="/platform/knowledge-graph" data-r data-reveal-delay="180">Knowledge Graph →</a>
+      </div>
+      <div class="hn-offering-visual" data-r data-reveal-delay="140">
+        <figure class="hn-win" aria-label="A bitemporal fact ledger with a flagged conflict">
+          <div class="hn-win-bar" aria-hidden="true">
+            <i></i><i></i><i></i><span>graph.lace — fact ledger</span>
+          </div>
+          <div class="hn-win-body">
+            <div class="hn-fact">
+              <span class="hn-fact-key">Renewal date</span>
+              <span class="hn-fact-val">Jan 15, 2027</span>
+              <span class="hn-cite">MSA §4.2</span>
+            </div>
+            <div class="hn-fact">
+              <span class="hn-fact-key">Annual fee</span>
+              <span class="hn-fact-val">$1.2M <i>as of 2026</i></span>
+              <span class="hn-cite">Table 3</span>
+            </div>
+            <div class="hn-fact hn-conflict">
+              <span class="hn-fact-key">Notice period</span>
+              <span class="hn-fact-val">90 days <i>vs</i> 60 days</span>
+              <span class="hn-cite hn-cite--warn">2 sources disagree</span>
+            </div>
+            <div class="hn-conflict-flag">
+              <i aria-hidden="true"></i> 1 conflict open · routed to counsel@ for ruling
+            </div>
+            <p class="hn-win-caption">Every fact carries a receipt · dated, not just asserted</p>
+          </div>
+        </figure>
+      </div>
+    </div>
+
+    <!-- 03 Agent Studio -->
+    <div class="hn-offering">
+      <div class="hn-offering-copy">
+        <span class="hn-offering-idx" data-r>03 / Agent Studio</span>
+        <h2 data-r data-reveal-delay="60">A job description in. An AI teammate out.</h2>
+        <p data-r data-reveal-delay="120">
+          Describe the role — renewals watchdog, intake clerk, research analyst.
+          LACE builds it with you, proves it against test scenarios, and runs it
+          on a budget, inside your permissions, with the risky step held for a
+          human. One agent, every channel.
+        </p>
+        <a class="hn-link" href="/platform/agents" data-r data-reveal-delay="180">Agent Studio →</a>
+      </div>
+      <div class="hn-offering-visual" data-r data-reveal-delay="140">
+        <figure class="hn-win" aria-label="A governed agent run with an approval gate">
+          <div class="hn-win-bar" aria-hidden="true">
+            <i></i><i></i><i></i><span>agents.lace — contracts-intake · v12</span>
+          </div>
+          <div class="hn-win-body">
+            <div class="hn-channels" aria-hidden="true">
+              <span>Web chat</span><span>Slack</span><span>Teams</span><span>Email</span>
+              <span>SMS</span><span>WhatsApp</span><span>Voice</span><span>API</span>
+            </div>
+            <div class="hn-agent-head">
+              <svg width="20" height="20" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                <circle cx="9" cy="9" r="3" fill="#00A882" />
+                <circle cx="9" cy="9" r="6.5" stroke="#00A882" stroke-width="0.8" opacity="0.5" />
+                <circle cx="9" cy="9" r="8.5" stroke="#00A882" stroke-width="0.5" opacity="0.22" />
+              </svg>
+              <div>
+                <strong>Contracts intake agent</strong>
+                <em>budget $40/day · 2 approval gates</em>
+              </div>
+              <span class="hn-agent-live">LIVE</span>
+            </div>
+            <div class="hn-trace">
+              <div class="hn-trace-row"><i>1</i><span>Email in — Meridian asks about renewal</span></div>
+              <div class="hn-trace-row"><i>2</i><span>Reply drafted · cites <b>MSA §4.2</b> and <b>Table 3</b></span></div>
+              <div class="hn-trace-row hn-gate">
+                <i>3</i><span>Routed to counsel <b>· approval required</b></span>
+                <span class="hn-gate-actions"><span class="hn-gate-approve">Approve</span><span class="hn-gate-edit">Edit</span></span>
+              </div>
+              <div class="hn-trace-row"><i>4</i><span>Approved · sent · run logged</span></div>
+            </div>
+            <p class="hn-win-caption">Every channel · one agent · every action traced</p>
+          </div>
+        </figure>
+      </div>
+    </div>
+
+    <!-- 04 App Builder -->
+    <div class="hn-offering">
+      <div class="hn-offering-copy">
+        <span class="hn-offering-idx" data-r>04 / App Builder</span>
+        <h2 data-r data-reveal-delay="60">Software, described in a sentence.</h2>
+        <p data-r data-reveal-delay="120">
+          The tool your team keeps wishing for — described in one sentence, live
+          at a real URL in minutes. Generated code runs in an isolated sandbox
+          and reaches data, identity, and policy only through the platform SDK.
+        </p>
+        <a class="hn-link" href="/platform/app-builder" data-r data-reveal-delay="180">App Builder →</a>
+      </div>
+      <div class="hn-offering-visual" data-r data-reveal-delay="140">
+        <figure class="hn-win" aria-label="A prompt becomes a deployed app through an isolated sandbox">
+          <div class="hn-win-bar" aria-hidden="true">
+            <i></i><i></i><i></i><span>app-builder.lace</span>
+          </div>
+          <div class="hn-win-body">
+            <div class="hn-flow">
+              <div class="hn-flow-stage"><strong>Prompt</strong><span>“an intake portal for legal requests”</span></div>
+              <div class="hn-flow-arrow">↓</div>
+              <div class="hn-flow-stage"><strong>Isolated sandbox</strong><span>no database · no network · no credentials</span></div>
+              <div class="hn-flow-arrow">↓</div>
+              <div class="hn-flow-stage"><strong>Git</strong><span>every change versioned &amp; reviewable</span></div>
+              <div class="hn-flow-arrow">↓</div>
+              <div class="hn-flow-stage"><strong>Live URL</strong><span>sign-in, database, releases, rollback</span></div>
+            </div>
+            <div class="hn-flow-base">
+              <span><strong>@platform/sdk</strong> — the governed capability surface. Imported in the sandbox, enforced in the container: the only path to identity, data, policy, limits, and audit.</span>
+            </div>
+            <p class="hn-win-caption">From one sentence to deployed software — on the record</p>
+          </div>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── GOVERNANCE: the instrument panel ──────────────────────────── -->
+  <section class="hn-governance">
+    <div class="hn-governance-inner">
+      <div class="hn-governance-head">
+        <p class="hn-kicker" data-r>Governance</p>
+        <h2 data-r data-reveal-delay="60">The controls, not a feature strip.</h2>
+        <p data-r data-reveal-delay="120">
+          Governance is in the runtime. These five mechanisms are part of the
+          platform itself — an agent that is not authorized to reach a source
+          finds that capability unavailable, not merely discouraged.
+        </p>
+      </div>
+
+      <div class="hn-controls">
+        {
+          controls.map((control, i) => (
+            <div class="hn-control" data-r data-reveal-delay={i * 70}>
+              <span class="hn-control-glyph" aria-hidden="true">
+                {control.glyph === "provenance" && (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9.5 14.5 14.5 9.5" />
+                    <path d="M11 6.5 13 4.5a3.5 3.5 0 0 1 5 5l-2 2" />
+                    <path d="M13 17.5 11 19.5a3.5 3.5 0 0 1-5-5l2-2" />
+                  </svg>
+                )}
+                {control.glyph === "permissions" && (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="5" y="10" width="14" height="10" rx="2" />
+                    <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+                  </svg>
+                )}
+                {control.glyph === "budgets" && (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 19a8 8 0 1 1 16 0" />
+                    <path d="m12 15 4-5" />
+                    <circle cx="12" cy="15" r="1.1" fill="currentColor" stroke="none" />
+                  </svg>
+                )}
+                {control.glyph === "approvals" && (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 3a7 7 0 0 0-4 12.7V19a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-3.3A7 7 0 0 0 12 3Z" />
+                    <path d="m9 12 2 2 4-4" />
+                  </svg>
+                )}
+                {control.glyph === "audit" && (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="4" y="3" width="16" height="18" rx="2" />
+                    <path d="M8 7h8M8 11h8M8 15h5" />
+                  </svg>
+                )}
+              </span>
+              <span class="hn-control-label">{control.label}</span>
+              <span class="hn-control-readout">{control.readout}</span>
+              <span class="hn-control-status"><i aria-hidden="true"></i> Enforced</span>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ── DEPLOYMENT: the boundary rail ─────────────────────────────── -->
+  <section class="hn-deploy">
+    <div class="hn-deploy-head">
+      <p class="hn-kicker" data-r>Deployment</p>
+      <h2 data-r data-reveal-delay="60">One platform, four boundaries.</h2>
+      <p data-r data-reveal-delay="120">
+        Run it in managed cloud, your VPC, your own racks, or fully air-gapped
+        with no external AI calls. The same governed substrate in every mode —
+        most governed-AI competitors give up one end of that range.
+      </p>
+    </div>
+
+    <div class="hn-rail" data-r data-reveal-delay="140">
+      <div class="hn-rail-line" aria-hidden="true"></div>
+      <div class="hn-rail-stops">
+        {
+          stops.map((stop) => (
+            <div class="hn-stop">
+              <i aria-hidden="true">
+                {stop.glyph === "cloud" && (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
+                    <path d="M7 18a4.5 4.5 0 1 1 .66-8.95A6 6 0 0 1 19.35 10.6 3.75 3.75 0 0 1 18.25 18z" />
+                  </svg>
+                )}
+                {stop.glyph === "vpc" && (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
+                    <path d="M12 3.5l7 2.8v5.2c0 4.1-2.9 7-7 8.9-4.1-1.9-7-4.8-7-8.9V6.3z" />
+                    <path d="M9.2 11.8l2 2 3.6-3.8" />
+                  </svg>
+                )}
+                {stop.glyph === "onprem" && (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <rect x="4" y="4.5" width="16" height="6" rx="1.2" />
+                    <rect x="4" y="13.5" width="16" height="6" rx="1.2" />
+                    <circle cx="8" cy="7.5" r="1" fill="currentColor" />
+                    <circle cx="8" cy="16.5" r="1" fill="currentColor" />
+                  </svg>
+                )}
+                {stop.glyph === "air" && (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2.6 3">
+                    <circle cx="12" cy="12" r="8.2" />
+                    <circle cx="12" cy="12" r="2.6" fill="currentColor" stroke="none" />
+                  </svg>
+                )}
+              </i>
+              <strong>{stop.name}</strong>
+              <em>{stop.line}</em>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ── MCP: LACE inside the AI tools the team already uses ───────── -->
+  <LaceMcpSection />
+
+  <!-- ── CTA: back to the console ──────────────────────────────────── -->
+  <section class="hn-cta">
+    <div class="hn-cta-inner">
+      <p class="hn-kicker hn-kicker--dark" data-r>Next step</p>
+      <h2 data-r data-reveal-delay="60">See it on <span class="hn-h1-accent">your documents.</span></h2>
+      <p data-r data-reveal-delay="140">
+        We set up a pilot on your documents and one workflow your team actually
+        runs. You judge the working output — in weeks, not a quarter-long
+        project.
+      </p>
+      <div class="hn-cta-actions" data-r data-reveal-delay="220">
+        <a href="/contact" class="hn-btn hn-btn-primary">Book a demo</a>
+        <a href={whitepaper} target="_blank" rel="noopener noreferrer" class="hn-btn hn-btn-ghost">
+          Platform overview (PDF) →
+          <span class="lp-sr-only">Opens in a new tab</span>
+        </a>
+      </div>
+      <div class="hn-cta-stamp" data-r data-reveal-delay="300">
+        <i aria-hidden="true"></i> Governed · Traceable · Deployable anywhere
+      </div>
+    </div>
+  </section>
+
+  <LaceFooter />
+</main>

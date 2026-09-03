@@ -1,5 +1,5 @@
 ---
-title: "We Tested 40 Embedding Models for Local Search on Consumer CPU Hardware"
+title: "We Tested the Best Models for Local Search"
 description: "Semantic search that stays on the device needs an embedding model that also stays on the device. We benchmarked 40 open-weight models against a hand-graded 300-query set to find out which ones are actually worth the CPU."
 seoTitle: "Local Embedding Model Benchmark for On-Device Search | LACE"
 seoDescription: "A 40-model benchmark of open-weight embedding models on consumer CPU hardware, scored against a 300-query judged set, with CPU and GPU throughput numbers."
